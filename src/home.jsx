@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
-
 import Slick from "./components/slick";
 
  class Home extends Component {
+
+     handleClick =()=> {
+         this.props.history.push('/create')
+     }
+
     render() {
         return (<div>
+            <div className='container header'>
+                <div className="row ">
+                    <div className='col-12 rightText'>
+                        <div className="header-button">
+                            <button className='btn'>Connect Wallet</button>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
             <section className="padding">
                 <div className="container">
                     <div className="trheading wow ">
@@ -17,7 +29,7 @@ import Slick from "./components/slick";
                     <div className="container">
                         <div className="testimonial-slider justify-content-center">
                             <div className="slider slider-nav trtestimonial-nav">
-                                <Slick />
+                                <Slick history={this.props.history}/>
                             </div>
                         </div>
                     </div>
@@ -28,8 +40,8 @@ import Slick from "./components/slick";
                     <div className="container position-relative">
                         <div className="row justify-content-center">
                             <div className="col-12">
-                                <Link to='/create'><button className="btn btn-primary trFooter-Form-button" type="submit">Create My DAO
-                                </button></Link>
+                                <button className="btn btn-primary trFooter-Form-button" onClick={this.handleClick}>Create My DAO
+                                </button>
                             </div>
 
                         </div>
@@ -43,3 +55,4 @@ import Slick from "./components/slick";
 }
 
 export default Home;
+

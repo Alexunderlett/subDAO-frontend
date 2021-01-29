@@ -97,7 +97,7 @@
   position: absolute;
   bottom: -70px;
   z-index: -1;
-  right: -60px;
+  right: 0;
   -webkit-animation: scale 3s linear infinite;
   -moz-animation: scale 3s linear infinite;
   -ms-animation: scale 3s linear infinite;
@@ -140,7 +140,7 @@
     //float: left;
     width: 40%;
     display: inline-block;
-    a{
+    span{
       display: flex;
       background: transparent;
       align-items: center;
@@ -154,6 +154,8 @@
         -webkit-box-shadow: 3px 3px 24px 0px rgba(1, 2, 2, 0.05);
         -moz-box-shadow: 3px 3px 24px 0px rgba(1, 2, 2, 0.05);
         box-shadow: 3px 3px 24px 0px rgba(1, 2, 2, 0.05);
+        color:#d51073;
+        cursor: pointer;
       }
 
       i{

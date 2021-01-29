@@ -2,17 +2,36 @@ import React, { Component } from 'react';
 import t3 from "./images/t-4.png";
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
+import Headertop from "./components/Headertop";
 
 class About extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: null
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            id:this.props.match.params.id
+        })
+    }
+    handleClicktoVote = () => {
+        let { id } = this.state;
+        this.props.history.push(`/vote/${id}`)
+    }
     render() {
         return (
+            <div>
+                <Headertop />
+
             <section className="section blog-single position-relative">
                 <div className="footershape-image-1">
-                    <img src={shap1} className="img-fluid" />
+                    <img src={shap1} alt=''/>
                 </div>
                 <div className="footershape-image-3">
-                    <img src={shap2}
-                         className="img-fluid  wow fadeInUp" />
+                    <img src={shap2} alt='' />
                 </div>
                 <div className="container">
                     <div className="row">
@@ -20,7 +39,7 @@ class About extends Component {
 
                             <div className='sidebar'>
                                 <div className='leftTop'>
-                                    <img src={t3} />
+                                    <img src={t3}  alt=''/>
                                 </div>
                                 <ul>
                                     <li>Created by Lorem ipsum dolor sit amet</li>
@@ -116,28 +135,28 @@ class About extends Component {
                                 <div>
                                     <ul className="service-docs">
                                         <li>
-                                            <a href="#">
-                                                <i className="fa fa-street-view"></i>
+                                            <span onClick={this.handleClicktoVote} >
+                                                <i className="fa fa-street-view" />
                                                 Voting
-                                            </a>
+                                            </span>
                                         </li>
                                         <li>
-                                            <a href="#">
-                                                <i className="fa fa-star-o"></i>
+                                            <span onClick={this.handleClicktoVote} >
+                                                <i className="fa fa-star-o" />
                                                 Vault
-                                            </a>
+                                            </span>
                                         </li>
                                         <li>
-                                            <a href="#">
-                                                <i className="fa fa-dollar"></i>
+                                            <span onClick={this.handleClicktoVote} >
+                                                <i className="fa fa-dollar" />
                                                 Finance
-                                            </a>
+                                            </span>
                                         </li>
                                         <li>
-                                            <a href="#">
-                                                <i className="fa fa-building-o"></i>
+                                            <span onClick={this.handleClicktoVote} >
+                                                <i className="fa fa-building-o" />
                                                 Org
-                                            </a>
+                                            </span>
                                         </li>
                                     </ul>
 
@@ -150,6 +169,7 @@ class About extends Component {
                     </div>
                 </div>
             </section>
+            </div>
         )
     }
 }

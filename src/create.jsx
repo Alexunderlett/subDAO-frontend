@@ -1,63 +1,61 @@
-import React, { Component } from 'react';
-import {InputGroup,FormControl,Container,Col,Row,Image,Button} from 'react-bootstrap';
+import React, {Component} from 'react';
 import t3 from "./images/t-4.png";
-import {Link} from 'react-router-dom';
+import bg from "./images/shape-5.png";
+import bg2 from "./images/round-shape.png";
+import bg3 from "./images/dottd-squre.png";
+import StepNav from './components/stepNav';
+import FirstStep from './components/create/firstStep';
+import SecondStep from './components/create/secondStep';
+import ThirdStep from './components/create/thirdStep';
+import ForthStep from './components/create/forthStep';
+import Headertop from "./components/Headertop";
 
-class Createnew extends Component{
+
+class Createnew extends Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            type:1
+        }
+    }
+
+    setStep =(i) => {
+        this.setState({type:i})
+    }
+
     render() {
-        return (
+        return (<div>
+                    <Headertop />
+
             <section>
-                <div>
+                <div className="shape-image-five wow fadeInLeft" data-wow-duration="3s">
+                    <img src={bg} alt=""/>
+                </div>
+                <div className="shape-image-four">
+                    <img src={bg2} alt="" />
+                </div>
+                <div className="shape-image-two">
+                    <img src={bg3} alt="" />
                 </div>
                 <div className="container">
                     <div className="createSingle row">
-                        <div className='col-lg-12'> <ul className="breadcrumbstep">
-                            <li className='active'>Step 1. Basic information</li>
-                            <li>Step 2. Template selection</li>
-                            <li>Step 3. Template configuration</li>
-                            <li>Step 4. Completion</li>
-                        </ul></div>
-                        <div  className='col-lg-4'>
+                        <StepNav type={this.state.type} />
+                        <div className='col-lg-4'>
                             <img src={t3} alt=""/>
                         </div>
                         <div className='col-lg-8'>
-                            <ul>
-
-                                <li> <InputGroup className="mb-3">
-                                    <FormControl
-                                        placeholder="Username"
-                                        aria-label="Username"
-                                        aria-describedby="basic-addon1"
-                                    />
-                                </InputGroup></li>
-                                <li> <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text id="basic-addon3">
-                                            https://
-                                        </InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <FormControl id="basic-url" aria-describedby="basic-addon3" />
-                                </InputGroup></li>
-                                <li>
-                                    <InputGroup>
-
-                                        <FormControl as="textarea" aria-label="With textarea" />
-                                    </InputGroup>
-                                </li>
-                                <li className='brdr'>
-                                    <Link to='/'><Button variant="outline-primary" className='leftBtn'>Maybe Later</Button></Link>
-                                    <Button variant="primary">Next</Button>
-                                </li>
-                            </ul>
+                            { this.state.type === 1 && <FirstStep handlerSet={this.setStep} />}
+                            { this.state.type === 2 && <SecondStep handlerSet={this.setStep} />}
+                            { this.state.type === 3 && <ThirdStep handlerSet={this.setStep} />}
+                            { this.state.type === 4 && <ForthStep handlerSet={this.setStep} />}
                         </div>
                     </div>
                 </div>
-
-
             </section>
 
-
+            </div>
         );
     }
 }
+
 export default Createnew;

@@ -7,9 +7,11 @@ import t1 from "../images/t-1.png";
 import t2 from "../images/t-2.png";
 import t3 from "../images/t-3.png";
 import t4 from "../images/t-4.png";
-import {Link} from 'react-router-dom';
 
 class Slick extends Component {
+    handleClicktoAbout(id) {
+        this.props.history.push(`/about/${id}`)
+    }
     render() {
         const settings = {
             slidesToShow: 5,
@@ -37,36 +39,32 @@ class Slick extends Component {
             <div className='sliderBrdr'>
                 <Slider {...settings}>
                     <div className="testimonial-slider-img">
-                        <Link to='/about'><img src={t3} /></Link>
+                        <img src={t3}  alt='' id="3" onClick={this.handleClicktoAbout.bind(this,3)}/>
                     </div>
                     <div className="testimonial-slider-img">
-                        <img src={t2} />
+                        <img src={t2}  alt='' id="2" onClick={this.handleClicktoAbout.bind(this,2)}/>
                     </div>
 
 
                     <div className="testimonial-slider-img">
-                        <img src={t4} />
+                        <img src={t4}  alt=''/>
                     </div>
                     <div className="testimonial-slider-img">
-                        <img src={t1} />
+                        <img src={t1}  alt=''/>
                     </div>
                     <div className="testimonial-slider-img">
-                        <img src={t2} />
+                        <img src={t2}  alt=''/>
                     </div>
                     <div className="testimonial-slider-img">
-                        <img src={t4} />
+                        <img src={t4}  alt=''/>
                     </div>
                     <div className="testimonial-slider-img">
-                        <img src={t1} />
+                        <img src={t1}  alt=''/>
                     </div>
 
                     <div className="testimonial-slider-img">
-                        <img src={t3} />
+                        <img src={t3}  alt=''/>
                     </div>
-
-
-
-
                 </Slider>
             </div>
         );
