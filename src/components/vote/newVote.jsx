@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import Headertop from "../Headertop";
-import bg from "../../images/shape-5.png";
-import bg2 from "../../images/round-shape.png";
-import bg3 from "../../images/dottd-squre.png";
 import t3 from "../../images/t-4.png";
 import {Button, FormControl, InputGroup} from "react-bootstrap";
 import Datetime from 'react-datetime';
+import PageBackground from "../pagebackground";
 
 import moment from 'moment';
 var yesterday = moment().subtract( 1, 'day' );
@@ -15,7 +12,7 @@ var valid = function( current ){
 
 let inputProps = {
     placeholder: 'Please select end time',
-    disabled:true
+    // disabled:true
 };
 
 class NewVote extends Component {
@@ -23,6 +20,7 @@ class NewVote extends Component {
         super(props);
         this.state={
             date:'',
+            id: null,
             optionlist:[
                 {
                     option:''
@@ -36,6 +34,15 @@ class NewVote extends Component {
             ]
         };
         this.datetimeRef = React.createRef();
+    }
+    componentDidMount() {
+        this.setState({
+            id:this.props.match.params.id
+        })
+    }
+    handleClicktoVote = () => {
+        let { id } = this.state;
+        this.props.history.push(`/vote/${id}`)
     }
     removeOption (selectItem,index){
 
@@ -61,18 +68,21 @@ class NewVote extends Component {
     }
 
     handleChange=(value)=>{
-        console.log("====32234",value._d)
         this.setState({date: value._d})
     }
-    renderInput( props, openCalendar, closeCalendar ){
+    renderInput = ( props, openCalendar, closeCalendar )=>{
         function clear(){
+            console.log(props.value)
             props.onChange({target: {value: ''}});
         }
         return (
             <div>
                 <input {...props} />
                 <button className="selectedCal" onClick={openCalendar}></button>
-                <button onClick={clear}>clear</button>
+                {
+                    props.value.length!==0 && <div className='removeDate' onClick={clear}><i className='fa fa-close'></i></div>
+                }
+
             </div>
         );
     }
@@ -80,41 +90,34 @@ class NewVote extends Component {
         let {optionlist} = this.state;
         return (
             <div>
-                <Headertop />
-
                 <section>
-                    <div className="shape-image-five wow fadeInLeft" data-wow-duration="3s">
-                        <img src={bg} alt=""/>
-                    </div>
-                    <div className="shape-image-four">
-                        <img src={bg2} alt="" />
-                    </div>
-                    <div className="shape-image-two">
-                        <img src={bg3} alt="" />
-                    </div>
+                    <PageBackground />
                     <div className="container">
                         <div className="createSingle row">
                             <div className='col-lg-4'>
                                 <div>
                                     <img src={t3} alt=""/>
                                 </div>
-                                <div className='voteBtn'>
-                                    <Datetime
-                                        renderInput={ this.renderInput }
-                                        inputProps={ inputProps }
-                                        isValidDate={ valid }
-                                        ref={this.datetimeRef}
-                                        onChange={this.handleChange}
-                                       />
-                                </div>
+
                             </div>
                             <div className='col-lg-8'>
                                 <ul>
                                     <li>
+                                        <div className='voteBtn'>
+                                            <Datetime
+                                                renderInput={ this.renderInput }
+                                                inputProps={ inputProps }
+                                                isValidDate={ valid }
+                                                ref={this.datetimeRef}
+                                                onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </li>
+                                    <li>
                                         <div>
                                             <InputGroup className="mb-3">
                                                 <FormControl
-                                                    placeholder="Please Fill the title"
+                                                    placeholder="Please fill the title"
                                                     aria-label="Username"
                                                     aria-describedby="basic-addon1"
                                                 />
@@ -124,7 +127,7 @@ class NewVote extends Component {
                                     <li>
                                         <div>
                                             <InputGroup>
-                                                <FormControl as="textarea" aria-label="With textarea" placeholder="Please Fill description" />
+                                                <FormControl as="textarea" aria-label="With textarea" placeholder="Please fill description" />
                                             </InputGroup>
                                         </div>
                                     </li>
@@ -137,7 +140,7 @@ class NewVote extends Component {
                                                     <div className="col-11">
                                                         <InputGroup className="mb-3">
                                                             <FormControl
-                                                                placeholder="Fill the option"
+                                                                placeholder="fill the option"
                                                                 aria-label="Username"
                                                                 aria-describedby="basic-addon1"
                                                                 value={optionlist[index].option}
@@ -160,8 +163,7 @@ class NewVote extends Component {
                                     </li>
 
                                     <li className='brdr'>
-
-                                        <Button variant="primary" onClick={this.toForthStep}>Create</Button>
+                                        <Button variant="primary" onClick={this.handleClicktoVote}>Create</Button>
                                     </li>
                                 </ul>
                             </div>

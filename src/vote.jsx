@@ -1,43 +1,42 @@
 import React, { Component } from 'react';
 import t3 from "./images/t-4.png";
-import Headertop from "./components/Headertop";
-import bg from "./images/shape-5.png";
-import bg2 from "./images/round-shape.png";
-import bg3 from "./images/dottd-squre.png";
-import VotePagination from './components/votePagination'
-
+import VotePagination from './components/votePagination';
 import {Button, Table} from "react-bootstrap";
+import PageBackground from "./components/pagebackground";
 
 class Vote extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: null
+        }
+    }
 
     componentDidMount() {
-        // console.log(this.props.match.params.id)
+        this.setState({
+            id:this.props.match.params.id
+        })
     }
     handleClicktonewVote = () => {
-        this.props.history.push(`/newVote`)
+        let { id } = this.state;
+        this.props.history.push(`/newVote/${id}`)
+    }
+    handleClicktoview (voteid){
+        let { id } = this.state;
+        this.props.history.push(`/voteView/${id}/${voteid}`)
     }
     render() {
         return (
             <div>
-                <Headertop />
-
                 <section>
-                    <div className="shape-image-five wow fadeInLeft" data-wow-duration="3s">
-                        <img src={bg} alt=""/>
-                    </div>
-                    <div className="shape-image-four">
-                        <img src={bg2} alt="" />
-                    </div>
-                    <div className="shape-image-two">
-                        <img src={bg3} alt="" />
-                    </div>
+                    <PageBackground />
                     <div className="container">
                         <div className="createSingle row">
                             <div className='col-lg-4'>
                                 <div>
                                     <img src={t3} alt=""/>
                                 </div>
-                                <div className='voteBtn'>
+                                <div className='newVote'>
                                     <Button variant="primary" onClick={this.handleClicktonewVote}>New voting</Button>
                                 </div>
                             </div>
@@ -50,8 +49,8 @@ class Vote extends Component {
                                             <tr>
                                                 <td>1</td>
                                                 <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td><span><i className="fa fa-sign-in" /> view</span></td>
+                                                <td>Otto </td>
+                                                <td><span onClick={this.handleClicktoview.bind(this,55)}><i className="fa fa-sign-in"/> view</span></td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
@@ -85,7 +84,7 @@ class Vote extends Component {
                                     <li>
                                         <h6>History</h6>
 
-                                        <VotePagination />
+                                        <VotePagination id={this.state.id}  history={this.props.history}  />
                                     </li>
 
                                 </ul>

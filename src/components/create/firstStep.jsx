@@ -3,9 +3,7 @@ import {Button, FormControl, InputGroup} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 class FirstStep extends Component {
-    constructor(props) {
-        super(props);
-    }
+
     toSecondStep =() => {
         this.props.handlerSet(2)
     }

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import {Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
 
 class ForthStep extends Component {
     toThirdStep =() => {
         this.props.handlerSet(3)
+    }
+    handleClicktoAbout(id) {
+        console.log(this)
+        this.props.history.push(`/about/${id}`)
     }
     render() {
         return <ul>
@@ -46,7 +49,7 @@ class ForthStep extends Component {
 
             <li className='brdr'>
                 <Button variant="outline-primary" className='leftBtn' onClick={this.toThirdStep}>Previous</Button>
-                <Link to="/about"><Button variant="primary">Manage</Button></Link>
+                <Button variant="primary" onClick={this.handleClicktoAbout.bind(this,3)}>Manage</Button>
             </li>
         </ul>;
     }

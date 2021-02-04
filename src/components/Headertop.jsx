@@ -1,27 +1,48 @@
 import React, {Component} from 'react';
 import * as history from 'history'
 
+const createHashHistory =history.createHashHistory();
+
 
 class Headertop extends Component{
     constructor(props) {
         super(props);
-        this.state = {
-            isShow: true
+        this.state={
+            showHeader:null
         }
     }
     backNav=()=>{
-        const createHashHistory =history.createHashHistory();
         createHashHistory.goBack()
+
+    }
+    backHome=()=>{
+        // console.log( createHashHistory.location.pathname)
+        // createHashHistory.goBack(`/`)
+        createHashHistory.push(`/`)
+    }
+    componentDidMount() {
+        this.setState({
+            showHeader: createHashHistory.location.pathname !== '/'
+        });
+        createHashHistory.listen((obj)=>{
+
+            this.setState({
+                showHeader: obj.pathname !== '/'
+            });
+        })
     }
 
     render() {
         return (<div className='container header'>
-            <div className="row ">
+            <div className="row">
                 <div className='col-6 leftText'>
-                    {
-                        this.state.isShow &&  <span onClick={this.backNav}><i className='fa fa-chevron-left'></i>back</span>
-                    }
-
+                {
+                    this.state.showHeader &&
+                        <div>
+                            <span onClick={this.backNav}><i className='fa fa-chevron-left' />Prev</span>
+                            <span onClick={this.backHome}>Home</span>
+                        </div>
+                }
                 </div>
                 <div className='col-6 rightText'>
                     <div className="header-button">

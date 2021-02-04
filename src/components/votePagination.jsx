@@ -27,7 +27,10 @@ class VotePagination extends Component {
         this.pageClick(1);
 
     }
-
+    handleClicktoVoteview = (voteid) => {
+        let { id } = this.props;
+        this.props.history.push(`/voteOverview/${id}/${voteid}`)
+    }
     pageClick = (pageNum) => {
         if (pageNum !== this.state.current) {
             // this.state.current = pageNum
@@ -70,7 +73,7 @@ class VotePagination extends Component {
                         <td>
                             <div><Badge variant="primary"><i className="fa fa-times-circle"/> Failed</Badge></div>
                         </td>
-                        <td><span><i className="fa fa-sign-in"/> view</span></td>
+                        <td><span onClick={this.handleClicktoVoteview.bind(this,55)}><i className="fa fa-sign-in" /> view</span></td>
                     </tr>
                     <tr>
                         <td>1</td>
