@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import t3 from "./images/t-4.png";
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
-import Headertop from "./components/Headertop";
 
 class About extends Component {
     constructor(props) {
@@ -17,15 +16,13 @@ class About extends Component {
             id:this.props.match.params.id
         })
     }
-    handleClicktoVote = () => {
+    handleClicktoType = (type) => {
         let { id } = this.state;
-        this.props.history.push(`/vote/${id}`)
+        this.props.history.push(`/${type}/${id}`)
     }
     render() {
         return (
             <div>
-                <Headertop />
-
             <section className="section blog-single position-relative">
                 <div className="footershape-image-1">
                     <img src={shap1} alt=''/>
@@ -77,7 +74,7 @@ class About extends Component {
                                 </div>
                                 <div>
                                     <h4>Moderators</h4>
-                                    <ul>
+                                    <ul className='list'>
                                         <li>
                                             <span>Evy</span>
                                             <a href="">2300506e9fbb4d35887c851d84440538</a>
@@ -93,7 +90,7 @@ class About extends Component {
 
                                     </ul>
                                 </div>
-                                <div>
+                                <div className='list'>
                                     <h4>Contracts</h4>
                                     <ul>
                                         <li>
@@ -116,7 +113,7 @@ class About extends Component {
                                 </div>
                                 <div>
                                     <h4>Votings</h4>
-                                    <ul>
+                                    <ul className='list'>
                                         <li>
                                             <span>Active: </span>
                                             <a href="">2300506e9fbb4d35887c851d84440538</a>
@@ -135,29 +132,29 @@ class About extends Component {
                                 <div>
                                     <ul className="service-docs">
                                         <li>
-                                            <span onClick={this.handleClicktoVote} >
+                                            <span onClick={this.handleClicktoType.bind(this,'vote')} >
                                                 <i className="fa fa-street-view" />
                                                 Voting
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={this.handleClicktoVote} >
+                                            <span onClick={this.handleClicktoType.bind(this,'vault')} >
                                                 <i className="fa fa-star-o" />
                                                 Vault
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={this.handleClicktoVote} >
-                                                <i className="fa fa-dollar" />
-                                                Finance
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span onClick={this.handleClicktoVote} >
+                                            <span onClick={this.handleClicktoType.bind(this,'org')} >
                                                 <i className="fa fa-building-o" />
                                                 Org
                                             </span>
                                         </li>
+                                        {/*<li>*/}
+                                        {/*    <span onClick={this.handleClicktoType.bind(this,'finance')} >*/}
+                                        {/*        <i className="fa fa-dollar" />*/}
+                                        {/*        Finance*/}
+                                        {/*    </span>*/}
+                                        {/*</li>*/}
                                     </ul>
 
                                 </div>

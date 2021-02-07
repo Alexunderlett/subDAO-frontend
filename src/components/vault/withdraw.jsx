@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
 import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
+import VaultmodalTips from "./vaultmodalTips";
 
 class Withdraw extends Component {
     constructor(props) {
         super(props);
         this.state = {
             id:null,
+            showModal: false,
             copied: false,
         }
     }
@@ -19,6 +21,12 @@ class Withdraw extends Component {
     handleClicktoVault=()=>{
         let { id } = this.state;
         this.props.history.push(`/vault/${id}`)
+    }
+    triggerConfirm=()=>{
+        this.setState({showModal: true})
+    }
+    handleClose = () => {
+        this.setState({showModal: false})
     }
     render() {
         return (
@@ -68,7 +76,8 @@ class Withdraw extends Component {
                                     </li>
                                     <li className='brdr'>
                                         <Button variant="primary" onClick={this.handleClicktoVault}>Back</Button>
-                                        <Button variant="outline-primary" onClick={this.handleClicktoVote}>Request</Button>
+                                        <VaultmodalTips  handleClose={this.handleClose} showTips={this.state.showModal} />
+                                        <Button variant="outline-primary" onClick={this.triggerConfirm}>Request</Button>
                                     </li>
                                 </ul>
                             </div>

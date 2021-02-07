@@ -61,10 +61,9 @@ class VoteView extends Component {
                                     <li className='timeTop'>
                                         <i className='fa fa-clock-o'/> 03:59:28
                                     </li>
-                                    <li className='pl-1'>voting seq number</li>
                                     <li className='VotetitleTop'>
                                         <div>
-                                            <p>Please Fill description Please Fill description </p>
+                                            <p>1. Please Fill description Please Fill description </p>
                                         </div>
                                     </li>
                                     <li>
