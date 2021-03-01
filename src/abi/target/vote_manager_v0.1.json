@@ -1,0 +1,692 @@
+{
+  "metadataVersion": "0.1.0",
+  "source": {
+    "hash": "0x69a2b3103f7ee538a9d957c381d6fb03934e9a6ca59b3ab2efb4cf1a938ad483",
+    "language": "ink! 3.0.0-rc2",
+    "compiler": "rustc 1.50.0-nightly"
+  },
+  "contract": {
+    "name": "vote_manager",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "name": "_vote_time",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "support_require_pct",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "min_require_num",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "name": [
+          "new"
+        ],
+        "selector": "0xd183512b"
+      }
+    ],
+    "docs": [],
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "creator",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 11
+            }
+          }
+        ],
+        "docs": [],
+        "name": "StartVote"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "voter",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "support",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 8
+            }
+          }
+        ],
+        "docs": [],
+        "name": "CastVote"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "name": "ExecuteVote"
+      }
+    ],
+    "messages": [
+      {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "new_vote"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x093e59d4"
+      },
+      {
+        "args": [
+          {
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "support",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 8
+            }
+          },
+          {
+            "name": "voter",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 11
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "vote"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x2202830d"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "next_index"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 1
+        },
+        "selector": "0xc7795f19"
+      }
+    ]
+  },
+  "storage": {
+    "struct": {
+      "fields": [
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "support_require_pct"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "min_require_num"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "votes_length"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "vote_time"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0500000001000000000000000000000000000000000000000000000000000000",
+                                          "ty": 4
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0600000000000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 6
+                        }
+                      },
+                      "offset": "0x0500000001000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "votes"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0700000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 9
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0800000001000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
+                        }
+                      },
+                      "offset": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "voters"
+        }
+      ]
+    }
+  },
+  "types": [
+    {
+      "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "last_vacant",
+              "type": 3
+            },
+            {
+              "name": "len",
+              "type": 3
+            },
+            {
+              "name": "len_entries",
+              "type": 3
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Header"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u32"
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 5
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 1
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        1
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "next",
+              "type": 3
+            },
+            {
+              "name": "prev",
+              "type": 3
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "VacantEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 7
+            },
+            {
+              "name": "key_index",
+              "type": 3
+            }
+          ]
+        }
+      },
+      "params": [
+        7
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "executed",
+              "type": 8
+            },
+            {
+              "name": "start_date",
+              "type": 1
+            },
+            {
+              "name": "vote_time",
+              "type": 1
+            },
+            {
+              "name": "support_require_pct",
+              "type": 1
+            },
+            {
+              "name": "yea",
+              "type": 1
+            },
+            {
+              "name": "nay",
+              "type": 1
+            }
+          ]
+        }
+      },
+      "path": [
+        "vote_manager",
+        "vote_manager",
+        "Vote"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 5
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 10
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "tuple": [
+          1,
+          11
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 12
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 13
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 15
+            },
+            {
+              "name": "key_index",
+              "type": 3
+            }
+          ]
+        }
+      },
+      "params": [
+        15
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "Absent"
+            },
+            {
+              "discriminant": 1,
+              "name": "Yea"
+            },
+            {
+              "discriminant": 2,
+              "name": "Nay"
+            }
+          ]
+        }
+      },
+      "path": [
+        "vote_manager",
+        "vote_manager",
+        "VoterState"
+      ]
+    }
+  ]
+}

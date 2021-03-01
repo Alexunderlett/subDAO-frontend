@@ -9,15 +9,19 @@ class VoteView extends Component {
         this.state = {
             id: null,
             voteid: null,
+            selected:'',
             optionlist: [
                 {
-                    option: ''
+                    name: 'name1',
+                    value: 'value1'
                 },
                 {
-                    option: ''
+                    name: 'name2',
+                    value: 'value2'
                 },
                 {
-                    option: ''
+                    name: 'name3',
+                    value: 'value3'
                 }
             ]
         };
@@ -40,6 +44,10 @@ class VoteView extends Component {
     handleClicktoOverview = () => {
         let {id, voteid} = this.state;
         this.props.history.push(`/voteOverview/${id}/${voteid}`)
+        console.log(this.state.selected)
+    }
+    handleRadio = (e) =>{
+        this.setState({selected:e.target.value})
     }
 
     render() {
@@ -83,9 +91,12 @@ class VoteView extends Component {
                                                 <div className="row">
                                                     <div className="col-12 radioOption">
                                                         <Form.Group controlId="formBasicCheckbox">
-                                                            <Form.Check type="radio"
-                                                                        label="Check me 3wreout423Check me outCh "
-                                                                        id={`radio_${index}`} name='radiobutton'/>
+                                                            <Form.Check
+                                                                type="radio"
+                                                                label={i.name}
+                                                                id={`radio_${index}`}
+                                                                value={i.value}
+                                                                name='radiobutton' onChange={this.handleRadio}/>
                                                         </Form.Group>
                                                     </div>
 

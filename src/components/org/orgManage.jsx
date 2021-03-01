@@ -3,6 +3,7 @@ import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
 import {Button, Table, Form} from "react-bootstrap";
 import ModalTips from "./modalTips";
+import ManageItem from "./manageItem";
 
 class OrgManage extends Component {
     constructor(props) {
@@ -10,9 +11,26 @@ class OrgManage extends Component {
         this.state = {
             id:null,
             moderators: false,
-            showModal: false,
-            showAdd:false,
+            members: false,
+            showModalmoderators: false,
+            showModalmembers: false,
+            showAddmoderators:false,
+            showAddmembers:false,
             showAddMember:false,
+            memberlist: [
+                {
+                    name: 'ETH',
+                    id: '1',
+                    url: 'fdajogaogogndso',
+                    checked: false
+                },
+                {
+                    name: 'pETH2',
+                    id: '2',
+                    url: 'fdajogaogogndso',
+                    checked: false
+                }
+            ],
             checklist: [
                 {
                     name: 'pETH1',
@@ -48,62 +66,62 @@ class OrgManage extends Component {
         })
     }
 
-    handleClicktoview(voteid) {
-        let {id} = this.state;
-        this.props.history.push(`/voteView/${id}/${voteid}`)
+    handleClicktoview = (id) =>{
+        // let {voteid} = this.state;
+        // this.props.history.push(`/voteView/${id}/${voteid}`)
+        console.log("id",id)
     }
 
-    isAllChecked(e, id) {
+    isAllChecked = (e) => {
         let bool = e.target.checked;
-        let {checklist} = this.state;
+        const name = e.target.id;
+        const listname = e.target.dataset.list;
+        let checklist = this.state[listname];
+
         if (bool) {
             this.setState({
-                moderators: true
+                [name]: true
             });
             checklist.map((item) => {
                 item.checked = true;
             })
         } else {
             this.setState({
-                moderators: false
+                [name]: false
             });
             checklist.map((item) => {
                 item.checked = false;
             })
         }
-        this.setState({checklist});
+        this.setState({[listname]:checklist});
     }
 
-    isChecked(e, obj) {
+    isChecked = (e, obj) =>{
         let currentbool = e.target.checked;
-        if (!currentbool) {
-            this.setState({
-                moderators: false
-            })
-        }
-        let {checklist} = this.state;
+        const name = e.target.dataset.type;
+        const listname = e.target.dataset.list;
+        this.setState({
+            [name]: !(currentbool !=="false")
+        });
+
+        let checklist = this.state[listname];
         checklist.map(item => {
             if (item.id === obj.id) {
                 item.checked = currentbool
             }
         });
-        this.setState({checklist})
+        this.setState({[listname]:checklist});
     }
 
-    delConfirm = () => {
-        this.setState({showModal: true})
+    delConfirm = (name) => {
+        this.setState({ [name]: true})
     }
-    handleClose = () => {
-        this.setState({showModal: false})
+    handleClose = (name) => {
+        this.setState({ [name]: false})
     }
-    addModerators = () => {
+    addModerators = (name) => {
         this.setState(prevState => ({
-            showAdd: !prevState.showAdd
-        }))
-    }
-    addMembers = () => {
-        this.setState(prevState => ({
-            showAddMember: !prevState.showAddMember
+            [name]: !prevState[name]
         }))
     }
     handleClicktoOrg = () => {
@@ -112,7 +130,7 @@ class OrgManage extends Component {
     }
 
     render() {
-        let {checklist, moderators, showModal, showAdd, showAddMember} = this.state;
+        let {checklist, moderators, showModalmoderators, showModalmembers,showAddmembers, showAddmoderators,members,memberlist} = this.state;
 
         return <div>
             <section>
@@ -131,104 +149,37 @@ class OrgManage extends Component {
                             <ul className="manage">
                                 <li>
                                     <h6>Moderators</h6>
-                                    <ModalTips handleClose={this.handleClose} showTips={showModal}/>
-                                    <div className='operationBar'>
-                                        <span onClick={this.delConfirm}>
-                                          <i className='fa fa-trash'/> remove
-                                        </span>
-                                        <span onClick={this.addModerators}>
-                                            <i className='fa fa-plus-circle'/> add
-                                        </span>
-                                    </div>
-                                    {
-                                        showAdd &&<div className='addBtn'>
-                                            <Form.Group controlId="exampleForm.ControlTextarea1">
-                                                <Form.Control as="textarea" rows={3}
-                                                              placeholder="Please fill moderators' address,split with;"/>
-                                                <Button variant="primary" type="submit">
-                                                    Add
-                                                </Button>
-                                            </Form.Group>
-                                        </div>
-                                    }
-
-                                    <Table striped bordered hover>
-                                        <tbody>
-                                        <tr>
-                                            <th><Form.Check type='checkbox' id='moderators' value={moderators}
-                                                            checked={moderators}
-                                                            onChange={e => this.isAllChecked(e, 'moderators')}/></th>
-                                            <th>Name</th>
-                                            <th>Address</th>
-                                            <th>Operation</th>
-                                        </tr>
-                                        {
-                                            checklist.map((item) => (
-                                                    <tr key={`moderators_${item.id}`}>
-                                                        <td>
-                                                            <Form.Check type='checkbox' value={item.checked}
-                                                                        checked={item.checked}
-                                                                        onChange={e => this.isChecked(e, item)}/>
-                                                        </td>
-                                                        <td>{item.name}</td>
-                                                        <td>{item.url}</td>
-                                                        <td><span onClick={this.handleClicktoview.bind(this, item.id)}><i
-                                                            className="fa fa-trash"/> remove</span></td>
-                                                    </tr>
-                                                )
-                                            )
-                                        }
-                                        </tbody>
-                                    </Table>
+                                    <ManageItem
+                                        list={checklist}
+                                        chooseAll={moderators}
+                                        type='moderators'
+                                        isChecked={this.isChecked}
+                                        listname={'checklist'}
+                                        isAllChecked={this.isAllChecked}
+                                        handleClicktoview={this.handleClicktoview}
+                                        showModal={showModalmoderators}
+                                        showAdd={showAddmoderators}
+                                        handleClose={this.handleClose.bind(this,'showModalmoderators')}
+                                        addModerators={this.addModerators.bind(this,'showAddmoderators')}
+                                        delConfirm={this.delConfirm.bind(this,'showModalmoderators')}
+                                    />
                                 </li>
                                 <li>
                                     <h6>Members</h6>
-                                    <div className='operationBar'>
-                                        <span onClick={this.delConfirm}>
-                                          <i className='fa fa-trash'/> remove
-                                        </span>
-                                        <span onClick={this.addMembers}>
-                                            <i className='fa fa-plus-circle'/> add
-                                        </span>
-                                    </div>
-                                    {
-                                        showAddMember &&<div className='addBtn'>
-                                            <Form.Group controlId="exampleForm.ControlTextarea1">
-                                                <Form.Control as="textarea" rows={3}
-                                                              placeholder="Please fill moderators' address,split with;"/>
-                                                <Button variant="primary" type="submit">
-                                                    Add
-                                                </Button>
-                                            </Form.Group>
-                                        </div>
-                                    }
-
-                                    <Table striped bordered hover>
-                                        <tbody>
-                                        <tr>
-                                            <th><Form.Check type='checkbox'/></th>
-                                            <th>Name</th>
-                                            <th>Address</th>
-                                            <th>Operation</th>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <Form.Check type='checkbox'/>
-                                            </td>
-                                            <td>pETH</td>
-                                            <td>fdagfdg56ythdgfjuiyyryttefd</td>
-                                            <td><span onClick={this.handleClicktoview.bind(this, 55)}><i
-                                                className="fa fa-trash"/> remove</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><Form.Check type='checkbox'/></td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td><span onClick={this.handleClicktoview.bind(this, 55)}><i
-                                                className="fa fa-trash"/> remove</span></td>
-                                        </tr>
-                                        </tbody>
-                                    </Table>
+                                    <ManageItem
+                                        list={memberlist}
+                                        listname={'memberlist'}
+                                        chooseAll={members}
+                                        type='members'
+                                        isChecked={this.isChecked}
+                                        isAllChecked={this.isAllChecked}
+                                        handleClicktoview={this.handleClicktoview}
+                                        showModal={showModalmembers}
+                                        showAdd={showAddmembers}
+                                        handleClose={this.handleClose.bind(this,'showModalmembers')}
+                                        addModerators={this.addModerators.bind(this,'showAddmembers')}
+                                        delConfirm={this.delConfirm.bind(this,'showModalmembers')}
+                                    />
                                 </li>
                             </ul>
                         </div>

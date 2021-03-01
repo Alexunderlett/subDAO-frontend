@@ -1,15 +1,85 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect} from 'react';
 import {Button} from "react-bootstrap";
+import ConnectContract from "../../api/connectContract";
+import {useSubstrate} from "../../api/contracts";
+import {Keyring} from "@polkadot/keyring";
 
-class ForthStep extends Component {
-    toThirdStep =() => {
-        this.props.handlerSet(3)
+import { ContractPromise } from '@polkadot/api-contract';
+
+export default function ForthStep(props) {
+    const {api,maincontract} = useSubstrate();
+    const toThirdStep = () => {
+       props.handlerSet(3)
     }
-    handleClicktoAbout(id) {
-        console.log(this)
-        this.props.history.push(`/about/${id}`)
+    const handleClicktoAbout =(id) => {
+      props.history.push(`/about/${id}`)
     }
-    render() {
+    useEffect(async () => {
+
+        if(maincontract){
+
+            const AccountId = JSON.parse(sessionStorage.getItem('account'));
+
+console.log(AccountId,AccountId[0].address,AccountId[0].meta.name)
+
+
+
+
+// NOTE the apps UI specified these in mega units
+            const value = 0;
+            const gasLimit = 138003n * 1000000n;
+            const keyring = new Keyring({type: 'sr25519'});
+            let alicePair = keyring.createFromUri('//Alice');
+// Perform the actual read (no params at the end, for the `get` message)
+// (We perform the send from an account, here using Alice's address)
+            console.info(maincontract.query)
+            console.info(maincontract.tx)
+
+            // query
+            // const { gasConsumed, result, outcome } = await contract.query.listTemplates(alicePair.address, { value, gasLimit });
+            // // The actual result from RPC as `ContractExecResult`
+            // console.log(result);
+            // // gas consumed
+            // console.log(gasConsumed.toHuman());
+
+            // tx
+            await maincontract.tx.instanceByTemplate({value, gasLimit}, 0, "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
+                .signAndSend(alicePair, (result) => {
+                    console.log("hello");
+                    if (result.status.isInBlock) {
+                        console.log('in a block',result);
+                        console.log(result.output.toHuman())
+                    } else if (result.status.isFinalized) {
+                        console.log('finalized');
+                    }
+                });
+
+
+
+    // const value = 0;
+    // // const gasLimit = 3000n * 1000000n;
+    // const gasLimit = -1;
+    //
+    // const keyring = new Keyring({ type: 'sr25519' });
+    // let alicePair = keyring.createFromUri(`//${AccountId[0].meta.name}`);
+    // // let alicePair = keyring.createFromUri('//Alice');
+    //
+    // let templateid = JSON.parse(sessionStorage.getItem('secondStep'))[0].id
+    // console.log(templateid)
+    //
+    // await maincontract.tx
+    //     .instanceByTemplate({ value, gasLimit }, templateid,AccountId[0].address)
+    //     .signAndSend(alicePair, (result) => {
+    //         if (result.status.isInBlock) {
+    //             console.log('in a block',result);
+    //         } else if (result.status.isFinalized) {
+    //             console.log('finalized');
+    //         }
+    //     });
+    //
+        }
+
+    }, [maincontract]);
         return <ul>
             <li className='successful'>
                 <div className="successFont">
@@ -48,11 +118,10 @@ class ForthStep extends Component {
             </li>
 
             <li className='brdr'>
-                <Button variant="outline-primary" className='leftBtn' onClick={this.toThirdStep}>Previous</Button>
-                <Button variant="primary" onClick={this.handleClicktoAbout.bind(this,3)}>Manage</Button>
+                <Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}>Previous</Button>
+                <Button variant="primary" onClick={handleClicktoAbout.bind(this, 3)}>Manage</Button>
             </li>
         </ul>;
-    }
-}
 
-export default ForthStep;
+
+}

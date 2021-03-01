@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PageBackground from "../pagebackground";
 import VoteEcharts from "./voteEcharts";
-import {Button} from "react-bootstrap";
+import {Badge, Button} from "react-bootstrap";
 
 class VoteOverview extends Component {
     constructor(props) {
@@ -32,6 +32,11 @@ class VoteOverview extends Component {
                                 <ul>
                                     <li>
                                         Voting Number: 12234345
+                                    </li>
+                                    <li>status:
+                                        <Badge variant="primary"><i className="fa fa-remove"/> Failed</Badge>
+                                        <Badge variant="success"><i className="fa fa-check"/> Success</Badge>
+                                        <Badge variant="secondary"><i className="fa fa-retweet"/> Pending</Badge>
                                     </li>
                                     <li>
                                         Creator: Hongfei <a href="">43ertowjtrejorejtwoot43ertowjtrejorejtwoot</a>

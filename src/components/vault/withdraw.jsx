@@ -11,6 +11,24 @@ class Withdraw extends Component {
             id:null,
             showModal: false,
             copied: false,
+            address:'',
+            reason:'',
+            amount:'',
+            selectd:'',
+            list: [
+                {
+                    name: 'Non-Profit Organization Template',
+                    value: 'value1',
+                },
+                {
+                    name: 'name2',
+                    value: 'value2',
+                },
+                {
+                    name: 'name3',
+                    value: 'value3',
+                }
+            ]
         }
     }
     componentDidMount() {
@@ -28,7 +46,26 @@ class Withdraw extends Component {
     handleClose = () => {
         this.setState({showModal: false})
     }
+    handleChange = (e) => {
+        const {name, value} = e.target;
+        this.setState({[name]: value});
+    }
+    handleConfirm=()=>{
+
+        this.setState({showModal: false});
+
+        const {address,amount,reason,selected} = this.state;
+        let obj = {
+            address,amount,reason,selected
+        }
+        console.log("====",obj)
+    }
+    handleSelect = (e) => {
+        let template = this.state.list.filter(item => item.value === e.target.value);
+        this.setState({selected:template[0].value})
+    }
     render() {
+        const {list,address,amount,reason} = this.state;
         return (
             <div>
                 <section>
@@ -43,10 +80,13 @@ class Withdraw extends Component {
                             <div className='col-lg-8'>
                                 <ul className="withdraw">
                                     <li>
-                                        <Form.Control as="select">
-                                            <option>Default select</option>
-                                            <option>Default select</option>
-                                            <option>Default select</option>
+                                        <Form.Control as="select" onChange={this.handleSelect}>
+                                            <option value=''>Please select option</option>
+                                            {
+                                                list.map(i => (
+                                                    <option value={i.value} key={i.value}>{i.name}</option>
+                                                ))
+                                            }
                                         </Form.Control>
                                         <br />
                                     </li>
@@ -54,29 +94,36 @@ class Withdraw extends Component {
                                         <InputGroup className="mb-3">
                                             <FormControl
                                                 placeholder="Please fill your receiver's address"
-                                                aria-label="Username"
-                                                aria-describedby="basic-addon1"
+                                                value={address}
+                                                name='address'
+                                                onChange={this.handleChange}
                                             />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
                                             <FormControl
                                                 placeholder="Please fill your reason"
-                                                aria-label="Username"
-                                                aria-describedby="basic-addon1"
+                                                value={reason}
+                                                name='reason'
+                                                onChange={this.handleChange}
                                             />
                                         </InputGroup>
 
                                         <InputGroup className="mb-3">
                                             <FormControl
                                                 placeholder="Please fill your amount"
-                                                aria-label="Username"
-                                                aria-describedby="basic-addon1"
+                                                value={amount}
+                                                name='amount'
+                                                onChange={this.handleChange}
                                             />
                                         </InputGroup>
                                     </li>
                                     <li className='brdr'>
                                         <Button variant="primary" onClick={this.handleClicktoVault}>Back</Button>
-                                        <VaultmodalTips  handleClose={this.handleClose} showTips={this.state.showModal} />
+                                        <VaultmodalTips
+                                            handleClose={this.handleClose}
+                                            showTips={this.state.showModal}
+                                            handleConfirm={this.handleConfirm}
+                                        />
                                         <Button variant="outline-primary" onClick={this.triggerConfirm}>Request</Button>
                                     </li>
                                 </ul>

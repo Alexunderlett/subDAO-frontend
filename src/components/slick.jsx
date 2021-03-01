@@ -12,15 +12,22 @@ class Slick extends Component {
     handleClicktoAbout(id) {
         this.props.history.push(`/about/${id}`)
     }
+    next = () => {
+        this.slider.slickNext();
+    }
+    prev = () => {
+        this.slider.slickPrev();
+    }
     render() {
         const settings = {
             slidesToShow: 5,
             slidesToScroll: 1,
             dots: false,
-            arrows: true,
             infinite: true,
             centerMode: true,
+            swipeToSlide: true,
             focusOnSelect: true,
+            arrows: false,
             responsive: [{
                 breakpoint: 992,
                 settings: {
@@ -36,36 +43,43 @@ class Slick extends Component {
             }]
         };
         return (
+            <div>
+                <span className="slick-prev" onClick={this.prev}>prev</span>
+                <span className="slick-next slick-disabled" onClick={this.next}>Next</span>
+
             <div className='sliderBrdr'>
-                <Slider {...settings}>
+                <Slider ref={slider => (this.slider = slider)} {...settings}>
                     <div className="testimonial-slider-img">
                         <img src={t3}  alt='' id="3" onClick={this.handleClicktoAbout.bind(this,3)}/>
                     </div>
-                    <div className="testimonial-slider-img">
-                        <img src={t2}  alt='' id="2" onClick={this.handleClicktoAbout.bind(this,2)}/>
-                    </div>
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t2}  alt='' id="2" onClick={this.handleClicktoAbout.bind(this,2)}/>*/}
+                    {/*</div>*/}
 
 
-                    <div className="testimonial-slider-img">
-                        <img src={t4}  alt=''/>
-                    </div>
-                    <div className="testimonial-slider-img">
-                        <img src={t1}  alt=''/>
-                    </div>
-                    <div className="testimonial-slider-img">
-                        <img src={t2}  alt=''/>
-                    </div>
-                    <div className="testimonial-slider-img">
-                        <img src={t4}  alt=''/>
-                    </div>
-                    <div className="testimonial-slider-img">
-                        <img src={t1}  alt=''/>
-                    </div>
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t4}  alt=''/>*/}
+                    {/*</div>*/}
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t1}  alt=''/>*/}
+                    {/*</div>*/}
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t2}  alt=''/>*/}
+                    {/*</div>*/}
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t4}  alt=''/>*/}
+                    {/*</div>*/}
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t1}  alt=''/>*/}
+                    {/*</div>*/}
 
-                    <div className="testimonial-slider-img">
-                        <img src={t3}  alt=''/>
-                    </div>
+                    {/*<div className="testimonial-slider-img">*/}
+                    {/*    <img src={t3}  alt=''/>*/}
+                    {/*</div>*/}
                 </Slider>
+
+            </div>
+
             </div>
         );
     }

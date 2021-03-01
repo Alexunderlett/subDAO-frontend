@@ -1,64 +1,144 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
 
 class ThirdStep extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            tokenlist:[
-            {
-                address:'',
-                token:''
+        this.state = {
+            form:{
+                admin: false,
+                token: false,
+                address: '',
+                name: '',
+                symbol: '',
+                supply: '',
+                tokenlist: [
+                    {
+                        address: '',
+                        token: ''
+                    }
+                ]
             }
-            ]
+
         };
     }
 
-    toForthStep =() => {
-        this.props.handlerSet(4)
+    toForthStep = () => {
+        this.props.handlerSet(4);
+        sessionStorage.setItem('thirdStep',JSON.stringify(this.state.form))
     }
 
-    toSecondStep =() => {
+    toSecondStep = () => {
         this.props.handlerSet(2)
     }
 
-    addtoken =()=>{
-        let { tokenlist} = this.state;
+    addtoken = () => {
+        let {tokenlist} = this.state.form;
         let newArray = [...tokenlist];
         newArray.push({
-            address:'',
-            token:''
+            address: '',
+            token: ''
 
         });
-        this.setState({tokenlist: newArray});
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                tokenlist : newArray
+            };
+            return {
+                form
+            };
+        });
     }
-    setAddress =(e,index)=>{
-        let { tokenlist} = this.state;
-        tokenlist[index].address = e.target.value;
-        this.setState({tokenlist})
+    setAddress = (e, index) => {
+        let {tokenlist} = this.state.form;
+        const {name, value} = e.target;
+        tokenlist[index][name] = value;
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                tokenlist
+            };
+            return {
+                form
+            };
+        });
     }
 
-    removeToken (selectItem,index){
+    removeToken(selectItem, index) {
+        let {tokenlist} = this.state.form;
+        tokenlist.splice(index, 1);
 
-        let { tokenlist} = this.state;
-
-       tokenlist.splice(index,1);
-
-        this.setState({tokenlist});
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                tokenlist
+            };
+            return {
+                form
+            };
+        });
     }
+
+    handleInput = (e) => {
+        const {name, value} = e.target;
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                [name]: value
+            };
+            return {
+                form
+            };
+        });
+
+    }
+
+    handleCheck = (e) => {
+        const {name, value} = e.target;
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                [name]: !(value !== "false")
+            };
+            return {
+                form
+            };
+
+        });
+    }
+    componentDidMount() {
+        let form = JSON.parse(sessionStorage.getItem('thirdStep'));
+        if(form){
+            this.setState({form})
+        }
+    }
+
     render() {
-        let {tokenlist} = this.state;
+        let { form:{admin, address, token, name, symbol,supply,tokenlist}} = this.state;
         return <ul>
             <li>
                 <div>
                     <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="DAO Admin" />
+                        <Form.Check
+                            type="checkbox"
+                            label="DAO Admin"
+                            value={admin}
+                            checked={admin}
+                            name='admin'
+                            onChange={this.handleCheck}
+                        />
                     </Form.Group>
                 </div>
                 <div>
                     <InputGroup>
-
-                        <FormControl as="textarea" aria-label="With textarea" placeholder="Fill the address, split with ;" />
+                        <FormControl
+                            as="textarea"
+                            placeholder="Fill the address, split with ;"
+                            value={address}
+                            name='address'
+                            onChange={this.handleInput}
+                        />
                     </InputGroup>
                 </div>
             </li>
@@ -66,15 +146,24 @@ class ThirdStep extends Component {
             <li>
                 <div>
                     <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Token" />
+                        <Form.Check
+                            type="checkbox"
+                            label="Token"
+                            value={token}
+                            checked={token}
+                            name='token'
+                            onChange={this.handleCheck}
+                        />
                     </Form.Group>
                 </div>
                 <div>
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Fill the name"
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
+                            value={name}
+                            checked={name}
+                            name='name'
+                            onChange={this.handleInput}
                         />
                     </InputGroup>
                 </div>
@@ -82,8 +171,10 @@ class ThirdStep extends Component {
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Fill the symbol"
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
+                            value={symbol}
+                            checked={symbol}
+                            name='symbol'
+                            onChange={this.handleInput}
                         />
                     </InputGroup>
                 </div>
@@ -91,12 +182,14 @@ class ThirdStep extends Component {
                     <InputGroup className="mb-3">
                         <FormControl
                             placeholder="Fill the total supply"
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
+                            value={supply}
+                            checked={supply}
+                            name='supply'
+                            onChange={this.handleInput}
                         />
                     </InputGroup>
                 </div>
-                { tokenlist.map((i,index)=>(
+                {tokenlist.map((i, index) => (
 
                     <div key={index}>
                         <div className="row">
@@ -104,10 +197,9 @@ class ThirdStep extends Component {
                                 <InputGroup className="mb-3">
                                     <FormControl
                                         placeholder="Fill the address"
-                                        aria-label="Username"
-                                        aria-describedby="basic-addon1"
                                         value={tokenlist[index].address}
-                                        onChange={(event)=> this.setAddress(event,index)}
+                                        name='address'
+                                        onChange={(event) => this.setAddress(event, index)}
                                     />
                                 </InputGroup>
                             </div>
@@ -115,13 +207,18 @@ class ThirdStep extends Component {
                                 <InputGroup className="mb-3">
                                     <FormControl
                                         placeholder="Fill the token"
-                                        aria-label="Username"
-                                        aria-describedby="basic-addon1"
+                                        value={tokenlist[index].token}
+                                        name='token'
+                                        onChange={(event) => this.setAddress(event, index)}
                                     />
                                 </InputGroup>
                             </div>
                             <div className="col-1">
-                                <i className="fa fa-close remove" onClick={this.removeToken.bind(this,i,index)} />
+                                {
+                                    !!index &&
+                                    <i className="fa fa-close remove" onClick={this.removeToken.bind(this, i, index)}/>
+                                }
+                                {/*<i className="fa fa-close remove" onClick={this.removeToken.bind(this, i, index)}/>*/}
 
                             </div>
                         </div>
@@ -130,7 +227,7 @@ class ThirdStep extends Component {
                 }
 
                 <div>
-                    <Button variant="light" onClick={this.addtoken}><i className="fa fa-plus"></i> Add Token</Button>
+                    <Button variant="light" onClick={this.addtoken}><i className="fa fa-plus"/> Add Token</Button>
                 </div>
 
             </li>
@@ -142,4 +239,5 @@ class ThirdStep extends Component {
         </ul>;
     }
 }
+
 export default ThirdStep;

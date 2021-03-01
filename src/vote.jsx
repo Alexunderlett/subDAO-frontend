@@ -43,9 +43,7 @@ class Vote extends Component {
                                 <ul className="vote">
                                     <li>
                                         <h6>Active Voting List</h6>
-
                                         <VoteActive  id={this.state.id}  history={this.props.history} />
-
                                     </li>
                                     <li>
                                         <h6>Pending Voting List</h6>
@@ -53,7 +51,6 @@ class Vote extends Component {
                                     </li>
                                     <li>
                                         <h6>History</h6>
-
                                         <VotePagination id={this.state.id}  history={this.props.history}  />
                                     </li>
 
