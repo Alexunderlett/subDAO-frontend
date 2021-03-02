@@ -10,7 +10,6 @@ export default function Vote(props){
     const [id, setAId] = useState(null);
 
     const  handleClicktonewVote = () => {
-        let { id } = this.state;
         props.history.push(`/newVote/${id}`)
     }
     const handleClicktoview = (voteid) => {
