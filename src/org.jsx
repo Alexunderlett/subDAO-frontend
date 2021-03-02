@@ -2,15 +2,33 @@ import React, {Component, useEffect, useState} from 'react';
 import PageBackground from "./components/pagebackground";
 import t3 from "./images/t-4.png";
 import {Button} from "react-bootstrap";
+import {useSubstrate} from "./api/contracts";
 
 export default function Org(props){
+
+    const {state,dispatch} = useSubstrate();
+    const {orgcontract} = state;
 
     const [id, setId] = useState(null);
 
     useEffect(() => {
         setId(props.match.params.id)
-
+        dispatch({type: 'LOAD_ORG'});
     }, []);
+
+
+    useEffect(() => {
+
+
+
+        // orgcontract
+
+
+
+
+
+    }, [orgcontract]);
+
     const handleClicktoManage = () => {
        props.history.push(`/manage/${id}`)
     }

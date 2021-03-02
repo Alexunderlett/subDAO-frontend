@@ -61,8 +61,18 @@ module.exports = (state, action) => {
         case 'SET_VAULT':
             return { ...state, vaultcontract: action.payload, vaultcontractState: 'READY' };
 
-        case 'LOAD_VAULT_ERROR':
+        case 'VAULT_ERROR':
             return { ...state, vaultcontract: null, vaultcontractState: 'ERROR' };
+
+            // vote
+        case 'LOAD_VOTE':
+            return { ...state, votecontractState: 'LOAD_VOTE' };
+
+        case 'SET_VOTE':
+            return { ...state, votecontract: action.payload, votecontractState: 'READY' };
+
+        case 'VOTE_ERROR':
+            return { ...state, votecontract: null, votecontractState: 'ERROR' };
 
         // DAO
         case 'LOAD_DAO':
@@ -71,7 +81,7 @@ module.exports = (state, action) => {
         case 'SET_DAO':
             return { ...state, daoManagercontract: action.payload, daoManagercontractState: 'READY' };
 
-        case 'LOAD_DAO_ERROR':
+        case 'DAO_ERROR':
             return { ...state, daoManagercontract: null, daoManagercontractState: 'ERROR' };
 
 

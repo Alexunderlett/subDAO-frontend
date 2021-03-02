@@ -5,8 +5,13 @@ import VotePending from './components/vote/votePending';
 import VoteActive from './components/vote/voteActive';
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
+import {useSubstrate} from "./api/contracts";
 
 export default function Vote(props){
+
+    const {state,dispatch} = useSubstrate();
+    const {votecontract} = state;
+
     const [id, setAId] = useState(null);
 
     const  handleClicktonewVote = () => {
@@ -22,8 +27,17 @@ export default function Vote(props){
     }
     useEffect(() => {
         setAId(props.match.params.id)
-
+        dispatch({type: 'LOAD_VOTE'});
     }, []);
+
+    useEffect(() => {
+
+
+
+        // votecontract
+
+
+    }, [votecontract]);
 
         return (
             <div>

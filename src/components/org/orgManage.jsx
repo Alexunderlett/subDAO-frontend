@@ -127,7 +127,7 @@ export default function OrgManage(props){
             setShowModalmembers(true)
         }
     }
-   
+
     const addModerators = (name) => {
         if(name==="showAddmoderators"){
             setShowAddmoderators(!showAddmoderators)

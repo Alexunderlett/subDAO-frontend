@@ -16,7 +16,7 @@ export default async function baseConnect(state, dispatch)  {
             dispatch({ type: 'BASE_ERROR' });
         }
     };
-    if (basecontractState!=='BASE_ERROR') return;
+    if (basecontractState!=='LOAD_BASE') return;
     if (loadBase) return dispatch({ type: 'SET_BASE', payload: basecontract });
     loadBase = true;
     asyncLoadbase();

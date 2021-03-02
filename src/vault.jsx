@@ -2,16 +2,28 @@ import React, {Component, useEffect, useState} from 'react';
 import t3 from "./images/t-4.png";
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
+import {useSubstrate} from "./api/contracts";
 
 
 export default function Vault(props){
+
+    const {state,dispatch} = useSubstrate();
+    const {vaultcontract} = state;
 
     const [id, setId] = useState(null);
 
     useEffect(() => {
         setId(props.match.params.id)
+        dispatch({type: 'LOAD_VAULT'});
 
     }, []);
+
+    useEffect(() => {
+        // vaultcontract
+
+
+
+    }, [vaultcontract]);
 
     const handleClicktoDetail = (type) => {
         props.history.push(`/${type}/${id}`)

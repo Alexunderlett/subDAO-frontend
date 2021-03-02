@@ -19,6 +19,9 @@ module.exports = {
     vaultcontractState: null,
     vaultcontract:null,
 
+    votecontractState: null,
+    votecontract:null,
+
     daoManagercontractState: null,
     daoManagercontract:null,
 

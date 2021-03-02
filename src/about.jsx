@@ -6,14 +6,38 @@ import {useSubstrate} from "./api/contracts";
 
 export default function About(props) {
     const {state,dispatch} = useSubstrate();
+    const {basecontract,daoManagercontract} = state;
 
     const [id, setId] = useState(null);
 
     useEffect(() => {
         dispatch({type: 'LOAD_BASE'});
+        dispatch({type: 'LOAD_DAO'});
         setId(props.match.params.id)
 
     }, []);
+
+    useEffect(() => {
+
+
+    //basecontract
+
+
+
+
+
+    }, [basecontract]);
+
+    useEffect(() => {
+
+
+        //daoManagercontract
+
+
+
+
+
+    }, [daoManagercontract]);
 
    const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)

@@ -33,13 +33,19 @@ export default function SecondStep(props) {
         if(maincontract === null) return ;
 
         const AccountId = JSON.parse(sessionStorage.getItem('account'));
+        console.log(maincontract)
 
         let listTemplates = await maincontract.query.listTemplates(AccountId[0].address, { value: 0, gasLimit: -1 });
 
         console.log("======",listTemplates)
            if(listTemplates && listTemplates.output){
-               setlist(listTemplates.output.toHuman())
+               // setlist(listTemplates.output.toHuman())
+               console.log("======",listTemplates)
            }
+
+
+
+
 
     }, [maincontract]);
     // useEffect(async () => {

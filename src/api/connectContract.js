@@ -8,6 +8,8 @@ import orgAbi from '../abi/target/org_v0.1';
 
 import vaultAbi from '../abi/target/vault_v0.1';
 
+import voteAbi from '../abi/target/vote_manager_v0.1';
+
 import daoManagerAbi from '../abi/target/dao_manager_v0.1';
 
 
@@ -21,12 +23,14 @@ const ConnectContract = async (api,type,address) =>{
         case'base':
             abi = baseAbi;
             break;
-
         case'org':
             abi = orgAbi;
             break;
         case'vault':
             abi = vaultAbi;
+            break;
+        case'vote':
+            abi = voteAbi;
             break;
         case'daoManager':
             abi = daoManagerAbi;

@@ -5,6 +5,10 @@ import INIT_STATE from './initState';
 import mainConnect from './mainContract';
 import loadAccounts from './Account';
 import baseConnect from './baseContract';
+import orgConnect from './orgContract';
+import vaultConnect from './vaultContract';
+import voteConnect from './voteContract';
+import daoManagerConnect from './daoManagerContract';
 
 import {ApiPromise, WsProvider} from '@polkadot/api';
 
@@ -124,7 +128,7 @@ const SubstrateContextProvider = (props) => {
     const [state, dispatch] = useReducer(reducer, initState);
     console.log("=====state=====",state)
 
-    const { maincontractState,allaccountsState,basecontractState } = state;
+    const {maincontractState, allaccountsState, basecontractState, orgcontractState, vaultcontractState,votecontractState,daoManagercontractState} = state;
     connect(state, dispatch);
 
 
@@ -136,6 +140,18 @@ const SubstrateContextProvider = (props) => {
     }
     if(basecontractState === 'LOAD_BASE'){
        baseConnect(state, dispatch);
+    }
+    if(orgcontractState === 'LOAD_ORG'){
+        orgConnect(state, dispatch);
+    }
+    if(vaultcontractState === 'LOAD_VAULT'){
+        vaultConnect(state, dispatch);
+    }
+    if(votecontractState === 'LOAD_VOTE'){
+        voteConnect(state, dispatch);
+    }
+    if(daoManagercontractState === 'LOAD_DAO'){
+        daoManagerConnect(state, dispatch);
     }
     return <SubstrateContext.Provider value={{state,dispatch}}>
         {props.children}
