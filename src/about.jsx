@@ -130,19 +130,19 @@ export default function About(props) {
                                 <div>
                                     <ul className="service-docs">
                                         <li>
-                                            <span onClick={handleClicktoType.bind(this,'vote')} >
+                                            <span onClick={()=>handleClicktoType('vote')} >
                                                 <i className="fa fa-street-view" />
                                                 Voting
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={handleClicktoType.bind(this,'vault')} >
+                                            <span onClick={()=>handleClicktoType('vault')} >
                                                 <i className="fa fa-star-o" />
                                                 Vault
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={handleClicktoType.bind(this,'org')} >
+                                            <span onClick={()=>handleClicktoType('org')} >
                                                 <i className="fa fa-building-o" />
                                                 Org
                                             </span>

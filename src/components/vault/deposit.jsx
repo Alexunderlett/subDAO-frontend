@@ -1,56 +1,54 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
 import {Button, Form, Alert} from "react-bootstrap";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-class Deposit extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id:null,
-            copied: false,
-            selected:null,
-            list: [
-                {
-                    name: 'Non-Profit Organization Template',
-                    value: 'value1',
-                    img:require('../../images/t-4.png'),
-                    address:'11ann4 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
-                },
-                {
-                    name: 'name2',
-                    value: 'value2',
-                    img:require('../../images/t-2.png'),
-                    address:'ann3234 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
-                },
-                {
-                    name: 'name3',
-                    value: 'value3',
-                    img:'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1266732253,2995515206&fm=111&gp=0.jpg',
-                    address:'ann654564 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
-                }
-            ]
+export default function Deposit(props){
+
+
+    const [id, setId] = useState(null);
+    const [copied, setCopied] = useState(false);
+    const [selected, setSelected] = useState(null);
+    const [list, setList] = useState([
+        {
+            name: 'Non-Profit Organization Template',
+            value: 'value1',
+            img:require('../../images/t-4.png'),
+            address:'11ann4 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
+        },
+        {
+            name: 'name2',
+            value: 'value2',
+            img:require('../../images/t-2.png'),
+            address:'ann3234 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
+        },
+        {
+            name: 'name3',
+            value: 'value3',
+            img:'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1266732253,2995515206&fm=111&gp=0.jpg',
+            address:'ann654564 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
         }
-    }
-    componentDidMount() {
-        this.setState({
-            id: this.props.match.params.id
-        });
+    ]);
+
+    useEffect(() => {
+        setId(props.match.params.id)
+
+    }, []);
+
+
+    const handleClicktoVault=()=>{
+
+        props.history.push(`/vault/${id}`)
     }
 
-    handleClicktoVault=()=>{
-        let { id } = this.state;
-        this.props.history.push(`/vault/${id}`)
+    const handleSelect = (e) => {
+        let template = list.filter(item => item.value === e.target.value);
+        setSelected(template[0])
     }
 
-    handleSelect = (e) => {
-        let template = this.state.list.filter(item => item.value === e.target.value);
-        this.setState({selected:template[0]})
-    }
 
-    render() {
-        const {list,selected} = this.state;
+
         return (
             <div>
                 <section>
@@ -92,7 +90,7 @@ class Deposit extends Component {
 
                                                             {selected.address}
                                                             <CopyToClipboard text='ann4 d6tz vjzn rru6 fqee 3d57 rb62 xnph'
-                                                                             onCopy={() => this.setState({copied: true},()=>{setTimeout(()=>{this.setState({copied: false})},2000)})}>
+                                                                             onCopy={() => setCopied(true,()=>{setTimeout(()=>{setCopied(false)},2000)})}>
                                                                 <i className='fa fa-copy'/>
                                                             </CopyToClipboard>
 
@@ -102,7 +100,7 @@ class Deposit extends Component {
                                                 }
                                                 <div className='mt-4'>
                                                     {
-                                                        this.state.copied &&
+                                                        copied &&
                                                         <Alert variant='primary' transition={true}>
                                                             Deposit address copied to clipboard!
                                                         </Alert>
@@ -124,7 +122,6 @@ class Deposit extends Component {
 
             </div>
         )
-    }
+
 }
 
-export default Deposit;

@@ -1,71 +1,77 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
 import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
 import VaultmodalTips from "./vaultmodalTips";
 
-class Withdraw extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id:null,
-            showModal: false,
-            copied: false,
-            address:'',
-            reason:'',
-            amount:'',
-            selectd:'',
-            list: [
-                {
-                    name: 'Non-Profit Organization Template',
-                    value: 'value1',
-                },
-                {
-                    name: 'name2',
-                    value: 'value2',
-                },
-                {
-                    name: 'name3',
-                    value: 'value3',
-                }
-            ]
+export default function Withdraw(props){
+
+
+    const [id, setId] = useState(null);
+    const [selected, setSelected] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [address, setAddress] = useState('');
+    const [reason, setReason] = useState('');
+    const [amount, setAmount] = useState('');
+    const [list, setList] = useState([
+        {
+            name: 'Non-Profit Organization Template',
+            value: 'value1',
+        },
+        {
+            name: 'name2',
+            value: 'value2',
+        },
+        {
+            name: 'name3',
+            value: 'value3',
+        }
+    ]);
+
+    useEffect(() => {
+        setId(props.match.params.id)
+
+    }, []);
+
+    const handleClicktoVault=()=>{
+       props.history.push(`/vault/${id}`)
+    }
+    const triggerConfirm=()=>{
+        setShowModal(true)
+    }
+    const handleClose = () => {
+        setShowModal(false)
+    }
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        switch(name){
+            case'address':
+                setAddress(value)
+                break;
+            case'reason':
+                setReason(value)
+                break;
+            case'amount':
+                setAmount(value)
+                break;
+            default:
+                break;
         }
     }
-    componentDidMount() {
-        this.setState({
-            id: this.props.match.params.id
-        });
-    }
-    handleClicktoVault=()=>{
-        let { id } = this.state;
-        this.props.history.push(`/vault/${id}`)
-    }
-    triggerConfirm=()=>{
-        this.setState({showModal: true})
-    }
-    handleClose = () => {
-        this.setState({showModal: false})
-    }
-    handleChange = (e) => {
-        const {name, value} = e.target;
-        this.setState({[name]: value});
-    }
-    handleConfirm=()=>{
+    const handleConfirm=()=>{
 
-        this.setState({showModal: false});
+        setShowModal(false)
 
-        const {address,amount,reason,selected} = this.state;
         let obj = {
             address,amount,reason,selected
         }
         console.log("====",obj)
     }
-    handleSelect = (e) => {
-        let template = this.state.list.filter(item => item.value === e.target.value);
-        this.setState({selected:template[0].value})
+    const handleSelect = (e) => {
+        let template =list.filter(item => item.value === e.target.value);
+        setSelected(template[0].value)
     }
-    render() {
-        const {list,address,amount,reason} = this.state;
+
         return (
             <div>
                 <section>
@@ -80,7 +86,7 @@ class Withdraw extends Component {
                             <div className='col-lg-8'>
                                 <ul className="withdraw">
                                     <li>
-                                        <Form.Control as="select" onChange={this.handleSelect}>
+                                        <Form.Control as="select" onChange={handleSelect}>
                                             <option value=''>Please select option</option>
                                             {
                                                 list.map(i => (
@@ -96,7 +102,7 @@ class Withdraw extends Component {
                                                 placeholder="Please fill your receiver's address"
                                                 value={address}
                                                 name='address'
-                                                onChange={this.handleChange}
+                                                onChange={handleChange}
                                             />
                                         </InputGroup>
                                         <InputGroup className="mb-3">
@@ -104,7 +110,7 @@ class Withdraw extends Component {
                                                 placeholder="Please fill your reason"
                                                 value={reason}
                                                 name='reason'
-                                                onChange={this.handleChange}
+                                                onChange={handleChange}
                                             />
                                         </InputGroup>
 
@@ -113,18 +119,18 @@ class Withdraw extends Component {
                                                 placeholder="Please fill your amount"
                                                 value={amount}
                                                 name='amount'
-                                                onChange={this.handleChange}
+                                                onChange={handleChange}
                                             />
                                         </InputGroup>
                                     </li>
                                     <li className='brdr'>
-                                        <Button variant="primary" onClick={this.handleClicktoVault}>Back</Button>
+                                        <Button variant="primary" onClick={handleClicktoVault}>Back</Button>
                                         <VaultmodalTips
-                                            handleClose={this.handleClose}
-                                            showTips={this.state.showModal}
-                                            handleConfirm={this.handleConfirm}
+                                            handleClose={handleClose}
+                                            showTips={showModal}
+                                            handleConfirm={handleConfirm}
                                         />
-                                        <Button variant="outline-primary" onClick={this.triggerConfirm}>Request</Button>
+                                        <Button variant="outline-primary" onClick={triggerConfirm}>Request</Button>
                                     </li>
                                 </ul>
                             </div>
@@ -134,6 +140,6 @@ class Withdraw extends Component {
 
             </div>
         )
-    }
+
 }
-export default Withdraw;
+

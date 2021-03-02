@@ -1,135 +1,145 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
 import {Button} from "react-bootstrap";
 import ManageItem from "./manageItem";
 
-class OrgManage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id:null,
-            moderators: false,
-            members: false,
-            showModalmoderators: false,
-            showModalmembers: false,
-            showAddmoderators:false,
-            showAddmembers:false,
-            showAddMember:false,
-            memberlist: [
-                {
-                    name: 'ETH',
-                    id: '1',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                },
-                {
-                    name: 'pETH2',
-                    id: '2',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                }
-            ],
-            checklist: [
-                {
-                    name: 'pETH1',
-                    id: '1',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                },
-                {
-                    name: 'pETH2',
-                    id: '2',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                },
-                {
-                    name: 'pETH3',
-                    id: '3',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                },
-                {
-                    name: 'pETH4',
-                    id: '4',
-                    url: 'fdajogaogogndso',
-                    checked: false
-                },
-            ]
-        };
-    }
+export default function OrgManage(props){
 
-    componentDidMount() {
-        this.setState({
-            id:this.props.match.params.id
-        })
-    }
 
-    handleClicktoview = (id) =>{
+    const [id, setId] = useState(null);
+    const [moderators, setModerators] = useState(false);
+    const [members, setMembers] = useState(false);
+    const [showModalmoderators, setShowModalmoderators] = useState(false);
+    const [showModalmembers, setShowModalmembers] = useState(false);
+    const [showAddmoderators, setShowAddmoderators] = useState(false);
+    const [showAddmembers, setShowAddmembers] = useState(false);
+    const [showAddMember, setShowAddmember] = useState(false);
+    const [memberlist, setMemberlist] = useState([
+        {
+            name: 'ETH',
+            id: '1',
+            url: 'fdajogaogogndso',
+            checked: false
+        },
+        {
+            name: 'pETH2',
+            id: '2',
+            url: 'fdajogaogogndso',
+            checked: false
+        }
+    ]);
+    const [checklist, setChecklist] = useState([
+        {
+            name: 'pETH1',
+            id: '1',
+            url: 'fdajogaogogndso',
+            checked: false
+        },
+        {
+            name: 'pETH2',
+            id: '2',
+            url: 'fdajogaogogndso',
+            checked: false
+        },
+        {
+            name: 'pETH3',
+            id: '3',
+            url: 'fdajogaogogndso',
+            checked: false
+        },
+        {
+            name: 'pETH4',
+            id: '4',
+            url: 'fdajogaogogndso',
+            checked: false
+        },
+    ]);
+
+    useEffect(() => {
+        setId(props.match.params.id)
+
+    }, []);
+
+
+    const handleClicktoview = (id) =>{
         // let {voteid} = this.state;
         // this.props.history.push(`/voteView/${id}/${voteid}`)
         console.log("id",id)
     }
 
-    isAllChecked = (e) => {
-        let bool = e.target.checked;
+    const isAllChecked = (e) => {
         const name = e.target.id;
         const listname = e.target.dataset.list;
-        let checklist = this.state[listname];
 
-        if (bool) {
-            this.setState({
-                [name]: true
-            });
-            checklist.map((item) => {
-                item.checked = true;
+        let values= eval(name);
+        let listobj =  eval(listname);
+
+            if (name === 'moderators') {
+                setModerators(!values)
+            } else if (name === 'members') {
+                setMembers(!values)
+            }
+            listobj.map((item) => {
+                item.checked = !values;
             })
-        } else {
-            this.setState({
-                [name]: false
-            });
-            checklist.map((item) => {
-                item.checked = false;
-            })
+
+        if (listname === 'checklist') {
+            setChecklist([...listobj])
+        } else if (name === 'memberlist') {
+            setMemberlist([...listobj])
         }
-        this.setState({[listname]:checklist});
     }
 
-    isChecked = (e, obj) =>{
+    const isChecked = (e, obj) =>{
         let currentbool = e.target.checked;
         const name = e.target.dataset.type;
         const listname = e.target.dataset.list;
-        this.setState({
-            [name]: !(currentbool !=="false")
-        });
 
-        let checklist = this.state[listname];
-        checklist.map(item => {
+        if(!currentbool){
+            if (name === 'moderators') {
+                setModerators(false)
+            } else if (name === 'members') {
+                setMembers(false)
+            }
+        }
+
+
+        let listobj =  eval(listname);
+
+        listobj.map(item => {
             if (item.id === obj.id) {
                 item.checked = currentbool
             }
         });
-        this.setState({[listname]:checklist});
+
+        if (listname === 'checklist') {
+            setChecklist([...listobj])
+        } else if (name === 'memberlist') {
+            setMemberlist([...listobj])
+        }
     }
 
-    delConfirm = (name) => {
-        this.setState({ [name]: true})
+    const delConfirm = (name) => {
+        if(name==="showModalmoderators"){
+            setShowModalmoderators(true)
+        }else if(name==="showModalmembers"){
+            setShowModalmembers(true)
+        }
     }
-    handleClose = (name) => {
-        this.setState({ [name]: false})
+   
+    const addModerators = (name) => {
+        if(name==="showAddmoderators"){
+            setShowAddmoderators(!showAddmoderators)
+        }else if(name==="showAddmembers"){
+            setShowAddmembers(!showAddmembers)
+        }
+
     }
-    addModerators = (name) => {
-        this.setState(prevState => ({
-            [name]: !prevState[name]
-        }))
-    }
-    handleClicktoOrg = () => {
-        let {id} = this.state;
-        this.props.history.push(`/org/${id}`)
+    const handleClicktoOrg = () => {
+       props.history.push(`/org/${id}`)
     }
 
-    render() {
-        let {checklist, moderators, showModalmoderators, showModalmembers,showAddmembers, showAddmoderators,members,memberlist} = this.state;
 
         return <div>
             <section>
@@ -141,7 +151,7 @@ class OrgManage extends Component {
                                 <img src={t3} alt=""/>
                             </div>
                             <div className='brdr'>
-                                <Button variant="outline-primary" onClick={this.handleClicktoOrg}>Back</Button>
+                                <Button variant="outline-primary" onClick={handleClicktoOrg}>Back</Button>
                             </div>
                         </div>
                         <div className='col-lg-8'>
@@ -152,15 +162,15 @@ class OrgManage extends Component {
                                         list={checklist}
                                         chooseAll={moderators}
                                         type='moderators'
-                                        isChecked={this.isChecked}
+                                        isChecked={isChecked}
                                         listname={'checklist'}
-                                        isAllChecked={this.isAllChecked}
-                                        handleClicktoview={this.handleClicktoview}
+                                        isAllChecked={isAllChecked}
+                                        handleClicktoview={handleClicktoview}
                                         showModal={showModalmoderators}
                                         showAdd={showAddmoderators}
-                                        handleClose={this.handleClose.bind(this,'showModalmoderators')}
-                                        addModerators={this.addModerators.bind(this,'showAddmoderators')}
-                                        delConfirm={this.delConfirm.bind(this,'showModalmoderators')}
+                                        handleClose={()=>setShowModalmoderators(false)}
+                                        addModerators={()=>addModerators('showAddmoderators')}
+                                        delConfirm={()=>delConfirm('showModalmoderators')}
                                     />
                                 </li>
                                 <li>
@@ -170,14 +180,14 @@ class OrgManage extends Component {
                                         listname={'memberlist'}
                                         chooseAll={members}
                                         type='members'
-                                        isChecked={this.isChecked}
-                                        isAllChecked={this.isAllChecked}
-                                        handleClicktoview={this.handleClicktoview}
+                                        isChecked={isChecked}
+                                        isAllChecked={isAllChecked}
+                                        handleClicktoview={handleClicktoview}
                                         showModal={showModalmembers}
                                         showAdd={showAddmembers}
-                                        handleClose={this.handleClose.bind(this,'showModalmembers')}
-                                        addModerators={this.addModerators.bind(this,'showAddmembers')}
-                                        delConfirm={this.delConfirm.bind(this,'showModalmembers')}
+                                        handleClose={()=>setShowModalmembers(false)}
+                                        addModerators={()=>addModerators('showAddmembers')}
+                                        delConfirm={()=>delConfirm('showModalmembers')}
                                     />
                                 </li>
                             </ul>
@@ -187,7 +197,5 @@ class OrgManage extends Component {
             </section>
 
         </div>;
-    }
-}
 
-export default OrgManage;
+}

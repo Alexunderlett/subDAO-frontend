@@ -1,30 +1,25 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import t3 from "./images/t-4.png";
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 
-class Vault extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: null
-        }
+
+export default function Vault(props){
+
+    const [id, setId] = useState(null);
+
+    useEffect(() => {
+        setId(props.match.params.id)
+
+    }, []);
+
+    const handleClicktoDetail = (type) => {
+        props.history.push(`/${type}/${id}`)
+    }
+    const handleClicktoVote = () => {
+        props.history.push(`/about/${id}`)
     }
 
-    componentDidMount() {
-        this.setState({
-            id:this.props.match.params.id
-        })
-    }
-    handleClicktoDetail = (type) => {
-        let { id } = this.state;
-        this.props.history.push(`/${type}/${id}`)
-    }
-    handleClicktoVote = () => {
-        let {id} = this.state;
-        this.props.history.push(`/about/${id}`)
-    }
-    render() {
         return (
             <div>
                 <section>
@@ -36,8 +31,8 @@ class Vault extends Component {
                                     <img src={t3} alt=""/>
                                 </div>
                                 <div className='vaultBtn'>
-                                    <Button variant="primary" onClick={this.handleClicktoDetail.bind(this,'deposit')}>Deposit</Button>
-                                    <Button variant="primary" onClick={this.handleClicktoDetail.bind(this,'withdraw')}>Withdraw</Button>
+                                    <Button variant="primary" onClick={()=>handleClicktoDetail('deposit')}>Deposit</Button>
+                                    <Button variant="primary" onClick={()=>handleClicktoDetail('withdraw')}>Withdraw</Button>
                                 </div>
                             </div>
                             <div className='col-lg-8'>
@@ -89,7 +84,7 @@ class Vault extends Component {
                                         </div>
                                     </li>
                                     <li className='brdr'>
-                                        <Button variant="outline-primary" onClick={this.handleClicktoVote}>Back</Button>
+                                        <Button variant="outline-primary" onClick={handleClicktoVote}>Back</Button>
                                     </li>
                                 </ul>
                             </div>
@@ -99,6 +94,6 @@ class Vault extends Component {
 
             </div>
         )
-    }
+
 }
-export default Vault
+
