@@ -1,13 +1,22 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import Slick from "./components/slick";
+import {Modal,Button} from "react-bootstrap";
 
- class Home extends Component {
+export default function Home(props) {
+    let [showButton, setShowButton] = useState(false);
 
-     handleClick =()=> {
-         this.props.history.push('/create')
+     const handleClick =()=> {
+         let account = JSON.parse(sessionStorage.getItem('account'));
+
+         if(account === null || !account.length){
+             setShowButton(true)
+         }else{
+             props.history.push('/create')
+         }
      }
-    render() {
-        return (<div>
+
+
+    return (<div>
             <section className="padding">
                 <div className="container">
                     <div className="trheading">
@@ -18,19 +27,32 @@ import Slick from "./components/slick";
                     <div className="container">
                         <div className="testimonial-slider justify-content-center">
                             <div className="slider slider-nav trtestimonial-nav">
-                                <Slick history={this.props.history}/>
+                                <Slick history={props.history}/>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <section>
+        <section>
                 <div className="footer-top ">
                     <div className="container position-relative">
                         <div className="row justify-content-center">
                             <div className="col-12">
-                                <button className="btn btn-primary trFooter-Form-button" onClick={this.handleClick}>Create My DAO
+                                <button className="btn btn-primary trFooter-Form-button" onClick={handleClick}>Create My DAO
                                 </button>
+                                <Modal
+                                    show={showButton}
+                                    aria-labelledby="contained-modal-title-vcenter"
+                                    centered
+                                    onHide={() => setShowButton(false)}
+                                >
+                                    <Modal.Header closeButton>
+                                            <i className='fa fa-user-times homeTop'></i>
+                                    </Modal.Header>
+                                    <Modal.Body className='homebtm'>
+                                        <h4>Please connect wallet</h4>
+                                    </Modal.Body>
+                                </Modal>
                             </div>
 
                         </div>
@@ -39,9 +61,8 @@ import Slick from "./components/slick";
                 </div>
             </section>
 
+
         </div>)
-    }
 }
 
-export default Home;
 

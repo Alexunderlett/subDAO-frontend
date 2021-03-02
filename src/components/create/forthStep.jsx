@@ -1,13 +1,15 @@
 import React, {Component, useEffect} from 'react';
 import {Button} from "react-bootstrap";
-import ConnectContract from "../../api/connectContract";
+// import ConnectContract from "../../api/connectContract";
 import {useSubstrate} from "../../api/contracts";
 import {Keyring} from "@polkadot/keyring";
 
 import { ContractPromise } from '@polkadot/api-contract';
 
 export default function ForthStep(props) {
-    const {api,maincontract} = useSubstrate();
+    const {state,dispatch} = useSubstrate();
+    const {maincontract} = state;
+
     const toThirdStep = () => {
        props.handlerSet(3)
     }
@@ -15,7 +17,7 @@ export default function ForthStep(props) {
       props.history.push(`/about/${id}`)
     }
     useEffect(async () => {
-
+console.log("=====000000099990",maincontract)
         if(maincontract){
 
             const AccountId = JSON.parse(sessionStorage.getItem('account'));
@@ -48,7 +50,7 @@ console.log(AccountId,AccountId[0].address,AccountId[0].meta.name)
                     console.log("hello");
                     if (result.status.isInBlock) {
                         console.log('in a block',result);
-                        console.log(result.output.toHuman())
+                        // console.log(result.output.toHuman())
                     } else if (result.status.isFinalized) {
                         console.log('finalized');
                     }

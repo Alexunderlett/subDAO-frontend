@@ -1,41 +1,31 @@
-import React, {useState, useEffect,useReducer} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as history from 'history';
 import {Form} from "react-bootstrap";
 import {useSubstrate} from "../api/contracts";
-import reducer from '../api/reducer';
-import INIT_STATE from '../api/initState';
-import {
-    web3Accounts,
-    web3Enable,
-
-} from '@polkadot/extension-dapp';
 
 const createHashHistory = history.createHashHistory();
 
 
 export default function Headertop() {
-    const {api, allAccounts} = useSubstrate();
+    const {state,dispatch} = useSubstrate();
+    const {allAccounts} = state;
 
     const [showHeader, setshowHeader] = useState(false);
     let [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
-    const [state, setState] = useState({});
 
     useEffect(() => {
         setshowHeader(createHashHistory.location.pathname !== '/')
         createHashHistory.listen((obj) => {
             setshowHeader(createHashHistory.location.pathname !== '/')
         });
-    });
+    }, [setshowHeader]);
 
     useEffect(() => {
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
         }
-        // return () => {
-        //     setState({}); // This worked for me
-        // };
     }, []);
 
     const backNav = () => {
@@ -53,11 +43,13 @@ export default function Headertop() {
         setselected(selected);
         sessionStorage.setItem('account', JSON.stringify(selected))
     }
-
+    useEffect(() => {
+        if(allAccounts && allAccounts.length ){
+            setallList(allAccounts);
+        }
+    }, [allAccounts]);
     const connectWallet = async () => {
-        await web3Enable('SubDAO');
-        const allAccounts = await web3Accounts();
-        setallList(allAccounts);
+        dispatch({type: 'LOAD_ALLACCOUNTS'});
     }
 
 

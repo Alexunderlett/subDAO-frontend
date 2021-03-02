@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import t3 from "./images/t-4.png";
-import VotePagination from './components/votePagination';
-import VotePending from './components/votePending';
-import VoteActive from './components/voteActive';
-import {Button, Table} from "react-bootstrap";
+import VotePagination from './components/vote/votePagination';
+import VotePending from './components/vote/votePending';
+import VoteActive from './components/vote/voteActive';
+import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 
 class Vote extends Component {

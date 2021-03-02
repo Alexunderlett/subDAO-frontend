@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import PageComponent from './pageComponent.jsx';
-import {Badge, Table} from "react-bootstrap";
+import PageComponent from '../pageComponent.jsx';
+import {Table} from "react-bootstrap";
 
-class VotePagination extends Component {
+class VoteActive extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,6 +54,10 @@ class VotePagination extends Component {
             this.pageClick(cur + 1);
         }
     }
+    handleClicktoview (voteid){
+        let { id } = this.props;
+        this.props.history.push(`/voteView/${id}/${voteid}`)
+    }
     goPrevClick = () => {
         let cur = this.state.current;
         if (cur > 1) {
@@ -70,22 +74,14 @@ class VotePagination extends Component {
                     <tr>
                         <td>1</td>
                         <td>Mark</td>
-                        <td>
-                            <div><Badge variant="primary"><i className="fa fa-times-circle"/> Failed</Badge></div>
-                        </td>
-                        <td><span onClick={this.handleClicktoVoteview.bind(this,55)}><i className="fa fa-sign-in" /> view</span></td>
+                        <td>Otto </td>
+                        <td><span onClick={this.handleClicktoview.bind(this,55)}><i className="fa fa-sign-in"/> view</span></td>
                     </tr>
                     <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Closed</td>
-                        <td><span><i className="fa fa-sign-in"/> view</span></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Cancel</td>
-                        <td><span><i className="fa fa-sign-in"/> view</span></td>
+                        <td>2</td>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td><span><i className="fa fa-sign-in" /> view</span></td>
                     </tr>
                     </tbody>
                 </Table>
@@ -102,4 +98,4 @@ class VotePagination extends Component {
 
 }
 
-export default VotePagination;
+export default VoteActive;

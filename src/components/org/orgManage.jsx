@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
-import {Button, Table, Form} from "react-bootstrap";
-import ModalTips from "./modalTips";
+import {Button} from "react-bootstrap";
 import ManageItem from "./manageItem";
 
 class OrgManage extends Component {

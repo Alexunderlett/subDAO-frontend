@@ -2,7 +2,13 @@
   height:330px;
   overflow: hidden;
 }
-
+.homeTop{
+  color:#d51073;
+  font-size: 22px!important;
+}
+.homebtm{
+  padding: 4rem 1rem!important;
+}
 @media(min-width: 769px) {
   .overflow{
     overflow: hidden;

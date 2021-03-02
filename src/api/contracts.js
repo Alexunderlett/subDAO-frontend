@@ -1,19 +1,21 @@
 import React, {useReducer, useContext} from 'react';
 import reducer from './reducer';
 import INIT_STATE from './initState';
-import ConnectContract from './connectContract';
+// import ConnectContract from './connectContract';
+import mainConnect from './mainContract';
+import loadAccounts from './Account';
 
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import {ContractPromise} from '@polkadot/api-contract';
 
-import {
-    web3Accounts,
-    web3Enable,
-    web3FromAddress,
-    web3ListRpcProviders,
-    web3UseRpcProvider
 
-} from '@polkadot/extension-dapp';
+// import {
+//     web3Accounts,
+//     web3Enable,
+//     web3FromAddress,
+//     web3ListRpcProviders,
+//     web3UseRpcProvider
+//
+// } from '@polkadot/extension-dapp';
 
 
 // const contractAddress='5DpVJVPrq2qJVrnRB85uvYmrcJoJmyD431Z7EbJtN1VjfdAN' ;
@@ -114,46 +116,24 @@ const connect = async (state, dispatch) => {
 
 
 };
-let loadMain = false;
-const mainConnect = async (state, dispatch) => {
 
-    const {apiState, api, maincontractState} = state;
-    let account = JSON.parse(sessionStorage.getItem('account'));
-    if (apiState !== 'READY' || account) return;
-
-        let maincontract;
-        const asyncLoadMain = async () => {
-            dispatch({type: 'LOAD_MAINCONTRACT'});
-        try {
-            maincontract = await ConnectContract(api, 'main');
-
-            dispatch({ type: 'SET_MAINCONTRACT', payload: maincontract });
-        } catch (e) {
-            console.error(e);
-            dispatch({ type: 'MAINCONTRACT_ERROR' });
-        }
-    };
-
-    if (maincontractState) return;
-    if (loadMain) return dispatch({ type: 'SET_MAINCONTRACT', payload: maincontract });
-    loadMain = true;
-    asyncLoadMain();
-}
+const initState = {...INIT_STATE};
 
 const SubstrateContextProvider = (props) => {
-    const initState = {...INIT_STATE};
     const [state, dispatch] = useReducer(reducer, initState);
-
+    console.log("=====state=====",state)
+    const { maincontractState,allaccountsState } = state;
     connect(state, dispatch);
-
+    if(maincontractState === 'LOAD_MAINCONTRACT'){
         mainConnect(state, dispatch);
-
-    // loadAccounts(state, dispatch);
-    return <SubstrateContext.Provider value={state}>
+    }
+    if(allaccountsState === 'LOAD_ALLACCOUNTS'){
+        loadAccounts(state, dispatch);
+    }
+    return <SubstrateContext.Provider value={{state,dispatch}}>
         {props.children}
     </SubstrateContext.Provider>;
 };
-
 
 const useSubstrate = () => ({...useContext(SubstrateContext)});
 

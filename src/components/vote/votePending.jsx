@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import PageComponent from './pageComponent.jsx';
+import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
-import VoteModalTips from "./vote/votemodalTips";
+import VoteModalTips from "./votemodalTips";
 
 class VotePending extends Component {
     constructor(props) {

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PageBackground from "../pagebackground";
 import t3 from "../../images/t-4.png";
-import d1 from "../../images/download.png";
 import {Button, Form, Alert} from "react-bootstrap";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 

@@ -13,13 +13,16 @@ const ConnectContract = async (api,type) =>{
     let abi;
     let contractAddress;
     switch(type){
+
+        case'base':
+            abi = baseAbi;
+            contractAddress = mainAddress;
+            break;
+        default:
         case'main':
             abi = mainAbi;
             contractAddress = mainAddress;
             break;
-        case'base':
-            abi = baseAbi;
-            contractAddress = mainAddress;
             break;
     }
     const mainContract = new ContractPromise(api, abi, contractAddress);
