@@ -17,14 +17,20 @@ export default function About(props) {
 
     }, []);
 
-    useEffect(() => {
+    useEffect(async() => {
 
 
-    //basecontract
+        //basecontract
+        const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
 
+        console.log("baseContract: ", basecontract)
 
+        let name = await basecontract.query.getName(AccountId[0].address, { value: 0, gasLimit: -1 });
 
-
+        console.log("======",name)
+        if(name && name.output){
+               console.log("======",name) //格式化
+           }
 
     }, [basecontract]);
 
