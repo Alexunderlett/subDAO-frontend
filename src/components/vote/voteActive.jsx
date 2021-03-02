@@ -1,72 +1,56 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
+export default function VoteActive(props){
 
-class VoteActive extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            indexList: [],
-            totalNum: 0,
-            totalData: {},
-            current: 1,
-            pageSize: 5,
-            totalPage: 0,
-        }
+    const [indexList, setIndexList] = useState([]);
+    // const [totalNum, setTotalNum] = useState(0);
+    // const [totalData, setTotalData] = useState({});
+    // const [current, setCurrent] = useState(1);
+    // const [pageSize, setPageSize] = useState(5);
+    // const [totalPage, setTotalPage] = useState(0);
+
+    useEffect(() => {
+        // let totalNum = 52;
+        // setTotalData({})
+        // setTotalNum(totalNum)
+        //
+        // let totalPage = Math.ceil(totalNum / pageSize);
+        // setTotalPage(totalPage)
+        // pageClick(1);
+
+
+    }, []);
+
+    const handleClicktoVoteview = (voteid) => {
+        let { id } = props;
+        props.history.push(`/voteOverview/${id}/${voteid}`)
     }
 
-    componentWillMount() {
-        // ajax
-
-        let totalNum = 52;
-        this.setState({totalData: {}});
-        this.setState({totalNum: totalNum});
-
-        let totalPage = Math.ceil(totalNum / this.state.pageSize);
-        this.setState({totalPage: totalPage});
-        this.pageClick(1);
-
-    }
-    handleClicktoVoteview = (voteid) => {
-        let { id } = this.props;
-        this.props.history.push(`/voteOverview/${id}/${voteid}`)
-    }
-    pageClick = (pageNum) => {
-        if (pageNum !== this.state.current) {
-            // this.state.current = pageNum
-            this.setState({current: pageNum}, () => {
-                console.log("====", this.state.current)
-            })
-        }
-
-        // _this.state.indexList = [];//清空之前的数据
-        // for (var i = (pageNum - 1) * _this.state.pageSize; i < _this.state.pageSize * pageNum; i++) {
-        //     if (_this.state.totalData.array[i]) {
-        //         _this.state.indexList.push(_this.state.totalData.array[i])
-        //     }
-        // }
-        // _this.setState({indexList: _this.state.indexList})
-        // console.log(_this.state.indexList)
-    }
-    goNext = () => {
-        let cur = this.state.current;
-        if (cur < this.state.totalPage) {
-            this.pageClick(cur + 1);
-        }
-    }
-    handleClicktoview (voteid){
-        let { id } = this.props;
-        this.props.history.push(`/voteView/${id}/${voteid}`)
-    }
-    goPrevClick = () => {
-        let cur = this.state.current;
-        if (cur > 1) {
-            this.pageClick(cur - 1);
-        }
+    const handleClicktoview = (voteid) => {
+        let { id } = props;
+        props.history.push(`/voteView/${id}/${voteid}`)
     }
 
+    // const pageClick = (pageNum) => {
+    //     if (pageNum !== current) {
+    //         setCurrent(pageNum)
+    //     }
+    //
+    // }
+    // const goNext = () => {
+    //
+    //     if (current < totalPage) {
+    //         pageClick(current + 1);
+    //     }
+    // }
+    //
+    // const goPrevClick = () => {
+    //     if (current > 1) {
+    //        pageClick(current - 1);
+    //     }
+    // }
 
-    render() {
         return (
             <div>
                 <Table striped bordered hover>
@@ -75,7 +59,7 @@ class VoteActive extends Component {
                         <td>1</td>
                         <td>Mark</td>
                         <td>Otto </td>
-                        <td><span onClick={this.handleClicktoview.bind(this,55)}><i className="fa fa-sign-in"/> view</span></td>
+                        <td><span onClick={()=>handleClicktoview(34)}><i className="fa fa-sign-in"/> view</span></td>
                     </tr>
                     <tr>
                         <td>2</td>
@@ -85,17 +69,16 @@ class VoteActive extends Component {
                     </tr>
                     </tbody>
                 </Table>
-                <PageComponent total={this.state.totalNum}
-                               current={this.state.current}
-                               totalPage={this.state.totalPage}
-                               pageClick={this.pageClick.bind(this)}
-                               goPrev={this.goPrevClick.bind(this)}
-                               goNext={this.goNext.bind(this)}
-                />
+                {/*<PageComponent total={totalNum}*/}
+                {/*               current={current}*/}
+                {/*               totalPage={totalPage}*/}
+                {/*               pageClick={pageClick.bind(this)}*/}
+                {/*               goPrev={goPrevClick.bind(this)}*/}
+                {/*               goNext={goNext.bind(this)}*/}
+                {/*/>*/}
             </div>
         )
-    }
+
 
 }
 
-export default VoteActive;

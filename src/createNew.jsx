@@ -36,7 +36,6 @@ export default function  Createnew(props) {
         setimgUrl( setimgUrl ?  ImageUrl : '');
 
         dispatch({type: 'LOAD_MAINCONTRACT'});
-        console.log("======LOAD_MAINCONTRACT",state)
     }, []);
 
         return (<div>
