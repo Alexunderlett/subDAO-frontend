@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import t3 from "./images/t-4.png";
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
+import {useSubstrate} from "./api/contracts";
 
-class About extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: null
-        }
+export default function About(props) {
+    const {state,dispatch} = useSubstrate();
+
+    const [id, setId] = useState(null);
+
+    useEffect(() => {
+        dispatch({type: 'LOAD_BASE'});
+        setId(props.match.params.id)
+
+    }, []);
+
+   const handleClicktoType = (type) => {
+        props.history.push(`/${type}/${id}`)
     }
 
-    componentDidMount() {
-        this.setState({
-            id:this.props.match.params.id
-        })
-    }
-    handleClicktoType = (type) => {
-        let { id } = this.state;
-        this.props.history.push(`/${type}/${id}`)
-    }
-    render() {
         return (
             <div>
             <section className="section blog-single position-relative">
@@ -132,29 +130,24 @@ class About extends Component {
                                 <div>
                                     <ul className="service-docs">
                                         <li>
-                                            <span onClick={this.handleClicktoType.bind(this,'vote')} >
+                                            <span onClick={handleClicktoType.bind(this,'vote')} >
                                                 <i className="fa fa-street-view" />
                                                 Voting
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={this.handleClicktoType.bind(this,'vault')} >
+                                            <span onClick={handleClicktoType.bind(this,'vault')} >
                                                 <i className="fa fa-star-o" />
                                                 Vault
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={this.handleClicktoType.bind(this,'org')} >
+                                            <span onClick={handleClicktoType.bind(this,'org')} >
                                                 <i className="fa fa-building-o" />
                                                 Org
                                             </span>
                                         </li>
-                                        {/*<li>*/}
-                                        {/*    <span onClick={this.handleClicktoType.bind(this,'finance')} >*/}
-                                        {/*        <i className="fa fa-dollar" />*/}
-                                        {/*        Finance*/}
-                                        {/*    </span>*/}
-                                        {/*</li>*/}
+
                                     </ul>
 
                                 </div>
@@ -168,6 +161,5 @@ class About extends Component {
             </section>
             </div>
         )
-    }
+
 }
-export default About

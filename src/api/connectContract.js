@@ -4,28 +4,40 @@ import mainAbi from '../abi/target/main_v0.1';
 
 import baseAbi from '../abi/target/base_v0.1';
 
-const mainAddress='5CAJ25hn1nNdFc3jSnU3TruY4w4pXxfSUoQuZ2ANAr8SvF9m' ;
+import orgAbi from '../abi/target/org_v0.1';
 
-const ConnectContract = async (api,type) =>{
+import vaultAbi from '../abi/target/vault_v0.1';
+
+import daoManagerAbi from '../abi/target/dao_manager_v0.1';
+
+
+const ConnectContract = async (api,type,address) =>{
     if(!api){
       return
     }
     let abi;
-    let contractAddress;
     switch(type){
 
         case'base':
             abi = baseAbi;
-            contractAddress = mainAddress;
+            break;
+
+        case'org':
+            abi = orgAbi;
+            break;
+        case'vault':
+            abi = vaultAbi;
+            break;
+        case'daoManager':
+            abi = daoManagerAbi;
             break;
         default:
         case'main':
             abi = mainAbi;
-            contractAddress = mainAddress;
             break;
-            break;
+
     }
-    const mainContract = new ContractPromise(api, abi, contractAddress);
+    const mainContract = new ContractPromise(api, abi, address);
     return mainContract;
   }
 

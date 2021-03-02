@@ -1,9 +1,10 @@
 import React, {useReducer, useContext} from 'react';
 import reducer from './reducer';
 import INIT_STATE from './initState';
-// import ConnectContract from './connectContract';
+
 import mainConnect from './mainContract';
 import loadAccounts from './Account';
+import baseConnect from './baseContract';
 
 import {ApiPromise, WsProvider} from '@polkadot/api';
 
@@ -122,13 +123,19 @@ const initState = {...INIT_STATE};
 const SubstrateContextProvider = (props) => {
     const [state, dispatch] = useReducer(reducer, initState);
     console.log("=====state=====",state)
-    const { maincontractState,allaccountsState } = state;
+
+    const { maincontractState,allaccountsState,basecontractState } = state;
     connect(state, dispatch);
+
+
     if(maincontractState === 'LOAD_MAINCONTRACT'){
         mainConnect(state, dispatch);
     }
     if(allaccountsState === 'LOAD_ALLACCOUNTS'){
         loadAccounts(state, dispatch);
+    }
+    if(basecontractState === 'LOAD_BASE'){
+       baseConnect(state, dispatch);
     }
     return <SubstrateContext.Provider value={{state,dispatch}}>
         {props.children}

@@ -33,6 +33,47 @@ module.exports = (state, action) => {
         case 'ALLACCOUNTS_ERROR':
             return { ...state, allAccounts: null, allaccountsState: 'ERROR' };
 
+            //base
+        case 'LOAD_BASE':
+            return { ...state, basecontractState: 'LOAD_BASE' };
+
+        case 'SET_BASE':
+            return { ...state, basecontract: action.payload, basecontractState: 'READY' };
+
+        case 'BASE_ERROR':
+            return { ...state, basecontract: null, basecontractState: 'ERROR' };
+
+            //org
+        case 'LOAD_ORG':
+            return { ...state, orgcontractState: 'LOAD_ORG' };
+
+        case 'SET_ORG':
+            return { ...state, orgcontract: action.payload, orgcontractState: 'READY' };
+
+        case 'ORG_ERROR':
+            return { ...state, orgcontract: null, basecontractState: 'ERROR' };
+
+
+            // vault
+        case 'LOAD_VAULT':
+            return { ...state, vaultcontractState: 'LOAD_VAULT' };
+
+        case 'SET_VAULT':
+            return { ...state, vaultcontract: action.payload, vaultcontractState: 'READY' };
+
+        case 'LOAD_VAULT_ERROR':
+            return { ...state, vaultcontract: null, vaultcontractState: 'ERROR' };
+
+        // DAO
+        case 'LOAD_DAO':
+            return { ...state, daoManagercontractState: 'LOAD_DAO' };
+
+        case 'SET_DAO':
+            return { ...state, daoManagercontract: action.payload, daoManagercontractState: 'READY' };
+
+        case 'LOAD_DAO_ERROR':
+            return { ...state, daoManagercontract: null, daoManagercontractState: 'ERROR' };
+
 
 
         default:
