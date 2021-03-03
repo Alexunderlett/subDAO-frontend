@@ -18,7 +18,7 @@ export default function Vault(props){
 
     }, []);
 
-    useEffect(() => {
+    useEffect(async() => {
         // vaultcontract
 
 

@@ -30,7 +30,7 @@ export default function Vote(props){
         dispatch({type: 'LOAD_VOTE'});
     }, []);
 
-    useEffect(() => {
+    useEffect(async() => {
 
 
 

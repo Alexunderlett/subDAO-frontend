@@ -34,7 +34,7 @@ export default function About(props) {
 
     }, [basecontract]);
 
-    useEffect(() => {
+    useEffect(async() => {
 
 
         //daoManagercontract

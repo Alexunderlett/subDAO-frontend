@@ -17,7 +17,7 @@ export default function Org(props){
     }, []);
 
 
-    useEffect(() => {
+    useEffect(async () => {
 
 
 
