@@ -89,7 +89,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "username": "git config user.name srdothunter",
+    "email": "git config user.email srdothunter@gmail.com"
   },
   "eslintConfig": {
     "extends": [

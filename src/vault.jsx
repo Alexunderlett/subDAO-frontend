@@ -19,6 +19,7 @@ export default function Vault(props){
     }, []);
 
     useEffect(async() => {
+        if(vaultcontract === null) return ;
         // vaultcontract
 
 

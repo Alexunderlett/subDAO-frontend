@@ -18,7 +18,7 @@ export default function Org(props){
 
 
     useEffect(async () => {
-
+        if(orgcontract === null) return ;
 
 
         // orgcontract

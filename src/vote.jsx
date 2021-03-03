@@ -31,7 +31,7 @@ export default function Vote(props){
     }, []);
 
     useEffect(async() => {
-
+        if(votecontract === null) return ;
 
 
         // votecontract

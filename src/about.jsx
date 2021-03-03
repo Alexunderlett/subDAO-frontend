@@ -18,6 +18,7 @@ export default function About(props) {
     }, []);
 
     useEffect(async() => {
+        if(basecontract === null) return ;
 
 
         //basecontract
@@ -27,7 +28,7 @@ export default function About(props) {
 
         let name = await basecontract.query.getName(AccountId[0].address, { value: 0, gasLimit: -1 });
 
-        console.log("======",name)
+        console.log("======name",name)
         if(name && name.output){
                console.log("======",name) //格式化
            }
@@ -35,7 +36,7 @@ export default function About(props) {
     }, [basecontract]);
 
     useEffect(async() => {
-
+        if(daoManagercontract === null) return ;
 
         //daoManagercontract
 
