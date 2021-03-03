@@ -1,10 +1,10 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import t3 from "./images/t-4.png";
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
-import {useSubstrate} from "./api/contracts";
+import { useSubstrate } from "./api/contracts";
 
-import {Keyring} from "@polkadot/keyring";
+import { Keyring } from "@polkadot/keyring";
 
 
 import {
@@ -13,146 +13,189 @@ import {
     web3FromAddress,
     web3ListRpcProviders,
     web3UseRpcProvider
-  } from '@polkadot/extension-dapp';
+} from '@polkadot/extension-dapp';
 
 
 export default function About(props) {
-    const {state,dispatch} = useSubstrate();
-    const {basecontract,daoManagercontract} = state;
+    const { state, dispatch } = useSubstrate();
+    const { basecontract, daoManagercontract } = state;
 
     const [id, setId] = useState(null);
 
     useEffect(() => {
-        dispatch({type: 'LOAD_BASE'});
-        dispatch({type: 'LOAD_DAO'});
+        dispatch({ type: 'LOAD_BASE' });
+        dispatch({ type: 'LOAD_DAO' });
         setId(props.match.params.id)
 
     }, []);
 
-    useEffect(async() => {
-        if(basecontract === null) return ;
+    useEffect(async () => {
+        if (basecontract === null) return;
 
-        const allInjected = await web3Enable('my cool dapp');
-        console.log("======allInjected", allInjected);
-
-        const allAccounts = await web3Accounts();
-        console.log("======allAccounts", allAccounts);
-
-        if (allAccounts && allAccounts.length > 0) {
-            console.log("the first account: ", allAccounts[0].address);
-        } else {
-            console.error("no valid accounts available!");
-            return;
-        }
-
-
-        const AccountId = allAccounts[0].address;
-
-        const injector = await web3FromAddress(AccountId);
-
-        // const value = 0;
-        // const gasLimit = 138003n * 1000000n;
-        // const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
-
-        console.log("local account id : ", AccountId)
-
-        //basecontract
-        console.log("baseContract: ", basecontract);
-
-        let daoName = "mydao";
-        let daoLogo = "http://example.com/logo.jpg";
-        let daoDesc = "Hello World!";
-        let daoOwner = AccountId;
-
-        let optionParam = {value: 0, gasLimit:-1};
-
-        let resp = await basecontract.tx
-        .setName(optionParam, daoName)
-        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isInBlock) {
-                console.log('in a block');
-            } else if (result.status.isFinalized) {
-                console.log('finalized');
-            } else {
-                console.log("unexpected result", result);
+        try {
+            const allInjected = await web3Enable('SubDAO');
+            console.log("======allInjected", allInjected);
+            if (allInjected.length == 0) {
+                console.error("!!!!! No wallet extention detected!!");
+                return;
             }
-        });
+
+            const allAccounts = await web3Accounts();
+            console.log("======allAccounts", allAccounts);
+
+            if (allAccounts && allAccounts.length > 0) {
+                console.log("the first account: ", allAccounts[0].address);
+            } else {
+                console.error("no valid accounts available!");
+                return;
+            }
 
 
-        const keyring = new Keyring({type: 'sr25519'});
-        let alicePair = keyring.createFromUri('//Alice');
+            const AccountId = allAccounts[0].address;
 
-        // let resp = await basecontract.tx
-        // .setName(optionParam, daoName)
-        // .signAndSend(alicePair, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('in a block');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
+            const injector = await web3FromAddress(AccountId);
 
-        // await basecontract.tx
-        // .setLogo(optionParam, daoLogo)
-        // .signAndSend(alicePair, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('in a block');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
+            // const value = 0;
+            // const gasLimit = 138003n * 1000000n;
+            // const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
 
-        // await basecontract.tx
-        // .setDesc(optionParam, daoDesc)
-        // .signAndSend(alicePair, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('in a block');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
+            console.log("local account id : ", AccountId)
 
-        // await basecontract.tx
-        // .setOwner(optionParam, daoOwner)
-        // .signAndSend(alicePair, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('in a block');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
+            //basecontract
+            console.log("baseContract: ", basecontract);
 
-        let result;
+            let daoName = "mydao";
+            let daoLogo = "http://example.com/logo.jpg";
+            let daoDesc = "Hello World!";
+            let daoOwner = AccountId;
 
-        result = await basecontract.query.getName(AccountId, { value: 0, gasLimit: -1 });
-        console.log("======name",result)
-        if(result && result.output){
-            console.log("======",result.output.toHuman());
+            let optionParam = { value: 0, gasLimit: -1 };
+
+            let tx;
+            let result;
+            
+
+            // Test code for account in extension
+            // tx = await basecontract.tx.initBase(optionParam, daoName, daoLogo, daoDesc);
+            // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     } else {
+            //         console.log("unexpected result", result);
+            //     }
+            // });
+
+            tx = await basecontract.tx.initBase(optionParam, daoName, daoLogo, daoDesc);
+            result = await tx.signAndSend(AccountId, { signer: injector.signer });
+            console.log('result ', result.toString());
+
+            // tx = await basecontract.tx.setName(optionParam, daoName);
+            // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     } else {
+            //         console.log("unexpected result", result);
+            //     }
+            // });
+
+            // tx = await basecontract.tx.setDesc(optionParam, daoDesc);
+            // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+            // tx = await basecontract.tx.setOwner(optionParam, daoOwner);
+            // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+
+            // Test code for local key
+            // const keyring = new Keyring({type: 'sr25519'});
+            // let alicePair = keyring.createFromUri('//Alice');
+
+            // let resp = await basecontract.tx
+            // .setName(optionParam, daoName)
+            // .signAndSend(alicePair, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+            // await basecontract.tx
+            // .setLogo(optionParam, daoLogo)
+            // .signAndSend(alicePair, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+            // await basecontract.tx
+            // .setDesc(optionParam, daoDesc)
+            // .signAndSend(alicePair, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+            // await basecontract.tx
+            // .setOwner(optionParam, daoOwner)
+            // .signAndSend(alicePair, (result) => {
+            //     if (result.status.isInBlock) {
+            //         console.log('in a block');
+            //     } else if (result.status.isFinalized) {
+            //         console.log('finalized');
+            //     }
+            // });
+
+            result = await basecontract.query.getName(AccountId, { value: 0, gasLimit: -1 });
+            console.log("======name", result)
+            if (result && result.output) {
+                console.log("======", result.output.toHuman());
+            }
+
+            result = await basecontract.query.getLogo(AccountId, { value: 0, gasLimit: -1 });
+            console.log("======logo", result)
+            if (result && result.output) {
+                console.log("======", result.output.toHuman());
+            }
+
+            result = await basecontract.query.getDesc(AccountId, { value: 0, gasLimit: -1 });
+            console.log("======desc", result)
+            if (result && result.output) {
+                console.log("======", result.output.toHuman());
+            }
+
+            result = await basecontract.query.getOwner(AccountId, { value: 0, gasLimit: -1 });
+            console.log("======owner", result)
+            if (result && result.output) {
+                console.log("======", result.output.toHuman());
+            }
+
+        } catch (e) {
+            console.log("Catch the exception!!!", e); // 30
         }
-
-        result = await basecontract.query.getLogo(AccountId, { value: 0, gasLimit: -1 });
-        console.log("======logo",result)
-        if(result && result.output){
-            console.log("======",result.output.toHuman());
-        }
-
-        result = await basecontract.query.getDesc(AccountId, { value: 0, gasLimit: -1 });
-        console.log("======desc",result)
-        if(result && result.output){
-            console.log("======",result.output.toHuman());
-        }
-
-        result = await basecontract.query.getOwner(AccountId, { value: 0, gasLimit: -1 });
-        console.log("======owner",result)
-        if(result && result.output){
-            console.log("======",result.output.toHuman());
-        }
-
-
     }, [basecontract]);
 
-    useEffect(async() => {
-        if(daoManagercontract === null) return ;
+    useEffect(async () => {
+        if (daoManagercontract === null) return;
 
         //daoManagercontract
 
@@ -162,15 +205,15 @@ export default function About(props) {
 
     }, [daoManagercontract]);
 
-   const handleClicktoType = (type) => {
+    const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
     }
 
-        return (
-            <div>
+    return (
+        <div>
             <section className="section blog-single position-relative">
                 <div className="footershape-image-1">
-                    <img src={shap1} alt=''/>
+                    <img src={shap1} alt='' />
                 </div>
                 <div className="footershape-image-3">
                     <img src={shap2} alt='' />
@@ -181,7 +224,7 @@ export default function About(props) {
 
                             <div className='sidebar'>
                                 <div className='leftTop'>
-                                    <img src={t3}  alt=''/>
+                                    <img src={t3} alt='' />
                                 </div>
                                 <ul>
                                     <li>Created by Lorem ipsum dolor sit amet</li>
@@ -277,19 +320,19 @@ export default function About(props) {
                                 <div>
                                     <ul className="service-docs">
                                         <li>
-                                            <span onClick={()=>handleClicktoType('vote')} >
+                                            <span onClick={() => handleClicktoType('vote')} >
                                                 <i className="fa fa-street-view" />
                                                 Voting
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={()=>handleClicktoType('vault')} >
+                                            <span onClick={() => handleClicktoType('vault')} >
                                                 <i className="fa fa-star-o" />
                                                 Vault
                                             </span>
                                         </li>
                                         <li>
-                                            <span onClick={()=>handleClicktoType('org')} >
+                                            <span onClick={() => handleClicktoType('org')} >
                                                 <i className="fa fa-building-o" />
                                                 Org
                                             </span>
@@ -306,7 +349,7 @@ export default function About(props) {
                     </div>
                 </div>
             </section>
-            </div>
-        )
+        </div>
+    )
 
 }
