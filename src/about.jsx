@@ -34,8 +34,16 @@ export default function About(props) {
         const keyring = new Keyring({type: 'sr25519'});
         let alicePair = keyring.createFromUri('//Alice');
 
+
+        let daoName = "mydao";
+        let daoLogo = "http://example.com/logo.jpg";
+        let daoDesc = "Hello World!";
+        let daoOwner = AccountId;
+
+        let optionParam = {value: 0, gasLimit:-1};
+
         let resp = await basecontract.tx
-        .setName({value: 0, gasLimit:-1}, "subdao")
+        .setName(optionParam, daoName)
         .signAndSend(alicePair, (result) => {
             if (result.status.isInBlock) {
                 console.log('in a block');
@@ -44,12 +52,62 @@ export default function About(props) {
             }
         });
 
-        let name = await basecontract.query.getName(AccountId, { value: 0, gasLimit: -1 });
+        // await basecontract.tx
+        // .setLogo(optionParam, daoLogo)
+        // .signAndSend(alicePair, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('in a block');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
 
-        console.log("======name",name)
-        if(name && name.output){
-            console.log("======",name.output.toString()) //格式化
+        // await basecontract.tx
+        // .setDesc(optionParam, daoDesc)
+        // .signAndSend(alicePair, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('in a block');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
+
+        // await basecontract.tx
+        // .setOwner(optionParam, daoOwner)
+        // .signAndSend(alicePair, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('in a block');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
+
+        let result;
+
+        result = await basecontract.query.getName(AccountId, { value: 0, gasLimit: -1 });
+        console.log("======name",result)
+        if(result && result.output){
+            console.log("======",result.output.toHuman());
         }
+
+        result = await basecontract.query.getLogo(AccountId, { value: 0, gasLimit: -1 });
+        console.log("======logo",result)
+        if(result && result.output){
+            console.log("======",result.output.toHuman());
+        }
+
+        result = await basecontract.query.getDesc(AccountId, { value: 0, gasLimit: -1 });
+        console.log("======desc",result)
+        if(result && result.output){
+            console.log("======",result.output.toHuman());
+        }
+
+        result = await basecontract.query.getOwner(AccountId, { value: 0, gasLimit: -1 });
+        console.log("======owner",result)
+        if(result && result.output){
+            console.log("======",result.output.toHuman());
+        }
+
 
     }, [basecontract]);
 
