@@ -113,6 +113,12 @@ const connect = async (state, dispatch) => {
         }
     });
 
+    // const api = await ApiPromise.create({
+    //     provider: wsProvider
+    // });
+
+    // api.registerTypes({ "Address": "AccountId", "LookupSource": "AccountId" });
+
 
     if (api.isConnected) {
         dispatch({type: 'CONNECT', payload: api});

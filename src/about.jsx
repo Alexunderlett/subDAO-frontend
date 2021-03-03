@@ -4,6 +4,8 @@ import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
 import {useSubstrate} from "./api/contracts";
 
+import {Keyring} from "@polkadot/keyring";
+
 export default function About(props) {
     const {state,dispatch} = useSubstrate();
     const {basecontract,daoManagercontract} = state;
@@ -20,18 +22,34 @@ export default function About(props) {
     useEffect(async() => {
         if(basecontract === null) return ;
 
-
-        //basecontract
+        // const value = 0;
+        // const gasLimit = 138003n * 1000000n;
         const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
 
-        console.log("baseContract: ", basecontract)
+        console.log("local account id : ", AccountId)
 
-        let name = await basecontract.query.getName(AccountId[0].address, { value: 0, gasLimit: -1 });
+        //basecontract
+        console.log("baseContract: ", basecontract);
+
+        const keyring = new Keyring({type: 'sr25519'});
+        let alicePair = keyring.createFromUri('//Alice');
+
+        let resp = await basecontract.tx
+        .setName({value: 0, gasLimit:-1}, "subdao")
+        .signAndSend(alicePair, (result) => {
+            if (result.status.isInBlock) {
+                console.log('in a block');
+            } else if (result.status.isFinalized) {
+                console.log('finalized');
+            }
+        });
+
+        let name = await basecontract.query.getName(AccountId, { value: 0, gasLimit: -1 });
 
         console.log("======name",name)
         if(name && name.output){
-               console.log("======",name) //格式化
-           }
+            console.log("======",name.output.toString()) //格式化
+        }
 
     }, [basecontract]);
 
