@@ -6,6 +6,16 @@ import {useSubstrate} from "./api/contracts";
 
 import {Keyring} from "@polkadot/keyring";
 
+
+import {
+    web3Accounts,
+    web3Enable,
+    web3FromAddress,
+    web3ListRpcProviders,
+    web3UseRpcProvider
+  } from '@polkadot/extension-dapp';
+
+
 export default function About(props) {
     const {state,dispatch} = useSubstrate();
     const {basecontract,daoManagercontract} = state;
@@ -22,18 +32,32 @@ export default function About(props) {
     useEffect(async() => {
         if(basecontract === null) return ;
 
+        const allInjected = await web3Enable('my cool dapp');
+        console.log("======allInjected", allInjected);
+
+        const allAccounts = await web3Accounts();
+        console.log("======allAccounts", allAccounts);
+
+        if (allAccounts && allAccounts.length > 0) {
+            console.log("the first account: ", allAccounts[0].address);
+        } else {
+            console.error("no valid accounts available!");
+            return;
+        }
+
+
+        const AccountId = allAccounts[0].address;
+
+        const injector = await web3FromAddress(AccountId);
+
         // const value = 0;
         // const gasLimit = 138003n * 1000000n;
-        const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
+        // const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
 
         console.log("local account id : ", AccountId)
 
         //basecontract
         console.log("baseContract: ", basecontract);
-
-        const keyring = new Keyring({type: 'sr25519'});
-        let alicePair = keyring.createFromUri('//Alice');
-
 
         let daoName = "mydao";
         let daoLogo = "http://example.com/logo.jpg";
@@ -44,13 +68,29 @@ export default function About(props) {
 
         let resp = await basecontract.tx
         .setName(optionParam, daoName)
-        .signAndSend(alicePair, (result) => {
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isInBlock) {
                 console.log('in a block');
             } else if (result.status.isFinalized) {
                 console.log('finalized');
+            } else {
+                console.log("unexpected result", result);
             }
         });
+
+
+        const keyring = new Keyring({type: 'sr25519'});
+        let alicePair = keyring.createFromUri('//Alice');
+
+        // let resp = await basecontract.tx
+        // .setName(optionParam, daoName)
+        // .signAndSend(alicePair, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('in a block');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
 
         // await basecontract.tx
         // .setLogo(optionParam, daoLogo)
