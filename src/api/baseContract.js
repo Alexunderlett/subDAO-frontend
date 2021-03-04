@@ -9,7 +9,7 @@ export default async function baseConnect(state, dispatch)  {
     const asyncLoadbase = async () => {
 
         try {
-            basecontract = await ConnectContract(api, 'base','5CAJ25hn1nNdFc3jSnU3TruY4w4pXxfSUoQuZ2ANAr8SvF9m');
+            basecontract = await ConnectContract(api, 'base','5GPi6oGcFqmJg9JxWBL7pxthya6xbu54oUQzNdFwdgAuGcMV');
             dispatch({ type: 'SET_BASE', payload: basecontract });
         } catch (e) {
             console.error(e);
