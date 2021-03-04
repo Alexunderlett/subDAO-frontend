@@ -1,30 +1,52 @@
 import {
     web3Accounts,
     web3Enable,
-
+    web3FromAddress
 } from '@polkadot/extension-dapp';
 
-let loadAccts = false;
-let allAccounts;
-export default async function loadAccounts(state, dispatch)  {
-    const asyncLoadAccounts = async () => {
-        try {
+const accountlist = async () => {
+    const allInjected = await web3Enable('SubDAO');
 
-           const aa = await web3Enable('SubDAO');
-            allAccounts = await web3Accounts();
+    if (allInjected.length === 0) {
+        console.error("!!!!! No wallet extention detected!!");
+        return;
+    }
+    const allAccounts = await web3Accounts();
+    if (!allAccounts) {
+        console.error("no valid accounts available!");
+        return;
+    }
+    return allAccounts;
+}
+const accountAddress = async () =>{
+    let accountAddress;
+    const allInjected = await web3Enable('SubDAO');
+    if (allInjected.length === 0) {
+        console.error("!!!!! No wallet extention detected!!");
+        return;
+    }
+    const Accounts = JSON.parse(sessionStorage.getItem('account'));
+    if (Accounts && Accounts.length > 0) {
+        accountAddress = Accounts[0].address;
+    } else {
+        accountAddress = '';
+    }
+    return accountAddress;
 
-            dispatch({ type: 'SET_ALLACCOUNTS', payload: allAccounts });
-        } catch (e) {
-            console.error(e);
-            dispatch({ type: 'ALLACCOUNTS_ERROR' });
-        }
-    };
+}
+const accountInjector = async () => {
+    let injector;
+    const Accounts = JSON.parse(sessionStorage.getItem('account'));
 
-    const { allaccountsState } = state;
+    if (Accounts && Accounts.length > 0) {
+        const AccountId = Accounts[0].address;
+        injector = await web3FromAddress(AccountId);
+    }
+    return injector;
 
-
-    if (allaccountsState!=='LOAD_ALLACCOUNTS') return;
-    if (loadAccts) return dispatch({ type: 'SET_ALLACCOUNTS', payload: allAccounts });
-    loadAccts = true;
-    asyncLoadAccounts();
+}
+export default {
+    accountlist,
+    accountAddress,
+    accountInjector,
 }
