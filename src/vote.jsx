@@ -6,6 +6,8 @@ import VoteActive from './components/vote/voteActive';
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 import {useSubstrate} from "./api/contracts";
+import Accounts from "./api/Account";
+const { Keyring } = require('@polkadot/keyring');
 
 export default function Vote(props){
 
@@ -15,7 +17,8 @@ export default function Vote(props){
     const [id, setAId] = useState(null);
 
     const  handleClicktonewVote = () => {
-        props.history.push(`/newVote/${id}`)
+        props.history.push(`/newVote/${id}`);
+        console.log("new_vote");
     }
     const handleClicktoview = (voteid) => {
         let { id } = props;
@@ -27,15 +30,48 @@ export default function Vote(props){
     }
     useEffect(() => {
         setAId(props.match.params.id)
+        console.log("use effect load");
         dispatch({type: 'LOAD_VOTE'});
     }, []);
 
     useEffect(async() => {
         if(votecontract === null) return ;
 
+        const value = 0;
+        const gasLimit = -1;
 
-        // votecontract
+        const keyring = new Keyring({ type: 'sr25519' });
 
+        const alice = keyring.addFromUri('//Alice');
+
+
+
+        // await votecontract.tx.newVote({value, gasLimit}, "hehe", "haha", 1000, 1, 1, "A,B,C").
+        // signAndSend(alice, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log(vote);
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
+
+        // console.log(votecontract);
+
+        // await votecontract.exec('vote', {value, gasLimit}, 5, 0, alice.address).
+        // signAndSend(alice, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('inblock');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // });
+
+        await votecontract.query.queryAllVote(alice.address, {value, gasLimit}).then(result =>{
+            // console.log(output);
+            const {output} = result;
+            console.log(output);
+        });
+        // const result = await votecontract.exec('query_all_vote', {value, gasLimit});
 
     }, [votecontract]);
 

@@ -23,7 +23,8 @@ const connect = async (state, dispatch) => {
     dispatch({type: 'CONNECT_INIT'});
 
 
-    const wsProvider = new WsProvider('ws://39.101.70.206:9944');
+    // const wsProvider = new WsProvider('ws://39.101.70.206:9944');
+    const wsProvider = new WsProvider('ws://localhost:9944');
     const api = await ApiPromise.create({
         provider: wsProvider, types: {
             Address: 'AccountId',
