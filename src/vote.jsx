@@ -66,7 +66,36 @@ export default function Vote(props){
         //     }
         // });
 
+        // await votecontract.exec('execute', {value, gasLimit}, 5).
+        // signAndSend(alice, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('inblock');
+        //     } else if (result.status.isFinalized) {
+        //         console.log('finalized');
+        //     }
+        // })
+
         await votecontract.query.queryAllVote(alice.address, {value, gasLimit}).then(result =>{
+            // console.log(output);
+            const {output} = result;
+            console.log(output);
+        });
+        await votecontract.query.queryOneVote(alice.address, {value, gasLimit}, 0).then(result =>{
+            // console.log(output);
+            const {output} = result;
+            console.log(output);
+        });
+        await votecontract.query.queryWaitVote(alice.address, {value, gasLimit}).then(result =>{
+            // console.log(output);
+            const {output} = result;
+            console.log(output);
+        });
+        await votecontract.query.queryOpenVote(alice.address, {value, gasLimit}).then(result =>{
+            // console.log(output);
+            const {output} = result;
+            console.log(output);
+        });
+        await votecontract.query.queryExecutedVote(alice.address, {value, gasLimit}).then(result =>{
             // console.log(output);
             const {output} = result;
             console.log(output);
