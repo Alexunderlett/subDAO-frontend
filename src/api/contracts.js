@@ -94,7 +94,6 @@ const ws_server = 'ws://39.101.70.206:9944';
 
 // export default contracts
 
-
 const SubstrateContext = React.createContext();
 
 
@@ -136,9 +135,9 @@ const SubstrateContextProvider = (props) => {
     if(maincontractState === 'LOAD_MAINCONTRACT'){
         mainConnect(state, dispatch);
     }
-    if(allaccountsState === 'LOAD_ALLACCOUNTS'){
-        loadAccounts(state, dispatch);
-    }
+    // if(allaccountsState === 'LOAD_ALLACCOUNTS'){
+    //     loadAccounts(state, dispatch);
+    // }
     if(basecontractState === 'LOAD_BASE'){
        baseConnect(state, dispatch);
     }

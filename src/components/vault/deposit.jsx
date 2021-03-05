@@ -63,7 +63,7 @@ export default function Deposit(props){
                             <div className='col-lg-8'>
                                 <ul className="vault">
                                     <li>
-                                        <Form.Control as="select"  onChange={this.handleSelect} >
+                                        <Form.Control as="select"  onChange={handleSelect} >
                                             <option value=''>Please select option</option>
                                             {
                                                 list.map(i => (
@@ -112,7 +112,7 @@ export default function Deposit(props){
                                     </li>
 
                                     <li className='brdr'>
-                                        <Button variant="outline-primary" onClick={this.handleClicktoVault}>Back</Button>
+                                        <Button variant="outline-primary" onClick={handleClicktoVault}>Back</Button>
                                     </li>
                                 </ul>
                             </div>

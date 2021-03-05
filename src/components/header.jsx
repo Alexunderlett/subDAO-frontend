@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import * as history from 'history';
 import {Form} from "react-bootstrap";
-import {useSubstrate} from "../api/contracts";
+import Accounts from '../api/Account';
 
 const createHashHistory = history.createHashHistory();
 
-
 export default function Headertop() {
-    const {state,dispatch} = useSubstrate();
-    const {allAccounts} = state;
 
     const [showHeader, setshowHeader] = useState(false);
     let [allList, setallList] = useState([]);
@@ -43,15 +40,10 @@ export default function Headertop() {
         setselected(selected);
         sessionStorage.setItem('account', JSON.stringify(selected))
     }
-    useEffect(() => {
-        if(allAccounts && allAccounts.length ){
-            setallList(allAccounts);
-        }
-    }, [allAccounts]);
     const connectWallet = async () => {
-        dispatch({type: 'LOAD_ALLACCOUNTS'});
+        const accoutlist = await Accounts.accountlist();
+        setallList(accoutlist);
     }
-
 
     return (<div className='container header'>
         <div className="row">
