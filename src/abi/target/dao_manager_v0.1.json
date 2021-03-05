@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x4eef0035e73274264abca3240de7f3e6961a20ac1afce43c461cd68221552280",
+    "hash": "0x3a229e02231eb81298b00303ad7fdf5fd93158a421302d2e7f1fffdf6418cfd0",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -99,6 +99,33 @@
       {
         "args": [
           {
+            "name": "base_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
+          {
+            "name": "base_logo",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
+          {
+            "name": "base_desc",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
+          {
             "name": "erc20_name",
             "type": {
               "displayName": [
@@ -132,33 +159,6 @@
                 "u8"
               ],
               "type": 4
-            }
-          },
-          {
-            "name": "vote_time",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          },
-          {
-            "name": "vote_support_require_pct",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          },
-          {
-            "name": "vote_min_require_num",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
             }
           }
         ],

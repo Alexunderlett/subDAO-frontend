@@ -12,6 +12,7 @@ import daoManagerConnect from './daoManagerContract';
 
 import {ApiPromise, WsProvider} from '@polkadot/api';
 
+const ws_server = 'ws://39.101.70.206:9944';
 
 // import {
 //     web3Accounts,
@@ -26,7 +27,7 @@ import {ApiPromise, WsProvider} from '@polkadot/api';
 // const contractAddress='5DpVJVPrq2qJVrnRB85uvYmrcJoJmyD431Z7EbJtN1VjfdAN' ;
 //
 // const contracts = async  ()=> {
-//     const wsProvider = new WsProvider('ws://39.101.70.206:9944');
+//     const wsProvider = new WsProvider(ws_server);
 //     const api = await ApiPromise.create({ provider: wsProvider,  types: {
 //             // mapping the actual specified address format
 //             Address: 'AccountId',
@@ -105,7 +106,7 @@ const connect = async (state, dispatch) => {
     dispatch({type: 'CONNECT_INIT'});
 
 
-    const wsProvider = new WsProvider('ws://39.101.70.206:9944');
+    const wsProvider = new WsProvider(ws_server);
     const api = await ApiPromise.create({
         provider: wsProvider, types: {
             Address: 'AccountId',

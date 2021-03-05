@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x3fc49c6d7c6710796cb649c7364fe444534181e9e8a89e68a4c434deaea2fc42",
+    "hash": "0x8b8311d979fa1abc735162d48e7d00647135b8050499adc3794c2fbb75d80703",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -18,21 +18,108 @@
         "args": [],
         "docs": [],
         "name": [
+          "default"
+        ],
+        "selector": "0x6a3712e2"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "name": [
           "new"
         ],
         "selector": "0xd183512b"
       }
     ],
     "docs": [],
-    "events": [],
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "index",
+            "type": {
+              "displayName": [
+                "Index"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "creator",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "auditor",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
+            }
+          }
+        ],
+        "docs": [],
+        "name": "NewPR"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "index",
+            "type": {
+              "displayName": [
+                "Index"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "auditor",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "result",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 15
+            }
+          }
+        ],
+        "docs": [],
+        "name": "AuditPR"
+      }
+    ],
     "messages": [
       {
         "args": [
           {
-            "name": "repo_name",
+            "name": "repo_url",
             "type": {
               "displayName": [
-                "Hash"
+                "String"
               ],
               "type": 8
             }
@@ -61,7 +148,7 @@
               "displayName": [
                 "AccountId"
               ],
-              "type": 11
+              "type": 9
             }
           },
           {
@@ -70,7 +157,7 @@
               "displayName": [
                 "AccountId"
               ],
-              "type": 11
+              "type": 9
             }
           }
         ],
@@ -80,16 +167,21 @@
           "new_pull_request_auditor"
         ],
         "payable": false,
-        "returnType": null,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 16
+        },
         "selector": "0x7cac330d"
       },
       {
         "args": [
           {
-            "name": "github_id",
+            "name": "index",
             "type": {
               "displayName": [
-                "GitHubId"
+                "Index"
               ],
               "type": 1
             }
@@ -98,7 +190,7 @@
         "docs": [],
         "mutates": false,
         "name": [
-          "query_pull_request_auditor_status"
+          "query_pull_request_audit_status"
         ],
         "payable": false,
         "returnType": {
@@ -107,15 +199,15 @@
           ],
           "type": 15
         },
-        "selector": "0x986117a3"
+        "selector": "0x673fdc68"
       },
       {
         "args": [
           {
-            "name": "github_id",
+            "name": "index",
             "type": {
               "displayName": [
-                "GitHubId"
+                "Index"
               ],
               "type": 1
             }
@@ -136,8 +228,29 @@
           "audit_pull_request"
         ],
         "payable": false,
-        "returnType": null,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 16
+        },
         "selector": "0x0adbe364"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_current_index"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 1
+        },
+        "selector": "0x3fa5f3ff"
       }
     ]
   },
@@ -438,7 +551,7 @@
         "composite": {
           "fields": [
             {
-              "name": "repo_name",
+              "name": "repo_url",
               "type": 8
             },
             {
@@ -451,7 +564,7 @@
             },
             {
               "name": "account_id",
-              "type": 11
+              "type": 9
             }
           ]
         }
@@ -464,31 +577,7 @@
     },
     {
       "def": {
-        "composite": {
-          "fields": [
-            {
-              "type": 9
-            }
-          ]
-        }
-      },
-      "path": [
-        "ink_env",
-        "types",
-        "Hash"
-      ]
-    },
-    {
-      "def": {
-        "array": {
-          "len": 32,
-          "type": 10
-        }
-      }
-    },
-    {
-      "def": {
-        "primitive": "u8"
+        "primitive": "str"
       }
     },
     {
@@ -496,7 +585,7 @@
         "composite": {
           "fields": [
             {
-              "type": 9
+              "type": 10
             }
           ]
         }
@@ -506,6 +595,19 @@
         "types",
         "AccountId"
       ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 11
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
     },
     {
       "def": {
@@ -544,7 +646,7 @@
       "def": {
         "tuple": [
           1,
-          11
+          9
         ]
       }
     },
@@ -577,6 +679,63 @@
       "def": {
         "primitive": "bool"
       }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 17
+                }
+              ],
+              "name": "Ok"
+            },
+            {
+              "fields": [
+                {
+                  "type": 18
+                }
+              ],
+              "name": "Err"
+            }
+          ]
+        }
+      },
+      "params": [
+        17,
+        18
+      ],
+      "path": [
+        "Result"
+      ]
+    },
+    {
+      "def": {
+        "tuple": []
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "CallerIsNotAuditor"
+            },
+            {
+              "discriminant": 1,
+              "name": "PRIsNotRegisted"
+            }
+          ]
+        }
+      },
+      "path": [
+        "github",
+        "github",
+        "Error"
+      ]
     }
   ]
 }

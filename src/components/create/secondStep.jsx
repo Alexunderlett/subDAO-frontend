@@ -35,12 +35,13 @@ export default function SecondStep(props) {
         const AccountId = JSON.parse(sessionStorage.getItem('account'));
         console.log(maincontract)
 
-        let listTemplates = await maincontract.query.listTemplates(AccountId[0].address, { value: 0, gasLimit: -1 });
+        let result = await maincontract.query.listTemplates(AccountId[0].address, { value: 0, gasLimit: -1 });
 
-        console.log("======",listTemplates)
-           if(listTemplates && listTemplates.output){
+        console.log("======",result)
+        console.log("======",result.output.toString())
+           if(result && result.output){
                // setlist(listTemplates.output.toHuman())
-               console.log("======",listTemplates)
+               console.log("======",result)
            }
 
 
