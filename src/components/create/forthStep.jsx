@@ -39,6 +39,14 @@ console.log("=====000000099990",maincontract)
             console.info(maincontract.query)
             console.info(maincontract.tx)
 
+
+            // 查询所有的dao 用于欢迎页的dao查询
+            let list_all_dao_result = await maincontract.query.listDaoInstances(AccountId[0].address, {
+                value: 0,
+                gasLimit: -1
+            })
+            console.log("main.listDaoInstances", list_all_dao_result, list_all_dao_result.output.toJSON())
+
             // 实例化DAO并配置
             // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
             await maincontract.tx.instanceByTemplate({value, gasLimit}, 0, alicePair.address)
