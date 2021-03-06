@@ -146,9 +146,9 @@ export default function Vault(props){
                  }
              });
 
-
+             let erc_20_address3 = allAccounts[1].address;
              // 返回 返回某一个token的余额
-            result = await vaultcontract.query.get_balance_of(AccountId, { value: 0, gasLimit: -1 });
+            result = await vaultcontract.query.get_balance_of(AccountId, { value: 0, gasLimit: -1 },erc_20_address3);
             console.log("======name", result)
             if (result && result.output) {
                 console.log("======", result.output.toHuman());
