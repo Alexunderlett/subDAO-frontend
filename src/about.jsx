@@ -63,7 +63,7 @@ export default function About(props) {
 
 
         // Section for ERC20 test
-        await erc20contract.query.getName(AccountId, {value, gasLimit}).then(nameResult=>{
+        await erc20contract.query.name(AccountId, {value, gasLimit}).then(nameResult=>{
             nameResult = publicJs.formatResult(nameResult);
             console.log("erc20 token name:", nameResult);
         });
@@ -195,7 +195,7 @@ export default function About(props) {
         // } catch (e) {
         //     console.log("Catch the exception!!!", e);
         // }
-    }, [basecontract]);
+    }, [basecontract, erc20contract]);
 
     useEffect(async () => {
         if (daoManagercontract === null) return;
