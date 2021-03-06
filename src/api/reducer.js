@@ -43,6 +43,16 @@ module.exports = (state, action) => {
         case 'BASE_ERROR':
             return { ...state, basecontract: null, basecontractState: 'ERROR' };
 
+            //erc20
+        case 'LOAD_ERC20':
+            return { ...state, erc20contractState: 'LOAD_ERC20' };
+
+        case 'SET_ERC20':
+            return { ...state, erc20contract: action.payload, erc20contractState: 'READY' };
+
+        case 'ERC20_ERROR':
+            return { ...state, erc20contract: null, erc20contractState: 'ERROR' };
+
             //org
         case 'LOAD_ORG':
             return { ...state, orgcontractState: 'LOAD_ORG' };

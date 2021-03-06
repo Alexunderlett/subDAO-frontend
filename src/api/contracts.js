@@ -3,6 +3,7 @@ import reducer from './reducer';
 import INIT_STATE from './initState';
 
 import mainConnect from './mainContract';
+import erc20Connect from './erc20Contract';
 import loadAccounts from './Account';
 import baseConnect from './baseContract';
 import orgConnect from './orgContract';
@@ -128,7 +129,7 @@ const SubstrateContextProvider = (props) => {
     const [state, dispatch] = useReducer(reducer, initState);
     console.log("=====state=====",state)
 
-    const {maincontractState, allaccountsState, basecontractState, orgcontractState, vaultcontractState,votecontractState,daoManagercontractState} = state;
+    const {maincontractState, allaccountsState, erc20contractState, basecontractState, orgcontractState, vaultcontractState,votecontractState,daoManagercontractState} = state;
     connect(state, dispatch);
 
 
@@ -140,6 +141,9 @@ const SubstrateContextProvider = (props) => {
     // }
     if(basecontractState === 'LOAD_BASE'){
        baseConnect(state, dispatch);
+    }
+    if(erc20contractState === 'LOAD_ERC20'){
+       erc20Connect(state, dispatch);
     }
     if(orgcontractState === 'LOAD_ORG'){
         orgConnect(state, dispatch);

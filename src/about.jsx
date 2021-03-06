@@ -6,11 +6,12 @@ import Accounts from './api/Account';
 import publicJs from "./utils/publicJs";
 
 import {Keyring} from "@polkadot/keyring";
+import Account from './api/Account';
 
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, daoManagercontract} = state;
+    const {basecontract, erc20contract, daoManagercontract} = state;
 
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
@@ -20,6 +21,7 @@ export default function About(props) {
 
     useEffect(() => {
         dispatch({type: 'LOAD_BASE'});
+        dispatch({type: 'LOAD_ERC20'});
         dispatch({type: 'LOAD_DAO'});
         setId(props.match.params.id)
 
@@ -29,6 +31,8 @@ export default function About(props) {
 
         const AccountId = await Accounts.accountAddress();
         if (basecontract === null || !AccountId) return;
+
+        if (erc20contract === null || !AccountId) return;
 
         const value = 0;
         const gasLimit = -1;
@@ -54,6 +58,25 @@ export default function About(props) {
             setOwner(ownerResult)
         });
 
+
+        console.log('state---', state);
+
+
+        // Section for ERC20 test
+        await erc20contract.query.getName(AccountId, {value, gasLimit}).then(nameResult=>{
+            nameResult = publicJs.formatResult(nameResult);
+            console.log("erc20 token name:", nameResult);
+        });
+
+        await erc20contract.query.symbol(AccountId, {value, gasLimit}).then(nameResult=>{
+            nameResult = publicJs.formatResult(nameResult);
+            console.log("erc20 token symbol:",nameResult);
+        });
+
+        await erc20contract.query.totalSupply(AccountId, {value, gasLimit}).then(nameResult=>{
+            nameResult = publicJs.formatResult(nameResult);
+            console.log("erc20 token total supply:",nameResult);
+        });
 
         // try {
         //

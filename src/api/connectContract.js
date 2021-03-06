@@ -4,6 +4,8 @@ import mainAbi from '../abi/target/main_v0.1';
 
 import baseAbi from '../abi/target/base_v0.1';
 
+import erc20Abi from '../abi/target/erc20_v0.1';
+
 import orgAbi from '../abi/target/org_v0.1';
 
 import vaultAbi from '../abi/target/vault_v0.1';
@@ -22,6 +24,9 @@ const ConnectContract = async (api,type,address) =>{
 
         case'base':
             abi = baseAbi;
+            break;
+        case'erc20':
+            abi = erc20Abi;
             break;
         case'org':
             abi = orgAbi;

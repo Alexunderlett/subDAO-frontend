@@ -13,6 +13,9 @@ module.exports = {
     basecontractState: null,
     basecontract:null,
 
+    erc20contractState: null,
+    erc20contract:null,
+
     orgcontractState: null,
     orgcontract:null,
 
