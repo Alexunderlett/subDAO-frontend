@@ -154,9 +154,20 @@ export default function Vault(props){
         //          }
         //      });
         //
-        //
-        //
-        //     //把某一种token的 指定数量的资金存入国库
+        //      //把某一种token的 指定数量的资金存入国库
+            // 1.1 需要执行一步 etc20合约的approve。
+         //   tx = await erc20_contract.tx.approve(optionParam, vault_contract_address,200.0);
+         //   await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
+         //       if (result.status.isInBlock) {
+         //           console.log('in a block');
+         //       } else if (result.status.isFinalized) {
+         //           console.log('finalized');
+          //      } else {
+         //           console.log("unexpected result", result);
+         //       }
+        //    });
+
+            // 1.2 实际执行 vaultcontract.tx.deposit
         //     let erc_20_address = allAccounts[1].address;
         //     let from_address =  allAccounts[2].address;
         //     tx = await vaultcontract.tx.deposit(optionParam, erc_20_address, from_address,110.0);
