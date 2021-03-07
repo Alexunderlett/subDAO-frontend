@@ -2,208 +2,92 @@ import React, {useEffect, useState} from 'react';
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
 import {useSubstrate} from "./api/contracts";
-import Accounts from './api/Account';
+// import Accounts from './api/Account';
+// import publicJs from "./utils/publicJs";
+import api from './api/index';
 import publicJs from "./utils/publicJs";
+import Accounts from "./api/Account";
 
-import {Keyring} from "@polkadot/keyring";
-import Account from './api/Account';
+// import {Keyring} from "@polkadot/keyring";
 
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, erc20contract, daoManagercontract} = state;
+    const {basecontract, vaultcontract,orgcontract,votecontract,erc20contract} = state;
 
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
     const [logo, setLogo] = useState('');
     const [description, setDescription] = useState('');
     const [owner, setOwner] = useState('');
+    const [moderators, setModerators] = useState([]);
+    const [activelist, setActivelist] = useState([]);
+    const [balancelist, setbalancelist] = useState([]);
 
-    useEffect(() => {
-        dispatch({type: 'LOAD_BASE'});
-        dispatch({type: 'LOAD_ERC20'});
-        dispatch({type: 'LOAD_DAO'});
-        setId(props.match.params.id)
+    useEffect(async () => {
+        setId(props.match.params.id);
+
+        await api.base.InitBase(state, dispatch,'5GPi6oGcFqmJg9JxWBL7pxthya6xbu54oUQzNdFwdgAuGcMV');
+        await api.vault.InitVault(state,dispatch,'5HS7Vufvtr7sCrpS4yeXBZWurT5BqpZpzKgwRsZfvmF8euMv');
+        await api.org.InitOrg(state,dispatch,'5CkgafcwX8XRV7gTqMWcroBt25c8vJxHmZdiSaKFGMRyMtrd');
+        await api.vote.InitVote(state,dispatch,'5CPrv4sEHos9Xc6j2AHntSaCaQPyE3ufiKnkDV1QjaV3iVsb');
+        await api.erc20.InitErc20(state,dispatch,'5HU5TSviQ8UvzEoPTKb9wmqsmbSjbMtWe6AZcvyNVvDg1yqM');
 
     }, []);
 
     useEffect(async () => {
-
-        const AccountId = await Accounts.accountAddress();
-        if (basecontract === null || !AccountId) return;
-
-        if (erc20contract === null || !AccountId) return;
-
-        const value = 0;
-        const gasLimit = -1;
-
-        await basecontract.query.getName(AccountId, {value, gasLimit}).then(nameResult=>{
-            nameResult = publicJs.formatResult(nameResult);
-            setName(nameResult);
-        });
-
-        await basecontract.query.getLogo(AccountId, {value, gasLimit}).then(logoResult=>{
-            logoResult = publicJs.formatResult(logoResult);
-            setLogo(logoResult);
-        });
-
-        await basecontract.query.getDesc(AccountId, {value, gasLimit}).then(descResult=>{
-            descResult = publicJs.formatResult(descResult);
-            setDescription(descResult);
-        });
-
-
-        await basecontract.query.getOwner(AccountId, {value, gasLimit}).then(ownerResult=>{
-            ownerResult = publicJs.formatResult(ownerResult);
-            setOwner(ownerResult)
-        });
-
-
-        console.log('state---', state);
-
-
-        // Section for ERC20 test
-        await erc20contract.query.name(AccountId, {value, gasLimit}).then(nameResult=>{
-            nameResult = publicJs.formatResult(nameResult);
-            console.log("erc20 token name:", nameResult);
-        });
-
-        await erc20contract.query.symbol(AccountId, {value, gasLimit}).then(nameResult=>{
-            nameResult = publicJs.formatResult(nameResult);
-            console.log("erc20 token symbol:",nameResult);
-        });
-
-        await erc20contract.query.totalSupply(AccountId, {value, gasLimit}).then(nameResult=>{
-            nameResult = publicJs.formatResult(nameResult);
-            console.log("erc20 token total supply:",nameResult);
-        });
-
-        // try {
-        //
-        //
-        //     const injector = await Accounts.accountInjector();
-        //
-        //     // const value = 0;
-        //     // const gasLimit = 138003n * 1000000n;
-        //     // const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
-        //
-        //
-        //     let daoName = "mydao";
-        //     let daoLogo = "http://example.com/logo.jpg";
-        //     let daoDesc = "Hello World!";
-        //     let daoOwner = AccountId;
-        //
-        //     let optionParam = {value: 0, gasLimit: -1};
-        //
-        //     let tx;
-        //     let result;
-        //
-        //
-        //     // Test code for account in extension
-        //     // tx = await basecontract.tx.initBase(optionParam, daoName, daoLogo, daoDesc);
-        //     // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     } else {
-        //     //         console.log("unexpected result", result);
-        //     //     }
-        //     // });
-        //
-        //     tx = await basecontract.tx.initBase(optionParam, daoName, daoLogo, daoDesc);
-        //     result = await tx.signAndSend(AccountId, {signer: injector.signer});
-        //     console.log('result ', result.toString());
-        //
-        //     // tx = await basecontract.tx.setName(optionParam, daoName);
-        //     // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     } else {
-        //     //         console.log("unexpected result", result);
-        //     //     }
-        //     // });
-        //
-        //     // tx = await basecontract.tx.setDesc(optionParam, daoDesc);
-        //     // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //     // tx = await basecontract.tx.setOwner(optionParam, daoOwner);
-        //     // await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //
-        //     // Test code for local key
-        //     // const keyring = new Keyring({type: 'sr25519'});
-        //     // let alicePair = keyring.createFromUri('//Alice');
-        //
-        //     // let resp = await basecontract.tx
-        //     // .setName(optionParam, daoName)
-        //     // .signAndSend(alicePair, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //     // await basecontract.tx
-        //     // .setLogo(optionParam, daoLogo)
-        //     // .signAndSend(alicePair, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //     // await basecontract.tx
-        //     // .setDesc(optionParam, daoDesc)
-        //     // .signAndSend(alicePair, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //     // await basecontract.tx
-        //     // .setOwner(optionParam, daoOwner)
-        //     // .signAndSend(alicePair, (result) => {
-        //     //     if (result.status.isInBlock) {
-        //     //         console.log('in a block');
-        //     //     } else if (result.status.isFinalized) {
-        //     //         console.log('finalized');
-        //     //     }
-        //     // });
-        //
-        //
-        //
-        //
-        // } catch (e) {
-        //     console.log("Catch the exception!!!", e);
-        // }
-    }, [basecontract, erc20contract]);
+        sessionStorage.setItem('logo',logo)
+    }, [logo]);
 
     useEffect(async () => {
-        if (daoManagercontract === null) return;
+        if(basecontract==null||vaultcontract==null||orgcontract==null||votecontract==null||erc20contract==null)return;
 
-        //daoManagercontract
+        await api.base.getBaseData(basecontract).then(data => {
+            if (!data) return;
+            let {nameResult, logoResult, descResult, ownerResult,erc20contract} = data;
+            setName(nameResult.substr(1));
+            setLogo(logoResult.substr(1));
+            setDescription(descResult.substr(1));
+            setOwner(ownerResult.substr(1));
+        });
+
+        // let erc20 = '5HU5TSviQ8UvzEoPTKb9wmqsmbSjbMtWe6AZcvyNVvDg1yqM';
+        // await api.vault.getBalanceOf(vaultcontract,erc20).then(data => {
+        //     if (!data) return;
+        //     // setbalancelist(data)
+        // });
+        await api.vote.queryOpenVote(votecontract).then(data => {
+            if (!data) return;
+            let arr = data.slice(0,3);
+            setActivelist(arr)
+        });
+        await api.org.getDaoModeratorList(orgcontract).then(data => {
+            if (!data) return;
+            setModerators(data)
+        });
 
 
-    }, [daoManagercontract]);
+        // const AccountId = await Accounts.accountAddress();
+        // const value = 0;
+        // const gasLimit = -1;
+        // if(erc20contract==null) return ;
+        // await erc20contract.query.name(AccountId, {value, gasLimit}).then(nameResult=>{
+        //     nameResult = publicJs.formatResult(nameResult);
+        //     console.log("erc20 token name:", nameResult);
+        // });
+        //
+        // await erc20contract.query.symbol(AccountId, {value, gasLimit}).then(nameResult=>{
+        //     nameResult = publicJs.formatResult(nameResult);
+        //     console.log("erc20 token symbol:",nameResult);
+        // });
+        //
+        // await erc20contract.query.totalSupply(AccountId, {value, gasLimit}).then(nameResult=>{
+        //     nameResult = publicJs.formatResult(nameResult);
+        //     console.log("erc20 token total supply:",nameResult);
+        // });
+
+
+    }, [basecontract, vaultcontract,orgcontract,votecontract,erc20contract]);
 
     const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
@@ -239,45 +123,42 @@ export default function About(props) {
                                 <div>
                                     <h4>Balance</h4>
                                     <ul className='list'>
-                                        <li>
-                                            <span>pETH 10,000,000</span>
-                                            <a href="">2300506e9fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>pETH 10,000,000</span>
-                                            <a href="">2300506e9fbb4d35887c851d84438</a>
-                                        </li>
-                                        <li>
-                                            <span>pETH 10,000,000</span>
-                                            <a href="">230059fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>pETH 10,000,000</span>
-                                            <a href="">300506e9fbb4d35887c851d84440538</a>
-                                        </li>
+                                        {
+                                            balancelist.map((item,index)=>
+                                                <li key={`balance_${index}`}>
+                                                    <span>pETH 10,000,000</span>
+                                                    <a href="#">2300506e9fbb4d35887c851d84440538</a>
+                                                </li>
+                                            )
+                                        }
+
+
                                     </ul>
                                 </div>
                                 <div>
                                     <h4>Moderators</h4>
                                     <ul className='list'>
-                                        <li>
-                                            <span>Evy</span>
-                                            <a href="">2300506e9fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>pETH</span>
-                                            <a href="">2300506e9fbb4d35887c851d84438</a>
-                                        </li>
-                                        <li>
-                                            <span>pETHA</span>
-                                            <a href="">230059fbb4d35887c851d84440538</a>
-                                        </li>
+                                        {
+                                            moderators.map((i,index)=><li key={moderators[index]}>
+                                                {/*<span>Evy</span>*/}
+                                                <a href="#">{moderators[index]}</a>
+                                            </li>)
+                                        }
+
+                                        {/*<li>*/}
+                                        {/*    <span>pETH</span>*/}
+                                        {/*    <a href="">2300506e9fbb4d35887c851d84438</a>*/}
+                                        {/*</li>*/}
+                                        {/*<li>*/}
+                                        {/*    <span>pETHA</span>*/}
+                                        {/*    <a href="">230059fbb4d35887c851d84440538</a>*/}
+                                        {/*</li>*/}
 
                                     </ul>
                                 </div>
-                                <div className='list'>
+                                <div>
                                     <h4>Contracts</h4>
-                                    <ul>
+                                    <ul className='list'>
                                         <li>
                                             <span>DAO Address: </span>
                                             <a href="">2300506e9fbb4d35887c851d84440538</a>
@@ -299,18 +180,12 @@ export default function About(props) {
                                 <div>
                                     <h4>Votings</h4>
                                     <ul className='list'>
-                                        <li>
-                                            <span>Active: </span>
-                                            <a href="">2300506e9fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>Closed: </span>
-                                            <a href="">2300506e9fbb4d35887c851d84438</a>
-                                        </li>
-                                        <li>
-                                            <span>Cancel: </span>
-                                            <a href="">230059fbb4d35887c851d84440538</a>
-                                        </li>
+                                        {
+                                            activelist.map((item,index)=><li key={`votings_${index}`}>
+                                                {/*<span>Active: </span>*/}
+                                                <a href="#">{item.title}</a>
+                                            </li>)
+                                        }
 
                                     </ul>
                                 </div>

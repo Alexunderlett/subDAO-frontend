@@ -34,6 +34,22 @@ const accountAddress = async () =>{
     return accountAddress;
 
 }
+const accountName = async () =>{
+    let accountName;
+    const allInjected = await web3Enable('SubDAO');
+    if (allInjected.length === 0) {
+        console.error("!!!!! No wallet extention detected!!");
+        return;
+    }
+    const Accounts = JSON.parse(sessionStorage.getItem('account'));
+    if (Accounts && Accounts.length > 0) {
+        accountName = Accounts[0].meta.name;
+    } else {
+        accountName = '';
+    }
+    return accountName;
+
+}
 const accountInjector = async () => {
     let injector;
     const Accounts = JSON.parse(sessionStorage.getItem('account'));
@@ -48,5 +64,6 @@ const accountInjector = async () => {
 export default {
     accountlist,
     accountAddress,
+    accountName,
     accountInjector,
 }

@@ -13,7 +13,7 @@ module.exports = (state, action) => {
         case 'CONNECT_ERROR':
             return { ...state, apiState: 'ERROR', apiError: action.payload };
 
-            //main contract
+        //main contract
         case 'LOAD_MAINCONTRACT':
             return { ...state, maincontractState: 'LOAD_MAINCONTRACT' };
 
@@ -23,7 +23,7 @@ module.exports = (state, action) => {
         case 'MAINCONTRACT_ERROR':
             return { ...state, maincontract: null, maincontractState: 'ERROR' };
 
-            //accounts
+        //accounts
         case 'LOAD_ALLACCOUNTS':
             return { ...state, allaccountsState: 'LOAD_ALLACCOUNTS' };
 
@@ -33,7 +33,7 @@ module.exports = (state, action) => {
         case 'ALLACCOUNTS_ERROR':
             return { ...state, allAccounts: null, allaccountsState: 'ERROR' };
 
-            //base
+        //base
         case 'LOAD_BASE':
             return { ...state, basecontractState: 'LOAD_BASE' };
 
@@ -43,7 +43,7 @@ module.exports = (state, action) => {
         case 'BASE_ERROR':
             return { ...state, basecontract: null, basecontractState: 'ERROR' };
 
-            //erc20
+        //erc20
         case 'LOAD_ERC20':
             return { ...state, erc20contractState: 'LOAD_ERC20' };
 
@@ -53,7 +53,7 @@ module.exports = (state, action) => {
         case 'ERC20_ERROR':
             return { ...state, erc20contract: null, erc20contractState: 'ERROR' };
 
-            //org
+        //org
         case 'LOAD_ORG':
             return { ...state, orgcontractState: 'LOAD_ORG' };
 
@@ -61,10 +61,11 @@ module.exports = (state, action) => {
             return { ...state, orgcontract: action.payload, orgcontractState: 'READY' };
 
         case 'ORG_ERROR':
-            return { ...state, orgcontract: null, basecontractState: 'ERROR' };
+            return { ...state, orgcontract: null, orgcontractState: 'ERROR' };
 
 
-            // vault
+
+        // vault
         case 'LOAD_VAULT':
             return { ...state, vaultcontractState: 'LOAD_VAULT' };
 
@@ -74,7 +75,7 @@ module.exports = (state, action) => {
         case 'VAULT_ERROR':
             return { ...state, vaultcontract: null, vaultcontractState: 'ERROR' };
 
-            // vote
+        // vote
         case 'LOAD_VOTE':
             return { ...state, votecontractState: 'LOAD_VOTE' };
 
@@ -93,7 +94,6 @@ module.exports = (state, action) => {
 
         case 'DAO_ERROR':
             return { ...state, daoManagercontract: null, daoManagercontractState: 'ERROR' };
-
 
 
         default:

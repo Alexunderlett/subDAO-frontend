@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
+import {useSubstrate} from "../../api/contracts";
 export default function VoteActive(props){
+
+    // const {state,dispatch} = useSubstrate();
+    //
+    //
+    // const {votecontract} = state;
 
     const [indexList, setIndexList] = useState([]);
     // const [totalNum, setTotalNum] = useState(0);
@@ -10,7 +16,15 @@ export default function VoteActive(props){
     // const [pageSize, setPageSize] = useState(5);
     // const [totalPage, setTotalPage] = useState(0);
 
+
+
     useEffect(() => {
+        if(props.list.length){
+            setIndexList(props.list)
+        }
+
+        // if(votecontract)
+        // console.log("votecontractvotecontractvotecontractvotecontract",state)
         // let totalNum = 52;
         // setTotalData({})
         // setTotalNum(totalNum)
@@ -19,8 +33,7 @@ export default function VoteActive(props){
         // setTotalPage(totalPage)
         // pageClick(1);
 
-
-    }, []);
+    }, [props]);
 
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
@@ -55,18 +68,14 @@ export default function VoteActive(props){
             <div>
                 <Table striped bordered hover>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto </td>
-                        <td><span onClick={()=>handleClicktoview(34)}><i className="fa fa-sign-in"/> view</span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td><span><i className="fa fa-sign-in" /> view</span></td>
-                    </tr>
+                    {
+                        indexList.map((item,index)=><tr key={`active_${index}`}>
+                            <td>{index}</td>
+                            <td>{item.title}</td>
+                            {/*<td>{item.title} </td>*/}
+                            <td><span onClick={()=>handleClicktoview(index)}><i className="fa fa-sign-in"/> view</span></td>
+                        </tr>)
+                    }
                     </tbody>
                 </Table>
                 {/*<PageComponent total={totalNum}*/}

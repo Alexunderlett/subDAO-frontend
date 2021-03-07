@@ -1,10 +1,14 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
-import t3 from "../../images/t-4.png";
 import {Button} from "react-bootstrap";
 import ManageItem from "./manageItem";
+import api from "../../api";
+import {useSubstrate} from "../../api/contracts";
 
 export default function OrgManage(props){
+
+    const {state,dispatch} = useSubstrate();
+    const {orgcontract} = state;
 
 
     const [id, setId] = useState(null);
@@ -15,57 +19,64 @@ export default function OrgManage(props){
     const [showAddmoderators, setShowAddmoderators] = useState(false);
     const [showAddmembers, setShowAddmembers] = useState(false);
     const [showAddMember, setShowAddmember] = useState(false);
-    const [memberlist, setMemberlist] = useState([
-        {
-            name: 'ETH',
-            id: '1',
-            url: 'fdajogaogogndso',
-            checked: false
-        },
-        {
-            name: 'pETH2',
-            id: '2',
-            url: 'fdajogaogogndso',
-            checked: false
-        }
-    ]);
-    const [checklist, setChecklist] = useState([
-        {
-            name: 'pETH1',
-            id: '1',
-            url: 'fdajogaogogndso',
-            checked: false
-        },
-        {
-            name: 'pETH2',
-            id: '2',
-            url: 'fdajogaogogndso',
-            checked: false
-        },
-        {
-            name: 'pETH3',
-            id: '3',
-            url: 'fdajogaogogndso',
-            checked: false
-        },
-        {
-            name: 'pETH4',
-            id: '4',
-            url: 'fdajogaogogndso',
-            checked: false
-        },
-    ]);
+    const [addModerator, setaddModerator] = useState(false);
+    const [addMember, setaddMember] = useState(false);
+    const [logo, setLogo] = useState('');
+    const [memberlist, setMemberlist] = useState([]);
+    const [checklist, setChecklist] = useState([]);
 
     useEffect(() => {
+        if(addModerator){
+            props.history.push(`/org/${id}`)
+        }
+    }, [addModerator]);
+    useEffect(() => {
+        if(addMember){
+            props.history.push(`/org/${id}`)
+        }
+    }, [addMember]);
+    useEffect(() => {
         setId(props.match.params.id)
-
+        let logo = sessionStorage.getItem('logo');
+        setLogo(logo);
     }, []);
+    useEffect(async () => {
 
+        await api.org.getDaoModeratorList(orgcontract).then(data => {
+            if (!data) return;
+            setChecklist(data)
+        });
+        await api.org.getDaoMembersList(orgcontract).then(data => {
+            if (!data) return;
+            setMemberlist(data)
+        });
+    }, [orgcontract]);
 
-    const handleClicktoview = (id) =>{
+    const handleClicktoview = async (id,type) =>{
         // let {voteid} = this.state;
         // this.props.history.push(`/voteView/${id}/${voteid}`)
-        console.log("id",id)
+
+        let obj={
+            name:'Alice',
+            address:id
+        }
+        if(type==='moderators'){
+
+            await api.org.removeDaoModerator(orgcontract,obj,function (result) {
+                setaddModerator(result)
+            }).then(data => {
+                if (!data) return;
+
+            });
+        }else if(type==='members'){
+
+            await api.org.removeDaoMember(orgcontract,obj,function (result) {
+                setaddMember(result)
+            }).then(data => {
+                if (!data) return;
+
+            });
+        }
     }
 
     const isAllChecked = (e) => {
@@ -139,6 +150,25 @@ export default function OrgManage(props){
     const handleClicktoOrg = () => {
        props.history.push(`/org/${id}`)
     }
+    const submitModerators = async (obj) =>{
+
+        await api.org.addDaoModerator(orgcontract,obj,function (result) {
+            setaddModerator(result)
+        }).then(data => {
+            if (!data) return;
+
+        });
+
+    }
+ const submitMembers = async (obj) =>{
+        console.log(obj)
+     await api.org.addDaoMember(orgcontract,obj,function (result) {
+         setaddMember(result)
+     }).then(data => {
+         if (!data) return;
+         console.log(data)
+     });
+    }
 
 
         return <div>
@@ -148,9 +178,9 @@ export default function OrgManage(props){
                     <div className="bgwhite row">
                         <div className='col-lg-4 bg'>
                             <div>
-                                <img src={t3} alt=""/>
+                                <img src={logo} alt=""/>
                             </div>
-                            <div className='brdr'>
+                            <div className='brdr '>
                                 <Button variant="outline-primary" onClick={handleClicktoOrg}>Back</Button>
                             </div>
                         </div>
@@ -168,6 +198,7 @@ export default function OrgManage(props){
                                         handleClicktoview={handleClicktoview}
                                         showModal={showModalmoderators}
                                         showAdd={showAddmoderators}
+                                        handleSubmit={submitModerators}
                                         handleClose={()=>setShowModalmoderators(false)}
                                         addModerators={()=>addModerators('showAddmoderators')}
                                         delConfirm={()=>delConfirm('showModalmoderators')}
@@ -186,6 +217,7 @@ export default function OrgManage(props){
                                         showModal={showModalmembers}
                                         showAdd={showAddmembers}
                                         handleClose={()=>setShowModalmembers(false)}
+                                        handleSubmit={submitMembers}
                                         addModerators={()=>addModerators('showAddmembers')}
                                         delConfirm={()=>delConfirm('showModalmembers')}
                                     />

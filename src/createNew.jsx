@@ -6,6 +6,7 @@ import ThirdStep from './components/create/thirdStep';
 import ForthStep from './components/create/forthStep';
 import PageBackground from "./components/pagebackground";
 import {useSubstrate} from "./api/contracts";
+import api from "./api/index";
 
 export default function  Createnew(props) {
     const {state,dispatch} = useSubstrate();
@@ -35,8 +36,8 @@ export default function  Createnew(props) {
         let ImageUrl = sessionStorage.getItem('ImageUrl');
         setimgUrl( setimgUrl ?  ImageUrl : '');
 
-        dispatch({type: 'LOAD_MAINCONTRACT'});
     }, []);
+
 
         return (<div>
                 <section>

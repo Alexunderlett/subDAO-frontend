@@ -1,127 +1,130 @@
-import React, {Component} from 'react';
-import t3 from "../../images/t-4.png";
+import React, {Component, useEffect, useState} from 'react';
 import {Button, Form} from "react-bootstrap";
 import PageBackground from "../pagebackground";
+import {useSubstrate} from "../../api/contracts";
+import api from "../../api/index";
 
-class VoteView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: null,
-            voteid: null,
-            selected:'',
-            optionlist: [
-                {
-                    name: 'name1',
-                    value: 'value1'
-                },
-                {
-                    name: 'name2',
-                    value: 'value2'
-                },
-                {
-                    name: 'name3',
-                    value: 'value3'
-                }
-            ]
-        };
 
-    }
+export default function VoteView (props){
 
-    componentDidMount() {
-        this.setState({
-            id: this.props.match.params.id
+    const {state,dispatch} = useSubstrate();
+    const {votecontract} = state;
+
+    const [optionlist, setoptionlist] = useState([]);
+    const [id, setId] = useState(null);
+    const [voteid, setvoteid] = useState(null);
+    const [title, settitle] = useState('');
+    const [desc, setdesc] = useState('');
+    const [selected, setselected] = useState('');
+    const [logo, setLogo] = useState('');
+
+    useEffect(() => {
+        let logo = sessionStorage.getItem('logo');
+        setLogo(logo);
+    }, []);
+
+    useEffect(async() => {
+        setId(props.match.params.id)
+        setvoteid(props.match.params.voteid)
+
+
+
+        await api.vote.queryOneVote(votecontract,voteid).then(data => {
+            if (!data) return;
+            const {
+                    title, desc, start_date, vote_time, support_require_num,min_require_num, support_num,choices
+            } = data;
+            settitle(title)
+            setdesc(desc)
+            setoptionlist(choices.split(','))
+
+
         });
-        this.setState({
-            voteid: this.props.match.params.voteid
-        });
+
+        // if(props.list.length){
+        //     setIndexList(props.list)
+        // }
+
+
+    }, [props]);
+    const handleClicktoVote = () => {
+        props.history.push(`/vote/${id}`)
+    }
+    const handleClicktoOverview = () => {
+        console.log(selected)
+
+
+        props.history.push(`/voteOverview/${id}/${voteid}`)
+    }
+    const handleRadio = (e) =>{
+        setselected(e.target.value)
     }
 
-    handleClicktoVote = () => {
-        let {id} = this.state;
-        this.props.history.push(`/vote/${id}`)
-    }
-    handleClicktoOverview = () => {
-        let {id, voteid} = this.state;
-        this.props.history.push(`/voteOverview/${id}/${voteid}`)
-        console.log(this.state.selected)
-    }
-    handleRadio = (e) =>{
-        this.setState({selected:e.target.value})
-    }
-
-    render() {
-        let {optionlist} = this.state;
-        return (
-            <div>
-                <section>
-                    <PageBackground/>
-                    <div className="container">
-                        <div className="createSingle row">
-                            <div className='col-lg-4'>
-                                <div>
-                                    <img src={t3} alt=""/>
-                                </div>
-
+    return (
+        <div>
+            <section>
+                <PageBackground/>
+                <div className="container">
+                    <div className="createSingle row">
+                        <div className='col-lg-4'>
+                            <div>
+                                <img src={logo} alt=""/>
                             </div>
-                            <div className='col-lg-8'>
-                                <ul>
-                                    <li className='timeTop'>
-                                        <i className='fa fa-clock-o'/> 03:59:28
-                                    </li>
-                                    <li className='VotetitleTop'>
-                                        <div>
-                                            <p>1. Please Fill description Please Fill description </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className='voteContent'>
-                                            <p>Please Fill description Please Fill description Ple2324234fsase Fill
-                                                description Please Fill description Please Fill description Please Fill
-                                                description Please Fill descriptifdsaon Please Fill description Please
-                                                Fill description Please Fill description Please Fill description Please
-                                                Fill description Please Fill description Please Fill description</p>
-                                        </div>
-                                    </li>
 
-                                    <li>
-                                        {optionlist.map((i, index) => (
+                        </div>
+                        <div className='col-lg-8'>
+                            <ul>
+                                <li className='timeTop'>
+                                    <i className='fa fa-clock-o'/> 03:59:28
+                                </li>
+                                <li className='VotetitleTop'>
+                                    <div>
+                                        <p>{id}. {title} </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className='voteContent'>
+                                        <p>{desc}</p>
+                                    </div>
+                                </li>
 
-                                            <div key={index}>
-                                                <div className="row">
-                                                    <div className="col-12 radioOption">
-                                                        <Form.Group controlId="formBasicCheckbox">
-                                                            <Form.Check
-                                                                type="radio"
-                                                                label={i.name}
-                                                                id={`radio_${index}`}
-                                                                value={i.value}
-                                                                name='radiobutton' onChange={this.handleRadio}/>
-                                                        </Form.Group>
-                                                    </div>
+                                <li>
+                                    {optionlist.map((i, index) => (
 
+                                        <div key={index}>
+                                            <div className="row">
+                                                <div className="col-12 radioOption">
+                                                    <Form.Group controlId="formBasicCheckbox">
+                                                        <Form.Check
+                                                            type="radio"
+                                                            label={i.split(":")[0]}
+                                                            id={`radio_${index}`}
+                                                            value={i.split(":")[0]}
+                                                            name='radiobutton' onChange={handleRadio}/>
+                                                    </Form.Group>
                                                 </div>
+
                                             </div>
-                                        ))
-                                        }
+                                        </div>
+                                    ))
+                                    }
 
 
-                                    </li>
+                                </li>
 
-                                    <li className='brdr pl-1'>
-                                        <Button variant="outline-primary" className='leftBtn'
-                                                onClick={this.handleClicktoVote}>Cancel</Button>
-                                        <Button variant="primary" onClick={this.handleClicktoOverview}>Vote</Button>
-                                    </li>
-                                </ul>
-                            </div>
+                                <li className='brdr pl-1'>
+                                    <Button variant="outline-primary" className='leftBtn'
+                                            onClick={handleClicktoVote}>Cancel</Button>
+                                    <Button variant="primary" onClick={handleClicktoOverview}>Vote</Button>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-            </div>
-        )
-    }
+        </div>
+    )
+
 }
 
-export default VoteView;

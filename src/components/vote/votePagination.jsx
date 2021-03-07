@@ -13,6 +13,11 @@ export default function VotePagination(props){
     // const [totalPage, setTotalPage] = useState(0);
 
     useEffect(() => {
+
+        if(props.list.length){
+            setIndexList(props.list)
+        }
+
         // let totalNum = 52;
         // setTotalData({})
         // setTotalNum(totalNum)
@@ -22,7 +27,7 @@ export default function VotePagination(props){
         // pageClick(1);
 
 
-    }, []);
+    }, [props]);
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
         props.history.push(`/voteOverview/${id}/${voteid}`)
@@ -63,26 +68,29 @@ export default function VotePagination(props){
             <div>
                 <Table striped bordered hover>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>
-                            <div><Badge variant="primary"><i className="fa fa-times-circle"/> Failed</Badge></div>
-                        </td>
-                        <td><span onClick={()=>handleClicktoVoteview(34)}><i className="fa fa-sign-in" /> view</span></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Closed</td>
-                        <td><span><i className="fa fa-sign-in"/> view</span></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Cancel</td>
-                        <td><span><i className="fa fa-sign-in"/> view</span></td>
-                    </tr>
+                    {
+                        indexList.map((item,index)=><tr key={`history_${index}`}>
+                            <td>{index}</td>
+                            <td>{item.title}</td>
+                            {/*<td>*/}
+                            {/*    <div><Badge variant="primary"><i className="fa fa-times-circle"/> Failed</Badge></div>*/}
+                            {/*</td>*/}
+                            <td><span onClick={()=>handleClicktoVoteview(34)}><i className="fa fa-sign-in" /> view</span></td>
+                        </tr>)
+                    }
+
+                    {/*<tr>*/}
+                    {/*    <td>1</td>*/}
+                    {/*    <td>Mark</td>*/}
+                    {/*    <td>Closed</td>*/}
+                    {/*    <td><span><i className="fa fa-sign-in"/> view</span></td>*/}
+                    {/*</tr>*/}
+                    {/*<tr>*/}
+                    {/*    <td>1</td>*/}
+                    {/*    <td>Mark</td>*/}
+                    {/*    <td>Cancel</td>*/}
+                    {/*    <td><span><i className="fa fa-sign-in"/> view</span></td>*/}
+                    {/*</tr>*/}
                     </tbody>
                 </Table>
                 {/*<PageComponent total={totalNum}*/}

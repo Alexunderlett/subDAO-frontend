@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Slick from "./components/slick";
 import {Modal,Button} from "react-bootstrap";
+import {useSubstrate} from "./api/contracts";
 
 export default function Home(props) {
     let [showButton, setShowButton] = useState(false);
+    const {state,dispatch} = useSubstrate();
 
      const handleClick =()=> {
          let account = JSON.parse(sessionStorage.getItem('account'));
@@ -14,7 +16,10 @@ export default function Home(props) {
              props.history.push('/create')
          }
      }
+    useEffect(() => {
 
+        dispatch({type: 'LOAD_MAINCONTRACT'});
+    }, []);
 
     return (<div>
             <section className="padding">
@@ -47,7 +52,7 @@ export default function Home(props) {
                                     onHide={() => setShowButton(false)}
                                 >
                                     <Modal.Header closeButton>
-                                            <i className='fa fa-user-times homeTop'></i>
+                                            <i className='fa fa-user-times homeTop' />
                                     </Modal.Header>
                                     <Modal.Body className='homebtm'>
                                         <h4>Please connect wallet</h4>

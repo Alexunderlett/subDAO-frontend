@@ -1,36 +1,37 @@
 import React, {Component, useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
-import t3 from "../../images/t-4.png";
 import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
 import VaultmodalTips from "./vaultmodalTips";
+import api from "../../api";
+import {useSubstrate} from "../../api/contracts";
 
 export default function Withdraw(props){
-
+    const {state,dispatch} = useSubstrate();
+    const {vaultcontract} = state;
 
     const [id, setId] = useState(null);
     const [selected, setSelected] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [address, setAddress] = useState('');
+    const [token, setToken] = useState('');
     const [reason, setReason] = useState('');
     const [amount, setAmount] = useState('');
-    const [list, setList] = useState([
-        {
-            name: 'Non-Profit Organization Template',
-            value: 'value1',
-        },
-        {
-            name: 'name2',
-            value: 'value2',
-        },
-        {
-            name: 'name3',
-            value: 'value3',
-        }
-    ]);
+    const [logo, setLogo] = useState('');
+
+
+    const [list, setList] = useState([]);
 
     useEffect(() => {
-        setId(props.match.params.id)
+        setId(props.match.params.id);
+        let logo = sessionStorage.getItem('logo');
+        setLogo(logo);
+    }, []);
 
+    useEffect(async () => {
+        await api.vault.getTokenList(vaultcontract).then(data => {
+            if (!data) return;
+            setList(data)
+        });
     }, []);
 
     const handleClicktoVault=()=>{
@@ -58,18 +59,32 @@ export default function Withdraw(props){
                 break;
         }
     }
-    const handleConfirm=()=>{
+    const handleConfirm= async()=>{
 
         setShowModal(false)
 
         let obj = {
-            address,amount,reason,selected
+            address,amount,selected
         }
-        console.log("====",obj)
+
+
+        await api.vault.withdraw(vaultcontract,obj,(result)=> {
+            if(result){
+                props.history.push(`/vault/${id}`)
+            }
+        }).then(data => {
+            // if (!data) return;
+            // // setActivelist(data)
+
+            // if(data){
+            //     props.history.push(`/vote/${id}`)
+            // }
+
+        });
     }
     const handleSelect = (e) => {
-        let template =list.filter(item => item.value === e.target.value);
-        setSelected(template[0].value)
+        // let template =list.filter(item => item.value === e.target.value);
+        setSelected(e.target.value)
     }
 
         return (
@@ -80,17 +95,17 @@ export default function Withdraw(props){
                         <div className="createSingle row">
                             <div className='col-lg-4'>
                                 <div>
-                                    <img src={t3} alt=""/>
+                                    <img src={logo} alt=""/>
                                 </div>
                             </div>
                             <div className='col-lg-8'>
                                 <ul className="withdraw">
                                     <li>
-                                        <Form.Control as="select" onChange={handleSelect}>
-                                            <option value=''>Please select option</option>
+                                        <Form.Control as="select" name='selected' onChange={handleSelect}>
+                                            <option key='noselect'>Please select option</option>
                                             {
                                                 list.map(i => (
-                                                    <option value={i.value} key={i.value}>{i.name}</option>
+                                                    <option value={i} key={i}>{i}</option>
                                                 ))
                                             }
                                         </Form.Control>
@@ -105,14 +120,14 @@ export default function Withdraw(props){
                                                 onChange={handleChange}
                                             />
                                         </InputGroup>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                placeholder="Please fill your reason"
-                                                value={reason}
-                                                name='reason'
-                                                onChange={handleChange}
-                                            />
-                                        </InputGroup>
+                                        {/*<InputGroup className="mb-3">*/}
+                                        {/*    <FormControl*/}
+                                        {/*        placeholder="Please fill your reason"*/}
+                                        {/*        value={reason}*/}
+                                        {/*        name='reason'*/}
+                                        {/*        onChange={handleChange}*/}
+                                        {/*    />*/}
+                                        {/*</InputGroup>*/}
 
                                         <InputGroup className="mb-3">
                                             <FormControl

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form,Spinner,Modal} from "react-bootstrap";
 import { useSubstrate} from '../../api/contracts';
+import api from "../../api";
 
 export default function SecondStep(props) {
     const {state} = useSubstrate();
@@ -29,43 +30,11 @@ export default function SecondStep(props) {
         }
     }, []);
     useEffect(async() => {
-
-        if(maincontract === null) return ;
-
-        const AccountId = JSON.parse(sessionStorage.getItem('account'));
-        console.log(maincontract)
-
-        let result = await maincontract.query.listTemplates(AccountId[0].address, { value: 0, gasLimit: -1 });
-
-        console.log("======",result)
-        console.log("======",result.output.toString())
-           if(result && result.output){
-               // setlist(listTemplates.output.toHuman())
-               console.log("======",result)
-           }
-
-
-
-
-
+        await api.main.listTemplates(maincontract).then(data => {
+            if (!data) return;
+            setlist(data)
+        });
     }, [maincontract]);
-    // useEffect(async () => {
-    //     if(maincontract){
-    //         console.log(maincontract)
-    //         const AccountId = JSON.parse(sessionStorage.getItem('account'));
-    //
-    //         console.log(AccountId[0].address)
-    //       let listTemplates = await maincontract.query.listTemplates(AccountId[0].address, { value: 0, gasLimit: -1 });
-    //
-    //         console.log("======",listTemplates)
-    //            if(listTemplates && listTemplates.output){
-    //                setlist(listTemplates.output.toHuman())
-    //            }
-    //
-    //
-    //     }
-    //
-    // }, [maincontract]);
     return(
         <div>
 

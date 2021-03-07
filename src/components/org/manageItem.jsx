@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ModalTips from "./modalTips";
-import {Button, Form, Table} from "react-bootstrap";
+import {Button, Form, FormControl, InputGroup, Table} from "react-bootstrap";
 
 class ManageItem extends Component {
     constructor(props) {
@@ -11,19 +11,31 @@ class ManageItem extends Component {
             showModal: false,
             showAdd: false,
             showAddMember: false,
-
+            form:{
+                name:'',
+                address:'',
+            }
         };
     }
+   handleInputChange = (e) => {
+        const {name, value} = e.target;
+        // let str = `set${name}`
+        // eval(str)(value)
 
+       const {form} = this.state;
+       form[name] = value;
+       this.setState({form})
+    }
     render() {
-        const {list, listname, chooseAll, isChecked, isAllChecked, type, handleClicktoview, showModal, handleClose, showAdd, addModerators,delConfirm} = this.props;
+        const {list, listname, chooseAll, isChecked, isAllChecked, type, handleClicktoview, showModal, handleClose, showAdd, addModerators,delConfirm,handleSubmit} = this.props;
+        const{form} = this.state;
         return (<div>
 
             <ModalTips handleClose={handleClose} showTips={showModal}/>
             <div className='operationBar'>
-                <span onClick={delConfirm}>
-                  <i className='fa fa-trash'/> remove
-                </span>
+                {/*<span onClick={delConfirm}>*/}
+                {/*  <i className='fa fa-trash'/> remove*/}
+                {/*</span>*/}
                 <span onClick={addModerators}>
                     <i className='fa fa-plus-circle'/> add
                 </span>
@@ -31,9 +43,17 @@ class ManageItem extends Component {
             {
                 showAdd && <div className='addBtn'>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
+                        <FormControl
+                            placeholder="Please fill the name."
+                            name='name'
+                            onChange={this.handleInputChange}
+                        />
                         <Form.Control as="textarea" rows={3}
-                                      placeholder="Please fill moderators' address,split with;"/>
-                        <Button variant="primary" type="submit">
+                                      placeholder="Please fill the address"
+                                      name='address'
+                                      onChange={this.handleInputChange}
+                        />
+                        <Button variant="primary"  onClick={()=>handleSubmit(form)}>
                             Add
                         </Button>
                     </Form.Group>
@@ -42,30 +62,30 @@ class ManageItem extends Component {
 
             <Table striped bordered hover>
                 <tbody>
-                <tr>
-                    <th><Form.Check type='checkbox'  value={chooseAll}
-                                    checked={chooseAll}
-                                    id={type}
-                                    data-list={listname}
-                                    onChange={e => isAllChecked(e, type)}/></th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Operation</th>
-                </tr>
+                {/*<tr>*/}
+                {/*    <th><Form.Check type='checkbox'  value={chooseAll}*/}
+                {/*                    checked={chooseAll}*/}
+                {/*                    id={type}*/}
+                {/*                    data-list={listname}*/}
+                {/*                    onChange={e => isAllChecked(e, type)}/></th>*/}
+                {/*    <th>Name</th>*/}
+                {/*    <th>Address</th>*/}
+                {/*    <th>Operation</th>*/}
+                {/*</tr>*/}
                 {
-                    list.map((item) => (
-                            <tr key={`moderators_${item.id}`}>
+                    list.map((item,index) => (
+                            <tr key={`${type}_${index}`}>
+                                {/*<td>*/}
+                                {/*    <Form.Check type='checkbox' value={item.checked}*/}
+                                {/*                checked={item.checked}*/}
+                                {/*                data-type={type}*/}
+                                {/*                data-list={listname}*/}
+                                {/*                onChange={e => isChecked(e, item)}/>*/}
+                                {/*</td>*/}
+                                <td>{item}</td>
+                                {/*<td>{item.url}</td>*/}
                                 <td>
-                                    <Form.Check type='checkbox' value={item.checked}
-                                                checked={item.checked}
-                                                data-type={type}
-                                                data-list={listname}
-                                                onChange={e => isChecked(e, item)}/>
-                                </td>
-                                <td>{item.name}</td>
-                                <td>{item.url}</td>
-                                <td>
-                                    <span className='hand' onClick={handleClicktoview.bind(this, item.id)}><i
+                                    <span className='hand nowrap' onClick={()=>handleClicktoview(item,type)}><i
                                         className="fa fa-trash"/> remove</span>
                                 </td>
                             </tr>

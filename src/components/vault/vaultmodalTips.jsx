@@ -8,7 +8,7 @@ class VaultmodalTips extends Component {
             <Modal.Header closeButton>
                 <Modal.Title>Are you absolutely sure?</Modal.Title>
             </Modal.Header>
-            <Modal.Body>This action cannot be undone. This will permanently delete these Moderators.</Modal.Body>
+            <Modal.Body>This action cannot be undone.</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close

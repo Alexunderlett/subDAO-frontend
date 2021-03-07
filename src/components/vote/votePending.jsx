@@ -2,10 +2,17 @@ import React, {Component, useEffect, useState} from 'react';
 import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
 import VoteModalTips from "./votemodalTips";
+import api from "../../api";
+import {useSubstrate} from "../../api/contracts";
 
 export default function VotePending(props) {
+    const {state,dispatch} = useSubstrate();
+    const {votecontract} = state;
+
     const [indexList, setIndexList] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [list, setList] = useState([]);
+    const [selectid, setselectid] = useState('');
     // const [totalNum, setTotalNum] = useState(0);
     // const [totalData, setTotalData] = useState({});
     // const [current, setCurrent] = useState(1);
@@ -14,6 +21,9 @@ export default function VotePending(props) {
 
 
     useEffect(() => {
+        if(props.list.length){
+            setList(props.list)
+        }
         // let totalNum = 52;
         // setTotalData({})
         // setTotalNum(totalNum)
@@ -23,7 +33,7 @@ export default function VotePending(props) {
         // pageClick(1);
 
 
-    }, []);
+    }, [props]);
 
 
 
@@ -50,11 +60,23 @@ export default function VotePending(props) {
         // console.log(_this.state.indexList)
     // }
     const triggerConfirm = (id)=>{
-        console.log(id)
+        setselectid(id);
         setShowModal(true)
     }
     const handleClose = () => {
-        setShowModal(false)
+        setShowModal(false);
+        setselectid('')
+    }
+    const handleConfirm = async () => {
+        setShowModal(false);
+        console.log(selectid)
+
+        await api.vote.executeVote(votecontract).then(data => {
+            if (!data) return;
+            console.log(data)
+            // setHistorylist(data)
+        });
+            // setselectid('')
     }
     // const goNext = () => {
     //     let cur = this.state.current;
@@ -72,21 +94,27 @@ export default function VotePending(props) {
 
 
     return (<div>
-            <VoteModalTips handleClose={handleClose} showTips={showModal}/>
+            <VoteModalTips
+                handleClose={handleClose}
+                handleConfirm={handleConfirm}
+                showTips={showModal}
+                id={selectid}/>
             <Table striped bordered hover>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Pending</td>
-                    <td><span onClick={()=>triggerConfirm(34)}><i className="fa fa-toggle-on"/> trigger</span></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Pending</td>
-                    <td><span><i className="fa fa-toggle-on" /> trigger</span></td>
-                </tr>
+                {
+                    list.map((item,index)=><tr key={`Pending_${index}`}>
+                        <td>{index}</td>
+                        <td>{item.title}</td>
+                        {/*<td>Pending</td>*/}
+                        <td><span onClick={()=>triggerConfirm(index)}><i className="fa fa-toggle-on"/> trigger</span></td>
+                    </tr>)
+                }
+                {/*<tr>*/}
+                {/*    <td>1</td>*/}
+                {/*    <td>Mark</td>*/}
+                {/*    <td>Pending</td>*/}
+                {/*    <td><span><i className="fa fa-toggle-on" /> trigger</span></td>*/}
+                {/*</tr>*/}
                 </tbody>
             </Table>
             {/*<PageComponent total={this.state.totalNum}*/}

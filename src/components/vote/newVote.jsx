@@ -1,10 +1,11 @@
 import React, {createRef, useEffect, useState} from 'react';
-import t3 from "../../images/t-4.png";
 import {Button, FormControl, InputGroup} from "react-bootstrap";
-import Datetime from 'react-datetime';
+// import Datetime from 'react-datetime';
 import PageBackground from "../pagebackground";
 
 import moment from 'moment';
+import {useSubstrate} from "../../api/contracts";
+import api from "../../api";
 
 var yesterday = moment().subtract(1, 'day');
 var valid = function (current) {
@@ -18,193 +19,230 @@ let inputProps = {
 
 export default function NewVote(props) {
     // this.datetimeRef = createRef();
-    const [date, setDate] = useState('');
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+
+    const {state,dispatch} = useSubstrate();
+    const {votecontract} = state;
+
+
+    const [date, setdate] = useState('');
+    const [title, settitle] = useState('');
+    const [desc, setdesc] = useState('');
     const [id, setId] = useState(null);
-    const [optionlist, setOptionlist] = useState( [
-        {
-            option: ''
-        },
-        {
-            option: ''
-        },
-        {
-            option: ''
-        }
-    ]);
+    const [supportInput, setsupportInput] = useState('');
+    const [min, setmin] = useState('');
+    const [logo, setLogo] = useState('');
+
+    const [optionlist, setoptionlist] = useState( ['','','']);
     useEffect(() => {
-        setId(props.match.params.id)
-
-
+        setId(props.match.params.id);
+        let logo = sessionStorage.getItem('logo');
+        setLogo(logo);
 
     }, []);
 
-    const handleClicktoVote = () => {
-        // let {id} = this.state;
+    const handleClicktoVote = async () => {
 
-        props.history.push(`/vote/${id}`)
-        // console.log(this.state)
+        let dataobj = {
+            title,
+            desc,
+            vote_time:date,
+            support_require_num:supportInput,
+            min_require_num:min,
+            choices:optionlist.join(',')
+        }
+        await api.vote.newVote(votecontract,dataobj,(result)=> {
+            if(result){
+                props.history.push(`/vote/${id}`)
+            }
+        }).then(data => {
+            // if (!data) return;
+            // // setActivelist(data)
+
+            // if(data){
+            //     props.history.push(`/vote/${id}`)
+            // }
+
+        });
+
+
     }
 
     const removeOption =(selectItem, index) => {
         let arr = optionlist;
         arr.splice(index, 1);
-        setOptionlist([...arr])
+        setoptionlist([...arr])
 
     }
 
     const addOption = () => {
         let newArray = [...optionlist];
-        newArray.push({
-            option: ''
-
-        });
-        setOptionlist(newArray)
+        newArray.push('');
+        setoptionlist(newArray)
     }
     const setAddress = (e, index) => {
 
         let arr = optionlist;
 
-        arr[index].option = e.target.value;
-        setOptionlist([...arr])
+        arr[index] = e.target.value;
+        setoptionlist([...arr])
     }
 
-    const handleChange = (value) => {
-        setDate(value._d)
-    }
-    const renderInput = (itemprops, openCalendar, closeCalendar) => {
-        function clear() {
-            console.log(itemprops.value)
-            itemprops.onChange({target: {value: ''}});
-        }
-
-        return (
-            <div>
-                <input {...itemprops} />
-                <button className="selectedCal" onClick={openCalendar} />
-                {
-                    itemprops.value.length !== 0 &&
-                    <div className='removeDate' onClick={clear}><i className='fa fa-close' /></div>
-                }
-
-            </div>
-        );
-    }
+    // const handleChange = (value) => {
+    //     setdate(value._d)
+    // }
+    // const renderInput = (itemprops, openCalendar, closeCalendar) => {
+    //     function clear() {
+    //         console.log(itemprops.value)
+    //         itemprops.onChange({target: {value: ''}});
+    //     }
+    //
+    //     return (
+    //         <div>
+    //             <input {...itemprops} />
+    //             <button className="selectedCal" onClick={openCalendar} />
+    //             {
+    //                 itemprops.value.length !== 0 &&
+    //                 <div className='removeDate' onClick={clear}><i className='fa fa-close' /></div>
+    //             }
+    //
+    //         </div>
+    //     );
+    // }
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
-        switch(name){
-            case'title':
-                setTitle(value)
-                break;
-            case'description':
-                setDescription(value)
-                break;
-            default:
-                break;
-        }
-        // this.setState({[name]: value});
-        console.log(value)
+        let str = `set${name}`
+        eval(str)(value)
     }
 
-
-        return (
-            <div>
-                <section>
-                    <PageBackground/>
-                    <div className="container">
-                        <div className="createSingle row">
-                            <div className='col-lg-4'>
-                                <div>
-                                    <img src={t3} alt=""/>
-                                </div>
-
+    return (
+        <div>
+            <section>
+                <PageBackground/>
+                <div className="container">
+                    <div className="createSingle row">
+                        <div className='col-lg-4'>
+                            <div>
+                                <img src={logo} alt=""/>
                             </div>
-                            <div className='col-lg-8'>
-                                <ul>
-                                    <li>
-                                        <div className='voteBtn'>
-                                            <Datetime
-                                                renderInput={renderInput}
-                                                inputProps={inputProps}
-                                                isValidDate={valid}
-                                                // ref={datetimeRef}
-                                                onChange={handleChange}
+
+                        </div>
+                        <div className='col-lg-8'>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                placeholder="Please fill how long the vote durate by seconds"
+                                                name='date'
+                                                value={date}
+                                                onChange={handleInputChange}
                                             />
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div>
-                                            <InputGroup className="mb-3">
-                                                <FormControl
-                                                    placeholder="Please fill the title"
-                                                    name='title'
-                                                    value={title}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </InputGroup>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div>
-                                            <InputGroup>
-                                                <FormControl as="textarea"
-                                                             placeholder="Please fill description"
-                                                             name='description'
-                                                             value={description}
-                                                             onChange={handleInputChange}
-                                                />
-                                            </InputGroup>
-                                        </div>
-                                    </li>
+                                        </InputGroup>
+                                    </div>
+                                    {/*<div className='voteBtn'>*/}
+                                    {/*    <Datetime*/}
+                                    {/*        renderInput={renderInput}*/}
+                                    {/*        inputProps={inputProps}*/}
+                                    {/*        isValidDate={valid}*/}
+                                    {/*        // ref={datetimeRef}*/}
+                                    {/*        onChange={handleChange}*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
+                                </li>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                placeholder="Please fill the title"
+                                                name='title'
+                                                value={title}
+                                                onChange={handleInputChange}
+                                            />
+                                        </InputGroup>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                placeholder="Please fill the minimum support require numbers."
+                                                name='supportInput'
+                                                value={supportInput}
+                                                onChange={handleInputChange}
+                                            />
+                                        </InputGroup>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                placeholder="Please fill the minimum voter require numbers."
+                                                name='min'
+                                                value={min}
+                                                onChange={handleInputChange}
+                                            />
+                                        </InputGroup>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <InputGroup>
+                                            <FormControl as="textarea"
+                                                         placeholder="Please fill description"
+                                                         name='desc'
+                                                         value={desc}
+                                                         onChange={handleInputChange}
+                                            />
+                                        </InputGroup>
+                                    </div>
+                                </li>
 
-                                    <li>
-                                        {optionlist.map((i, index) => (
+                                <li>
+                                    {optionlist.map((i, index) => (
 
-                                            <div key={index}>
-                                                <div className="row">
-                                                    <div className="col-11">
-                                                        <InputGroup className="mb-3">
-                                                            <FormControl
-                                                                placeholder="fill the option"
-                                                                aria-label="Username"
-                                                                aria-describedby="basic-addon1"
-                                                                value={optionlist[index].option}
-                                                                onChange={(event) => setAddress(event, index)}
-                                                            />
-                                                        </InputGroup>
-                                                    </div>
-                                                    <div className="col-1">
-                                                        {
-                                                            !!index && index!==1 && <i className="fa fa-close remove"
-                                                                                            onClick={removeOption.bind(this, i, index)}/>
-                                                        }
+                                        <div key={index}>
+                                            <div className="row">
+                                                <div className="col-11">
+                                                    <InputGroup className="mb-3">
+                                                        <FormControl
+                                                            placeholder="fill the option"
+                                                            value={optionlist[index]}
+                                                            onChange={(event) => setAddress(event, index)}
+                                                        />
+                                                    </InputGroup>
+                                                </div>
+                                                <div className="col-1">
+                                                    {
+                                                        !!index && index!==1 && <i className="fa fa-close remove"
+                                                                                        onClick={removeOption.bind(this, i, index)}/>
+                                                    }
 
-                                                    </div>
                                                 </div>
                                             </div>
-                                        ))
-                                        }
-
-                                        <div>
-                                            <Button variant="light" onClick={addOption}><i
-                                                className="fa fa-plus"/> Add Option</Button>
                                         </div>
+                                    ))
+                                    }
 
-                                    </li>
+                                    <div>
+                                        <Button variant="light" onClick={addOption}><i
+                                            className="fa fa-plus"/> Add Option</Button>
+                                    </div>
 
-                                    <li className='brdr'>
-                                        <Button variant="primary" onClick={handleClicktoVote}>Create</Button>
-                                    </li>
-                                </ul>
-                            </div>
+                                </li>
+
+                                <li className='brdr'>
+                                    <Button variant="primary" onClick={handleClicktoVote}>Create</Button>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-            </div>
-        )
+        </div>
+    )
 
 }
 

@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import t3 from "./images/t-4.png";
 import VotePagination from './components/vote/votePagination';
 import VotePending from './components/vote/votePending';
 import VoteActive from './components/vote/voteActive';
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 import {useSubstrate} from "./api/contracts";
-import Accounts from "./api/Account";
-const { Keyring } = require('@polkadot/keyring');
+
+import api from './api/index';
+
 
 export default function Vote(props){
 
@@ -15,10 +15,13 @@ export default function Vote(props){
     const {votecontract} = state;
 
     const [id, setAId] = useState(null);
+    const [activelist, setActivelist] = useState([]);
+    const [pendinglist, setPendinglist] = useState([]);
+    const [historylist, setHistorylist] = useState([]);
+    const [logo, setLogo] = useState('');
 
     const  handleClicktonewVote = () => {
         props.history.push(`/newVote/${id}`);
-        console.log("new_vote");
     }
     const handleClicktoview = (voteid) => {
         let { id } = props;
@@ -29,20 +32,38 @@ export default function Vote(props){
         props.history.push(`/voteOverview/${id}/${voteid}`)
     }
     useEffect(() => {
-        setAId(props.match.params.id)
-        console.log("use effect load");
-        dispatch({type: 'LOAD_VOTE'});
+        setAId(props.match.params.id);
+        let logo = sessionStorage.getItem('logo');
+        setLogo(logo);
     }, []);
 
     useEffect(async() => {
-        if(votecontract === null) return ;
+        await api.vote.queryOpenVote(votecontract).then(data => {
+            if (!data) return;
+            setActivelist(data)
+        });
 
-        const value = 0;
-        const gasLimit = -1;
+        await api.vote.queryWaitVote(votecontract).then(data => {
+            if (!data) return;
+            setPendinglist(data)
+        });
 
-        const keyring = new Keyring({ type: 'sr25519' });
+        await api.vote.queryAllVote(votecontract).then(data => {
+            if (!data) return;
+            setHistorylist(data)
 
-        const alice = keyring.addFromUri('//Alice');
+        });
+
+        // if(votecontract === null) return ;
+
+        // const value = 0;
+        // const gasLimit = -1;
+        //
+        // const keyring = new Keyring({ type: 'sr25519' });
+        //
+        // const alice = keyring.addFromUri('//Alice');
+        //
+        //
 
 
 
@@ -75,34 +96,51 @@ export default function Vote(props){
         //     }
         // })
 
-        await votecontract.query.queryAllVote(alice.address, {value, gasLimit}).then(result =>{
-            // console.log(output);
-            const {output} = result;
-            console.log(output);
-        });
-        await votecontract.query.queryOneVote(alice.address, {value, gasLimit}, 0).then(result =>{
-            // console.log(output);
-            const {output} = result;
-            console.log(output);
-        });
-        await votecontract.query.queryWaitVote(alice.address, {value, gasLimit}).then(result =>{
-            // console.log(output);
-            const {output} = result;
-            console.log(output);
-        });
-        await votecontract.query.queryOpenVote(alice.address, {value, gasLimit}).then(result =>{
-            // console.log(output);
-            const {output} = result;
-            console.log(output);
-        });
-        await votecontract.query.queryExecutedVote(alice.address, {value, gasLimit}).then(result =>{
-            // console.log(output);
-            const {output} = result;
-            console.log(output);
-        });
+
+
+
+
+       //  await api.vote.queryAllVote(voteContract).then(data => {
+       //      if(!data) return;
+       // console.log(data)
+       //  });
+       //
+       //  await api.vote.queryOneVote(voteContract,id).then(data => {
+       //      if(!data) return;
+       // console.log(data)
+       //  });
+
+
+
+        // await votecontract.query.queryAllVote(alice.address, {value, gasLimit}).then(result =>{
+        //     // console.log(output);
+        //     const {output} = result;
+        //     console.log(output);
+        // });
+
+        // await votecontract.query.queryOneVote(alice.address, {value, gasLimit}, 0).then(result =>{
+        //     // console.log(output);
+        //     const {output} = result;
+        //     console.log(output);
+        // });
+        // await votecontract.query.queryWaitVote(alice.address, {value, gasLimit}).then(result =>{
+        //     // console.log(output);
+        //     const {output} = result;
+        //     console.log(output);
+        // });
+        // await votecontract.query.queryOpenVote(alice.address, {value, gasLimit}).then(result =>{
+        //     // console.log(output);
+        //     const {output} = result;
+        //     console.log(output);
+        // });
+        // await votecontract.query.queryExecutedVote(alice.address, {value, gasLimit}).then(result =>{
+        //     // console.log(output);
+        //     const {output} = result;
+        //     console.log(output);
+        // });
         // const result = await votecontract.exec('query_all_vote', {value, gasLimit});
 
-    }, [votecontract]);
+    }, []);
 
         return (
             <div>
@@ -112,7 +150,7 @@ export default function Vote(props){
                         <div className="createSingle row">
                             <div className='col-lg-4'>
                                 <div>
-                                    <img src={t3} alt=""/>
+                                    <img src={logo} alt=""/>
                                 </div>
                                 <div className='newVote'>
                                     <Button variant="primary" onClick={handleClicktonewVote}>New voting</Button>
@@ -122,15 +160,26 @@ export default function Vote(props){
                                 <ul className="vote">
                                     <li>
                                         <h6>Active Voting List</h6>
-                                        <VoteActive  id={id}  history={props.history} />
+                                        <VoteActive
+                                            id={id}
+                                            list={activelist}
+                                            history={props.history}
+                                        />
                                     </li>
                                     <li>
                                         <h6>Pending Voting List</h6>
-                                        <VotePending  id={id}  history={props.history}  />
+                                        <VotePending
+                                            id={id}
+                                            list={pendinglist}
+                                            history={props.history}
+                                        />
                                     </li>
                                     <li>
                                         <h6>History</h6>
-                                        <VotePagination id={id}  history={props.history}  />
+                                        <VotePagination
+                                            id={id}
+                                            list={historylist}
+                                            history={props.history}  />
                                     </li>
 
                                 </ul>

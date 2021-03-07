@@ -12,7 +12,7 @@ export default function Headertop() {
     const [selected, setselected] = useState([]);
 
     useEffect(() => {
-        setshowHeader(createHashHistory.location.pathname !== '/')
+        setshowHeader(createHashHistory.location.pathname !== '/');
         createHashHistory.listen((obj) => {
             setshowHeader(createHashHistory.location.pathname !== '/')
         });

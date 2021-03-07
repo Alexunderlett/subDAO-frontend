@@ -3,7 +3,8 @@ const formatResult =  (result) =>{
     if (result && result.output) {
         str = result.output.toHuman();
     }
-    return str.substr(1)
+
+    return str;
 }
 
 export default{ formatResult }
