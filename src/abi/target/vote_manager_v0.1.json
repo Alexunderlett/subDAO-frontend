@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x3ecdc0d34a38e498e9fa00e5bd4a8e5608286fe5db6bc58e8e2d5fb5f984851e",
-    "language": "ink! 3.0.0-rc2",
+    "hash": "0x75bd4ba2baa9963ccfe0fab5ca087b1869c9ffb7c61dae93270c9b810eded62c",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
@@ -687,6 +687,10 @@
         "composite": {
           "fields": [
             {
+              "name": "vote_id",
+              "type": 1
+            },
+            {
               "name": "executed",
               "type": 8
             },
@@ -869,6 +873,10 @@
       "def": {
         "composite": {
           "fields": [
+            {
+              "name": "vote_id",
+              "type": 1
+            },
             {
               "name": "executed",
               "type": 8
