@@ -2,10 +2,14 @@ import React, {useEffect, useState} from 'react';
 import Slick from "./components/slick";
 import {Modal,Button} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
+import api from "./api";
 
 export default function Home(props) {
+
     let [showButton, setShowButton] = useState(false);
     const {state,dispatch} = useSubstrate();
+    const {maincontract} = state;
+    const [list,setlist]= useState([]);
 
      const handleClick =()=> {
          let account = JSON.parse(sessionStorage.getItem('account'));
@@ -17,9 +21,23 @@ export default function Home(props) {
          }
      }
     useEffect(() => {
-
         dispatch({type: 'LOAD_MAINCONTRACT'});
     }, []);
+
+    //  useEffect(() => {
+    //      if(list.length){
+    //          for(let item of list){
+    //              await api.base.InitBase(state, dispatch,'5GPi6oGcFqmJg9JxWBL7pxthya6xbu54oUQzNdFwdgAuGcMV');
+    //          }
+    //      }
+    // }, [list]);
+
+     useEffect(async() => {
+         await api.main.listDaoInstances(maincontract).then(data => {
+             if (!data) return;
+             setlist(data)
+         });
+    }, [maincontract]);
 
     return (<div>
             <section className="padding">

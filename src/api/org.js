@@ -114,7 +114,6 @@ const removeDaoModerator = async (orgcontract,obj,cb) => {
     const {name,address} = obj;
     const injector = await Accounts.accountInjector();
 
-    // let data = await orgcontract.tx.removeDaoMember({value, gasLimit}, name,address)
     let data = await orgcontract.tx.removeDaoModerator({value, gasLimit}, address)
             .signAndSend(AccountId, { signer: injector.signer }, (result) => {
                 if (result.status.isFinalized || result.status.isInBlock ) {

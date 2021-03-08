@@ -27,7 +27,7 @@ export default function About(props) {
     useEffect(async () => {
         setId(props.match.params.id);
 
-        await api.base.InitBase(state, dispatch,'5GPi6oGcFqmJg9JxWBL7pxthya6xbu54oUQzNdFwdgAuGcMV');
+
         await api.vault.InitVault(state,dispatch,'5HS7Vufvtr7sCrpS4yeXBZWurT5BqpZpzKgwRsZfvmF8euMv');
         await api.org.InitOrg(state,dispatch,'5CkgafcwX8XRV7gTqMWcroBt25c8vJxHmZdiSaKFGMRyMtrd');
         await api.vote.InitVote(state,dispatch,'5CPrv4sEHos9Xc6j2AHntSaCaQPyE3ufiKnkDV1QjaV3iVsb');
@@ -45,10 +45,10 @@ export default function About(props) {
         await api.base.getBaseData(basecontract).then(data => {
             if (!data) return;
             let {nameResult, logoResult, descResult, ownerResult,erc20contract} = data;
-            setName(nameResult.substr(1));
-            setLogo(logoResult.substr(1));
-            setDescription(descResult.substr(1));
-            setOwner(ownerResult.substr(1));
+            setName(nameResult);
+            setLogo(logoResult);
+            setDescription(descResult);
+            setOwner(ownerResult);
         });
 
         // let erc20 = '5HU5TSviQ8UvzEoPTKb9wmqsmbSjbMtWe6AZcvyNVvDg1yqM';

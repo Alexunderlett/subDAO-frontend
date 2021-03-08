@@ -9,9 +9,7 @@ const listTemplates = async (maincontract) => {
     const AccountId = await Accounts.accountAddress();
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
-    console.log("=====r3456546",AccountId)
     let data = await maincontract.query.listTemplates(AccountId, {value, gasLimit});
-    console.log("=======",data)
     data = publicJs.formatResult(data);
 
     return data;
@@ -23,7 +21,7 @@ const listDaoInstances = async (maincontract) => {
     const AccountId = await Accounts.accountAddress();
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
-    let data = await maincontract.query.listTemplates(AccountId, {value, gasLimit});
+    let data = await maincontract.query.listDaoInstances(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
     return data;
@@ -50,8 +48,7 @@ const instanceByTemplate = async (maincontract,cb) => {
 
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
-
-    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit}, 0, AccountId)
+    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:138003n * 1000000n}, 0, AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isInBlock) {
                 // console.log('main.instanceByTemplate in a block', result);
@@ -65,10 +62,13 @@ const instanceByTemplate = async (maincontract,cb) => {
 
 };
 
+
+
 export default {
     listTemplates,
     listDaoInstances,
     listDaoInstancesByOwner,
     instanceByTemplate,
+
 }
 

@@ -1,26 +1,119 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from "react-bootstrap";
-// import ConnectContract from "../../api/connectContract";
 import {useSubstrate} from "../../api/contracts";
-import {Keyring} from "@polkadot/keyring";
-
-import { ContractPromise } from '@polkadot/api-contract';
-import ConnectContract from "../../api/connectContract";
 import api from "../../api";
 
 export default function ForthStep(props) {
-    const {state,dispatch} = useSubstrate();
-    const {maincontract} = state;
+    const {state, dispatch} = useSubstrate();
+    const {maincontract, daoManagercontract} = state;
 
     const [instanceByTemplate, setinstanceByTemplate] = useState(false);
+    const [name, setname] = useState('');
+    const [logo, setlogo] = useState('');
+    const [desc, setdesc] = useState('');
+    const [ercUrl, setercUrl] = useState('');
+    const [symbol, setsymbol] = useState('');
+    const [ercSupply, setsercSupply] = useState('');
+    const [baseC, setbaseC] = useState(null);
+    const [tokenlist,settokenlist]= useState([]);
+    const [adminlist,setadminlist]= useState([]);
+    const [contractlist,setcontractlist]= useState(null);
+    const [transfer,settransfer]= useState(false);
+    const [admin,setadmin]= useState(false);
+    const [queryAddrs,setqueryAddrs]= useState(false);
 
 
-    const toThirdStep = () => {
-       props.handlerSet(3)
+
+    // const toThirdStep = () => {
+    //     props.handlerSet(3)
+    // }
+    const handleClicktoAbout = (id) => {
+        props.history.push(`/about/${id}`)
     }
-    const handleClicktoAbout =(id) => {
-      props.history.push(`/about/${id}`)
-    }
+    useEffect(async () => {
+        const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
+        setname(firstStep.name);
+        setdesc(firstStep.description);
+
+        const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
+        setercUrl(secondStep[0].dao_manager_code_hash);
+
+        const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
+        const {symbol,supply,admin,token,adminlist,tokenlist} = thirdStep;
+        setsymbol(symbol);
+        setsercSupply(supply);
+        if(admin){
+            setadminlist(adminlist);
+        }
+        if(token){
+            settokenlist(tokenlist);
+        }
+        const img = sessionStorage.getItem('ImageUrl');
+        setlogo(img);
+
+    }, []);
+    useEffect(async () => {
+        if (instanceByTemplate){
+            await api.main.listDaoInstancesByOwner(maincontract).then(data => {
+                if (!data) return;
+                if (data.length) {
+                    setbaseC(data[data.length - 1])
+                }
+            });
+        }
+    }, [instanceByTemplate]);
+    useEffect(async () => {
+        if(baseC){
+            await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr);
+        }
+    }, [baseC]);
+    useEffect(async () => {
+        if(transfer){
+            for(let item of tokenlist){
+                await api.dao.transferToken(daoManagercontract, item,(data)=>{
+                    setadmin(data)
+                }).then(data=>{
+                    console.log(data)
+                });
+            }
+        }
+    }, [transfer]);
+
+    useEffect(async () => {
+        if(admin){
+            for(let item of adminlist){
+                await api.dao.addDaoModeratorTx(daoManagercontract, item,(data)=>{
+                    setqueryAddrs(data)
+                }).then(data=>{
+                    console.log(data)
+                });
+            }
+        }
+    }, [admin]);
+     useEffect(async () => {
+         await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
+             setcontractlist(data)
+             console.log(data)
+         });
+        }, [queryAddrs]);
+
+    useEffect(async () => {
+        let obj = {
+            base_name: name,
+            base_logo: logo,
+            base_desc: desc,
+            erc20_name: ercUrl,
+            erc20_symbol: symbol,
+            erc20_initial_supply: ercSupply,
+            erc20_decimals: 0
+        };
+        if (daoManagercontract == null) return;
+        await api.dao.setDAO(daoManagercontract, obj, (data) => {
+            settransfer(data)
+        }).then(data => {
+            console.log(data)
+        });
+    }, [daoManagercontract]);
     useEffect(async () => {
 
         // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
@@ -31,15 +124,12 @@ export default function ForthStep(props) {
         // 4.获取DAO地址后，调用分配token，transfer(&mut self, to: AccountId, value: u64) -> bool
         // 5.获取DAO地址后，调用增加管理员，add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool
         // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
-        await api.main.instanceByTemplate(maincontract, (result)=> {
-            console.log("===",result)
+        await api.main.instanceByTemplate(maincontract, (result) => {
             setinstanceByTemplate(result)
         }).then(data => {
             if (!data) return;
-            console.log(data)
         });
 
-console.log("=====000000099990",maincontract)
 //         if(maincontract) {
 //
 //             const AccountId = JSON.parse(sessionStorage.getItem('account'));
@@ -50,11 +140,16 @@ console.log("=====000000099990",maincontract)
 //             function sleep(delay) {
 //                 for(var t = Date.now(); Date.now() - t <= delay;);
 //             }
-// // NOTE the apps UI specified these in mega units
-//             const value = 0;
-//             const gasLimit = 138003n * 1000000n;
-//             const keyring = new Keyring({type: 'sr25519'});
-//             let alicePair = keyring.createFromUri('//Alice');
+// // // NOTE the apps UI specified these in mega units
+
+
+        //
+        // const value = 0;
+        // const gasLimit = 138003n * 1000000n;
+        // const keyring = new Keyring({type: 'sr25519'});
+        // let alicePair = keyring.createFromUri('//Alice');
+
+
 // // Perform the actual read (no params at the end, for the `get` message)
 // // (We perform the send from an account, here using Alice's address)
 //             console.info(maincontract.query)
@@ -70,18 +165,17 @@ console.log("=====000000099990",maincontract)
 //                 gasLimit: -1
 //             })
 //             console.log("main.listDaoInstances", list_all_dao_result, list_all_dao_result.output.toJSON())
-//
-//             // 实例化DAO并配置
-//             // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
-//             await maincontract.tx.instanceByTemplate({value, gasLimit}, 0, alicePair.address)
-//                 .signAndSend(alicePair, (result) => {
-//                     if (result.status.isInBlock) {
-//                         console.log('main.instanceByTemplate in a block', result);
-//                     } else if (result.status.isFinalized) {
-//                         console.log('main.instanceByTemplate finalized', result);
-//                     }
-//                 });
-//
+        // 实例化DAO并配置
+        // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
+        // await maincontract.tx.instanceByTemplate({value, gasLimit}, 0, alicePair.address)
+        // .signAndSend(alicePair, (result) => {
+        //     if (result.status.isInBlock) {
+        //         console.log('main.instanceByTemplate in a block', result);
+        //     } else if (result.status.isFinalized) {
+        //         console.log('main.instanceByTemplate finalized', result);
+        //     }
+        // });
+
 //
 //             sleep(10000);
 //             // 2.等待上链，in block，根据当前账户地址查询实例化的DAO列表，listDaoInstancesByOwner (owner: AccountId): Vec<DAOInstance>
@@ -144,58 +238,69 @@ console.log("=====000000099990",maincontract)
 //         }
 
     }, [maincontract]);
-    useEffect(async () => {
-        if(!instanceByTemplate) return ;
-        await api.main.listDaoInstancesByOwner(maincontract).then(data => {
-            if (!data) return;
-            console.log('listDaoInstancesByOwner',data)
-        });
 
-
-
-    }, [instanceByTemplate]);
-        return <ul>
-            <li className='successful'>
-                <div className="successFont">
-                    <h1>
-                        <span>S</span>
-                        <span>U</span>
-                        <span>C</span>
-                        <span>C</span>
-                        <span>e</span>
-                        <span>s</span>
-                        <span>s</span>
-                        <span>f</span>
-                        <span>u</span>
-                        <span>l</span>
-                    </h1>
-                </div>
-                <div className="successInfo">Create PAKA Labs successful !!</div>
+    return <ul>
+        <li className='successful'>
+            <div className="successFont">
+                <h1>
+                    <span>S</span>
+                    <span>U</span>
+                    <span>C</span>
+                    <span>C</span>
+                    <span>e</span>
+                    <span>s</span>
+                    <span>s</span>
+                    <span>f</span>
+                    <span>u</span>
+                    <span>l</span>
+                </h1>
+            </div>
+            <div className="successInfo">Create {name} successful !!</div>
+        </li>
+        {
+            contractlist!=null &&  <li className="addresslist">
+                {
+                    contractlist.base_addr!=null && <div>
+                        <span>Base Address</span>
+                        <a href="#">{contractlist.base_addr}</a>
+                    </div>
+                }
+                {
+                    contractlist.erc20_addr!=null && <div>
+                        <span>ERC20 Address</span>
+                        <a href="#">{contractlist.erc20_addr}</a>
+                    </div>
+                }
+                {
+                    contractlist.org_addr!=null && <div>
+                        <span>ORG Address</span>
+                        <a href="#">{contractlist.org_addr}</a>
+                    </div>
+                }
+                {
+                    contractlist.vault_addr!=null && <div>
+                        <span>VAULT Address</span>
+                        <a href="#">{contractlist.vault_addr}</a>
+                    </div>
+                }
+                {
+                    contractlist.vote_addr!=null && <div>
+                        <span>VOTE Address</span>
+                        <a href="#">{contractlist.vote_addr}</a>
+                    </div>
+                }
             </li>
-            <li className="addresslist">
-                <div>
-                    <span>DAO Address</span>
-                    <a href="#">DocumentsBlogsMediumTwitterDiscordGithub</a>
-                </div>
-                <div>
-                    <span>Token Address</span>
-                    <a href="#">DocumentsBlogsMediumTwitterDiscordGithub</a>
-                </div>
-                <div>
-                    <span>Vault Address</span>
-                    <a href="#">DocumentsBlogsMediumTwitterDiscordGithub</a>
-                </div>
-                <div>
-                    <span>Org Address</span>
-                    <a href="#">DocumentsBlogsMediumTwitterDiscordGithub</a>
-                </div>
-            </li>
+        }
 
-            <li className='brdr'>
-                <Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}>Previous</Button>
-                <Button variant="primary" onClick={handleClicktoAbout.bind(this, 3)}>Manage</Button>
-            </li>
-        </ul>;
+
+        <li className='brdr'>
+            {/*<Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}>Previous</Button>*/}
+            {
+                contractlist!=null &&  <Button variant="primary" onClick={handleClicktoAbout.bind(this, 3)}>Manage</Button>
+            }
+
+        </li>
+    </ul>;
 
 
 }

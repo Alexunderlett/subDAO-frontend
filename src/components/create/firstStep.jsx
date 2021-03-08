@@ -52,16 +52,16 @@ class FirstStep extends Component {
                     />
                 </InputGroup>
             </li>
-            <li>
-                <InputGroup className="mb-3">
-                    <FormControl
-                        placeholder="Optional.Please fill your DAO's website."
-                        value={website}
-                        name='website'
-                        onChange={this.handleChange}
-                    />
-                </InputGroup>
-            </li>
+            {/*<li>*/}
+            {/*    <InputGroup className="mb-3">*/}
+            {/*        <FormControl*/}
+            {/*            placeholder="Optional.Please fill your DAO's website."*/}
+            {/*            value={website}*/}
+            {/*            name='website'*/}
+            {/*            onChange={this.handleChange}*/}
+            {/*        />*/}
+            {/*    </InputGroup>*/}
+            {/*</li>*/}
             <li>
                 <InputGroup>
                     <FormControl as="textarea"

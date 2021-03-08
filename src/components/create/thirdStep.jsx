@@ -8,10 +8,15 @@ class ThirdStep extends Component {
             form:{
                 admin: false,
                 token: false,
-                address: '',
                 name: '',
                 symbol: '',
                 supply: '',
+                adminlist: [
+                    {
+                        name: '',
+                        address: ''
+                    }
+                ],
                 tokenlist: [
                     {
                         address: '',
@@ -50,6 +55,24 @@ class ThirdStep extends Component {
             };
         });
     }
+    addAdmin = () => {
+        let {adminlist} = this.state.form;
+        let newArray = [...adminlist];
+        newArray.push({
+            name: '',
+            address: ''
+
+        });
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                adminlist : newArray
+            };
+            return {
+                form
+            };
+        });
+    }
     setAddress = (e, index) => {
         let {tokenlist} = this.state.form;
         const {name, value} = e.target;
@@ -58,6 +81,20 @@ class ThirdStep extends Component {
             const form = {
                 ...prevState.form,
                 tokenlist
+            };
+            return {
+                form
+            };
+        });
+    }
+    setAdmin = (e, index) => {
+        let {adminlist} = this.state.form;
+        const {name, value} = e.target;
+        adminlist[index][name] = value;
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                adminlist
             };
             return {
                 form
@@ -73,6 +110,20 @@ class ThirdStep extends Component {
             const form = {
                 ...prevState.form,
                 tokenlist
+            };
+            return {
+                form
+            };
+        });
+    }
+    removeAdmin(selectItem, index) {
+        let {adminlist} = this.state.form;
+        adminlist.splice(index, 1);
+
+        this.setState((prevState) => {
+            const form = {
+                ...prevState.form,
+                adminlist
             };
             return {
                 form
@@ -115,7 +166,7 @@ class ThirdStep extends Component {
     }
 
     render() {
-        let { form:{admin, address, token, name, symbol,supply,tokenlist}} = this.state;
+        let { form:{admin, token, name, symbol,supply,tokenlist,adminlist}} = this.state;
         return <ul>
             <li>
                 <div>
@@ -131,15 +182,44 @@ class ThirdStep extends Component {
                     </Form.Group>
                 </div>
                 <div>
-                    <InputGroup>
-                        <FormControl
-                            as="textarea"
-                            placeholder="Fill the address, split with ;"
-                            value={address}
-                            name='address'
-                            onChange={this.handleInput}
-                        />
-                    </InputGroup>
+                    {adminlist.map((i, index) => (
+
+                        <div key={index}>
+                            <div className="row">
+                                <div className="col-4">
+                                    <InputGroup className="mb-3">
+                                        <FormControl
+                                            placeholder="Fill the name"
+                                            value={adminlist[index].name}
+                                            name='name'
+                                            onChange={(event) => this.setAdmin(event, index)}
+                                        />
+                                    </InputGroup>
+                                </div>
+                                <div className="col-7">
+                                    <InputGroup className="mb-3">
+                                        <FormControl
+                                            placeholder="Fill the address"
+                                            value={adminlist[index].address}
+                                            name='address'
+                                            onChange={(event) => this.setAdmin(event, index)}
+                                        />
+                                    </InputGroup>
+                                </div>
+                                <div className="col-1">
+                                    {
+                                        !!index &&
+                                        <i className="fa fa-close remove" onClick={this.removeAdmin.bind(this, i, index)}/>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                    }
+                    <div>
+                        <Button variant="light" onClick={this.addAdmin}><i className="fa fa-plus"/> Add Admin</Button>
+                    </div>
                 </div>
             </li>
 
