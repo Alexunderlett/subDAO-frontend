@@ -23,8 +23,13 @@ export default function ForthStep(props) {
     const [queryAddrs,setqueryAddrs]= useState(false);
     const [daoinit,setDaoinit]= useState(false);
 
-    const handleClicktoAbout = (id) => {
-        props.history.push(`/about/${baseC.dao_manager_addr}`)
+    const handleClicktoAbout = () => {
+        props.history.push(`/about/${baseC.dao_manager_addr}`);
+        sessionStorage.removeItem("step");
+        sessionStorage.removeItem("secondStep");
+        sessionStorage.removeItem("thirdStep");
+        sessionStorage.removeItem("firstStep");
+        sessionStorage.removeItem("ImageUrl");
     }
     useEffect(async () => {
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
@@ -48,7 +53,7 @@ export default function ForthStep(props) {
         setlogo(img);
 
     }, []);
-    useEffect(async () => {
+        useEffect(async () => {
 
         // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
         // 2.等待上链，in block，根据当前账户地址查询实例化的DAO列表，listDaoInstancesByOwner (owner: AccountId): Vec<DAOInstance>
@@ -280,7 +285,7 @@ export default function ForthStep(props) {
         <li className='brdr'>
             {/*<Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}>Previous</Button>*/}
             {
-                contractlist!=null &&  <Button variant="primary" onClick={handleClicktoAbout.bind(this, 3)}>Manage</Button>
+                contractlist!=null &&  <Button variant="primary" onClick={handleClicktoAbout}>Manage</Button>
             }
 
         </li>
