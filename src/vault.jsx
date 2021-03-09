@@ -49,7 +49,6 @@ export default function Vault(props){
 
         await api.vault.getTransferHistory(vaultcontract).then(data => {
             if (!data) return;
-            // setActivelist(data)
             sethistorylist(data)
         });
 

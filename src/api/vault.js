@@ -76,11 +76,10 @@ const withdraw = async (vaultcontract,obj,cb) => {
 
     await vaultcontract.tx.withdraw({value, gasLimit}, selected,address, amount).
     signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized || result.status.isInBlock) {
+        if (result.status.isFinalized) {
             // console.log("====result.status.isInBlock",result.status.isInBlock || result.status.isFinalized);
             // data = (result.status.isInBlock || result.status.isFinalized);
             // return
-            console.log('withdraw---------',result)
             cb(true)
         }
     });

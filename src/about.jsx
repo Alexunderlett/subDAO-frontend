@@ -48,8 +48,6 @@ export default function About(props) {
     useEffect(async () => {
 
         const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
-        console.log("=========contractlist===================", contractlist)
-
         if (base_addr != null) {
             await api.base.InitBase(state, dispatch, base_addr, (data) => {
                 setbasestate(data)
