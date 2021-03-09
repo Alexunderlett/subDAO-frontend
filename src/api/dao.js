@@ -8,9 +8,8 @@ const InitDAO = async (state,dispatch,address,cb) =>  {
 
     const {apiState, api,daoManagercontractState} = state;
     let account = await Accounts.accountAddress();
-    // if (apiState !== 'READY' || !account || daoManagercontractState!= null) return;
-    if (apiState !== 'READY' || !account ) return;
 
+    if (apiState !== 'READY' || !account ) return;
     // if (loadDAO) return dispatch({ type: 'SET_BASE', payload: daoManagercontract });
     // loadDAO = true;
 

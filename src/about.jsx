@@ -8,7 +8,7 @@ import api from './api/index';
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, vaultcontract, orgcontract, votecontract, erc20contract, daoManagercontract} = state;
+    const {basecontract, vaultcontract, orgcontract, votecontract, erc20contract, daoManagercontract,apiState} = state;
 
     const [id, setAId] = useState(null);
     const [name, setName] = useState('');
@@ -28,13 +28,17 @@ export default function About(props) {
     const [orgstate, setorgstate] = useState(false);
 
     useEffect(async () => {
+        if(apiState !== 'READY' ) return;
         await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
             setdaostate(data)
         });
+    }, [apiState]);
+    useEffect(async () => {
         setAId(props.match.params.id);
     }, []);
 
     useEffect(async () => {
+
         if (daoManagercontract == null && daostate) return;
         await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
             if (data) {
