@@ -65,7 +65,9 @@ export default function ForthStep(props) {
         // 4.获取DAO地址后，调用分配token，transfer(&mut self, to: AccountId, value: u64) -> bool
         // 5.获取DAO地址后，调用增加管理员，add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool
         // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
-        await api.main.instanceByTemplate(maincontract, templateid,(result) => {
+            
+            const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
+        await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
             setinstanceByTemplate(result)
             console.log("第一步=======instanceByTemplate")
         });
