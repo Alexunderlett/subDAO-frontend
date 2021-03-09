@@ -75,7 +75,6 @@ const getBaseData = async (basecontract) => {
         descResult,
         ownerResult,
     };
-    console.log("============",dataObj)
 
     return dataObj;
 

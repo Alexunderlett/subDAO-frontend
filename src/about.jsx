@@ -28,68 +28,69 @@ export default function About(props) {
     const [orgstate, setorgstate] = useState(false);
 
     useEffect(async () => {
-        await api.dao.InitDAO(state, dispatch, props.match.params.id,(data)=>{
+        await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
             setdaostate(data)
         });
         setAId(props.match.params.id);
     }, []);
 
     useEffect(async () => {
-        if(daoManagercontract==null && daostate) return ;
-        await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
-            if(data){
+        if (daoManagercontract == null && daostate) return;
+        await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+            if (data) {
                 setcontractlist(data)
             }
 
         });
 
-    }, [daoManagercontract,daostate]);
+    }, [daoManagercontract, daostate]);
 
     useEffect(async () => {
 
-        const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
+        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
+        console.log("=========contractlist===================", contractlist)
 
-        if(base_addr!=null){
-            await api.base.InitBase(state, dispatch,base_addr,(data)=>{
+        if (base_addr != null) {
+            await api.base.InitBase(state, dispatch, base_addr, (data) => {
                 setbasestate(data)
             });
         }
-        if(vault_addr!=null){
-            await api.vault.InitVault(state, dispatch, vault_addr,(data)=>{
+        if (vault_addr != null) {
+            await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
                 setvaultstate(data)
             });
         }
 
-        if(org_addr!=null){
-            await api.org.InitOrg(state, dispatch, org_addr,(data)=>{
+        if (org_addr != null) {
+            await api.org.InitOrg(state, dispatch, org_addr, (data) => {
                 setorgstate(data)
             });
         }
-        if(vote_addr!=null){
-            await api.vote.InitVote(state, dispatch, vote_addr,(data)=>{
+        if (vote_addr != null) {
+            await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
                 setvotestate(data)
             });
         }
-        if(erc20_addr!=null){
+        if (erc20_addr != null) {
             await api.erc20.InitErc20(state, dispatch, erc20_addr);
         }
 
-    }, [daoManagercontract,contractlist]);
+    }, [daoManagercontract, contractlist]);
 
 
     useEffect(async () => {
         sessionStorage.setItem('logo', logo)
     }, [logo]);
     useEffect(async () => {
-        let arr=[];
-        let i=0;
-        for(let item of tokenlist){
-            await api.vault.getBalanceOf(vaultcontract,item).then(data => {
+        let arr = [];
+        let i = 0;
+        for (let item of tokenlist) {
+            await api.vault.getBalanceOf(vaultcontract, item).then(data => {
                 if (!data) return;
 
-                arr[i]={
-                    address:item,
-                    balance:data
+                arr[i] = {
+                    address: item,
+                    balance: data
                 };
                 i++;
             });
@@ -97,7 +98,7 @@ export default function About(props) {
         setbalancelist(arr)
     }, [tokenlist]);
     useEffect(async () => {
-        if (!basestate) return;
+        if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
         await api.base.getBaseData(basecontract).then(data => {
             if (!data) return;
             let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
@@ -106,27 +107,27 @@ export default function About(props) {
             setDescription(descResult);
             setOwner(ownerResult);
         });
-    }, [basecontract,basestate]);
+    }, [basecontract, basestate]);
 
     useEffect(async () => {
-        if (!vaultstate) return;
+        if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;
         await api.vault.getTokenList(vaultcontract).then(data => {
             if (!data) return;
             settokenlist(data)
         });
-    }, [vaultcontract,vaultstate]);
+    }, [vaultcontract, vaultstate]);
 
     useEffect(async () => {
-        if (!votestate) return;
+        if (!votestate || contractlist.vote_addr == null || !contractlist.vote_addr) return;
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
             let arr = data.slice(0, 3);
             setActivelist(arr)
         });
-    }, [votecontract,votestate]);
+    }, [votecontract, votestate]);
 
     useEffect(async () => {
-        if(!orgstate)return;
+        if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
 
         await api.org.getDaoModeratorList(orgcontract).then(data => {
             if (!data) return;
@@ -154,10 +155,10 @@ export default function About(props) {
         // });
 
 
-    }, [ orgcontract,orgstate]);
+    }, [orgcontract, orgstate]);
 
     const handleClicktoType = (type) => {
-        const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
+        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
         let address;
         switch (type) {
             case'vote':
@@ -209,7 +210,8 @@ export default function About(props) {
                                         {
                                             balancelist.map((item, index) =>
                                                 <li key={`balance_${index}`}>
-                                                    <a href="#" target='_blank'>{item.address}</a><span>{item.balance}</span>
+                                                    <a href="#"
+                                                       target='_blank'>{item.address}</a><span>{item.balance}</span>
                                                 </li>
                                             )
                                         }
@@ -257,24 +259,33 @@ export default function About(props) {
                                 </div>
                                 <div>
                                     <ul className="service-docs">
-                                        <li>
-                                            <span onClick={() => handleClicktoType('vote')}>
-                                                <i className="fa fa-street-view"/>
-                                                Voting
-                                            </span>
-                                        </li>
-                                        <li>
+                                        {
+                                            contractlist.vote_addr !=null  &&<li>
+                                                <span onClick={() => handleClicktoType('vote')}>
+                                                    <i className="fa fa-street-view"/>
+                                                    Voting
+                                                </span>
+                                            </li>
+                                        }
+                                        {
+                                            contractlist.vault_addr !=null  && <li>
                                             <span onClick={() => handleClicktoType('vault')}>
                                                 <i className="fa fa-star-o"/>
                                                 Vault
                                             </span>
-                                        </li>
-                                        <li>
+                                            </li>
+                                        }
+
+                                        {
+                                            contractlist.org_addr !=null  && <li>
                                             <span onClick={() => handleClicktoType('org')}>
                                                 <i className="fa fa-building-o"/>
                                                 Org
                                             </span>
-                                        </li>
+                                            </li>
+                                        }
+
+
                                     </ul>
                                 </div>
                             </div>
