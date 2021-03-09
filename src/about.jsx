@@ -103,11 +103,13 @@ export default function About(props) {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
         await api.base.getBaseData(basecontract).then(data => {
             if (!data) return;
-            let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
-            setName(nameResult);
-            setLogo(logoResult);
-            setDescription(descResult);
-            setOwner(ownerResult);
+            // let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
+            let {owner, name, logo, desc} = data;
+
+            setName(name);
+            setLogo(logo);
+            setDescription(desc);
+            setOwner(owner);
         });
     }, [basecontract, basestate]);
 

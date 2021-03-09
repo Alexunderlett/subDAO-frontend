@@ -50,7 +50,7 @@ const instanceByTemplate = async (maincontract,id,cb) => {
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
 
-    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:138003n * 1000000n}, id, AccountId)
+    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isFinalized) {
                 console.log('main.instanceByTemplate finalized', result);

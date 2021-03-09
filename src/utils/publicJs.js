@@ -3,7 +3,6 @@ const formatResult =  (result) =>{
     if (result && result.output) {
         str = result.output.toHuman();
     }
-
     return str;
 }
 

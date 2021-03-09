@@ -46,8 +46,8 @@ const InitHome = async (state,address) => {
 
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
 
-    let logo = await basecontract.query.getLogo(AccountId, {value, gasLimit});
-    logo = publicJs.formatResult(logo);
+    let logo = await basecontract.query.getBase(AccountId, {value, gasLimit});
+    logo = publicJs.formatResult(logo).logo;
     return logo;
 };
 
@@ -56,27 +56,35 @@ const getBaseData = async (basecontract) => {
     const AccountId = await Accounts.accountAddress();
     if (basecontract === null || !basecontract || !basecontract.query || !AccountId) return;
 
-    let nameResult = await basecontract.query.getName(AccountId, {value, gasLimit});
+    let nameResult = await basecontract.query.getBase(AccountId, {value, gasLimit});
     nameResult = publicJs.formatResult(nameResult);
-
-    let logoResult = await basecontract.query.getLogo(AccountId, {value, gasLimit});
-    logoResult = publicJs.formatResult(logoResult);
-
-    let descResult = await basecontract.query.getDesc(AccountId, {value, gasLimit});
-    descResult = publicJs.formatResult(descResult);
-
-    let ownerResult = await basecontract.query.getOwner(AccountId, {value, gasLimit});
-    ownerResult = publicJs.formatResult(ownerResult);
+    console.log(nameResult)
 
 
-    dataObj = {
-        nameResult,
-        logoResult,
-        descResult,
-        ownerResult,
-    };
 
-    return dataObj;
+
+
+    // let nameResult = await basecontract.query.getName(AccountId, {value, gasLimit});
+    // nameResult = publicJs.formatResult(nameResult);
+    //
+    // let logoResult = await basecontract.query.getLogo(AccountId, {value, gasLimit});
+    // logoResult = publicJs.formatResult(logoResult);
+    //
+    // let descResult = await basecontract.query.getDesc(AccountId, {value, gasLimit});
+    // descResult = publicJs.formatResult(descResult);
+    //
+    // let ownerResult = await basecontract.query.getOwner(AccountId, {value, gasLimit});
+    // ownerResult = publicJs.formatResult(ownerResult);
+    //
+    //
+    // dataObj = {
+    //     nameResult,
+    //     logoResult,
+    //     descResult,
+    //     ownerResult,
+    // };
+
+    return nameResult;
 
 };
 
