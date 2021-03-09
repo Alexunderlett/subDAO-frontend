@@ -89,6 +89,8 @@ module.exports = (state, action) => {
         case 'LOAD_DAO':
             return { ...state, daoManagercontractState: 'LOAD_DAO' };
 
+
+
         case 'SET_DAO':
             return { ...state, daoManagercontract: action.payload, daoManagercontractState: 'READY' };
 

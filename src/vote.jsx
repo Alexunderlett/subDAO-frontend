@@ -21,7 +21,7 @@ export default function Vote(props){
     const [logo, setLogo] = useState('');
 
     const  handleClicktonewVote = () => {
-        props.history.push(`/newVote`);
+        props.history.push(`/newVote/${props.match.params.id}`);
     }
     useEffect(() => {
         setAId(props.match.params.id);

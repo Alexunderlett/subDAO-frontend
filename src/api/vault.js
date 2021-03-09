@@ -3,19 +3,22 @@ import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
 
 let loadVault = false;
-const InitVault = async (state, dispatch, address) =>  {
+const InitVault = async (state, dispatch, address,cb) =>  {
     let vaultcontract;
     const {apiState, api,vaultcontractState} = state;
     let account = await Accounts.accountAddress();
 
-    if (apiState !== 'READY' ||  !account || vaultcontractState!= null) return;
+    if (apiState !== 'READY' ||  !account ) return;
 
-    if (loadVault) return dispatch({ type: 'SET_VAULT', payload: vaultcontract });
-    loadVault = true;
+    // if (loadVault) return dispatch({ type: 'SET_VAULT', payload: vaultcontract });
+    // loadVault = true;
 
     try {
         vaultcontract = await ConnectContract(api, 'vault', address);
         dispatch({ type: 'SET_VAULT', payload: vaultcontract });
+        if(vaultcontract){
+            cb(true)
+        }
     } catch (e) {
         console.error(e);
     }

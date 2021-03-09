@@ -16,7 +16,7 @@ export default function VoteOverview (props){
     const [optionlist, setoptionlist] = useState([]);
 
     const handleClicktoVote = () => {
-       props.history.push(`/vote`)
+       props.history.push(`/vote/${props.match.params.id}`)
     }
     useEffect(async() => {
 

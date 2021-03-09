@@ -25,13 +25,15 @@ export default function VoteView (props){
     }, []);
     useEffect(() => {
         if(afterchoice){
-            props.history.push(`/voteOverview/${voteid}`);
+            props.history.push(`/voteOverview/${props.match.params.id}/${voteid}`);
         }
 
     }, [afterchoice]);
 
     useEffect(async() => {
+        console.log("====",props.match.params.id,props.match.params.voteid)
         setvoteid(props.match.params.voteid);
+        setId(props.match.params.id);
 
 
 
@@ -49,7 +51,7 @@ export default function VoteView (props){
     }, []);
 
     const handleClicktoVote = () => {
-        props.history.push(`/vote`)
+        props.history.push(`/vote/${props.match.params.id}`)
     }
     const handleClicktoOverview = async () => {
 

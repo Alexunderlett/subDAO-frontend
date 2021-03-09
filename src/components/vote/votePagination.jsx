@@ -28,7 +28,7 @@ export default function VotePagination(props){
     }, [props]);
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
-        props.history.push(`/voteOverview/${voteid}`)
+        props.history.push(`/voteOverview/${id}/${voteid}`)
     }
     // const pageClick = (pageNum) => {
     //     if (pageNum !== this.state.current) {

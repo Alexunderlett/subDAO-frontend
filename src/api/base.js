@@ -5,19 +5,25 @@ import api from "./index";
 
 let loadBase = false;
 let basecontract;
-const InitBase = async (state,dispatch, address) => {
+const InitBase = async (state,dispatch, address,cb) => {
 
     const {apiState, api,basecontractState} = state;
 
     let account = await Accounts.accountAddress();
-    if (apiState !== 'READY' || !account || basecontractState!= null) return;
+    // if (apiState !== 'READY' || !account || basecontractState!= null) return;
+    if (apiState !== 'READY' || !account ) return;
 
-    if (loadBase) return dispatch({ type: 'SET_BASE', payload: basecontract });
-    loadBase = true;
+
+    // if (loadBase) return dispatch({ type: 'SET_BASE', payload: basecontract });
+    // loadBase = true;
 
     try {
         basecontract = await ConnectContract(api, 'base', address);
+        if(basecontract){
+            cb(true)
+        }
         dispatch({ type: 'SET_BASE', payload: basecontract });
+
     } catch (e) {
         console.error(e);
     }
@@ -62,12 +68,14 @@ const getBaseData = async (basecontract) => {
     let ownerResult = await basecontract.query.getOwner(AccountId, {value, gasLimit});
     ownerResult = publicJs.formatResult(ownerResult);
 
+
     dataObj = {
         nameResult,
         logoResult,
         descResult,
         ownerResult,
     };
+    console.log("============",dataObj)
 
     return dataObj;
 

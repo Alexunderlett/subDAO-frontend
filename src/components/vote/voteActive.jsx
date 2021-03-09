@@ -30,7 +30,8 @@ export default function VoteActive(props){
 
 
     const handleView = (voteid) => {
-            props.history.push(`/voteView/${voteid}`)
+            const{id} = props;
+            props.history.push(`/voteView/${id}/${voteid}`)
         }
 
     // const pageClick = (pageNum) => {

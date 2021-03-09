@@ -23,7 +23,6 @@ export default function NewVote(props) {
     const {state,dispatch} = useSubstrate();
     const {votecontract} = state;
 
-
     const [date, setdate] = useState('');
     const [title, settitle] = useState('');
     const [desc, setdesc] = useState('');
@@ -50,6 +49,7 @@ export default function NewVote(props) {
             min_require_num:min,
             choices:optionlist.join(',')
         }
+        console.log("====",dataobj,votecontract)
         await api.vote.newVote(votecontract,dataobj,(result)=> {
             if(result){
                 props.history.push(`/vote/${id}`)

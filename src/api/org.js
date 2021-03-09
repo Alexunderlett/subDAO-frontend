@@ -4,20 +4,23 @@ import publicJs from "../utils/publicJs";
 
 let loadOrg = false;
 let orgcontract;
-const InitOrg = async (state, dispatch,address) =>  {
+const InitOrg = async (state, dispatch,address,cb) =>  {
 
     const {apiState, api,orgcontractState} = state;
 
     let account = await Accounts.accountAddress();
 
-    if (apiState !== 'READY' ||  !account || orgcontractState!= null) return;
+    if (apiState !== 'READY' ||  !account) return;
 
-    if (loadOrg) return dispatch({ type: 'SET_ORG', payload: orgcontract });
-    loadOrg = true;
+    // if (loadOrg) return dispatch({ type: 'SET_ORG', payload: orgcontract });
+    // loadOrg = true;
 
     try {
         orgcontract = await ConnectContract(api, 'org', address);
         dispatch({ type: 'SET_ORG', payload: orgcontract });
+        if(orgcontract){
+            cb(true)
+        }
     } catch (e) {
         console.error(e);
     }

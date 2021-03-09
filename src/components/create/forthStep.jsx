@@ -21,6 +21,7 @@ export default function ForthStep(props) {
     const [transfer,settransfer]= useState(false);
     const [admin,setadmin]= useState(false);
     const [queryAddrs,setqueryAddrs]= useState(false);
+    const [daoinit,setDaoinit]= useState(false);
 
     const handleClicktoAbout = (id) => {
         props.history.push(`/about/${baseC.dao_manager_addr}`)
@@ -48,66 +49,6 @@ export default function ForthStep(props) {
 
     }, []);
     useEffect(async () => {
-        if (instanceByTemplate){
-            await api.main.listDaoInstancesByOwner(maincontract).then(data => {
-                if (!data) return;
-                if (data.length) {
-                    setbaseC(data[data.length - 1])
-                }
-            });
-        }
-    }, [instanceByTemplate]);
-    useEffect(async () => {
-        console.log(baseC)
-        if(baseC){
-            await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr);
-        }
-    }, [baseC]);
-    useEffect(async () => {
-        if(transfer){
-            for(let item of tokenlist){
-                await api.dao.transferToken(daoManagercontract, item,(data)=>{
-                    setadmin(data)
-                }).then(data=>{
-                    console.log(data)
-                });
-            }
-        }
-    }, [transfer]);
-
-    useEffect(async () => {
-        if(admin){
-            for(let item of adminlist){
-                await api.dao.addDaoModeratorTx(daoManagercontract, item,(data)=>{
-                    setqueryAddrs(data)
-                }).then(data=>{
-                    console.log(data)
-                });
-            }
-        }
-    }, [admin]);
-     useEffect(async () => {
-         await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
-             setcontractlist(data)
-         });
-        }, [queryAddrs]);
-
-    useEffect(async () => {
-        let obj = {
-            base_name: name,
-            base_logo: logo,
-            base_desc: desc,
-            erc20_name: ercUrl,
-            erc20_symbol: symbol,
-            erc20_initial_supply: ercSupply,
-            erc20_decimals: 0
-        };
-        if (daoManagercontract == null) return;
-        await api.dao.setDAO(daoManagercontract, obj, (data) => {
-            settransfer(data)
-        });
-    }, [daoManagercontract]);
-    useEffect(async () => {
 
         // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
         // 2.等待上链，in block，根据当前账户地址查询实例化的DAO列表，listDaoInstancesByOwner (owner: AccountId): Vec<DAOInstance>
@@ -119,8 +60,7 @@ export default function ForthStep(props) {
         // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
         await api.main.instanceByTemplate(maincontract, (result) => {
             setinstanceByTemplate(result)
-        }).then(data => {
-            if (!data) return;
+            console.log("第一步=======instanceByTemplate")
         });
 
 //         if(maincontract) {
@@ -231,9 +171,84 @@ export default function ForthStep(props) {
 //         }
 
     }, [maincontract]);
+    useEffect(async () => {
+        if (instanceByTemplate){
+            console.log("第二步=======listDaoInstancesByOwner")
+            await api.main.listDaoInstancesByOwner(maincontract).then(data => {
+                if (!data) return;
+                if (data.length) {
+                    console.log("======listDaoInstancesByOwner",baseC,data)
+                    setbaseC(data[data.length - 1])
+                }
+            });
+        }
+    }, [instanceByTemplate]);
+    useEffect(async () => {
+        if(baseC!=null){
+            console.log("第三步=======InitDAO")
+            await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr,(data)=>{
+                setDaoinit(true)
+            });
+        }
+    }, [baseC]);
+    useEffect(async () => {
+        if(daoinit){
+            console.log("第四步=======传内容")
+            let obj = {
+                base_name: name,
+                base_logo: logo,
+                base_desc: desc,
+                erc20_name: ercUrl,
+                erc20_symbol: symbol,
+                erc20_initial_supply: ercSupply,
+                erc20_decimals: 0
+            };
+            if (daoManagercontract == null) return;
+            await api.dao.setDAO(daoManagercontract, obj, (data) => {
+                settransfer(data)
+            });
+        }
+    }, [daoManagercontract,daoinit]);
+    useEffect(async () => {
+        if(transfer && daoinit){
+            console.log("第五步======= transfer",transfer,daoinit)
+            for(let item of tokenlist){
+                await api.dao.transferToken(daoManagercontract, item,(data)=>{
+                    setadmin(data)
+                }).then(data=>{
+                    console.log(data)
+                });
+            }
+        }
+    }, [transfer,daoinit]);
+
+    useEffect(async () => {
+        if(admin && daoinit){
+            console.log("第六步======= 添加管理员",admin , daoinit)
+            for(let item of adminlist){
+                await api.dao.addDaoModeratorTx(daoManagercontract, item,(data)=>{
+                    setqueryAddrs(data)
+                }).then(data=>{
+                    console.log(data)
+                });
+            }
+        }
+    }, [admin,daoinit]);
+     useEffect(async () => {
+
+         if( queryAddrs && daoinit){
+             console.log("第七步======= queryComponentAddrs",queryAddrs,daoinit)
+             await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
+                 console.log(data,daoManagercontract)
+                 setcontractlist(data)
+             });
+         }
+
+        }, [queryAddrs,daoinit]);
 
     return <ul>
-        <li className='successful'>
+        {
+            contractlist!=null && <li className='successful'>
             <div className="successFont">
                 <h1>
                     <span>S</span>
@@ -249,7 +264,7 @@ export default function ForthStep(props) {
                 </h1>
             </div>
             <div className="successInfo">Create {name} successful !!</div>
-        </li>
+        </li>}
         {
             contractlist!=null &&  <li className="addresslist">{
                 Object.keys(contractlist).map((key)=>(

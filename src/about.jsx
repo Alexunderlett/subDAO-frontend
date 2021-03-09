@@ -10,7 +10,7 @@ export default function About(props) {
     const {state, dispatch} = useSubstrate();
     const {basecontract, vaultcontract, orgcontract, votecontract, erc20contract, daoManagercontract} = state;
 
-
+    const [id, setAId] = useState(null);
     const [name, setName] = useState('');
     const [logo, setLogo] = useState('');
     const [description, setDescription] = useState('');
@@ -21,13 +21,21 @@ export default function About(props) {
     const [contractlist, setcontractlist] = useState([]);
     const [tokenlist, settokenlist] = useState([]);
 
-    useEffect(async () => {
-        await api.dao.InitDAO(state, dispatch, props.match.params.id);
+    const [daostate, setdaostate] = useState(false);
+    const [basestate, setbasestate] = useState(false);
+    const [vaultstate, setvaultstate] = useState(false);
+    const [votestate, setvotestate] = useState(false);
+    const [orgstate, setorgstate] = useState(false);
 
+    useEffect(async () => {
+        await api.dao.InitDAO(state, dispatch, props.match.params.id,(data)=>{
+            setdaostate(data)
+        });
+        setAId(props.match.params.id);
     }, []);
 
     useEffect(async () => {
-        if(daoManagercontract==null) return ;
+        if(daoManagercontract==null && daostate) return ;
         await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
             if(data){
                 setcontractlist(data)
@@ -35,31 +43,32 @@ export default function About(props) {
 
         });
 
-    }, [daoManagercontract]);
+    }, [daoManagercontract,daostate]);
 
     useEffect(async () => {
-        console.log("=====333===",contractlist)
-
-        if(!contractlist.length)return ;
 
         const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
 
-        console.log(contractlist)
         if(base_addr!=null){
-            await api.base.InitBase(state, dispatch,base_addr)
+            await api.base.InitBase(state, dispatch,base_addr,(data)=>{
+                setbasestate(data)
+            });
         }
         if(vault_addr!=null){
-            await api.vault.InitVault(state, dispatch, vault_addr);
-            // await api.vault.InitVault(state, dispatch, '5HnTRCNsNYmMmEu3kfAeF3cUT5FL5D3B4PGMimwqu2s53H8i');
+            await api.vault.InitVault(state, dispatch, vault_addr,(data)=>{
+                setvaultstate(data)
+            });
         }
 
         if(org_addr!=null){
-            await api.org.InitOrg(state, dispatch, org_addr);
-            // await api.org.InitOrg(state, dispatch, '5H6TnZXVXoVgQtknwh8Ke1qu2a66NvmmVGAzvUr2ZP4VSfFK');
+            await api.org.InitOrg(state, dispatch, org_addr,(data)=>{
+                setorgstate(data)
+            });
         }
         if(vote_addr!=null){
-            await api.vote.InitVote(state, dispatch, vote_addr);
-            // await api.vote.InitVote(state, dispatch, '5D4ePouE1FvZfEHcV1aGPdznG3wyDqGT7kk4d74WeJH1gF57');
+            await api.vote.InitVote(state, dispatch, vote_addr,(data)=>{
+                setvotestate(data)
+            });
         }
         if(erc20_addr!=null){
             await api.erc20.InitErc20(state, dispatch, erc20_addr);
@@ -87,10 +96,8 @@ export default function About(props) {
         }
         setbalancelist(arr)
     }, [tokenlist]);
-
     useEffect(async () => {
-        // if (basecontract == null || vaultcontract == null || orgcontract == null || votecontract == null || erc20contract == null ) return;
-
+        if (!basestate) return;
         await api.base.getBaseData(basecontract).then(data => {
             if (!data) return;
             let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
@@ -99,17 +106,28 @@ export default function About(props) {
             setDescription(descResult);
             setOwner(ownerResult);
         });
+    }, [basecontract,basestate]);
 
+    useEffect(async () => {
+        if (!vaultstate) return;
         await api.vault.getTokenList(vaultcontract).then(data => {
             if (!data) return;
             settokenlist(data)
         });
+    }, [vaultcontract,vaultstate]);
 
+    useEffect(async () => {
+        if (!votestate) return;
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
             let arr = data.slice(0, 3);
             setActivelist(arr)
         });
+    }, [votecontract,votestate]);
+
+    useEffect(async () => {
+        if(!orgstate)return;
+
         await api.org.getDaoModeratorList(orgcontract).then(data => {
             if (!data) return;
             setModerators(data)
@@ -136,7 +154,7 @@ export default function About(props) {
         // });
 
 
-    }, [basecontract, vaultcontract, orgcontract, votecontract, erc20contract]);
+    }, [ orgcontract,orgstate]);
 
     const handleClicktoType = (type) => {
         const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
@@ -154,7 +172,7 @@ export default function About(props) {
                 break;
         }
 
-        props.history.push(`/${type}`)
+        props.history.push(`/${type}/${id}`)
 
     }
 
@@ -216,7 +234,7 @@ export default function About(props) {
                                     {
                                         contractlist != null && <ul className='list'>{
                                             Object.keys(contractlist).map((key) => (
-                                                <li>
+                                                <li key={`contract_${key}`}>
                                                     <span>{key}: </span>
                                                     <a href="#" target='_blank'>{contractlist[key]}</a>
                                                 </li>))

@@ -148,7 +148,7 @@ export default function OrgManage(props){
 
     }
     const handleClicktoOrg = () => {
-       props.history.push(`/org`)
+       props.history.push(`/org/${id}`)
     }
     const submitModerators = async (obj) =>{
 

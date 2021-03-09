@@ -4,19 +4,23 @@ import Accounts from "./Account";
 
 let loadDAO = false;
 let daoManagercontract;
-const InitDAO = async (state,dispatch,address) =>  {
-
+const InitDAO = async (state,dispatch,address,cb) =>  {
 
     const {apiState, api,daoManagercontractState} = state;
     let account = await Accounts.accountAddress();
-    if (apiState !== 'READY' || !account || daoManagercontractState!= null) return;
+    // if (apiState !== 'READY' || !account || daoManagercontractState!= null) return;
+    if (apiState !== 'READY' || !account ) return;
 
-    if (loadDAO) return dispatch({ type: 'SET_BASE', payload: daoManagercontract });
-    loadDAO = true;
+    // if (loadDAO) return dispatch({ type: 'SET_BASE', payload: daoManagercontract });
+    // loadDAO = true;
 
     try {
         daoManagercontract = await ConnectContract(api, 'daoManager',address);
+
         dispatch({ type: 'SET_DAO', payload: daoManagercontract });
+        if(cb){
+            cb(true)
+        }
     } catch (e) {
         console.error(e);
 
@@ -38,7 +42,7 @@ const setDAO = async (daoManagercontract,obj,cb) => {
 
     const{base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
 
-    const data = await daoManagercontract.tx.init({value, gasLimit}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    const data = await daoManagercontract.tx.init({value, gasLimit:-1}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized || result.status.isInBlock ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)
@@ -91,7 +95,6 @@ const queryComponentAddrs = async (daoManagercontract) => {
 
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
-    console.log("======queryComponentAddrs",data)
     return data;
 
 };

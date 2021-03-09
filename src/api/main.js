@@ -51,9 +51,7 @@ const instanceByTemplate = async (maincontract,cb) => {
 
     let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:138003n * 1000000n}, 0, AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isInBlock) {
-                // console.log('main.instanceByTemplate in a block', result);
-            } else if (result.status.isFinalized) {
+            if (result.status.isFinalized) {
                 console.log('main.instanceByTemplate finalized', result);
                 cb(true)
             }

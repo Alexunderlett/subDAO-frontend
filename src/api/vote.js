@@ -6,20 +6,23 @@ const {Keyring} = require('@polkadot/keyring');
 
 let loadvote;
 let votecontract;
-const InitVote = async (state, dispatch, address) => {
+const InitVote = async (state, dispatch, address,cb) => {
 
     const {apiState, api,votecontractState} = state;
 
     let account = await Accounts.accountAddress();
 
-    if (apiState !== 'READY' ||  !account || votecontractState!= null) return;
+    if (apiState !== 'READY' ||  !account) return;
 
-    if (loadvote) return dispatch({ type: 'SET_VOTE', payload: votecontract });
-    loadvote = true;
+    // if (loadvote) return dispatch({ type: 'SET_VOTE', payload: votecontract });
+    // loadvote = true;
 
     try {
         votecontract = await ConnectContract(api, 'vote', address);
         dispatch({ type: 'SET_VOTE', payload: votecontract });
+        if(votecontract){
+            cb(true)
+        }
     } catch (e) {
         console.error(e);
     }
@@ -108,7 +111,7 @@ const newVote = async (votecontract,obj,cb) => {
 
     if (votecontract === null || !votecontract || !votecontract.tx || !AccountId) return;
     let data;
-
+console.log("=======")
    await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices).
         signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized) {

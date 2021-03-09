@@ -10,11 +10,13 @@ export default function Org(props){
     const {state,dispatch} = useSubstrate();
     const {orgcontract} = state;
 
+    const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
     const [memberlist, setmemberlist] = useState([]);
     const [logo, setLogo] = useState('');
 
     useEffect(() => {
+        setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
@@ -287,10 +289,10 @@ export default function Org(props){
 
 
     const handleClicktoManage = () => {
-       props.history.push(`/manage`)
+       props.history.push(`/manage/${id}`)
     }
     const handleClicktoAbout = () => {
-       props.history.push(`/about`)
+       props.history.push(`/about/${id}`)
     }
 
     return (
