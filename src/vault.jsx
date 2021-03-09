@@ -14,12 +14,20 @@ export default function Vault(props){
     const [tokenlist, settokenlist] = useState([]);
     const [historylist, sethistorylist] = useState([]);
     const [logo, setLogo] = useState('');
+    const [withDrawS, setwithDrawS] = useState(true);
 
-    useEffect(() => {
+    useEffect(async() => {
         setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
+
     }, []);
+    useEffect(async() => {
+        if(vaultcontract==null) return ;
+        let aa = await api.vault.checkAuthority(vaultcontract).then(data => {
+            setwithDrawS(data)
+        });
+    }, [vaultcontract]);
 
     useEffect( async () => {
         let arr=[{
@@ -245,7 +253,10 @@ export default function Vault(props){
                                 </div>
                                 <div className='vaultBtn'>
                                     <Button variant="primary" onClick={()=>handleClicktoDetail('deposit')}>Deposit</Button>
-                                    <Button variant="primary" onClick={()=>handleClicktoDetail('withdraw')}>Withdraw</Button>
+                                    {
+                                        withDrawS&&<Button variant="primary" onClick={()=>handleClicktoDetail('withdraw')}>Withdraw</Button>
+                                    }
+
                                 </div>
                             </div>
                             <div className='col-lg-8'>

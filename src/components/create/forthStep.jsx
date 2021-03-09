@@ -14,6 +14,7 @@ export default function ForthStep(props) {
     const [ercUrl, setercUrl] = useState('');
     const [symbol, setsymbol] = useState('');
     const [ercSupply, setsercSupply] = useState('');
+    const [templateid, settemplateid] = useState(null);
     const [baseC, setbaseC] = useState(null);
     const [tokenlist,settokenlist]= useState([]);
     const [adminlist,setadminlist]= useState([]);
@@ -38,6 +39,7 @@ export default function ForthStep(props) {
 
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
         setercUrl(secondStep[0].dao_manager_code_hash);
+        settemplateid(secondStep[0].id);
 
         const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
         const {symbol,supply,admin,token,adminlist,tokenlist} = thirdStep;
@@ -63,7 +65,7 @@ export default function ForthStep(props) {
         // 4.获取DAO地址后，调用分配token，transfer(&mut self, to: AccountId, value: u64) -> bool
         // 5.获取DAO地址后，调用增加管理员，add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool
         // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
-        await api.main.instanceByTemplate(maincontract, (result) => {
+        await api.main.instanceByTemplate(maincontract, templateid,(result) => {
             setinstanceByTemplate(result)
             console.log("第一步=======instanceByTemplate")
         });

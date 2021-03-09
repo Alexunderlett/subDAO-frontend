@@ -86,6 +86,18 @@ const withdraw = async (vaultcontract,obj,cb) => {
     return data;
 }
 
+const checkAuthority = async (vaultcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
+    
+    let data = await vaultcontract.query.checkAuthority(AccountId, {value, gasLimit},AccountId);
+    data = publicJs.formatResult(data);
+
+    return data;
+};
+
+
 const deposit = async (vaultcontract,obj,cb) => {
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
@@ -112,5 +124,6 @@ export default {
     getTransferHistory,
     deposit,
     withdraw,
+    checkAuthority,
 }
 

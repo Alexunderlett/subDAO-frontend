@@ -42,7 +42,7 @@ const listDaoInstancesByOwner = async (maincontract) => {
 
 };
 
-const instanceByTemplate = async (maincontract,cb) => {
+const instanceByTemplate = async (maincontract,id,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
