@@ -13,6 +13,7 @@ export default function VotePending(props) {
     const [showModal, setShowModal] = useState(false);
     const [list, setList] = useState([]);
     const [selectid, setselectid] = useState('');
+    const [toTop, settoTop] = useState(false);
     // const [totalNum, setTotalNum] = useState(0);
     // const [totalData, setTotalData] = useState({});
     // const [current, setCurrent] = useState(1);
@@ -32,8 +33,13 @@ export default function VotePending(props) {
         // setTotalPage(totalPage)
         // pageClick(1);
 
-
     }, [props]);
+    useEffect(() => {
+        if(toTop){
+            props.history.push(`/vote`)
+        }
+
+    }, [toTop]);
 
 
 
@@ -67,16 +73,17 @@ export default function VotePending(props) {
         setShowModal(false);
         setselectid('')
     }
-    const handleConfirm = async () => {
+    const handleConfirm = async (e) => {
         setShowModal(false);
         console.log(selectid)
 
-        await api.vote.executeVote(votecontract).then(data => {
+        await api.vote.executeVote(votecontract,selectid,(data)=>{
+            settoTop(data)
+        }).then(data => {
             if (!data) return;
-            console.log(data)
-            // setHistorylist(data)
+            console.log("=============executeVote",data)
+
         });
-            // setselectid('')
     }
     // const goNext = () => {
     //     let cur = this.state.current;
@@ -97,24 +104,17 @@ export default function VotePending(props) {
             <VoteModalTips
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}
-                showTips={showModal}
-                id={selectid}/>
+                showTips={showModal}/>
             <Table striped bordered hover>
                 <tbody>
                 {
-                    list.map((item,index)=><tr key={`Pending_${index}`}>
-                        <td>{index}</td>
+                    list.map((item)=><tr key={`Pending_${item.vote_id}`}>
+                        <td>{item.vote_id}</td>
                         <td>{item.title}</td>
                         {/*<td>Pending</td>*/}
-                        <td><span onClick={()=>triggerConfirm(index)}><i className="fa fa-toggle-on"/> trigger</span></td>
+                        <td><span onClick={()=>triggerConfirm(item.vote_id)}><i className="fa fa-toggle-on"/> trigger</span></td>
                     </tr>)
                 }
-                {/*<tr>*/}
-                {/*    <td>1</td>*/}
-                {/*    <td>Mark</td>*/}
-                {/*    <td>Pending</td>*/}
-                {/*    <td><span><i className="fa fa-toggle-on" /> trigger</span></td>*/}
-                {/*</tr>*/}
                 </tbody>
             </Table>
             {/*<PageComponent total={this.state.totalNum}*/}

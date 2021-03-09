@@ -17,44 +17,46 @@ export default function VoteView (props){
     const [desc, setdesc] = useState('');
     const [selected, setselected] = useState('');
     const [logo, setLogo] = useState('');
+    const [afterchoice, setafterchoice] = useState(false);
 
     useEffect(() => {
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
+    useEffect(() => {
+        if(afterchoice){
+            props.history.push(`/voteOverview/${voteid}`);
+        }
+
+    }, [afterchoice]);
 
     useEffect(async() => {
-        setId(props.match.params.id)
-        setvoteid(props.match.params.voteid)
+        setvoteid(props.match.params.voteid);
 
 
 
-        await api.vote.queryOneVote(votecontract,voteid).then(data => {
+        await api.vote.queryOneVote(votecontract,props.match.params.voteid).then(data => {
             if (!data) return;
             const {
-                    title, desc, start_date, vote_time, support_require_num,min_require_num, support_num,choices
+                vote_id,title, desc, start_date, vote_time, support_require_num,min_require_num, support_num,choices
             } = data;
-            settitle(title)
-            setdesc(desc)
+            settitle(title);
+            setId(vote_id);
+            setdesc(desc);
             setoptionlist(choices.split(','))
-
-
         });
 
-        // if(props.list.length){
-        //     setIndexList(props.list)
-        // }
+    }, []);
 
-
-    }, [props]);
     const handleClicktoVote = () => {
-        props.history.push(`/vote/${id}`)
+        props.history.push(`/vote`)
     }
-    const handleClicktoOverview = () => {
-        console.log(selected)
+    const handleClicktoOverview = async () => {
 
+        await api.vote.VoteChoice(votecontract,voteid,selected,(data)=>{
+            setafterchoice(data)
+        });
 
-        props.history.push(`/voteOverview/${id}/${voteid}`)
     }
     const handleRadio = (e) =>{
         setselected(e.target.value)
@@ -99,7 +101,7 @@ export default function VoteView (props){
                                                             type="radio"
                                                             label={i.split(":")[0]}
                                                             id={`radio_${index}`}
-                                                            value={i.split(":")[0]}
+                                                            value={index}
                                                             name='radiobutton' onChange={handleRadio}/>
                                                     </Form.Group>
                                                 </div>

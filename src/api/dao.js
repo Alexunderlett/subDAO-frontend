@@ -6,9 +6,13 @@ let loadDAO = false;
 let daoManagercontract;
 const InitDAO = async (state,dispatch,address) =>  {
 
+
     const {apiState, api,daoManagercontractState} = state;
     let account = await Accounts.accountAddress();
     if (apiState !== 'READY' || !account || daoManagercontractState!= null) return;
+
+    if (loadDAO) return dispatch({ type: 'SET_BASE', payload: daoManagercontract });
+    loadDAO = true;
 
     try {
         daoManagercontract = await ConnectContract(api, 'daoManager',address);
@@ -87,6 +91,7 @@ const queryComponentAddrs = async (daoManagercontract) => {
 
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
+    console.log("======queryComponentAddrs",data)
     return data;
 
 };

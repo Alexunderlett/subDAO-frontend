@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import PageComponent from '../pageComponent.jsx';
+// import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
-import {useSubstrate} from "../../api/contracts";
-export default function VoteActive(props){
 
-    // const {state,dispatch} = useSubstrate();
-    //
-    //
-    // const {votecontract} = state;
+export default function VoteActive(props){
 
     const [indexList, setIndexList] = useState([]);
     // const [totalNum, setTotalNum] = useState(0);
@@ -23,8 +18,6 @@ export default function VoteActive(props){
             setIndexList(props.list)
         }
 
-        // if(votecontract)
-        // console.log("votecontractvotecontractvotecontractvotecontract",state)
         // let totalNum = 52;
         // setTotalData({})
         // setTotalNum(totalNum)
@@ -35,15 +28,10 @@ export default function VoteActive(props){
 
     }, [props]);
 
-    const handleClicktoVoteview = (voteid) => {
-        let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}`)
-    }
 
-    const handleClicktoview = (voteid) => {
-        let { id } = props;
-        props.history.push(`/voteView/${id}/${voteid}`)
-    }
+    const handleView = (voteid) => {
+            props.history.push(`/voteView/${voteid}`)
+        }
 
     // const pageClick = (pageNum) => {
     //     if (pageNum !== current) {
@@ -69,11 +57,10 @@ export default function VoteActive(props){
                 <Table striped bordered hover>
                     <tbody>
                     {
-                        indexList.map((item,index)=><tr key={`active_${index}`}>
-                            <td>{index}</td>
+                        indexList.map((item)=><tr key={`active_${item.vote_id}`}>
+                            <td>{item.vote_id}</td>
                             <td>{item.title}</td>
-                            {/*<td>{item.title} </td>*/}
-                            <td><span onClick={()=>handleClicktoview(index)}><i className="fa fa-sign-in"/> view</span></td>
+                            <td><span onClick={()=>handleView(item.vote_id)}><i className="fa fa-sign-in"/> view</span></td>
                         </tr>)
                     }
                     </tbody>
@@ -90,4 +77,3 @@ export default function VoteActive(props){
 
 
 }
-

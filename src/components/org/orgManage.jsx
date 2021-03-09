@@ -52,13 +52,13 @@ export default function OrgManage(props){
         });
     }, [orgcontract]);
 
-    const handleClicktoview = async (id,type) =>{
+    const handleClicktoview = async (item,type) =>{
         // let {voteid} = this.state;
         // this.props.history.push(`/voteView/${id}/${voteid}`)
 
         let obj={
             name:'Alice',
-            address:id
+            address:item[0]
         }
         if(type==='moderators'){
 
@@ -148,7 +148,7 @@ export default function OrgManage(props){
 
     }
     const handleClicktoOrg = () => {
-       props.history.push(`/org/${id}`)
+       props.history.push(`/org`)
     }
     const submitModerators = async (obj) =>{
 
@@ -161,7 +161,6 @@ export default function OrgManage(props){
 
     }
  const submitMembers = async (obj) =>{
-        console.log(obj)
      await api.org.addDaoMember(orgcontract,obj,function (result) {
          setaddMember(result)
      }).then(data => {

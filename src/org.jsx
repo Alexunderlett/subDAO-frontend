@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PageBackground from "./components/pagebackground";
 import {Button} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
@@ -10,13 +10,11 @@ export default function Org(props){
     const {state,dispatch} = useSubstrate();
     const {orgcontract} = state;
 
-    const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
     const [memberlist, setmemberlist] = useState([]);
     const [logo, setLogo] = useState('');
 
     useEffect(() => {
-        setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
@@ -286,20 +284,13 @@ export default function Org(props){
     //
     // }, [orgcontract]);
     //
-    //
-    //
-    // useEffect(async () => {
-    //     if (daoManagercontract === null) return;
-    //
-    //     //daoManagercontract
-    //
-    // }, [daoManagercontract]);
+
 
     const handleClicktoManage = () => {
-       props.history.push(`/manage/${id}`)
+       props.history.push(`/manage`)
     }
     const handleClicktoAbout = () => {
-       props.history.push(`/about/${id}`)
+       props.history.push(`/about`)
     }
 
     return (
@@ -321,8 +312,8 @@ export default function Org(props){
 
                                         {
                                             list.map((i,index)=><dl key={`moderator_${index}`}>
-                                                {/*<dt>pETH</dt>*/}
-                                                <dd><a href="#">{list[index]}</a></dd>
+                                                <dt>{i[1]}</dt>
+                                                <dd><a href="#" target='_blank'>{i[0]}</a></dd>
                                             </dl>)
                                         }
                                     </div>
@@ -332,8 +323,8 @@ export default function Org(props){
                                     <div className='orgbg'>
                                         {
                                             memberlist.map((i,index)=><dl key={`member_${index}`}>
-                                                {/*<dt>pETH</dt>*/}
-                                                <dd><a href="#">{memberlist[index]}</a></dd>
+                                                <dt>{i[1]}</dt>
+                                                <dd><a href="#" target='_blank'>{i[0]}</a></dd>
                                             </dl>)
                                         }
                                     </div>

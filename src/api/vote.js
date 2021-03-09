@@ -8,14 +8,13 @@ let loadvote;
 let votecontract;
 const InitVote = async (state, dispatch, address) => {
 
-
     const {apiState, api,votecontractState} = state;
 
     let account = await Accounts.accountAddress();
 
     if (apiState !== 'READY' ||  !account || votecontractState!= null) return;
 
-    if (loadvote) return dispatch({ type: 'SET_ORG', payload: votecontract });
+    if (loadvote) return dispatch({ type: 'SET_VOTE', payload: votecontract });
     loadvote = true;
 
     try {
@@ -98,7 +97,6 @@ const queryExecutedVote = async (votecontract) => {
 
     let dataobj = await votecontract.query.queryExecutedVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
-    console.log('=====queryExecutedVote',dataobj)
     return dataobj;
 }
 
@@ -108,15 +106,12 @@ const newVote = async (votecontract,obj,cb) => {
 
     const { title, desc, vote_time, support_require_num, min_require_num, choices} = obj;
 
-    if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
+    if (votecontract === null || !votecontract || !votecontract.tx || !AccountId) return;
     let data;
 
    await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices).
         signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized || result.status.isInBlock) {
-            // console.log("====result.status.isInBlock",result.status.isInBlock || result.status.isFinalized);
-            // data = (result.status.isInBlock || result.status.isFinalized);
-            // return
+        if (result.status.isFinalized) {
             cb(true)
         }
         });
@@ -124,25 +119,33 @@ const newVote = async (votecontract,obj,cb) => {
 }
 
 
-const executeVote = async (votecontract,id) => {
+const executeVote = async (votecontract,id,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    const injector = await Accounts.accountInjector();
+
+    if (votecontract === null || !votecontract || !AccountId) return;
+
+    await votecontract.exec('execute', {value, gasLimit}, id)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized) {
+                cb(true)
+            }
+    })
+}
+const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
 
     if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
 
-
-    let data;
-
-    await votecontract.exec('execute', {value, gasLimit}, id)
+    await votecontract.exec('vote', {value, gasLimit}, voteid,choiceid,AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isInBlock) {
-            console.log('inblock');
-        } else if (result.status.isFinalized) {
-            console.log('finalized');
-        }
+            if (result.status.isFinalized) {
+                cb(true)
+            }
     })
-    return data;
 }
 
 export default {
@@ -154,6 +157,7 @@ export default {
     queryExecutedVote,
     newVote,
     executeVote,
+    VoteChoice,
 }
 
 

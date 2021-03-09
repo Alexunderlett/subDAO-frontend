@@ -3,8 +3,6 @@ import PageComponent from '../pageComponent.jsx';
 import {Badge, Table} from "react-bootstrap";
 
 export default function VotePagination(props){
-
-
     const [indexList, setIndexList] = useState([]);
     // const [totalNum, setTotalNum] = useState(0);
     // const [totalData, setTotalData] = useState({});
@@ -30,7 +28,7 @@ export default function VotePagination(props){
     }, [props]);
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}`)
+        props.history.push(`/voteOverview/${voteid}`)
     }
     // const pageClick = (pageNum) => {
     //     if (pageNum !== this.state.current) {
@@ -69,28 +67,15 @@ export default function VotePagination(props){
                 <Table striped bordered hover>
                     <tbody>
                     {
-                        indexList.map((item,index)=><tr key={`history_${index}`}>
-                            <td>{index}</td>
+                        indexList.map((item)=><tr key={`history_${item.vote_id}`}>
+                            <td>{item.vote_id}</td>
                             <td>{item.title}</td>
                             {/*<td>*/}
                             {/*    <div><Badge variant="primary"><i className="fa fa-times-circle"/> Failed</Badge></div>*/}
                             {/*</td>*/}
-                            <td><span onClick={()=>handleClicktoVoteview(34)}><i className="fa fa-sign-in" /> view</span></td>
+                            <td><span onClick={()=>handleClicktoVoteview(item.vote_id)}><i className="fa fa-sign-in" /> view</span></td>
                         </tr>)
                     }
-
-                    {/*<tr>*/}
-                    {/*    <td>1</td>*/}
-                    {/*    <td>Mark</td>*/}
-                    {/*    <td>Closed</td>*/}
-                    {/*    <td><span><i className="fa fa-sign-in"/> view</span></td>*/}
-                    {/*</tr>*/}
-                    {/*<tr>*/}
-                    {/*    <td>1</td>*/}
-                    {/*    <td>Mark</td>*/}
-                    {/*    <td>Cancel</td>*/}
-                    {/*    <td><span><i className="fa fa-sign-in"/> view</span></td>*/}
-                    {/*</tr>*/}
                     </tbody>
                 </Table>
                 {/*<PageComponent total={totalNum}*/}

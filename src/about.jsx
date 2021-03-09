@@ -27,6 +27,8 @@ export default function About(props) {
     }, []);
 
     useEffect(async () => {
+            console.log("===daoManagercontract",daoManagercontract)
+        if(daoManagercontract==null) return ;
         await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
             if(data){
                 setcontractlist(data)
@@ -37,32 +39,34 @@ export default function About(props) {
     }, [daoManagercontract]);
 
     useEffect(async () => {
+        console.log("=====333===",contractlist)
+
+        if(!contractlist.length)return ;
 
         const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
 
         console.log(contractlist)
-
         if(base_addr!=null){
             await api.base.InitBase(state, dispatch,base_addr)
         }
         if(vault_addr!=null){
             await api.vault.InitVault(state, dispatch, vault_addr);
-            // await api.vault.InitVault(state, dispatch, '5HS7Vufvtr7sCrpS4yeXBZWurT5BqpZpzKgwRsZfvmF8euMv');
+            // await api.vault.InitVault(state, dispatch, '5HnTRCNsNYmMmEu3kfAeF3cUT5FL5D3B4PGMimwqu2s53H8i');
         }
 
         if(org_addr!=null){
             await api.org.InitOrg(state, dispatch, org_addr);
-            // await api.org.InitOrg(state, dispatch, '5CcCZEog57xweMuv7xFkyn1qCiqPzvSvTCynTeM6TxUbyCXG');
+            // await api.org.InitOrg(state, dispatch, '5H6TnZXVXoVgQtknwh8Ke1qu2a66NvmmVGAzvUr2ZP4VSfFK');
         }
         if(vote_addr!=null){
             await api.vote.InitVote(state, dispatch, vote_addr);
-            // await api.vote.InitVote(state, dispatch, '5CPrv4sEHos9Xc6j2AHntSaCaQPyE3ufiKnkDV1QjaV3iVsb');
+            // await api.vote.InitVote(state, dispatch, '5D4ePouE1FvZfEHcV1aGPdznG3wyDqGT7kk4d74WeJH1gF57');
         }
         if(erc20_addr!=null){
             await api.erc20.InitErc20(state, dispatch, erc20_addr);
         }
 
-    }, [contractlist]);
+    }, [daoManagercontract,contractlist]);
 
 
     useEffect(async () => {
@@ -102,10 +106,8 @@ export default function About(props) {
             settokenlist(data)
         });
 
-        console.log(votecontract)
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
-
             let arr = data.slice(0, 3);
             setActivelist(arr)
         });
@@ -153,7 +155,7 @@ export default function About(props) {
                 break;
         }
 
-        props.history.push(`/${type}/${address}`)
+        props.history.push(`/${type}`)
 
     }
 
@@ -190,7 +192,7 @@ export default function About(props) {
                                         {
                                             balancelist.map((item, index) =>
                                                 <li key={`balance_${index}`}>
-                                                    <a href="#">{item.address}</a><span>{item.balance}</span>
+                                                    <a href="#" target='_blank'>{item.address}</a><span>{item.balance}</span>
                                                 </li>
                                             )
                                         }
@@ -204,7 +206,7 @@ export default function About(props) {
                                         {
                                             moderators.map((i, index) => <li key={moderators[index]}>
                                                 <span>{moderators[index][1]}</span>
-                                                <a href="#">{moderators[index][0]}</a>
+                                                <a href="#" target='_blank'>{moderators[index][0]}</a>
                                             </li>)
                                         }
 
@@ -217,7 +219,7 @@ export default function About(props) {
                                             Object.keys(contractlist).map((key) => (
                                                 <li>
                                                     <span>{key}: </span>
-                                                    <a href="#">{contractlist[key]}</a>
+                                                    <a href="#" target='_blank'>{contractlist[key]}</a>
                                                 </li>))
                                         }
 
@@ -230,7 +232,7 @@ export default function About(props) {
                                         {
                                             activelist.map((item, index) => <li key={`votings_${index}`}>
                                                 {/*<span>Active: </span>*/}
-                                                <a href="#">{item.title}</a>
+                                                <a href="#" target='_blank'>{item.title}</a>
                                             </li>)
                                         }
 

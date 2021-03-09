@@ -82,8 +82,8 @@ class ManageItem extends Component {
                                 {/*                data-list={listname}*/}
                                 {/*                onChange={e => isChecked(e, item)}/>*/}
                                 {/*</td>*/}
-                                <td>{item}</td>
-                                {/*<td>{item.url}</td>*/}
+                                <td>{item[1]}</td>
+                                <td>{item[0]}</td>
                                 <td>
                                     <span className='hand nowrap' onClick={()=>handleClicktoview(item,type)}><i
                                         className="fa fa-trash"/> remove</span>

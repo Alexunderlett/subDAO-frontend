@@ -21,15 +21,7 @@ export default function Vote(props){
     const [logo, setLogo] = useState('');
 
     const  handleClicktonewVote = () => {
-        props.history.push(`/newVote/${id}`);
-    }
-    const handleClicktoview = (voteid) => {
-        let { id } = props;
-        props.history.push(`/voteView/${id}/${voteid}`)
-    }
-    const handleClicktoVoteview = (voteid) => {
-        let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}`)
+        props.history.push(`/newVote`);
     }
     useEffect(() => {
         setAId(props.match.params.id);
@@ -51,7 +43,6 @@ export default function Vote(props){
         await api.vote.queryAllVote(votecontract).then(data => {
             if (!data) return;
             setHistorylist(data)
-
         });
 
         // if(votecontract === null) return ;
@@ -96,48 +87,6 @@ export default function Vote(props){
         //     }
         // })
 
-
-
-
-
-       //  await api.vote.queryAllVote(voteContract).then(data => {
-       //      if(!data) return;
-       // console.log(data)
-       //  });
-       //
-       //  await api.vote.queryOneVote(voteContract,id).then(data => {
-       //      if(!data) return;
-       // console.log(data)
-       //  });
-
-
-
-        // await votecontract.query.queryAllVote(alice.address, {value, gasLimit}).then(result =>{
-        //     // console.log(output);
-        //     const {output} = result;
-        //     console.log(output);
-        // });
-
-        // await votecontract.query.queryOneVote(alice.address, {value, gasLimit}, 0).then(result =>{
-        //     // console.log(output);
-        //     const {output} = result;
-        //     console.log(output);
-        // });
-        // await votecontract.query.queryWaitVote(alice.address, {value, gasLimit}).then(result =>{
-        //     // console.log(output);
-        //     const {output} = result;
-        //     console.log(output);
-        // });
-        // await votecontract.query.queryOpenVote(alice.address, {value, gasLimit}).then(result =>{
-        //     // console.log(output);
-        //     const {output} = result;
-        //     console.log(output);
-        // });
-        // await votecontract.query.queryExecutedVote(alice.address, {value, gasLimit}).then(result =>{
-        //     // console.log(output);
-        //     const {output} = result;
-        //     console.log(output);
-        // });
         // const result = await votecontract.exec('query_all_vote', {value, gasLimit});
 
     }, []);

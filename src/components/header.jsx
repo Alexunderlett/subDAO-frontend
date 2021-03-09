@@ -9,7 +9,6 @@ const createHashHistory = history.createHashHistory();
 
 export default function Headertop() {
     const {state,dispatch} = useSubstrate();
-    const {maincontract,daoManagercontract} = state;
 
     const [showHeader, setshowHeader] = useState(false);
     let [allList, setallList] = useState([]);
@@ -45,23 +44,7 @@ export default function Headertop() {
         setselected(selected);
         sessionStorage.setItem('account', JSON.stringify(selected));
 
-        let addresslist = await api.main.listDaoInstances(maincontract);
-        console.log(addresslist)
-
-
-        let arr=[];
-        if(addresslist.length){
-            let i=0;
-            for(let item of addresslist){
-                let logo = await api.base.InitHome(state, item.dao_manager_addr);
-                arr[i]={
-                    address: item.dao_manager_addr,
-                    logo
-                };
-                i++;
-            }
-        }
-        dispatch({type: 'SET_HOME',payload:arr});
+        dispatch({type: 'SET_ALLACCOUNTS',payload:selected});
     }
     const connectWallet = async () => {
         const accoutlist = await Accounts.accountlist();

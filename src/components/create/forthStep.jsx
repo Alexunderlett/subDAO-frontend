@@ -58,6 +58,7 @@ export default function ForthStep(props) {
         }
     }, [instanceByTemplate]);
     useEffect(async () => {
+        console.log(baseC)
         if(baseC){
             await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr);
         }

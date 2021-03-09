@@ -19,17 +19,17 @@ function routerlink() {
         <Router>
             <Switch>
                 <Route path="/" component={Home} exact/>
-                <Route   activeClassName="active"  path="/about/:id" component={About}/>
+                <Route   activeClassName="active"  path="/about" component={About}/>
                 <Route path="/create" component={Createnew}/>
-                <Route path="/Vote/:id" component={Vote}/>
-                <Route path="/newVote/:id" component={NewVote}/>
-                <Route path="/voteView/:id/:voteid" component={VoteView}/>
-                <Route path="/voteOverview/:id/:voteid" component={VoteOverview}/>
-                <Route path="/vault/:id" component={Vault}/>
+                <Route path="/Vote" component={Vote}/>
+                <Route path="/newVote" component={NewVote}/>
+                <Route path="/voteView/:voteid" component={VoteView}/>
+                <Route path="/voteOverview/:voteid" component={VoteOverview}/>
+                <Route path="/vault" component={Vault}/>
                 <Route path="/deposit/:id" component={Deposit}/>
                 <Route path="/withdraw/:id" component={Withdraw}/>
-                <Route path="/org/:id" component={Org}/>
-                <Route path="/manage/:id" component={OrgManage}/>
+                <Route path="/org" component={Org}/>
+                <Route path="/manage" component={OrgManage}/>
             </Switch>
         </Router>);
 }
