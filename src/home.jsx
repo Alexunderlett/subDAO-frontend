@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import Slick from "./components/slick";
-import {Modal,Button} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
-import api from "./api";
+import Accounts from "./api/Account";
 
 export default function Home(props) {
-
-    let [showButton, setShowButton] = useState(false);
     const {state,dispatch} = useSubstrate();
-    const {maincontract} = state;
-    const [list,setlist]= useState([]);
+    const {homepage} = state;
 
-     const handleClick =()=> {
-         let account = JSON.parse(sessionStorage.getItem('account'));
-
+    const [showButton, setShowButton] = useState(false);
+    const [showlist, setshowlist] = useState(false);
+    const [imglist, setimglist] = useState([]);
+    const account = JSON.parse(sessionStorage.getItem('account'));
+     const handleClick = async ()=> {
          if(account === null || !account.length){
-             setShowButton(true)
+             setShowButton(true);
+
          }else{
              props.history.push('/create')
          }
@@ -23,21 +23,9 @@ export default function Home(props) {
     useEffect(() => {
         dispatch({type: 'LOAD_MAINCONTRACT'});
     }, []);
-
-    //  useEffect(() => {
-    //      if(list.length){
-    //          for(let item of list){
-    //              await api.base.InitBase(state, dispatch,'5GPi6oGcFqmJg9JxWBL7pxthya6xbu54oUQzNdFwdgAuGcMV');
-    //          }
-    //      }
-    // }, [list]);
-
-     useEffect(async() => {
-         await api.main.listDaoInstances(maincontract).then(data => {
-             if (!data) return;
-             setlist(data)
-         });
-    }, [maincontract]);
+    useEffect(() => {
+        setimglist(homepage)
+    }, [homepage]);
 
     return (<div>
             <section className="padding">
@@ -50,7 +38,9 @@ export default function Home(props) {
                     <div className="container">
                         <div className="testimonial-slider justify-content-center">
                             <div className="slider slider-nav trtestimonial-nav">
-                                <Slick history={props.history}/>
+                                {
+                                    !!imglist && !!imglist.length && <Slick list={imglist} history={props.history}/>
+                                }
                             </div>
                         </div>
                     </div>

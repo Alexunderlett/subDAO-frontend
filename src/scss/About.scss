@@ -19,7 +19,11 @@
   }
 
 }
-
+.balance{
+  a{
+    padding-right: 10px;
+  }
+}
 .post-details{
   background-color: #fff;
   padding: 40px;
@@ -47,8 +51,8 @@
     position: relative;
     padding-left: 18px ;
     word-break:break-all;
-
     word-wrap:break-word;
+
     li::before {
       position: absolute;
       margin-top: 10px;

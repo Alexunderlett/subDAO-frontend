@@ -16,7 +16,7 @@ export default function Vault(props){
     const [logo, setLogo] = useState('');
 
     useEffect(() => {
-        setId(props.match.params.id)
+        setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
@@ -50,7 +50,6 @@ export default function Vault(props){
         await api.vault.getTransferHistory(vaultcontract).then(data => {
             if (!data) return;
             // setActivelist(data)
-            console.log('getTransferHistory',data)
             sethistorylist(data)
         });
 

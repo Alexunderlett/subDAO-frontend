@@ -16,6 +16,13 @@ class Slick extends Component {
     prev = () => {
         this.slider.slickPrev();
     }
+    componentDidMount() {
+        let list = JSON.parse(sessionStorage.getItem('homelist'))
+        if(list!=null){
+            this.setState({list})
+        }
+    }
+
     render() {
         const settings = {
             slidesToShow: 5,
@@ -40,40 +47,20 @@ class Slick extends Component {
                 }
             }]
         };
+        const {list} = this.props;
         return (
             <div>
-                <span className="slick-prev" onClick={this.prev}>prev</span>
-                <span className="slick-next slick-disabled" onClick={this.next}>Next</span>
-
+                <span className={list&&list.length?"slick-prev":"slick-prev slick-disabled"} onClick={this.prev}>prev</span>
+                <span className={list&&list.length?"slick-next":"slick-next slick-disabled"} onClick={this.next}>Next</span>
             <div className='sliderBrdr'>
                 <Slider ref={slider => (this.slider = slider)} {...settings}>
-                    <div className="testimonial-slider-img">
-                        <img src={t3}  alt='' id="3" onClick={this.handleClicktoAbout.bind(this,3)}/>
-                    </div>
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t2}  alt='' id="2" onClick={this.handleClicktoAbout.bind(this,2)}/>*/}
-                    {/*</div>*/}
-
-
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t4}  alt=''/>*/}
-                    {/*</div>*/}
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t1}  alt=''/>*/}
-                    {/*</div>*/}
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t2}  alt=''/>*/}
-                    {/*</div>*/}
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t4}  alt=''/>*/}
-                    {/*</div>*/}
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t1}  alt=''/>*/}
-                    {/*</div>*/}
-
-                    {/*<div className="testimonial-slider-img">*/}
-                    {/*    <img src={t3}  alt=''/>*/}
-                    {/*</div>*/}
+                    {
+                        list.map(item=>
+                            <div className="testimonial-slider-img" key={item.address}>
+                                <img src={item.logo} onClick={this.handleClicktoAbout.bind(this,item.address)}/>
+                            </div>
+                        )
+                    }
                 </Slider>
 
             </div>

@@ -6,8 +6,8 @@ class ThirdStep extends Component {
         super(props);
         this.state = {
             form:{
-                admin: false,
-                token: false,
+                admin: true,
+                token: true,
                 name: '',
                 symbol: '',
                 supply: '',

@@ -12,10 +12,10 @@ export default function Withdraw(props){
     const [id, setId] = useState(null);
     const [selected, setSelected] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [address, setAddress] = useState('');
+    const [address, setaddress] = useState('');
     const [token, setToken] = useState('');
     const [reason, setReason] = useState('');
-    const [amount, setAmount] = useState('');
+    const [amount, setamount] = useState('');
     const [logo, setLogo] = useState('');
 
 
@@ -45,19 +45,8 @@ export default function Withdraw(props){
     }
     const handleChange = (e) => {
         const {name, value} = e.target;
-        switch(name){
-            case'address':
-                setAddress(value)
-                break;
-            case'reason':
-                setReason(value)
-                break;
-            case'amount':
-                setAmount(value)
-                break;
-            default:
-                break;
-        }
+        let str = `set${name}`
+        eval(str)(value)
     }
     const handleConfirm= async()=>{
 
@@ -67,23 +56,13 @@ export default function Withdraw(props){
             address,amount,selected
         }
 
-
         await api.vault.withdraw(vaultcontract,obj,(result)=> {
             if(result){
                 props.history.push(`/vault/${id}`)
             }
-        }).then(data => {
-            // if (!data) return;
-            // // setActivelist(data)
-
-            // if(data){
-            //     props.history.push(`/vote/${id}`)
-            // }
-
         });
     }
     const handleSelect = (e) => {
-        // let template =list.filter(item => item.value === e.target.value);
         setSelected(e.target.value)
     }
 

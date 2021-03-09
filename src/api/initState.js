@@ -28,5 +28,7 @@ module.exports = {
     daoManagercontractState: null,
     daoManagercontract:null,
 
+    homepage:null,
+    homepageState: null,
 
 };

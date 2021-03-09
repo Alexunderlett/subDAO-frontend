@@ -8,7 +8,7 @@ import VaultmodalTips from "./vaultmodalTips";
 
 export default function Deposit(props){
     const {state,dispatch} = useSubstrate();
-    const {vaultcontract} = state;
+    const {vaultcontract,erc20contract} = state;
 
     const [id, setId] = useState(null);
     const [copied, setCopied] = useState(false);
@@ -17,20 +17,34 @@ export default function Deposit(props){
     const [token, setToken] = useState('');
     const [amount, setAmount] = useState('');
     const [logo, setLogo] = useState('');
+    const [deposit, setdeposit] = useState('');
 
     const [list, setList] = useState([]);
 
-    useEffect(() => {
+    useEffect(async () => {
         setId(props.match.params.id)
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
-    }, []);
-    useEffect(async () => {
+
         await api.vault.getTokenList(vaultcontract).then(data => {
             if (!data) return;
             setList(data)
         });
     }, []);
+
+    useEffect(async () => {
+        let obj = {
+            amount,selected
+        }
+        if(deposit){
+            await api.vault.deposit(vaultcontract,obj,(result)=> {
+                if(result){
+                    props.history.push(`/vault/${id}`)
+                }
+            })
+        }
+
+    }, [deposit]);
 
 
     const handleClicktoVault=()=>{
@@ -43,38 +57,17 @@ export default function Deposit(props){
         setShowModal(false)
     }
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const {value} = e.target;
         setAmount(value)
-        // switch(name){
-        //     case'amount':
-        //         setAmount(value)
-        //         break;
-        //     default:
-        //         break;
-        // }
     }
     const handleConfirm= async()=>{
 
-        setShowModal(false)
+        setShowModal(false);
 
-        let obj = {
-           amount,selected
-        }
+        await api.erc20.approveOp(erc20contract,amount,(result)=> {
+            setdeposit(true)
+        })
 
-
-        await api.vault.deposit(vaultcontract,obj,(result)=> {
-            if(result){
-                props.history.push(`/vault/${id}`)
-            }
-        }).then(data => {
-            // if (!data) return;
-            // // setActivelist(data)
-
-            // if(data){
-            //     props.history.push(`/vote/${id}`)
-            // }
-
-        });
     }
     const handleSelect = (e) => {
         // let template =list.filter(item => item.value === e.target.value);

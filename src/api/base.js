@@ -1,6 +1,7 @@
 import ConnectContract from './connectContract';
 import publicJs from "../utils/publicJs";
 import Accounts from "./Account";
+import api from "./index";
 
 let loadBase = false;
 let basecontract;
@@ -28,9 +29,25 @@ const InitBase = async (state,dispatch, address) => {
 const value = 0;
 const gasLimit = -1;
 
+const InitHome = async (state,address) => {
+    const {api} = state;
+    const AccountId = await Accounts.accountAddress();
+
+    const  daoManagercontract = await ConnectContract(api, 'daoManager',address);
+
+    let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+
+    const basecontract = await ConnectContract(api, 'base', data.base_addr);
+
+    let logo = await basecontract.query.getLogo(AccountId, {value, gasLimit});
+
+    logo = publicJs.formatResult(logo);
+    return logo;
+};
+
 const getBaseData = async (basecontract) => {
     let dataObj = {};
-
     const AccountId = await Accounts.accountAddress();
     if (basecontract === null || !basecontract || !basecontract.query || !AccountId) return;
 
@@ -59,5 +76,6 @@ const getBaseData = async (basecontract) => {
 
 export default {
     InitBase,
+    InitHome,
     getBaseData
 }

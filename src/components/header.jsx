@@ -2,14 +2,19 @@ import React, {useState, useEffect} from 'react';
 import * as history from 'history';
 import {Form} from "react-bootstrap";
 import Accounts from '../api/Account';
+import api from "../api";
+import {useSubstrate} from "../api/contracts";
 
 const createHashHistory = history.createHashHistory();
 
 export default function Headertop() {
+    const {state,dispatch} = useSubstrate();
+    const {maincontract,daoManagercontract} = state;
 
     const [showHeader, setshowHeader] = useState(false);
     let [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
+    const [addresslist, setaddresslist] = useState([]);
 
     useEffect(() => {
         setshowHeader(createHashHistory.location.pathname !== '/');
@@ -35,10 +40,28 @@ export default function Headertop() {
         createHashHistory.push(`/`)
     }
 
-    const selectAccounts = (e) => {
+    const selectAccounts = async(e) => {
         let selected = allList.filter(i => i.address === e.target.value);
         setselected(selected);
-        sessionStorage.setItem('account', JSON.stringify(selected))
+        sessionStorage.setItem('account', JSON.stringify(selected));
+
+        let addresslist = await api.main.listDaoInstances(maincontract);
+        console.log(addresslist)
+
+
+        let arr=[];
+        if(addresslist.length){
+            let i=0;
+            for(let item of addresslist){
+                let logo = await api.base.InitHome(state, item.dao_manager_addr);
+                arr[i]={
+                    address: item.dao_manager_addr,
+                    logo
+                };
+                i++;
+            }
+        }
+        dispatch({type: 'SET_HOME',payload:arr});
     }
     const connectWallet = async () => {
         const accoutlist = await Accounts.accountlist();

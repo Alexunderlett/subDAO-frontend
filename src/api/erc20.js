@@ -20,6 +20,25 @@ const InitErc20 = async (state, dispatch, address) =>  {
     }
     return erc20contract;
 }
+
+const value = 0;
+const gasLimit = -1;
+
+const approveOp = async (erc20contract,total,cb) => {
+    const AccountId = await Accounts.accountAddress();
+    const injector = await Accounts.accountInjector();
+
+
+    if (erc20contract === null || !erc20contract || !erc20contract.tx || !AccountId) return;
+
+    await erc20contract.tx.approve({value, gasLimit},AccountId,total)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+          if (result.status.isFinalized) {
+             cb(true);
+         }
+       });
+}
 export default {
     InitErc20,
+    approveOp,
 }

@@ -22,13 +22,8 @@ export default function ForthStep(props) {
     const [admin,setadmin]= useState(false);
     const [queryAddrs,setqueryAddrs]= useState(false);
 
-
-
-    // const toThirdStep = () => {
-    //     props.handlerSet(3)
-    // }
     const handleClicktoAbout = (id) => {
-        props.history.push(`/about/${id}`)
+        props.history.push(`/about/${baseC.dao_manager_addr}`)
     }
     useEffect(async () => {
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
@@ -93,7 +88,6 @@ export default function ForthStep(props) {
      useEffect(async () => {
          await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
              setcontractlist(data)
-             console.log(data)
          });
         }, [queryAddrs]);
 
@@ -110,8 +104,6 @@ export default function ForthStep(props) {
         if (daoManagercontract == null) return;
         await api.dao.setDAO(daoManagercontract, obj, (data) => {
             settransfer(data)
-        }).then(data => {
-            console.log(data)
         });
     }, [daoManagercontract]);
     useEffect(async () => {
@@ -258,37 +250,13 @@ export default function ForthStep(props) {
             <div className="successInfo">Create {name} successful !!</div>
         </li>
         {
-            contractlist!=null &&  <li className="addresslist">
-                {
-                    contractlist.base_addr!=null && <div>
-                        <span>Base Address</span>
-                        <a href="#">{contractlist.base_addr}</a>
-                    </div>
-                }
-                {
-                    contractlist.erc20_addr!=null && <div>
-                        <span>ERC20 Address</span>
-                        <a href="#">{contractlist.erc20_addr}</a>
-                    </div>
-                }
-                {
-                    contractlist.org_addr!=null && <div>
-                        <span>ORG Address</span>
-                        <a href="#">{contractlist.org_addr}</a>
-                    </div>
-                }
-                {
-                    contractlist.vault_addr!=null && <div>
-                        <span>VAULT Address</span>
-                        <a href="#">{contractlist.vault_addr}</a>
-                    </div>
-                }
-                {
-                    contractlist.vote_addr!=null && <div>
-                        <span>VOTE Address</span>
-                        <a href="#">{contractlist.vote_addr}</a>
-                    </div>
-                }
+            contractlist!=null &&  <li className="addresslist">{
+                Object.keys(contractlist).map((key)=>(
+                    <div key={key}>
+                        <span>{key}</span>
+                        <a href="#">{contractlist[key]}</a>
+                </div>))
+            }
             </li>
         }
 

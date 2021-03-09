@@ -95,6 +95,9 @@ module.exports = (state, action) => {
         case 'DAO_ERROR':
             return { ...state, daoManagercontract: null, daoManagercontractState: 'ERROR' };
 
+        case 'SET_HOME':
+            return { ...state, homepage: action.payload,homepageState:'READY'};
+
 
         default:
             throw new Error(`Unknown type: ${action.type}`);

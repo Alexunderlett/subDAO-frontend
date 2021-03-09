@@ -28,6 +28,7 @@ const listDaoInstances = async (maincontract) => {
 
 };
 
+
 const listDaoInstancesByOwner = async (maincontract) => {
 
     const AccountId = await Accounts.accountAddress();

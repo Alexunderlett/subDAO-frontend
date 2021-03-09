@@ -2,20 +2,15 @@ import React, {useEffect, useState} from 'react';
 import shap1 from "./images/footer-shap-1.png";
 import shap2 from "./images/footer-shap-3.png";
 import {useSubstrate} from "./api/contracts";
-// import Accounts from './api/Account';
-// import publicJs from "./utils/publicJs";
-import api from './api/index';
-import publicJs from "./utils/publicJs";
-import Accounts from "./api/Account";
 
-// import {Keyring} from "@polkadot/keyring";
+import api from './api/index';
 
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, vaultcontract,orgcontract,votecontract,erc20contract} = state;
+    const {basecontract, vaultcontract, orgcontract, votecontract, erc20contract, daoManagercontract} = state;
 
-    const [id, setId] = useState(null);
+
     const [name, setName] = useState('');
     const [logo, setLogo] = useState('');
     const [description, setDescription] = useState('');
@@ -23,42 +18,95 @@ export default function About(props) {
     const [moderators, setModerators] = useState([]);
     const [activelist, setActivelist] = useState([]);
     const [balancelist, setbalancelist] = useState([]);
+    const [contractlist, setcontractlist] = useState([]);
+    const [tokenlist, settokenlist] = useState([]);
 
     useEffect(async () => {
-        setId(props.match.params.id);
-
-
-        await api.vault.InitVault(state,dispatch,'5HS7Vufvtr7sCrpS4yeXBZWurT5BqpZpzKgwRsZfvmF8euMv');
-        await api.org.InitOrg(state,dispatch,'5CkgafcwX8XRV7gTqMWcroBt25c8vJxHmZdiSaKFGMRyMtrd');
-        await api.vote.InitVote(state,dispatch,'5CPrv4sEHos9Xc6j2AHntSaCaQPyE3ufiKnkDV1QjaV3iVsb');
-        await api.erc20.InitErc20(state,dispatch,'5HU5TSviQ8UvzEoPTKb9wmqsmbSjbMtWe6AZcvyNVvDg1yqM');
+        await api.dao.InitDAO(state, dispatch, props.match.params.id);
 
     }, []);
 
     useEffect(async () => {
-        sessionStorage.setItem('logo',logo)
-    }, [logo]);
+        await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
+            if(data){
+                setcontractlist(data)
+            }
+
+        });
+
+    }, [daoManagercontract]);
 
     useEffect(async () => {
-        if(basecontract==null||vaultcontract==null||orgcontract==null||votecontract==null||erc20contract==null)return;
+
+        const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
+
+        console.log(contractlist)
+
+        if(base_addr!=null){
+            await api.base.InitBase(state, dispatch,base_addr)
+        }
+        if(vault_addr!=null){
+            await api.vault.InitVault(state, dispatch, vault_addr);
+            // await api.vault.InitVault(state, dispatch, '5HS7Vufvtr7sCrpS4yeXBZWurT5BqpZpzKgwRsZfvmF8euMv');
+        }
+
+        if(org_addr!=null){
+            await api.org.InitOrg(state, dispatch, org_addr);
+            // await api.org.InitOrg(state, dispatch, '5CcCZEog57xweMuv7xFkyn1qCiqPzvSvTCynTeM6TxUbyCXG');
+        }
+        if(vote_addr!=null){
+            await api.vote.InitVote(state, dispatch, vote_addr);
+            // await api.vote.InitVote(state, dispatch, '5CPrv4sEHos9Xc6j2AHntSaCaQPyE3ufiKnkDV1QjaV3iVsb');
+        }
+        if(erc20_addr!=null){
+            await api.erc20.InitErc20(state, dispatch, erc20_addr);
+        }
+
+    }, [contractlist]);
+
+
+    useEffect(async () => {
+        sessionStorage.setItem('logo', logo)
+    }, [logo]);
+    useEffect(async () => {
+        let arr=[];
+        let i=0;
+        for(let item of tokenlist){
+            await api.vault.getBalanceOf(vaultcontract,item).then(data => {
+                if (!data) return;
+
+                arr[i]={
+                    address:item,
+                    balance:data
+                };
+                i++;
+            });
+        }
+        setbalancelist(arr)
+    }, [tokenlist]);
+
+    useEffect(async () => {
+        // if (basecontract == null || vaultcontract == null || orgcontract == null || votecontract == null || erc20contract == null ) return;
 
         await api.base.getBaseData(basecontract).then(data => {
             if (!data) return;
-            let {nameResult, logoResult, descResult, ownerResult,erc20contract} = data;
+            let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
             setName(nameResult);
             setLogo(logoResult);
             setDescription(descResult);
             setOwner(ownerResult);
         });
 
-        // let erc20 = '5HU5TSviQ8UvzEoPTKb9wmqsmbSjbMtWe6AZcvyNVvDg1yqM';
-        // await api.vault.getBalanceOf(vaultcontract,erc20).then(data => {
-        //     if (!data) return;
-        //     // setbalancelist(data)
-        // });
+        await api.vault.getTokenList(vaultcontract).then(data => {
+            if (!data) return;
+            settokenlist(data)
+        });
+
+        console.log(votecontract)
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
-            let arr = data.slice(0,3);
+
+            let arr = data.slice(0, 3);
             setActivelist(arr)
         });
         await api.org.getDaoModeratorList(orgcontract).then(data => {
@@ -87,10 +135,26 @@ export default function About(props) {
         // });
 
 
-    }, [basecontract, vaultcontract,orgcontract,votecontract,erc20contract]);
+    }, [basecontract, vaultcontract, orgcontract, votecontract, erc20contract]);
 
     const handleClicktoType = (type) => {
-        props.history.push(`/${type}/${id}`)
+        const {vault_addr,org_addr,vote_addr,erc20_addr,base_addr} = contractlist;
+        let address;
+        switch (type) {
+            case'vote':
+                address = vote_addr;
+                break;
+            case'vault':
+                address = vault_addr;
+                break;
+            default:
+            case'org':
+                address = org_addr;
+                break;
+        }
+
+        props.history.push(`/${type}/${address}`)
+
     }
 
     return (
@@ -122,12 +186,11 @@ export default function About(props) {
                             <div className='post-details'>
                                 <div>
                                     <h4>Balance</h4>
-                                    <ul className='list'>
+                                    <ul className='list balance'>
                                         {
-                                            balancelist.map((item,index)=>
+                                            balancelist.map((item, index) =>
                                                 <li key={`balance_${index}`}>
-                                                    <span>pETH 10,000,000</span>
-                                                    <a href="#">2300506e9fbb4d35887c851d84440538</a>
+                                                    <a href="#">{item.address}</a><span>{item.balance}</span>
                                                 </li>
                                             )
                                         }
@@ -139,49 +202,33 @@ export default function About(props) {
                                     <h4>Moderators</h4>
                                     <ul className='list'>
                                         {
-                                            moderators.map((i,index)=><li key={moderators[index]}>
-                                                {/*<span>Evy</span>*/}
-                                                <a href="#">{moderators[index]}</a>
+                                            moderators.map((i, index) => <li key={moderators[index]}>
+                                                <span>{moderators[index][1]}</span>
+                                                <a href="#">{moderators[index][0]}</a>
                                             </li>)
                                         }
-
-                                        {/*<li>*/}
-                                        {/*    <span>pETH</span>*/}
-                                        {/*    <a href="">2300506e9fbb4d35887c851d84438</a>*/}
-                                        {/*</li>*/}
-                                        {/*<li>*/}
-                                        {/*    <span>pETHA</span>*/}
-                                        {/*    <a href="">230059fbb4d35887c851d84440538</a>*/}
-                                        {/*</li>*/}
 
                                     </ul>
                                 </div>
                                 <div>
                                     <h4>Contracts</h4>
-                                    <ul className='list'>
-                                        <li>
-                                            <span>DAO Address: </span>
-                                            <a href="">2300506e9fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>Token Address: </span>
-                                            <a href="">2300506e9fbb4d35887c851d84438</a>
-                                        </li>
-                                        <li>
-                                            <span>Vault Address: </span>
-                                            <a href="">230059fbb4d35887c851d84440538</a>
-                                        </li>
-                                        <li>
-                                            <span>Org Address: </span>
-                                            <a href="">300506e9fbb4d35887c851d84440538</a>
-                                        </li>
-                                    </ul>
+                                    {
+                                        contractlist != null && <ul className='list'>{
+                                            Object.keys(contractlist).map((key) => (
+                                                <li>
+                                                    <span>{key}: </span>
+                                                    <a href="#">{contractlist[key]}</a>
+                                                </li>))
+                                        }
+
+                                        </ul>
+                                    }
                                 </div>
                                 <div>
                                     <h4>Votings</h4>
                                     <ul className='list'>
                                         {
-                                            activelist.map((item,index)=><li key={`votings_${index}`}>
+                                            activelist.map((item, index) => <li key={`votings_${index}`}>
                                                 {/*<span>Active: </span>*/}
                                                 <a href="#">{item.title}</a>
                                             </li>)

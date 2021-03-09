@@ -33,7 +33,7 @@ const getDaoModeratorList = async (orgcontract) => {
     if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
 
 
-    let data = await orgcontract.query.getDaoModeratorList(AccountId, {value, gasLimit});
+    let data = await orgcontract.query.getDaoMemberDetailList(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
     return data;
 

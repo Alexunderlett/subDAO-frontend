@@ -37,6 +37,7 @@ const setDAO = async (daoManagercontract,obj,cb) => {
     const data = await daoManagercontract.tx.init({value, gasLimit}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized || result.status.isInBlock ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
+            console.log(result)
             cb(true)
         }
     });
@@ -86,7 +87,6 @@ const queryComponentAddrs = async (daoManagercontract) => {
 
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
-
     return data;
 
 };

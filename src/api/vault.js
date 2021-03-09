@@ -93,6 +93,7 @@ const deposit = async (vaultcontract,obj,cb) => {
     if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
     let data;
 
+
     await vaultcontract.tx.deposit({value, gasLimit}, selected,AccountId, amount).
     signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized || result.status.isInBlock) {
