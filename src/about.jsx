@@ -27,7 +27,6 @@ export default function About(props) {
     }, []);
 
     useEffect(async () => {
-            console.log("===daoManagercontract",daoManagercontract)
         if(daoManagercontract==null) return ;
         await api.dao.queryComponentAddrs(daoManagercontract).then(data=>{
             if(data){
