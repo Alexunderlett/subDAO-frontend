@@ -4,11 +4,15 @@ import {Button} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
 
+import Loading from "./components/loading/Loading";
 
 export default function Org(props) {
 
     const {state} = useSubstrate();
     const {orgcontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
@@ -25,6 +29,8 @@ export default function Org(props) {
         if (orgcontract == null) return;
 
         const setall = async () => {
+            setLoading(true);
+            setTips('Initialize the ORG page');
 
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
@@ -34,6 +40,7 @@ export default function Org(props) {
                 if (!data) return;
                 setmemberlist(data)
             });
+            setLoading(false);
         };
         setall();
     }, [orgcontract]);
@@ -47,6 +54,7 @@ export default function Org(props) {
 
     return (
         <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section>
                 <PageBackground/>
                 <div className="container">

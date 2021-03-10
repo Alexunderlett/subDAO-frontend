@@ -4,11 +4,14 @@ import shap2 from "./images/footer-shap-3.png";
 import {useSubstrate} from "./api/contracts";
 
 import api from './api/index';
-
+import Loading from "./components/loading/Loading";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
     const {basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setAId] = useState(null);
     const [name, setName] = useState('');
@@ -29,29 +32,33 @@ export default function About(props) {
 
     useEffect(() => {
         if (apiState !== 'READY') return;
+
         const setInitDAO = async () => {
+            setLoading(true)
+            setTips('Initializing DAO Contracts')
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data)
             });
+
         };
         setInitDAO();
     }, [apiState]);
     useEffect(() => {
-        const setids = async () => {
-            setAId(props.match.params.id);
-        };
-        setids();
+        setAId(props.match.params.id);
     }, []);
 
     useEffect( () => {
         if (daoManagercontract == null && daostate) return;
         const queryAddrs = async () => {
+
+            setTips('Get Contract Address');
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
                     setcontractlist(data)
                 }
 
             });
+
         };
         queryAddrs();
     }, [daoManagercontract, daostate]);
@@ -60,7 +67,9 @@ export default function About(props) {
 
         const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
         if (base_addr != null) {
+
             const setInitBase = async () => {
+                setTips('Initializing Contracts');
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
                     setbasestate(data)
                 });
@@ -69,6 +78,7 @@ export default function About(props) {
         }
         if (vault_addr != null) {
             const setInitVault = async () => {
+                setTips('Initializing Contracts');
                 await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
                     setvaultstate(data)
                 });
@@ -78,6 +88,7 @@ export default function About(props) {
 
         if (org_addr != null) {
             const setInitOrg = async () => {
+                setTips('Initializing Contracts');
                 await api.org.InitOrg(state, dispatch, org_addr, (data) => {
                     setorgstate(data)
                 });
@@ -86,6 +97,7 @@ export default function About(props) {
         }
         if (vote_addr != null) {
             const setInitVote = async () => {
+                setTips('Initializing Contracts');
                 await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
                     setvotestate(data)
                 });
@@ -94,6 +106,7 @@ export default function About(props) {
         }
         if (erc20_addr != null) {
             const setInitErc20 = async () => {
+                setTips('Initializing Contracts');
                 await api.erc20.InitErc20(state, dispatch, erc20_addr);
             };
             setInitErc20();
@@ -107,6 +120,7 @@ export default function About(props) {
     }, [logo]);
     useEffect( () => {
         const setBalance = async () => {
+            setTips('Get balance Of tokens');
             let arr = [];
             let index = 0;
             for (let item of tokenlist) {
@@ -129,6 +143,7 @@ export default function About(props) {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
 
         const setBase = async () => {
+            setTips('Get information');
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
                 let {owner, name, logo, desc} = data;
@@ -138,6 +153,7 @@ export default function About(props) {
                 setDescription(desc);
                 setOwner(owner);
             });
+            setLoading(false)
         };
         setBase();
     }, [basecontract, basestate]);
@@ -197,26 +213,11 @@ export default function About(props) {
     }, [orgcontract, orgstate]);
 
     const handleClicktoType = (type) => {
-        // const {vault_addr, org_addr, vote_addr} = contractlist;
-        // let address;
-        // switch (type) {
-        //     case'vote':
-        //         address = vote_addr;
-        //         break;
-        //     case'vault':
-        //         address = vault_addr;
-        //         break;
-        //     default:
-        //     case'org':
-        //         address = org_addr;
-        //         break;
-        // }
-
         props.history.push(`/${type}/${id}`)
-
     }
     return (
         <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section className="section blog-single position-relative">
                 <div className="footershape-image-1">
                     <img src={shap1} alt=''/>

@@ -3,11 +3,15 @@ import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
+import Loading from "./components/loading/Loading";
 
 export default function Vault(props){
 
     const {state} = useSubstrate();
     const {vaultcontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
@@ -48,13 +52,16 @@ export default function Vault(props){
                 });
                 index++;
             }
-            settokenlist(arr)
+            settokenlist(arr);
+            setLoading(false);
         };
         setbalance();
     }, [list]);
 
     useEffect( () => {
         if(vaultcontract === null) return;
+        setLoading(true);
+        setTips('Initialize the vault page');
         const setAlllist = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
@@ -78,6 +85,7 @@ export default function Vault(props){
 
         return (
             <div>
+                <Loading showLoading={loading} tips={tips}/>
                 <section>
                     <PageBackground />
                     <div className="container">

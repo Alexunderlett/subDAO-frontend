@@ -3,19 +3,21 @@ import Slick from "./components/slick";
 import {Modal} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
+import Loading from "./components/loading/Loading";
 
 export default function Home(props) {
     const {state,dispatch} = useSubstrate();
+
     const {homepage,maincontract,allAccounts} = state;
+    const [loading,setLoading]= useState(false);
 
     const [showButton, setShowButton] = useState(false);
     // const [showlist, setshowlist] = useState(false);
     const [imglist, setimglist] = useState([]);
     const account = JSON.parse(sessionStorage.getItem('account'));
-     const handleClick = async ()=> {
+     const handleClick = ()=> {
          if(account === null || !account.length){
              setShowButton(true);
-
          }else{
              props.history.push('/create')
          }
@@ -33,6 +35,7 @@ export default function Home(props) {
          if(maincontract==null ) return ;
 
          const setInstances = async() => {
+             setLoading(true)
              let addresslist = await api.main.listDaoInstances(maincontract);
              let arr = [];
              if (addresslist && addresslist.length) {
@@ -48,14 +51,17 @@ export default function Home(props) {
              }
              setimglist(arr);
              dispatch({type: 'SET_HOME', payload: arr});
+             setLoading(false)
          };
          setInstances();
+
     }, [allAccounts,maincontract]);
     useEffect(() => {
         setimglist(homepage)
     }, [homepage]);
 
     return (<div>
+        <Loading showLoading={loading} tips='Initialize home page'/>
             <section className="padding">
                 <div className="container">
                     <div className="trheading">

@@ -6,9 +6,14 @@ import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import VaultmodalTips from "./vaultmodalTips";
 
+import Loading from "../loading/Loading";
+
 export default function Deposit(props){
     const {state} = useSubstrate();
     const {vaultcontract,erc20contract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     // const [copied, setCopied] = useState(false);
@@ -40,11 +45,15 @@ export default function Deposit(props){
         }
         if(deposit){
             const setdeposit =async () => {
+                setLoading(true);
+                setTips('Create a new deposit');
                 await api.vault.deposit(vaultcontract, obj, (result) => {
                     if (result) {
+                        setLoading(false);
                         props.history.push(`/vault/${id}`)
                     }
-                })
+                });
+
             };
             setdeposit();
         }
@@ -81,6 +90,7 @@ export default function Deposit(props){
 
     return (
         <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section>
                 <PageBackground />
                 <div className="container">

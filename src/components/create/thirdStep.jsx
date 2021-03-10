@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
+import {Button, FormControl, InputGroup} from "react-bootstrap";
 
 class ThirdStep extends Component {
     constructor(props) {
@@ -169,17 +169,18 @@ class ThirdStep extends Component {
         let { form:{admin, token, name, symbol,supply,tokenlist,adminlist}} = this.state;
         return <ul>
             <li>
-                <div>
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check
-                            type="checkbox"
-                            label="DAO Admin"
-                            value={admin}
-                            checked={admin}
-                            name='admin'
-                            onChange={this.handleCheck}
-                        />
-                    </Form.Group>
+                <div className='steptitle'>
+                    DAO Admin
+                    {/*<Form.Group controlId="formBasicCheckbox">*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="DAO Admin"*/}
+                    {/*        value={admin}*/}
+                    {/*        checked={admin}*/}
+                    {/*        name='admin'*/}
+                    {/*        onChange={this.handleCheck}*/}
+                    {/*    />*/}
+                    {/*</Form.Group>*/}
                 </div>
                 <div>
                     {adminlist.map((i, index) => (
@@ -224,17 +225,18 @@ class ThirdStep extends Component {
             </li>
 
             <li>
-                <div>
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check
-                            type="checkbox"
-                            label="Token"
-                            value={token}
-                            checked={token}
-                            name='token'
-                            onChange={this.handleCheck}
-                        />
-                    </Form.Group>
+                <div className='steptitle'>
+                    Token
+                    {/*<Form.Group controlId="formBasicCheckbox">*/}
+                    {/*    <Form.Check*/}
+                    {/*        type="checkbox"*/}
+                    {/*        label="Token"*/}
+                    {/*        value={token}*/}
+                    {/*        checked={token}*/}
+                    {/*        name='token'*/}
+                    {/*        onChange={this.handleCheck}*/}
+                    {/*    />*/}
+                    {/*</Form.Group>*/}
                 </div>
                 <div>
                     <InputGroup className="mb-3">

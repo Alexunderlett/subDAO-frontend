@@ -7,6 +7,8 @@ import PageBackground from "../pagebackground";
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api";
 
+import Loading from "../loading/Loading";
+
 // var yesterday = moment().subtract(1, 'day');
 // var valid = function (current) {
 //     return current.isAfter(yesterday);
@@ -22,6 +24,9 @@ export default function NewVote(props) {
 
     const {state} = useSubstrate();
     const {votecontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [date, setdate] = useState('');
     const [title, settitle] = useState('');
@@ -40,7 +45,8 @@ export default function NewVote(props) {
     }, []);
 
     const handleClicktoVote = async () => {
-
+        setLoading(true);
+        setTips('Create a new vote');
         let dataobj = {
             title,
             desc,
@@ -50,20 +56,11 @@ export default function NewVote(props) {
             choices:optionlist.join(',')
         }
         await api.vote.newVote(votecontract,dataobj,(result)=> {
+            setLoading(false);
             if(result){
                 props.history.push(`/vote/${id}`)
             }
-        }).then(data => {
-            // if (!data) return;
-            // // setActivelist(data)
-
-            // if(data){
-            //     props.history.push(`/vote/${id}`)
-            // }
-
         });
-
-
     }
 
     const removeOption =(selectItem, index) => {
@@ -116,6 +113,7 @@ export default function NewVote(props) {
 
     return (
         <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section>
                 <PageBackground/>
                 <div className="container">

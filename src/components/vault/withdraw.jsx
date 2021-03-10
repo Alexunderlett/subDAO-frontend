@@ -5,9 +5,14 @@ import VaultmodalTips from "./vaultmodalTips";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 
+import Loading from "../loading/Loading";
+
 export default function Withdraw(props){
     const {state} = useSubstrate();
     const {vaultcontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     const [selected, setSelected] = useState(null);
@@ -58,8 +63,10 @@ export default function Withdraw(props){
         let obj = {
             address,amount,selected
         }
-
+        setLoading(true);
+        setTips('Create a new withdraw');
         await api.vault.withdraw(vaultcontract,obj,(result)=> {
+            setLoading(false);
             if(result){
                 props.history.push(`/vault/${id}`)
             }
@@ -71,6 +78,7 @@ export default function Withdraw(props){
 
         return (
             <div>
+                <Loading showLoading={loading} tips={tips}/>
                 <section>
                     <PageBackground />
                     <div className="container">

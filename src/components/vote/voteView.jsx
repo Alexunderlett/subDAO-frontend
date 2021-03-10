@@ -3,12 +3,16 @@ import {Button, Form} from "react-bootstrap";
 import PageBackground from "../pagebackground";
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api/index";
+import Loading from "../loading/Loading";
 
 
 export default function VoteView (props){
 
     const {state} = useSubstrate();
     const {votecontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [optionlist, setoptionlist] = useState([]);
     const [id, setId] = useState(null);
@@ -26,6 +30,7 @@ export default function VoteView (props){
     useEffect(() => {
         if(afterchoice){
             props.history.push(`/voteOverview/${props.match.params.id}/${voteid}`);
+            setLoading(false);
         }
 
     }, [afterchoice]);
@@ -36,6 +41,8 @@ export default function VoteView (props){
 
 
         const setOnevote = async() => {
+            setLoading(true);
+            setTips('Initialize the vote page');
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
                 const {
@@ -46,6 +53,7 @@ export default function VoteView (props){
                 setdesc(desc);
                 setoptionlist(choices.split(','))
             });
+            setLoading(false);
         };
         setOnevote();
     }, []);
@@ -54,7 +62,8 @@ export default function VoteView (props){
         props.history.push(`/vote/${props.match.params.id}`)
     }
     const handleClicktoOverview = async () => {
-
+        setLoading(true);
+        setTips('Voting');
         await api.vote.VoteChoice(votecontract,voteid,selected,(data)=>{
             setafterchoice(data)
         });
@@ -66,6 +75,7 @@ export default function VoteView (props){
 
     return (
         <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section>
                 <PageBackground/>
                 <div className="container">

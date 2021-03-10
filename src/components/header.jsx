@@ -10,7 +10,7 @@ export default function Headertop() {
     const {dispatch} = useSubstrate();
 
     const [showHeader, setshowHeader] = useState(false);
-    let [allList, setallList] = useState([]);
+    const [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
 
     useEffect(() => {
@@ -21,6 +21,10 @@ export default function Headertop() {
     }, [setshowHeader]);
 
     useEffect(() => {
+
+    }, []);
+
+    useEffect(() => {
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
@@ -29,11 +33,9 @@ export default function Headertop() {
 
     const backNav = () => {
         createHashHistory.goBack()
-
     }
 
     const backHome = () => {
-
         createHashHistory.push(`/`)
     }
 

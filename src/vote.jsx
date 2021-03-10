@@ -8,11 +8,15 @@ import {useSubstrate} from "./api/contracts";
 
 import api from './api/index';
 
+import Loading from "./components/loading/Loading";
 
 export default function Vote(props){
 
     const {state} = useSubstrate();
     const {votecontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setAId] = useState(null);
     const [activelist, setActivelist] = useState([]);
@@ -32,6 +36,8 @@ export default function Vote(props){
     useEffect(() => {
 
         const setAll = async() => {
+            setLoading(true);
+            setTips('Initialize the vote page');
             await api.vote.queryOpenVote(votecontract).then(data => {
                 if (!data) return;
                 setActivelist(data)
@@ -46,6 +52,7 @@ export default function Vote(props){
                 if (!data) return;
                 setHistorylist(data)
             });
+            setLoading(false);
         };
         setAll();
 
@@ -53,6 +60,7 @@ export default function Vote(props){
 
         return (
             <div>
+                <Loading showLoading={loading} tips={tips}/>
                 <section>
                     <PageBackground />
                     <div className="container">

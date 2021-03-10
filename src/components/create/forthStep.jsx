@@ -3,9 +3,14 @@ import {Button} from "react-bootstrap";
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api";
 
+import Loading from "../loading/Loading";
+
 export default function ForthStep(props) {
     const {state, dispatch} = useSubstrate();
     const {maincontract, daoManagercontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [instanceByTemplate, setinstanceByTemplate] = useState(false);
     const [name, setname] = useState('');
@@ -66,6 +71,8 @@ export default function ForthStep(props) {
 
             const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
             const stepone=async () => {
+                setLoading(true)
+                setTips('Instance By Template');
                 await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
                     setinstanceByTemplate(result)
                     console.log("第一步=======instanceByTemplate")
@@ -78,6 +85,7 @@ export default function ForthStep(props) {
         if (instanceByTemplate){
             console.log("第二步=======listDaoInstancesByOwner")
             const steptwo = async () => {
+                setTips('List Dao Instances By Owner');
                 await api.main.listDaoInstancesByOwner(maincontract).then(data => {
                     if (!data) return;
                     if (data.length) {
@@ -93,6 +101,7 @@ export default function ForthStep(props) {
         if(baseC!=null){
             console.log("第三步=======InitDAO")
             const stepthree = async () => {
+                setTips('Init DAO');
                 await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr, (data) => {
                     setDaoinit(true)
                 });
@@ -114,6 +123,7 @@ export default function ForthStep(props) {
             };
             if (daoManagercontract == null) return;
             const stepfour = async () => {
+                setTips('Upload DAO\'s information');
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
                     settransfer(data)
                 });
@@ -125,6 +135,7 @@ export default function ForthStep(props) {
         if(transfer && daoinit){
             console.log("第五步======= transfer",transfer,daoinit)
             const stepfive = async () => {
+                setTips('Transfer Tokens');
                 for (let item of tokenlist) {
                     await api.dao.transferToken(daoManagercontract, item, (data) => {
                         setadmin(data)
@@ -141,6 +152,7 @@ export default function ForthStep(props) {
         if(admin && daoinit){
             console.log("第六步======= 添加管理员",admin , daoinit)
             const stepsix = async () => {
+                setTips('Add Dao Moderators');
                 for (let item of adminlist) {
                     await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
                         setqueryAddrs(data)
@@ -157,9 +169,11 @@ export default function ForthStep(props) {
          if( queryAddrs && daoinit){
              console.log("第七步======= queryComponentAddrs",queryAddrs,daoinit)
              const stepseven = async () => {
+                 setTips('Get contract address');
                  await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-                     console.log(data, daoManagercontract)
-                     setcontractlist(data)
+                     console.log(data, daoManagercontract);
+                     setcontractlist(data);
+                     setLoading(false);
                  });
              };
              stepseven();
@@ -168,6 +182,7 @@ export default function ForthStep(props) {
         }, [queryAddrs,daoinit]);
 
     return <ul>
+        <Loading showLoading={loading} tips={tips}/>
         {
             contractlist!=null && <li className='successful'>
             <div className="successFont">

@@ -4,12 +4,15 @@ import {Button} from "react-bootstrap";
 import ManageItem from "./manageItem";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
+import Loading from "../loading/Loading";
 
 export default function OrgManage(props){
 
     const {state} = useSubstrate();
     const {orgcontract} = state;
 
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     const [moderators, setModerators] = useState(false);
@@ -27,11 +30,13 @@ export default function OrgManage(props){
 
     useEffect(() => {
         if(addModerator){
+            setLoading(false);
             props.history.push(`/org/${id}`)
         }
     }, [addModerator]);
     useEffect(() => {
         if(addMember){
+            setLoading(false);
             props.history.push(`/org/${id}`)
         }
     }, [addMember]);
@@ -43,6 +48,8 @@ export default function OrgManage(props){
     useEffect( () => {
 
         const setAllList = async () => {
+            setLoading(true);
+            setTips('Initialize the ORG  page');
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
                 setChecklist(data)
@@ -51,6 +58,7 @@ export default function OrgManage(props){
                 if (!data) return;
                 setMemberlist(data)
             });
+            setLoading(false);
         };
         setAllList();
     }, [orgcontract]);
@@ -64,7 +72,8 @@ export default function OrgManage(props){
             address:item[0]
         }
         if(type==='moderators'){
-
+            setLoading(true);
+            setTips('Remove a DAO moderator');
             await api.org.removeDaoModerator(orgcontract,obj,function (result) {
                 setaddModerator(result)
             }).then(data => {
@@ -72,7 +81,8 @@ export default function OrgManage(props){
 
             });
         }else if(type==='members'){
-
+            setLoading(true);
+            setTips('Remove a DAO member');
             await api.org.removeDaoMember(orgcontract,obj,function (result) {
                 setaddMember(result)
             }).then(data => {
@@ -158,26 +168,25 @@ export default function OrgManage(props){
        props.history.push(`/org/${id}`)
     }
     const submitModerators = async (obj) =>{
-
+        setLoading(true);
+        setTips('Add a DAO Moderator');
         await api.org.addDaoModerator(orgcontract,obj,function (result) {
             setaddModerator(result)
-        }).then(data => {
-            if (!data) return;
-
         });
 
+
     }
- const submitMembers = async (obj) =>{
-     await api.org.addDaoMember(orgcontract,obj,function (result) {
-         setaddMember(result)
-     }).then(data => {
-         if (!data) return;
-         console.log(data)
-     });
+     const submitMembers = async (obj) =>{
+         setLoading(true);
+         setTips('Add a DAO Member');
+         await api.org.addDaoMember(orgcontract,obj,function (result) {
+             setaddMember(result)
+         });
     }
 
 
         return <div>
+            <Loading showLoading={loading} tips={tips}/>
             <section>
                 <PageBackground/>
                 <div className="container">
