@@ -39,7 +39,7 @@ const setDAO = async (daoManagercontract,obj,cb) => {
     const{base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
 
     const data = await daoManagercontract.tx.init({value, gasLimit:-1}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized || result.status.isInBlock ) {
+        if (result.status.isFinalized ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)
             cb(true)
@@ -57,13 +57,12 @@ const transferToken =  async (daoManagercontract,obj,cb) => {
 
     const{address,token}=obj;
 
-    const data = await daoManagercontract.tx.transfer({value, gasLimit}, address, token,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized || result.status.isInBlock ) {
+    await daoManagercontract.tx.transfer({value, gasLimit}, address, token,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+        if (result.status.isFinalized ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             cb(true)
         }
     });
-    return data;
 }
 
 const addDaoModeratorTx =  async (daoManagercontract,obj,cb) => {
@@ -75,13 +74,12 @@ const addDaoModeratorTx =  async (daoManagercontract,obj,cb) => {
 
     const{address,name}=obj;
 
-    const data = await daoManagercontract.tx.addDaoModerator({value, gasLimit}, name,address,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized || result.status.isInBlock ) {
+    await daoManagercontract.tx.addDaoModerator({value, gasLimit}, name,address,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+        if (result.status.isFinalized) {
             console.log(result.status.isFinalized ,result.status.isInBlock ,result);
             cb(true)
         }
     });
-    return data;
 }
 
 const queryComponentAddrs = async (daoManagercontract) => {

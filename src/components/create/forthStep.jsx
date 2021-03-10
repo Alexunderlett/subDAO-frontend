@@ -27,6 +27,8 @@ export default function ForthStep(props) {
     const [admin,setadmin]= useState(false);
     const [queryAddrs,setqueryAddrs]= useState(false);
     const [daoinit,setDaoinit]= useState(false);
+    const [adminstate,setadminstate]= useState(false);
+    const [tokenstate,settokenstate]= useState(false);
 
     const handleClicktoAbout = () => {
         props.history.push(`/about/${baseC.dao_manager_addr}`);
@@ -42,12 +44,14 @@ export default function ForthStep(props) {
         setdesc(firstStep.description);
 
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
-        setercUrl(secondStep[0].dao_manager_code_hash);
+        // setercUrl(secondStep[0].dao_manager_code_hash);
 
         const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
         const {symbol,supply,admin,token,adminlist,tokenlist} = thirdStep;
         setsymbol(symbol);
         setsercSupply(supply);
+        setadminstate(admin);
+        settokenstate(token);
         if(admin){
             setadminlist(adminlist);
         }
@@ -70,15 +74,19 @@ export default function ForthStep(props) {
         // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
 
             const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
-            const stepone=async () => {
-                setLoading(true)
-                setTips('Instance By Template');
-                await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
-                    setinstanceByTemplate(result)
-                    console.log("第一步=======instanceByTemplate")
-                });
-            };
-            stepone();
+            console.log(secondStep && secondStep[0] &&secondStep[0].id)
+            if(secondStep && secondStep[0] &&secondStep[0].id){
+                const stepone=async () => {
+                    setLoading(true)
+                    setTips('Instance By Template');
+                    await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
+                        setinstanceByTemplate(result)
+                        console.log("第一步=======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
+                    });
+                };
+                stepone();
+            }
+
 
     }, [maincontract]);
     useEffect( () => {
@@ -90,7 +98,7 @@ export default function ForthStep(props) {
                     if (!data) return;
                     if (data.length) {
                         console.log("======listDaoInstancesByOwner", baseC, data)
-                        setbaseC(data[data.length - 1])
+                        setbaseC(data && data.length?data[data.length - 1]:[])
                     }
                 });
             };
@@ -98,7 +106,7 @@ export default function ForthStep(props) {
         }
     }, [instanceByTemplate]);
     useEffect( () => {
-        if(baseC!=null){
+        if(baseC!=null && instanceByTemplate){
             console.log("第三步=======InitDAO")
             const stepthree = async () => {
                 setTips('Init DAO');
@@ -110,8 +118,8 @@ export default function ForthStep(props) {
         }
     }, [baseC]);
     useEffect( () => {
-        if(daoinit){
-            console.log("第四步=======传内容")
+        if(daoinit && instanceByTemplate && baseC!=null){
+            console.log("第四步=======传内容",baseC.dao_manager_addr);
             let obj = {
                 base_name: name,
                 base_logo: logo,
@@ -125,48 +133,90 @@ export default function ForthStep(props) {
             const stepfour = async () => {
                 setTips('Upload DAO\'s information');
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
-                    settransfer(data)
+                    settransfer(true)
                 });
             };
             stepfour();
         }
-    }, [daoManagercontract,daoinit]);
+    }, [daoinit]);
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     useEffect( () => {
-        if(transfer && daoinit){
-            console.log("第五步======= transfer",transfer,daoinit)
-            const stepfive = async () => {
-                setTips('Transfer Tokens');
-                for (let item of tokenlist) {
-                    await api.dao.transferToken(daoManagercontract, item, (data) => {
-                        setadmin(data)
-                    }).then(data => {
-                        console.log(data)
-                    });
-                }
-            };
-            stepfive();
+        if(daoinit && instanceByTemplate && baseC!=null && transfer){
+            if(tokenstate){
+                console.log("第五步======= transfer",transfer,daoinit)
+                const stepfive = async () => {
+                    setTips('Transfer Tokens');
+                    let arr=[];
+                    let index=0;
+                    for (let item of tokenlist) {
+                        if(index){
+                            while (!arr[index-1]){
+                                await delay(500);
+                            }
+                        }
+                        try{
+                            await api.dao.transferToken(daoManagercontract, item, (data) => {
+
+                                arr.push(data);
+                                setTips(`Transfer Tokens (${arr.length}/${tokenlist.length})`);
+                                if(arr.length===tokenlist.length){
+                                    setadmin(true);
+                                }
+                            });
+                        }catch (e) {
+                            console.log(e);
+                        }
+                        index++;
+                    }
+
+                };
+                stepfive();
+
+            }else{
+                setadmin(true);
+            }
         }
-    }, [transfer,daoinit]);
+
+    }, [transfer]);
 
     useEffect( () => {
-        if(admin && daoinit){
-            console.log("第六步======= 添加管理员",admin , daoinit)
-            const stepsix = async () => {
-                setTips('Add Dao Moderators');
-                for (let item of adminlist) {
-                    await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
-                        setqueryAddrs(data)
-                    }).then(data => {
-                        console.log(data)
-                    });
-                }
-            };
-            stepsix();
+        if(admin && daoinit && instanceByTemplate && baseC!=null && transfer){
+            if(adminstate){
+                console.log("第六步======= 添加管理员",admin , daoinit);
+                const stepsix = async () => {
+                    setTips('Add Dao Moderators');
+                    let arr=[];
+                    let index=0;
+                    for (let item of adminlist) {
+                       if(index){
+                           while (!arr[index-1]){
+                               await delay(500);
+                           }
+                       }
+                        try{
+                            await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
+                                arr.push(data);
+                                setTips(`Add Dao Moderators (${arr.length}/${adminlist.length})`);
+                                if(arr.length===adminlist.length){
+                                    setqueryAddrs(true);
+                                }
+                            });
+                        }catch (e) {
+                            console.log(e)
+                        }
+
+                    index++;
+                    }
+
+                };
+                stepsix();
+            }else {
+                setqueryAddrs(true);
+            }
         }
-    }, [admin,daoinit]);
+    }, [admin]);
      useEffect( () => {
-
-         if( queryAddrs && daoinit){
+         if( queryAddrs && daoinit && instanceByTemplate && baseC!=null && admin && transfer){
              console.log("第七步======= queryComponentAddrs",queryAddrs,daoinit)
              const stepseven = async () => {
                  setTips('Get contract address');
@@ -178,8 +228,7 @@ export default function ForthStep(props) {
              };
              stepseven();
          }
-
-        }, [queryAddrs,daoinit]);
+        }, [queryAddrs]);
 
     return <ul>
         <Loading showLoading={loading} tips={tips}/>

@@ -35,18 +35,18 @@ export default function Home(props) {
          if(maincontract==null ) return ;
 
          const setInstances = async() => {
-             setLoading(true)
+             setLoading(true);
              let addresslist = await api.main.listDaoInstances(maincontract);
              let arr = [];
              if (addresslist && addresslist.length) {
-                 let i = 0;
+
                  for (let item of addresslist) {
-                     let logo = await api.base.InitHome(state, item.dao_manager_addr);
-                     arr[i] = {
+                     const data = await api.base.InitHome(state, item.dao_manager_addr);
+                     const logo = data && data.logo?data.logo:'';
+                     arr.push({
                          address: item.dao_manager_addr,
                          logo
-                     };
-                     i++;
+                     }) ;
                  }
              }
              setimglist(arr);

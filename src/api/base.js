@@ -40,7 +40,7 @@ const InitHome = async (state,address) => {
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
 
     let logo = await basecontract.query.getBase(AccountId, {value, gasLimit});
-    logo = publicJs.formatResult(logo).logo;
+    logo = publicJs.formatResult(logo);
     return logo;
 };
 
