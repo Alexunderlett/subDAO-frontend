@@ -2,16 +2,13 @@ import ConnectContract from './connectContract';
 import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
 
-let loadVault = false;
+
 const InitVault = async (state, dispatch, address,cb) =>  {
     let vaultcontract;
-    const {apiState, api,vaultcontractState} = state;
+    const {apiState, api} = state;
     let account = await Accounts.accountAddress();
 
     if (apiState !== 'READY' ||  !account ) return;
-
-    // if (loadVault) return dispatch({ type: 'SET_VAULT', payload: vaultcontract });
-    // loadVault = true;
 
     try {
         vaultcontract = await ConnectContract(api, 'vault', address);
@@ -33,7 +30,6 @@ const getBalanceOf = async (vaultcontract,erc20) => {
 
     const AccountId = await Accounts.accountAddress();
     if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
-    let erc;
 
     let data = await vaultcontract.query.getBalanceOf(AccountId, {value, gasLimit},erc20);
     data = publicJs.formatResult(data);
@@ -74,8 +70,8 @@ const withdraw = async (vaultcontract,obj,cb) => {
     if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
     let data;
 
-    await vaultcontract.tx.withdraw({value, gasLimit}, selected,address, amount).
-    signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    await vaultcontract.tx.withdraw({value, gasLimit}, selected,address, amount)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized) {
             // console.log("====result.status.isInBlock",result.status.isInBlock || result.status.isFinalized);
             // data = (result.status.isInBlock || result.status.isFinalized);
@@ -90,7 +86,7 @@ const checkAuthority = async (vaultcontract) => {
 
     const AccountId = await Accounts.accountAddress();
     if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
-    
+
     let data = await vaultcontract.query.checkAuthority(AccountId, {value, gasLimit},AccountId);
     data = publicJs.formatResult(data);
 
@@ -108,8 +104,8 @@ const deposit = async (vaultcontract,obj,cb) => {
     let data;
 
 
-    await vaultcontract.tx.deposit({value, gasLimit}, selected,AccountId, amount).
-    signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    await vaultcontract.tx.deposit({value, gasLimit}, selected,AccountId, amount)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized || result.status.isInBlock) {
             cb(true)
         }

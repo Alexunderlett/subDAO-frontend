@@ -5,12 +5,12 @@ const FootBtm = ()=>{
         <div className='footer'>
             <div className='container'>
                 <div className='col-12'>
-                    <a href="">Documents</a>
-                    <a href="">Blogs</a>
-                    <a href="">Medium</a>
-                    <a href="">Twitter</a>
-                    <a href="">Discord</a>
-                    <a href="">Github</a>
+                    <a href="#" target="_blank">Documents</a>
+                    <a href="#" target="_blank">Blogs</a>
+                    <a href="#" target="_blank">Medium</a>
+                    <a href="#" target="_blank">Twitter</a>
+                    <a href="#" target="_blank">Discord</a>
+                    <a href="#" target="_blank">Github</a>
                 </div>
             </div>
 

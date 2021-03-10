@@ -11,7 +11,7 @@ import api from './api/index';
 
 export default function Vote(props){
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {votecontract} = state;
 
     const [id, setAId] = useState(null);
@@ -29,65 +29,25 @@ export default function Vote(props){
         setLogo(logo);
     }, []);
 
-    useEffect(async() => {
-        await api.vote.queryOpenVote(votecontract).then(data => {
-            if (!data) return;
-            setActivelist(data)
-        });
+    useEffect(() => {
 
-        await api.vote.queryWaitVote(votecontract).then(data => {
-            if (!data) return;
-            setPendinglist(data)
-        });
+        const setAll = async() => {
+            await api.vote.queryOpenVote(votecontract).then(data => {
+                if (!data) return;
+                setActivelist(data)
+            });
 
-        await api.vote.queryAllVote(votecontract).then(data => {
-            if (!data) return;
-            setHistorylist(data)
-        });
+            await api.vote.queryWaitVote(votecontract).then(data => {
+                if (!data) return;
+                setPendinglist(data)
+            });
 
-        // if(votecontract === null) return ;
-
-        // const value = 0;
-        // const gasLimit = -1;
-        //
-        // const keyring = new Keyring({ type: 'sr25519' });
-        //
-        // const alice = keyring.addFromUri('//Alice');
-        //
-        //
-
-
-
-        // await votecontract.tx.newVote({value, gasLimit}, "hehe", "haha", 1000, 1, 1, "A,B,C").
-        // signAndSend(alice, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log(vote);
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
-
-        // console.log(votecontract);
-
-        // await votecontract.exec('vote', {value, gasLimit}, 5, 0, alice.address).
-        // signAndSend(alice, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('inblock');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // });
-
-        // await votecontract.exec('execute', {value, gasLimit}, 5).
-        // signAndSend(alice, (result) => {
-        //     if (result.status.isInBlock) {
-        //         console.log('inblock');
-        //     } else if (result.status.isFinalized) {
-        //         console.log('finalized');
-        //     }
-        // })
-
-        // const result = await votecontract.exec('query_all_vote', {value, gasLimit});
+            await api.vote.queryAllVote(votecontract).then(data => {
+                if (!data) return;
+                setHistorylist(data)
+            });
+        };
+        setAll();
 
     }, []);
 

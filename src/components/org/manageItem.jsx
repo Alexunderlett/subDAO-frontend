@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ModalTips from "./modalTips";
-import {Button, Form, FormControl, InputGroup, Table} from "react-bootstrap";
+import {Button, Form, FormControl, Table} from "react-bootstrap";
 
 class ManageItem extends Component {
     constructor(props) {
@@ -27,7 +27,9 @@ class ManageItem extends Component {
        this.setState({form})
     }
     render() {
-        const {list, listname, chooseAll, isChecked, isAllChecked, type, handleClicktoview, showModal, handleClose, showAdd, addModerators,delConfirm,handleSubmit} = this.props;
+        // const {list, listname, chooseAll, isChecked, isAllChecked, type, handleClicktoview, showModal, handleClose, showAdd, addModerators,delConfirm,handleSubmit} = this.props;
+
+        const {list, type, handleClicktoview, showModal, handleClose, showAdd, addModerators,handleSubmit} = this.props;
         const{form} = this.state;
         return (<div>
 

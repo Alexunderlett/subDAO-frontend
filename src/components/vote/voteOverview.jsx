@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
 import VoteEcharts from "./voteEcharts";
-import {Badge, Button} from "react-bootstrap";
+import { Button} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 
 export default function VoteOverview (props){
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {votecontract} = state;
     const [voteid, setvoteid] = useState(null);
     const [title, settitle] = useState('');
@@ -18,35 +18,36 @@ export default function VoteOverview (props){
     const handleClicktoVote = () => {
        props.history.push(`/vote/${props.match.params.id}`)
     }
-    useEffect(async() => {
-
-
-        await api.vote.queryOneVote(votecontract,props.match.params.voteid).then(data => {
-            if (!data) return;
-            const {
-                vote_id,title, desc, start_date, vote_time, support_require_num,min_require_num, support_num,choices
-            } = data;
-            settitle(title);
-            setvoteid(vote_id);
-            setdesc(desc);
-            setsupport(support_require_num);
-            setmin(min_require_num);
-            let arr = [],afterArr = [];
-            arr = choices.split(',');
-            arr.map((i,index)=>{
-                let obj = i.split(":");
-                afterArr[index] ={
-                    value: obj[1]?parseInt(obj[1]):0,
-                    name: obj[0]
+    useEffect(() => {
+        const setOneVote = async() => {
+            await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
+                if (!data) return;
+                const {
+                    vote_id, title, desc, support_require_num, min_require_num, choices
+                } = data;
+                settitle(title);
+                setvoteid(vote_id);
+                setdesc(desc);
+                setsupport(support_require_num);
+                setmin(min_require_num);
+                let arr = [], afterArr = [];
+                arr = choices.split(',');
+                arr.map((i, index) => {
+                    let obj = i.split(":");
+                    afterArr[index] = {
+                        value: obj[1] ? parseInt(obj[1]) : 0,
+                        name: obj[0]
+                    };
+                    return i;
+                });
+                if (afterArr.length) {
+                    setoptionlist(afterArr);
                 }
-            })
-            if(afterArr.length){
-                setoptionlist(afterArr);
-            }
 
-        });
+            });
+        };
 
-
+        setOneVote();
     }, []);
 
     return (

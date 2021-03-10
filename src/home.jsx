@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import Slick from "./components/slick";
 import {Modal} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
-import Accounts from "./api/Account";
 import api from "./api";
 
 export default function Home(props) {
@@ -10,7 +9,7 @@ export default function Home(props) {
     const {homepage,maincontract,allAccounts} = state;
 
     const [showButton, setShowButton] = useState(false);
-    const [showlist, setshowlist] = useState(false);
+    // const [showlist, setshowlist] = useState(false);
     const [imglist, setimglist] = useState([]);
     const account = JSON.parse(sessionStorage.getItem('account'));
      const handleClick = async ()=> {
@@ -29,24 +28,28 @@ export default function Home(props) {
         }
     }, []);
 
-     useEffect(async() => {
+     useEffect(() => {
 
          if(maincontract==null ) return ;
-         let addresslist = await api.main.listDaoInstances(maincontract);
-         let arr=[];
-         if(addresslist && addresslist.length){
-             let i=0;
-             for(let item of addresslist){
-                 let logo = await api.base.InitHome(state, item.dao_manager_addr);
-                 arr[i]={
-                     address: item.dao_manager_addr,
-                     logo
-                 };
-                 i++;
+
+         const setInstances = async() => {
+             let addresslist = await api.main.listDaoInstances(maincontract);
+             let arr = [];
+             if (addresslist && addresslist.length) {
+                 let i = 0;
+                 for (let item of addresslist) {
+                     let logo = await api.base.InitHome(state, item.dao_manager_addr);
+                     arr[i] = {
+                         address: item.dao_manager_addr,
+                         logo
+                     };
+                     i++;
+                 }
              }
-         }
-         setimglist(arr)
-         dispatch({type: 'SET_HOME',payload:arr});
+             setimglist(arr);
+             dispatch({type: 'SET_HOME', payload: arr});
+         };
+         setInstances();
     }, [allAccounts,maincontract]);
     useEffect(() => {
         setimglist(homepage)

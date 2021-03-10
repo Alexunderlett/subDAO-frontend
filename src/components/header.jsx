@@ -2,18 +2,16 @@ import React, {useState, useEffect} from 'react';
 import * as history from 'history';
 import {Form} from "react-bootstrap";
 import Accounts from '../api/Account';
-import api from "../api";
 import {useSubstrate} from "../api/contracts";
 
 const createHashHistory = history.createHashHistory();
 
 export default function Headertop() {
-    const {state,dispatch} = useSubstrate();
+    const {dispatch} = useSubstrate();
 
     const [showHeader, setshowHeader] = useState(false);
     let [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
-    const [addresslist, setaddresslist] = useState([]);
 
     useEffect(() => {
         setshowHeader(createHashHistory.location.pathname !== '/');

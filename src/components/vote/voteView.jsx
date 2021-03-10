@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Form} from "react-bootstrap";
 import PageBackground from "../pagebackground";
 import {useSubstrate} from "../../api/contracts";
@@ -7,7 +7,7 @@ import api from "../../api/index";
 
 export default function VoteView (props){
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {votecontract} = state;
 
     const [optionlist, setoptionlist] = useState([]);
@@ -30,24 +30,24 @@ export default function VoteView (props){
 
     }, [afterchoice]);
 
-    useEffect(async() => {
-        console.log("====",props.match.params.id,props.match.params.voteid)
+    useEffect(() => {
         setvoteid(props.match.params.voteid);
         setId(props.match.params.id);
 
 
-
-        await api.vote.queryOneVote(votecontract,props.match.params.voteid).then(data => {
-            if (!data) return;
-            const {
-                vote_id,title, desc, start_date, vote_time, support_require_num,min_require_num, support_num,choices
-            } = data;
-            settitle(title);
-            setId(vote_id);
-            setdesc(desc);
-            setoptionlist(choices.split(','))
-        });
-
+        const setOnevote = async() => {
+            await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
+                if (!data) return;
+                const {
+                    vote_id, title, desc, choices
+                } = data;
+                settitle(title);
+                setId(vote_id);
+                setdesc(desc);
+                setoptionlist(choices.split(','))
+            });
+        };
+        setOnevote();
     }, []);
 
     const handleClicktoVote = () => {

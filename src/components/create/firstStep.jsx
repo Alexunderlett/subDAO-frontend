@@ -8,7 +8,7 @@ class FirstStep extends Component {
         this.state = {
             form:{
                 name: '',
-                website: '',
+                // website: '',
                 description: ''
             }
         }
@@ -40,7 +40,7 @@ class FirstStep extends Component {
     }
 
     render() {
-        let {name, website, description} = this.state.form;
+        let {name,  description} = this.state.form;
         return <ul>
             <li>
                 <InputGroup className="mb-3">

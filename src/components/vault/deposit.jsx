@@ -1,47 +1,52 @@
 import React, {useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
-import {Button, Form, Alert, InputGroup, FormControl} from "react-bootstrap";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {Button, Form, InputGroup, FormControl} from "react-bootstrap";
+// import {CopyToClipboard} from 'react-copy-to-clipboard';
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import VaultmodalTips from "./vaultmodalTips";
 
 export default function Deposit(props){
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {vaultcontract,erc20contract} = state;
 
     const [id, setId] = useState(null);
-    const [copied, setCopied] = useState(false);
+    // const [copied, setCopied] = useState(false);
     const [selected, setSelected] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [token, setToken] = useState('');
+    // const [token, setToken] = useState('');
     const [amount, setAmount] = useState('');
     const [logo, setLogo] = useState('');
     const [deposit, setdeposit] = useState('');
 
     const [list, setList] = useState([]);
 
-    useEffect(async () => {
+    useEffect( () => {
         setId(props.match.params.id)
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
-
-        await api.vault.getTokenList(vaultcontract).then(data => {
-            if (!data) return;
-            setList(data)
-        });
+        const setTokenlist=async () => {
+            await api.vault.getTokenList(vaultcontract).then(data => {
+                if (!data) return;
+                setList(data)
+            });
+        };
+        setTokenlist();
     }, []);
 
-    useEffect(async () => {
+    useEffect( () => {
         let obj = {
             amount,selected
         }
         if(deposit){
-            await api.vault.deposit(vaultcontract,obj,(result)=> {
-                if(result){
-                    props.history.push(`/vault/${id}`)
-                }
-            })
+            const setdeposit =async () => {
+                await api.vault.deposit(vaultcontract, obj, (result) => {
+                    if (result) {
+                        props.history.push(`/vault/${id}`)
+                    }
+                })
+            };
+            setdeposit();
         }
 
     }, [deposit]);

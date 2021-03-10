@@ -3,8 +3,6 @@ import "slick-carousel/slick/slick-theme.css";
 import "../scss/slider.scss"
 import React, {Component} from 'react';
 import Slider from "react-slick";
-import t3 from "../images/t-3.png";
-
 
 class Slick extends Component {
     handleClicktoAbout(id) {
@@ -57,7 +55,7 @@ class Slick extends Component {
                     {
                         list.map(item=>
                             <div className="testimonial-slider-img" key={item.address}>
-                                <img src={item.logo} onClick={this.handleClicktoAbout.bind(this,item.address)}/>
+                                <img src={item.logo} alt="" onClick={this.handleClicktoAbout.bind(this,item.address)}/>
                             </div>
                         )
                     }

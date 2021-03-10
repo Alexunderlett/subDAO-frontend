@@ -1,15 +1,15 @@
-import React, {Component, useEffect, useState} from 'react';
-import PageComponent from '../pageComponent.jsx';
+import React, { useEffect, useState} from 'react';
+// import PageComponent from '../pageComponent.jsx';
 import {Table} from "react-bootstrap";
 import VoteModalTips from "./votemodalTips";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 
 export default function VotePending(props) {
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {votecontract} = state;
 
-    const [indexList, setIndexList] = useState([]);
+    // const [indexList, setIndexList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [list, setList] = useState([]);
     const [selectid, setselectid] = useState('');

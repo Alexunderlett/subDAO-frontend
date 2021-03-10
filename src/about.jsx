@@ -8,7 +8,7 @@ import api from './api/index';
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, vaultcontract, orgcontract, votecontract, erc20contract, daoManagercontract,apiState} = state;
+    const {basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState} = state;
 
     const [id, setAId] = useState(null);
     const [name, setName] = useState('');
@@ -27,118 +27,153 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
-    useEffect(async () => {
-        if(apiState !== 'READY' ) return;
-        await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
-            setdaostate(data)
-        });
+    useEffect(() => {
+        if (apiState !== 'READY') return;
+        const setInitDAO = async () => {
+            await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
+                setdaostate(data)
+            });
+        };
+        setInitDAO();
     }, [apiState]);
-    useEffect(async () => {
-        setAId(props.match.params.id);
+    useEffect(() => {
+        const setids = async () => {
+            setAId(props.match.params.id);
+        };
+        setids();
     }, []);
 
-    useEffect(async () => {
-
+    useEffect( () => {
         if (daoManagercontract == null && daostate) return;
-        await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-            if (data) {
-                setcontractlist(data)
-            }
+        const queryAddrs = async () => {
+            await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+                if (data) {
+                    setcontractlist(data)
+                }
 
-        });
-
+            });
+        };
+        queryAddrs();
     }, [daoManagercontract, daostate]);
 
-    useEffect(async () => {
+    useEffect(() => {
 
         const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
         if (base_addr != null) {
-            await api.base.InitBase(state, dispatch, base_addr, (data) => {
-                setbasestate(data)
-            });
+            const setInitBase = async () => {
+                await api.base.InitBase(state, dispatch, base_addr, (data) => {
+                    setbasestate(data)
+                });
+            };
+            setInitBase();
         }
         if (vault_addr != null) {
-            await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
-                setvaultstate(data)
-            });
+            const setInitVault = async () => {
+                await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
+                    setvaultstate(data)
+                });
+            };
+            setInitVault();
         }
 
         if (org_addr != null) {
-            await api.org.InitOrg(state, dispatch, org_addr, (data) => {
-                setorgstate(data)
-            });
+            const setInitOrg = async () => {
+                await api.org.InitOrg(state, dispatch, org_addr, (data) => {
+                    setorgstate(data)
+                });
+            };
+            setInitOrg();
         }
         if (vote_addr != null) {
-            await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
-                setvotestate(data)
-            });
+            const setInitVote = async () => {
+                await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
+                    setvotestate(data)
+                });
+            };
+            setInitVote();
         }
         if (erc20_addr != null) {
-            await api.erc20.InitErc20(state, dispatch, erc20_addr);
+            const setInitErc20 = async () => {
+                await api.erc20.InitErc20(state, dispatch, erc20_addr);
+            };
+            setInitErc20();
         }
 
     }, [daoManagercontract, contractlist]);
 
 
-    useEffect(async () => {
+    useEffect(() => {
         sessionStorage.setItem('logo', logo)
     }, [logo]);
-    useEffect(async () => {
-        let arr = [];
-        let i = 0;
-        for (let item of tokenlist) {
-            await api.vault.getBalanceOf(vaultcontract, item).then(data => {
-                if (!data) return;
+    useEffect( () => {
+        const setBalance = async () => {
+            let arr = [];
+            let index = 0;
+            for (let item of tokenlist) {
+                // eslint-disable-next-line no-loop-func
+                await api.vault.getBalanceOf(vaultcontract, item).then(data => {
+                    if (!data) return;
 
-                arr[i] = {
-                    address: item,
-                    balance: data
-                };
-                i++;
-            });
-        }
-        setbalancelist(arr)
+                    arr[index] = {
+                        address: item,
+                        balance: data
+                    };
+                    index++;
+                });
+            }
+            setbalancelist(arr)
+        };
+        setBalance();
     }, [tokenlist]);
-    useEffect(async () => {
+    useEffect( () => {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
-        await api.base.getBaseData(basecontract).then(data => {
-            if (!data) return;
-            // let {nameResult, logoResult, descResult, ownerResult, erc20contract} = data;
-            let {owner, name, logo, desc} = data;
 
-            setName(name);
-            setLogo(logo);
-            setDescription(desc);
-            setOwner(owner);
-        });
+        const setBase = async () => {
+            await api.base.getBaseData(basecontract).then(data => {
+                if (!data) return;
+                let {owner, name, logo, desc} = data;
+
+                setName(name);
+                setLogo(logo);
+                setDescription(desc);
+                setOwner(owner);
+            });
+        };
+        setBase();
     }, [basecontract, basestate]);
 
-    useEffect(async () => {
+    useEffect( () => {
         if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;
-        await api.vault.getTokenList(vaultcontract).then(data => {
-            if (!data) return;
-            settokenlist(data)
-        });
+        const setToken = async () => {
+            await api.vault.getTokenList(vaultcontract).then(data => {
+                if (!data) return;
+                settokenlist(data)
+            });
+        };
+        setToken();
     }, [vaultcontract, vaultstate]);
 
-    useEffect(async () => {
+    useEffect( () => {
         if (!votestate || contractlist.vote_addr == null || !contractlist.vote_addr) return;
-        await api.vote.queryOpenVote(votecontract).then(data => {
-            if (!data) return;
-            let arr = data.slice(0, 3);
-            setActivelist(arr)
-        });
+        const setActiveVote = async () => {
+            await api.vote.queryOpenVote(votecontract).then(data => {
+                if (!data) return;
+                let arr = data.slice(0, 3);
+                setActivelist(arr)
+            });
+        };
+        setActiveVote();
     }, [votecontract, votestate]);
 
-    useEffect(async () => {
+    useEffect( () => {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
-
-        await api.org.getDaoModeratorList(orgcontract).then(data => {
-            if (!data) return;
-            setModerators(data)
-        });
-
-
+        const setModeratorList = async () => {
+            await api.org.getDaoModeratorList(orgcontract).then(data => {
+                if (!data) return;
+                setModerators(data)
+            });
+        };
+        setModeratorList();
         // const AccountId = await Accounts.accountAddress();
         // const value = 0;
         // const gasLimit = -1;
@@ -162,25 +197,24 @@ export default function About(props) {
     }, [orgcontract, orgstate]);
 
     const handleClicktoType = (type) => {
-        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
-        let address;
-        switch (type) {
-            case'vote':
-                address = vote_addr;
-                break;
-            case'vault':
-                address = vault_addr;
-                break;
-            default:
-            case'org':
-                address = org_addr;
-                break;
-        }
+        // const {vault_addr, org_addr, vote_addr} = contractlist;
+        // let address;
+        // switch (type) {
+        //     case'vote':
+        //         address = vote_addr;
+        //         break;
+        //     case'vault':
+        //         address = vault_addr;
+        //         break;
+        //     default:
+        //     case'org':
+        //         address = org_addr;
+        //         break;
+        // }
 
         props.history.push(`/${type}/${id}`)
 
     }
-
     return (
         <div>
             <section className="section blog-single position-relative">
@@ -264,7 +298,7 @@ export default function About(props) {
                                 <div>
                                     <ul className="service-docs">
                                         {
-                                            contractlist.vote_addr !=null  &&<li>
+                                            contractlist.vote_addr != null && <li>
                                                 <span onClick={() => handleClicktoType('vote')}>
                                                     <i className="fa fa-street-view"/>
                                                     Voting
@@ -272,7 +306,7 @@ export default function About(props) {
                                             </li>
                                         }
                                         {
-                                            contractlist.vault_addr !=null  && <li>
+                                            contractlist.vault_addr != null && <li>
                                             <span onClick={() => handleClicktoType('vault')}>
                                                 <i className="fa fa-star-o"/>
                                                 Vault
@@ -281,7 +315,7 @@ export default function About(props) {
                                         }
 
                                         {
-                                            contractlist.org_addr !=null  && <li>
+                                            contractlist.org_addr != null && <li>
                                             <span onClick={() => handleClicktoType('org')}>
                                                 <i className="fa fa-building-o"/>
                                                 Org

@@ -28,7 +28,7 @@ class VoteEcharts extends Component {
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
-                        formatter: '{b}:{c}' + '\n\r' + '({d}%)',
+                        formatter: '{b}:{c}\n\r({d}%)',
                         position: 'left'
                     },
                     emphasis: {

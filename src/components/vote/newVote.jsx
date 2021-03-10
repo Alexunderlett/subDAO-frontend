@@ -1,26 +1,26 @@
-import React, {createRef, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {Button, FormControl, InputGroup} from "react-bootstrap";
 // import Datetime from 'react-datetime';
 import PageBackground from "../pagebackground";
 
-import moment from 'moment';
+// import moment from 'moment';
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api";
 
-var yesterday = moment().subtract(1, 'day');
-var valid = function (current) {
-    return current.isAfter(yesterday);
-};
-
-let inputProps = {
-    placeholder: 'Please select end time',
-    // disabled:true
-};
+// var yesterday = moment().subtract(1, 'day');
+// var valid = function (current) {
+//     return current.isAfter(yesterday);
+// };
+//
+// let inputProps = {
+//     placeholder: 'Please select end time',
+//     // disabled:true
+// };
 
 export default function NewVote(props) {
     // this.datetimeRef = createRef();
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {votecontract} = state;
 
     const [date, setdate] = useState('');
@@ -49,7 +49,6 @@ export default function NewVote(props) {
             min_require_num:min,
             choices:optionlist.join(',')
         }
-        console.log("====",dataobj,votecontract)
         await api.vote.newVote(votecontract,dataobj,(result)=> {
             if(result){
                 props.history.push(`/vote/${id}`)

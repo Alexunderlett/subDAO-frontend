@@ -29,11 +29,14 @@ export default function SecondStep(props) {
             setselected(selected)
         }
     }, []);
-    useEffect(async() => {
-        await api.main.listTemplates(maincontract).then(data => {
-            if (!data) return;
-            setlist(data)
-        });
+    useEffect(() => {
+        const setlisttemplate =async() => {
+            await api.main.listTemplates(maincontract).then(data => {
+                if (!data) return;
+                setlist(data)
+            });
+        };
+        setlisttemplate();
     }, [maincontract]);
     return(
         <div>

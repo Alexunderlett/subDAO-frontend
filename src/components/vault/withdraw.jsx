@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import PageBackground from "../pagebackground";
 import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
 import VaultmodalTips from "./vaultmodalTips";
@@ -6,15 +6,15 @@ import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 
 export default function Withdraw(props){
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {vaultcontract} = state;
 
     const [id, setId] = useState(null);
     const [selected, setSelected] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [address, setaddress] = useState('');
-    const [token, setToken] = useState('');
-    const [reason, setReason] = useState('');
+    // const [token, setToken] = useState('');
+    // const [reason, setReason] = useState('');
     const [amount, setamount] = useState('');
     const [logo, setLogo] = useState('');
 
@@ -27,11 +27,14 @@ export default function Withdraw(props){
         setLogo(logo);
     }, []);
 
-    useEffect(async () => {
-        await api.vault.getTokenList(vaultcontract).then(data => {
-            if (!data) return;
-            setList(data)
-        });
+    useEffect( () => {
+        const settokenlist = async () => {
+            await api.vault.getTokenList(vaultcontract).then(data => {
+                if (!data) return;
+                setList(data)
+            });
+        };
+        settokenlist();
     }, []);
 
     const handleClicktoVault=()=>{

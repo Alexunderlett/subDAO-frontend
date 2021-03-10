@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {Button} from "react-bootstrap";
 import PageBackground from "./components/pagebackground";
 import {useSubstrate} from "./api/contracts";
@@ -6,7 +6,7 @@ import api from "./api";
 
 export default function Vault(props){
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {vaultcontract} = state;
 
     const [id, setId] = useState(null);
@@ -16,223 +16,58 @@ export default function Vault(props){
     const [logo, setLogo] = useState('');
     const [withDrawS, setwithDrawS] = useState(true);
 
-    useEffect(async() => {
+    useEffect(() => {
         setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
 
     }, []);
-    useEffect(async() => {
+    useEffect(() => {
         if(vaultcontract==null) return ;
-        let aa = await api.vault.checkAuthority(vaultcontract).then(data => {
-            setwithDrawS(data)
-        });
+        const checkAuthority = async() => {
+            await api.vault.checkAuthority(vaultcontract).then(data => {
+                setwithDrawS(data)
+            });
+        };
+        checkAuthority();
     }, [vaultcontract]);
 
-    useEffect( async () => {
-        let arr=[{
-            token:'',
-            balance:''
-        }];
-        let index = 0;
-        for(let item of list){
-            arr[index].token = item;
-            await api.vault.getBalanceOf(vaultcontract,item).then(data => {
-                if (!data) return;
-                arr[index].balance = data
-            });
-            index++;
-        }
-        settokenlist(arr)
-
+    useEffect(  () => {
+        const setbalance = async () => {
+            let arr = [{
+                token: '',
+                balance: ''
+            }];
+            let index = 0;
+            for (let item of list) {
+                arr[index].token = item;
+                // eslint-disable-next-line no-loop-func
+                await api.vault.getBalanceOf(vaultcontract, item).then(data => {
+                    if (!data) return;
+                    arr[index].balance = data
+                });
+                index++;
+            }
+            settokenlist(arr)
+        };
+        setbalance();
     }, [list]);
 
-    useEffect(async () => {
+    useEffect( () => {
         if(vaultcontract === null) return;
+        const setAlllist = async () => {
+            await api.vault.getTokenList(vaultcontract).then(data => {
+                if (!data) return;
+                setlist(data)
+            });
 
-        await api.vault.getTokenList(vaultcontract).then(data => {
-            if (!data) return;
-            setlist(data)
-        });
-
-        await api.vault.getTransferHistory(vaultcontract).then(data => {
-            if (!data) return;
-            sethistorylist(data)
-        });
-
-        // try {
-        //     const allInjected = await web3Enable('SubDAO');
-        //     console.log("======allInjected", allInjected);
-        //     if (allInjected.length == 0) {
-        //         console.error("!!!!! No wallet extention detected!!");
-        //         return;
-        //     }
-        //
-        //     const allAccounts = await web3Accounts();
-        //     console.log("======allAccounts", allAccounts);
-        //
-        //     if (allAccounts && allAccounts.length > 0) {
-        //         console.log("the first account: ", allAccounts[0].address);
-        //     } else {
-        //         console.error("no valid accounts available!");
-        //         return;
-        //     }
-        //
-        //
-        //     const AccountId = allAccounts[0].address;
-        //
-        //     const injector = await web3FromAddress(AccountId);
-        //
-        //     // const value = 0;
-        //     // const gasLimit = 138003n * 1000000n;
-        //     // const AccountId = JSON.parse(sessionStorage.getItem('account')); //本地账户
-        //
-        //     console.log("local account id : ", AccountId)
-        //
-        //
-        //
-        //     //vault
-        //     console.log("vaultcontract: ", vaultcontract);
-        //
-        //     let daoName = "mydao";
-        //     let daoLogo = "http://example.com/logo.jpg";
-        //     let daoDesc = "Hello World!";
-        //     let vault_contract_address = AccountId;
-        //
-        //     let optionParam = { value: 0, gasLimit: -1 };
-        //
-        //     let tx;
-        //     let result;
-        //
-        //
-        //     tx = await vaultcontract.tx.init(optionParam,vault_contract_address );
-        //     result = await tx.signAndSend(AccountId, { signer: injector.signer });
-        //     console.log('result ', result.toString());
-        //
-        //
-        //
-        //     let add_erc_token = allAccounts[1].address;
-        //     //增加一种token
-        //     tx = await vaultcontract.tx.add_vault_token(optionParam, add_erc_token);
-        //     await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //         if (result.status.isInBlock) {
-        //             console.log('in a block');
-        //          } else if (result.status.isFinalized) {
-        //              console.log('finalized');
-        //         } else {
-        //            console.log("unexpected result", result);
-        //          }
-        //      });
-        //
-        //     let add_erc_token2 = allAccounts[1].address;
-        //     //增加另一种token
-        //     tx = await vaultcontract.tx.add_vault_token(optionParam, add_erc_token2);
-        //     await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //         if (result.status.isInBlock) {
-        //             console.log('in a block');
-        //          } else if (result.status.isFinalized) {
-        //              console.log('finalized');
-        //         } else {
-        //            console.log("unexpected result", result);
-        //          }
-        //      });
-        //
-        //
-        //
-        //    // 返回 token list
-        //     result = await vaultcontract.query.get_token_list(AccountId, { value: 0, gasLimit: -1 });
-        //     console.log("======name", result)
-        //     if (result && result.output) {
-        //         console.log("======", result.output.toHuman());
-        //     }
-        //
-        //
-        //     //let add_erc_token2 = allAccounts[1].address;
-        //     //移除一种token
-        //     tx = await vaultcontract.tx.remove_vault_token(optionParam, add_erc_token2);
-        //     await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //         if (result.status.isInBlock) {
-        //             console.log('in a block');
-        //          } else if (result.status.isFinalized) {
-        //              console.log('finalized');
-        //         } else {
-        //            console.log("unexpected result", result);
-        //          }
-        //      });
-        //
-        //      //把某一种token的 指定数量的资金存入国库
-            // 1.1 需要执行一步 etc20合约的approve。
-         //   tx = await erc20_contract.tx.approve(optionParam, vault_contract_address,200.0);
-         //   await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-         //       if (result.status.isInBlock) {
-         //           console.log('in a block');
-         //       } else if (result.status.isFinalized) {
-         //           console.log('finalized');
-          //      } else {
-         //           console.log("unexpected result", result);
-         //       }
-        //    });
-
-            // 1.2 实际执行 vaultcontract.tx.deposit
-        //     let erc_20_address = allAccounts[1].address;
-        //     let from_address =  allAccounts[2].address;
-        //     tx = await vaultcontract.tx.deposit(optionParam, erc_20_address, from_address,110.0);
-        //     await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //         if (result.status.isInBlock) {
-        //             console.log('in a block');
-        //          } else if (result.status.isFinalized) {
-        //              console.log('finalized');
-        //         } else {
-        //            console.log("unexpected result", result);
-        //          }
-        //      });
-        //
-        //      let erc_20_address3 = allAccounts[1].address;
-        //      // 返回 返回某一个token的余额
-        //     result = await vaultcontract.query.get_balance_of(AccountId, { value: 0, gasLimit: -1 },erc_20_address3);
-        //     console.log("======name", result)
-        //     if (result && result.output) {
-        //         console.log("======", result.output.toHuman());
-        //     }
-        //
-        //     // 返回转账的流水。
-        //     result = await vaultcontract.query.get_transfer_history(AccountId, { value: 0, gasLimit: -1 });
-        //     console.log("======name", result)
-        //     if (result && result.output) {
-        //         console.log("======", result.output.toHuman());
-        //     }
-        //
-        //
-        //
-        //     //把某一种token的 指定数量的资金转出国库
-        //     let erc_20_address1 = allAccounts[1].address;
-        //     let to_address =  allAccounts[2].address;
-        //     tx = await vaultcontract.tx.withdraw(optionParam, erc_20_address1, to_address,110.0);
-        //     await tx.signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        //         if (result.status.isInBlock) {
-        //             console.log('in a block');
-        //          } else if (result.status.isFinalized) {
-        //              console.log('finalized');
-        //         } else {
-        //            console.log("unexpected result", result);
-        //          }
-        //      });
-        //
-        //
-        //
-        //
-        //
-        //
-        // } catch (e) {
-        //     console.log("Catch the exception!!!", e); // 30
-        // }
-
-
-
-
+            await api.vault.getTransferHistory(vaultcontract).then(data => {
+                if (!data) return;
+                sethistorylist(data)
+            });
+        };
+        setAlllist();
     }, []);
-
-
 
     const handleClicktoDetail = (type) => {
         props.history.push(`/${type}/${id}`)

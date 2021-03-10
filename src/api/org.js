@@ -2,18 +2,14 @@ import ConnectContract from './connectContract';
 import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
 
-let loadOrg = false;
 let orgcontract;
 const InitOrg = async (state, dispatch,address,cb) =>  {
 
-    const {apiState, api,orgcontractState} = state;
+    const {apiState, api} = state;
 
     let account = await Accounts.accountAddress();
 
     if (apiState !== 'READY' ||  !account) return;
-
-    // if (loadOrg) return dispatch({ type: 'SET_ORG', payload: orgcontract });
-    // loadOrg = true;
 
     try {
         orgcontract = await ConnectContract(api, 'org', address);

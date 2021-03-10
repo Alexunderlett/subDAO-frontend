@@ -3,7 +3,7 @@ import {Button, Modal} from "react-bootstrap";
 
 class VoteModalTips extends Component {
     render() {
-        let {handleClose, showTips,handleConfirm,id} = this.props;
+        let {handleClose, showTips,handleConfirm} = this.props;
         return <Modal show={showTips} onHide={handleClose} centered={true}>
             <Modal.Header closeButton>
                 <Modal.Title>Are you absolutely sure?</Modal.Title>

@@ -2,20 +2,13 @@ import ConnectContract from './connectContract';
 import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
 
-const {Keyring} = require('@polkadot/keyring');
-
-let loadvote;
 let votecontract;
 const InitVote = async (state, dispatch, address,cb) => {
 
-    const {apiState, api,votecontractState} = state;
+    const {apiState, api} = state;
 
     let account = await Accounts.accountAddress();
-
     if (apiState !== 'READY' ||  !account) return;
-
-    // if (loadvote) return dispatch({ type: 'SET_VOTE', payload: votecontract });
-    // loadvote = true;
 
     try {
         votecontract = await ConnectContract(api, 'vote', address);
@@ -32,16 +25,6 @@ const InitVote = async (state, dispatch, address,cb) => {
 const value = 0;
 const gasLimit = -1;
 
-
-async function account() {
-    const keyring = new Keyring({type: 'sr25519'});
-
-    const accountName = await Accounts.accountName();
-
-    const alice = keyring.addFromUri(`//${accountName}`);
-
-    return alice;
-}
 
 const queryAllVote = async (votecontract) => {
 
@@ -111,9 +94,9 @@ const newVote = async (votecontract,obj,cb) => {
 
     if (votecontract === null || !votecontract || !votecontract.tx || !AccountId) return;
     let data;
-console.log("=======")
-   await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices).
-        signAndSend(AccountId, { signer: injector.signer }, (result) => {
+
+   await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices)
+       .signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized) {
             cb(true)
         }

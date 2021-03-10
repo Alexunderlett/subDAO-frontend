@@ -2,16 +2,13 @@ import ConnectContract from './connectContract';
 import publicJs from "../utils/publicJs";
 import Accounts from "./Account";
 
-let loadDAO = false;
 let daoManagercontract;
 const InitDAO = async (state,dispatch,address,cb) =>  {
 
-    const {apiState, api,daoManagercontractState} = state;
+    const {apiState, api} = state;
     let account = await Accounts.accountAddress();
 
     if (apiState !== 'READY' || !account ) return;
-    // if (loadDAO) return dispatch({ type: 'SET_BASE', payload: daoManagercontract });
-    // loadDAO = true;
 
     try {
         daoManagercontract = await ConnectContract(api, 'daoManager',address);

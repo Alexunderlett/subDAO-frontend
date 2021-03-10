@@ -1,6 +1,6 @@
-import React, {Component, useEffect, useState} from 'react';
-import PageComponent from '../pageComponent.jsx';
-import {Badge, Table} from "react-bootstrap";
+import React, {useEffect, useState} from 'react';
+// import PageComponent from '../pageComponent.jsx';
+import { Table} from "react-bootstrap";
 
 export default function VotePagination(props){
     const [indexList, setIndexList] = useState([]);

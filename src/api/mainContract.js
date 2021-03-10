@@ -7,7 +7,7 @@ export default async function mainConnect(state, dispatch)  {
 
     const {apiState, api, maincontractState} = state;
     let account = JSON.parse(sessionStorage.getItem('account'));
-    if (apiState !== 'READY' || account && !account.length) return;
+    if (apiState !== 'READY' || (account && !account.length)) return;
     const asyncLoadMain = async () => {
 
         try {

@@ -5,11 +5,8 @@ import SecondStep from './components/create/secondStep';
 import ThirdStep from './components/create/thirdStep';
 import ForthStep from './components/create/forthStep';
 import PageBackground from "./components/pagebackground";
-import {useSubstrate} from "./api/contracts";
-import api from "./api/index";
 
 export default function  Createnew(props) {
-    const {state,dispatch} = useSubstrate();
 
     const [type, settype] = useState(1);
     let [imgUrl, setimgUrl ]= useState('');

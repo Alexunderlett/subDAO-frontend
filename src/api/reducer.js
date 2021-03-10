@@ -1,4 +1,4 @@
-module.exports = (state, action) => {
+const reducer = (state, action) => {
     switch (action.type) {
         //api
         case 'CONNECT_INIT':
@@ -105,3 +105,4 @@ module.exports = (state, action) => {
             throw new Error(`Unknown type: ${action.type}`);
     }
 };
+export default reducer

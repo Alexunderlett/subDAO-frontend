@@ -7,7 +7,7 @@ import {useSubstrate} from "../../api/contracts";
 
 export default function OrgManage(props){
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
     const {orgcontract} = state;
 
 
@@ -18,12 +18,12 @@ export default function OrgManage(props){
     const [showModalmembers, setShowModalmembers] = useState(false);
     const [showAddmoderators, setShowAddmoderators] = useState(false);
     const [showAddmembers, setShowAddmembers] = useState(false);
-    const [showAddMember, setShowAddmember] = useState(false);
     const [addModerator, setaddModerator] = useState(false);
     const [addMember, setaddMember] = useState(false);
     const [logo, setLogo] = useState('');
     const [memberlist, setMemberlist] = useState([]);
     const [checklist, setChecklist] = useState([]);
+
 
     useEffect(() => {
         if(addModerator){
@@ -36,20 +36,23 @@ export default function OrgManage(props){
         }
     }, [addMember]);
     useEffect(() => {
-        setId(props.match.params.id)
+        setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
-    useEffect(async () => {
+    useEffect( () => {
 
-        await api.org.getDaoModeratorList(orgcontract).then(data => {
-            if (!data) return;
-            setChecklist(data)
-        });
-        await api.org.getDaoMembersList(orgcontract).then(data => {
-            if (!data) return;
-            setMemberlist(data)
-        });
+        const setAllList = async () => {
+            await api.org.getDaoModeratorList(orgcontract).then(data => {
+                if (!data) return;
+                setChecklist(data)
+            });
+            await api.org.getDaoMembersList(orgcontract).then(data => {
+                if (!data) return;
+                setMemberlist(data)
+            });
+        };
+        setAllList();
     }, [orgcontract]);
 
     const handleClicktoview = async (item,type) =>{
@@ -57,7 +60,7 @@ export default function OrgManage(props){
         // this.props.history.push(`/voteView/${id}/${voteid}`)
 
         let obj={
-            name:'Alice',
+            name:item[1],
             address:item[0]
         }
         if(type==='moderators'){
@@ -91,9 +94,7 @@ export default function OrgManage(props){
             } else if (name === 'members') {
                 setMembers(!values)
             }
-            listobj.map((item) => {
-                item.checked = !values;
-            })
+            listobj.map((item) => item.checked = !values)
 
         if (listname === 'checklist') {
             setChecklist([...listobj])
@@ -118,10 +119,16 @@ export default function OrgManage(props){
 
         let listobj =  eval(listname);
 
+        // listobj.map(item => {
+        //     if (item.id === obj.id) {
+        //         item.checked = currentbool;
+        //     }
+        // });
         listobj.map(item => {
             if (item.id === obj.id) {
-                item.checked = currentbool
+                item.checked = currentbool;
             }
+            return item;
         });
 
         if (listname === 'checklist') {
