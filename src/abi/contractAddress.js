@@ -1,5 +1,4 @@
-module.exports = {
-  // main: "5CBDTCog29oPwqYJmf62GYTpxLzy1CccVJqoQR3ZcuoxWqFs"
-  main: "5Eqj5KV46UFEqxzw8MndGxjttWh5UDXFQVMnLuXxkorrgy2r"
-  // main: "5DfFHF7bJM7XiWBbLVojZRW7QGSgFvB6yA1YzacYKKWAGrNb"
+const mainAddress = {
+  main: "5Es1daxrUQbVi5w41wghTVnuwQAABc5Sw4E1mHVtuZ7guhdQ"
 }
+export default mainAddress;

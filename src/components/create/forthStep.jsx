@@ -32,11 +32,7 @@ export default function ForthStep(props) {
 
     const handleClicktoAbout = () => {
         props.history.push(`/about/${baseC.dao_manager_addr}`);
-        sessionStorage.removeItem("step");
-        sessionStorage.removeItem("secondStep");
-        sessionStorage.removeItem("thirdStep");
-        sessionStorage.removeItem("firstStep");
-        sessionStorage.removeItem("ImageUrl");
+
     }
     useEffect( () => {
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
@@ -224,6 +220,11 @@ export default function ForthStep(props) {
                      console.log(data, daoManagercontract);
                      setcontractlist(data);
                      setLoading(false);
+                     sessionStorage.removeItem("step");
+                     sessionStorage.removeItem("secondStep");
+                     sessionStorage.removeItem("thirdStep");
+                     sessionStorage.removeItem("firstStep");
+                     sessionStorage.removeItem("ImageUrl");
                  });
              };
              stepseven();
