@@ -27,7 +27,7 @@ export default function Deposit(props){
     const [list, setList] = useState([]);
 
     useEffect( () => {
-        setId(props.match.params.id)
+        setId(props.match.params.id);
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
         const setTokenlist=async () => {
@@ -44,9 +44,8 @@ export default function Deposit(props){
             amount,selected
         }
         if(deposit){
-            const setdeposit =async () => {
-                setLoading(true);
-                setTips('Create a new deposit');
+            const setdeposittrs =async () => {
+
                 await api.vault.deposit(vaultcontract, obj, (result) => {
                     if (result) {
                         setLoading(false);
@@ -55,7 +54,7 @@ export default function Deposit(props){
                 });
 
             };
-            setdeposit();
+            setdeposittrs();
         }
 
     }, [deposit]);
@@ -77,6 +76,8 @@ export default function Deposit(props){
     const handleConfirm= async()=>{
 
         setShowModal(false);
+        setLoading(true);
+        setTips('Create a new deposit');
 
         await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount,(result)=> {
             setdeposit(true)

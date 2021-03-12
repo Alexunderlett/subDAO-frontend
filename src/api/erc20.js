@@ -24,7 +24,6 @@ const approveOp = async (erc20contract, spender, total,cb) => {
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
 
-
     if (erc20contract === null || !erc20contract || !erc20contract.tx || !AccountId) return;
 
     await erc20contract.tx.approve({value, gasLimit}, spender, total)
