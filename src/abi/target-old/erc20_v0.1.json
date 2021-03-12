@@ -1,12 +1,12 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5ad71ebb2488e439e477172128d14432649a0df475ca830b45d5e3efca07a22a",
+    "hash": "0x599b65cb65a7d7e287f42bd02dd622790de0402105c9ad6f6fbeb6b382cd0583",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.52.0-nightly"
+    "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
-    "name": "main",
+    "name": "erc20",
     "version": "0.1.0",
     "authors": [
       "[your_name] <[your_email]>"
@@ -17,12 +17,48 @@
       {
         "args": [
           {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "symbol",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "initial_supply",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "name": "decimals",
+            "type": {
+              "displayName": [
+                "u8"
+              ],
+              "type": 3
+            }
+          },
+          {
             "name": "controller",
             "type": {
               "displayName": [
                 "AccountId"
               ],
-              "type": 1
+              "type": 7
             }
           }
         ],
@@ -40,220 +76,160 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "index",
+            "name": "from",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 14
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "to",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 14
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "value",
             "type": {
               "displayName": [
                 "u64"
               ],
-              "type": 4
+              "type": 2
             }
-          },
+          }
+        ],
+        "docs": [],
+        "name": "Transfer"
+      },
+      {
+        "args": [
           {
             "docs": [],
             "indexed": true,
             "name": "owner",
             "type": {
               "displayName": [
-                "Option"
+                "AccountId"
               ],
-              "type": 24
+              "type": 7
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "dao_addr",
+            "name": "spender",
             "type": {
               "displayName": [
                 "AccountId"
               ],
-              "type": 1
-            }
-          }
-        ],
-        "docs": [],
-        "name": "InstanceDAO"
-      }
-    ],
-    "messages": [
-      {
-        "args": [
-          {
-            "name": "template_code_hash",
-            "type": {
-              "displayName": [
-                "Hash"
-              ],
-              "type": 15
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "init"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 16
-        },
-        "selector": "0xa1ec5918"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 17
+              "type": 7
             }
           },
           {
-            "name": "dao_manager_code_hash",
-            "type": {
-              "displayName": [
-                "Hash"
-              ],
-              "type": 15
-            }
-          },
-          {
-            "name": "components",
-            "type": {
-              "displayName": [
-                "BTreeMap"
-              ],
-              "type": 18
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_template"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 16
-        },
-        "selector": "0x1db8b2fa"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "list_templates"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "Vec"
-          ],
-          "type": 21
-        },
-        "selector": "0x6d935a7e"
-      },
-      {
-        "args": [
-          {
-            "name": "index",
+            "docs": [],
+            "indexed": true,
+            "name": "value",
             "type": {
               "displayName": [
                 "u64"
               ],
-              "type": 4
+              "type": 2
             }
           }
         ],
         "docs": [],
+        "name": "Approval"
+      }
+    ],
+    "messages": [
+      {
+        "args": [],
+        "docs": [],
         "mutates": false,
         "name": [
-          "query_template_by_index"
+          "name"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "DAOTemplate"
+            "String"
           ],
-          "type": 22
+          "type": 1
         },
-        "selector": "0x2728869d"
+        "selector": "0xa0a95494"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "query_template_addr"
+          "symbol"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "String"
+          ],
+          "type": 1
+        },
+        "selector": "0x57178a4a"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "total_supply"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 2
+        },
+        "selector": "0xdcb736b5"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "decimals"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u8"
+          ],
+          "type": 3
+        },
+        "selector": "0x9f700f55"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "owner"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
             "AccountId"
           ],
-          "type": 1
+          "type": 7
         },
-        "selector": "0x863a8656"
-      },
-      {
-        "args": [
-          {
-            "name": "index",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "controller",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 1
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "instance_by_template"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 16
-        },
-        "selector": "0xc2119911"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "list_dao_instances"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "Vec"
-          ],
-          "type": 23
-        },
-        "selector": "0xea0dc02c"
+        "selector": "0x66154539"
       },
       {
         "args": [
@@ -263,23 +239,242 @@
               "displayName": [
                 "AccountId"
               ],
-              "type": 1
+              "type": 7
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "balance_of"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 2
+        },
+        "selector": "0x56e929b2"
+      },
+      {
+        "args": [
+          {
+            "name": "owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "spender",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "allowance"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 2
+        },
+        "selector": "0xf3cfff66"
+      },
+      {
+        "args": [
+          {
+            "name": "to",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
             }
           }
         ],
         "docs": [],
         "mutates": true,
         "name": [
-          "list_dao_instances_by_owner"
+          "transfer"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "Vec"
+            "bool"
           ],
-          "type": 23
+          "type": 13
         },
-        "selector": "0x3caddb35"
+        "selector": "0xfae3a09d"
+      },
+      {
+        "args": [
+          {
+            "name": "spender",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "approve"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 13
+        },
+        "selector": "0x03d0e114"
+      },
+      {
+        "args": [
+          {
+            "name": "from",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "to",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "transfer_from"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 13
+        },
+        "selector": "0xfcfb2ccd"
+      },
+      {
+        "args": [
+          {
+            "name": "to",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "mint_token_by_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 13
+        },
+        "selector": "0x66612e04"
+      },
+      {
+        "args": [
+          {
+            "name": "from",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 7
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "destroy_token_by_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 13
+        },
+        "selector": "0x8b31777e"
       }
     ]
   },
@@ -293,77 +488,34 @@
               "ty": 1
             }
           },
-          "name": "owner"
+          "name": "name"
         },
         {
           "layout": {
-            "enum": {
-              "dispatchKey": "0x0100000000000000000000000000000000000000000000000000000000000000",
-              "variants": {
-                "0": {
-                  "fields": [
-                    {
-                      "layout": {
-                        "cell": {
-                          "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                          "ty": 1
-                        }
-                      },
-                      "name": null
-                    }
-                  ]
-                },
-                "1": {
-                  "fields": []
-                }
-              }
+            "cell": {
+              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
             }
           },
-          "name": "template_addr"
+          "name": "symbol"
         },
         {
           "layout": {
-            "enum": {
-              "dispatchKey": "0x0200000000000000000000000000000000000000000000000000000000000000",
-              "variants": {
-                "0": {
-                  "fields": [
-                    {
-                      "layout": {
-                        "struct": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 1
-                                }
-                              },
-                              "name": "account_id"
-                            }
-                          ]
-                        }
-                      },
-                      "name": null
-                    }
-                  ]
-                },
-                "1": {
-                  "fields": []
-                }
-              }
+            "cell": {
+              "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+              "ty": 2
             }
           },
-          "name": "template"
+          "name": "total_supply"
         },
         {
           "layout": {
             "cell": {
               "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-              "ty": 4
+              "ty": 3
             }
           },
-          "name": "instance_index"
+          "name": "decimals"
         },
         {
           "layout": {
@@ -377,7 +529,7 @@
                           "layout": {
                             "cell": {
                               "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                              "ty": 5
+                              "ty": 4
                             }
                           },
                           "name": "header"
@@ -390,7 +542,7 @@
                                   "layout": {
                                     "cell": {
                                       "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                                      "ty": 6
+                                      "ty": 5
                                     }
                                   },
                                   "name": "len"
@@ -402,7 +554,7 @@
                                       "layout": {
                                         "cell": {
                                           "key": "0x0500000001000000000000000000000000000000000000000000000000000000",
-                                          "ty": 7
+                                          "ty": 6
                                         }
                                       },
                                       "len": 4294967295,
@@ -427,7 +579,7 @@
                       "layout": {
                         "cell": {
                           "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
-                          "ty": 9
+                          "ty": 10
                         }
                       },
                       "offset": "0x0500000001000000000000000000000000000000000000000000000000000000",
@@ -443,7 +595,7 @@
               ]
             }
           },
-          "name": "instance_map"
+          "name": "balances"
         },
         {
           "layout": {
@@ -457,7 +609,7 @@
                           "layout": {
                             "cell": {
                               "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
-                              "ty": 5
+                              "ty": 4
                             }
                           },
                           "name": "header"
@@ -470,7 +622,7 @@
                                   "layout": {
                                     "cell": {
                                       "key": "0x0700000001000000000000000000000000000000000000000000000000000000",
-                                      "ty": 6
+                                      "ty": 5
                                     }
                                   },
                                   "name": "len"
@@ -482,7 +634,7 @@
                                       "layout": {
                                         "cell": {
                                           "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
-                                          "ty": 12
+                                          "ty": 11
                                         }
                                       },
                                       "len": 4294967295,
@@ -507,7 +659,7 @@
                       "layout": {
                         "cell": {
                           "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
-                          "ty": 13
+                          "ty": 10
                         }
                       },
                       "offset": "0x0700000002000000000000000000000000000000000000000000000000000000",
@@ -523,7 +675,16 @@
               ]
             }
           },
-          "name": "instance_map_by_owner"
+          "name": "allowances"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
+              "ty": 7
+            }
+          },
+          "name": "owner"
         }
       ]
     }
@@ -531,31 +692,7 @@
   "types": [
     {
       "def": {
-        "composite": {
-          "fields": [
-            {
-              "type": 2
-            }
-          ]
-        }
-      },
-      "path": [
-        "ink_env",
-        "types",
-        "AccountId"
-      ]
-    },
-    {
-      "def": {
-        "array": {
-          "len": 32,
-          "type": 3
-        }
-      }
-    },
-    {
-      "def": {
-        "primitive": "u8"
+        "primitive": "str"
       }
     },
     {
@@ -565,19 +702,24 @@
     },
     {
       "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 5
             },
             {
               "name": "len",
-              "type": 6
+              "type": 5
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 5
             }
           ]
         }
@@ -601,7 +743,7 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 9
                 }
               ],
               "name": "Vacant"
@@ -609,7 +751,7 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 7
                 }
               ],
               "name": "Occupied"
@@ -618,7 +760,7 @@
         }
       },
       "params": [
-        4
+        7
       ],
       "path": [
         "ink_storage",
@@ -632,12 +774,36 @@
         "composite": {
           "fields": [
             {
+              "type": 8
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 3
+        }
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
               "name": "next",
-              "type": 6
+              "type": 5
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 5
             }
           ]
         }
@@ -655,17 +821,17 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 2
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 5
             }
           ]
         }
       },
       "params": [
-        10
+        2
       ],
       "path": [
         "ink_storage",
@@ -676,58 +842,12 @@
     },
     {
       "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "id",
-              "type": 4
-            },
-            {
-              "name": "owner",
-              "type": 1
-            },
-            {
-              "name": "dao_manager",
-              "type": 11
-            },
-            {
-              "name": "dao_manager_addr",
-              "type": 1
-            }
-          ]
-        }
-      },
-      "path": [
-        "main",
-        "main",
-        "DAOInstance"
-      ]
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "account_id",
-              "type": 1
-            }
-          ]
-        }
-      },
-      "path": [
-        "dao_manager",
-        "dao_manager",
-        "DAOManager"
-      ]
-    },
-    {
-      "def": {
         "variant": {
           "variants": [
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 9
                 }
               ],
               "name": "Vacant"
@@ -735,7 +855,7 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 12
                 }
               ],
               "name": "Occupied"
@@ -744,7 +864,7 @@
         }
       },
       "params": [
-        1
+        12
       ],
       "path": [
         "ink_storage",
@@ -755,139 +875,15 @@
     },
     {
       "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "value",
-              "type": 14
-            },
-            {
-              "name": "key_index",
-              "type": 6
-            }
-          ]
-        }
-      },
-      "params": [
-        14
-      ],
-      "path": [
-        "ink_storage",
-        "collections",
-        "hashmap",
-        "ValueEntry"
-      ]
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 4
-        }
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "type": 2
-            }
-          ]
-        }
-      },
-      "path": [
-        "ink_env",
-        "types",
-        "Hash"
-      ]
-    },
-    {
-      "def": {
-        "primitive": "bool"
-      }
-    },
-    {
-      "def": {
-        "primitive": "str"
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "type": 20
-            }
-          ]
-        }
-      },
-      "params": [
-        19
-      ],
-      "path": [
-        "BTreeMap"
-      ]
-    },
-    {
-      "def": {
         "tuple": [
-          17,
-          15
+          7,
+          7
         ]
       }
     },
     {
       "def": {
-        "sequence": {
-          "type": 19
-        }
-      }
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 22
-        }
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "id",
-              "type": 4
-            },
-            {
-              "name": "owner",
-              "type": 1
-            },
-            {
-              "name": "name",
-              "type": 17
-            },
-            {
-              "name": "dao_manager_code_hash",
-              "type": 15
-            },
-            {
-              "name": "components",
-              "type": 18
-            }
-          ]
-        }
-      },
-      "path": [
-        "template_manager",
-        "template_manager",
-        "DAOTemplate"
-      ]
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 10
-        }
+        "primitive": "bool"
       }
     },
     {
@@ -900,7 +896,7 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 7
                 }
               ],
               "name": "Some"
@@ -909,7 +905,7 @@
         }
       },
       "params": [
-        1
+        7
       ],
       "path": [
         "Option"

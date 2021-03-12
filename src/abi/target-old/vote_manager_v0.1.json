@@ -1,12 +1,12 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5ad71ebb2488e439e477172128d14432649a0df475ca830b45d5e3efca07a22a",
+    "hash": "0x75bd4ba2baa9963ccfe0fab5ca087b1869c9ffb7c61dae93270c9b810eded62c",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.52.0-nightly"
+    "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
-    "name": "main",
+    "name": "vote_manager",
     "version": "0.1.0",
     "authors": [
       "[your_name] <[your_email]>"
@@ -15,17 +15,7 @@
   "spec": {
     "constructors": [
       {
-        "args": [
-          {
-            "name": "controller",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 1
-            }
-          }
-        ],
+        "args": [],
         "docs": [],
         "name": [
           "new"
@@ -40,186 +30,165 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "index",
+            "name": "vote_id",
             "type": {
               "displayName": [
-                "u64"
+                "VoteId"
               ],
-              "type": 4
+              "type": 1
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "owner",
-            "type": {
-              "displayName": [
-                "Option"
-              ],
-              "type": 24
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "dao_addr",
+            "name": "creator",
             "type": {
               "displayName": [
                 "AccountId"
+              ],
+              "type": 12
+            }
+          }
+        ],
+        "docs": [],
+        "name": "StartVote"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "voter",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 12
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "support_choice",
+            "type": {
+              "displayName": [
+                "ChoiceId"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "docs": [],
+        "name": "CastVote"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
               ],
               "type": 1
             }
           }
         ],
         "docs": [],
-        "name": "InstanceDAO"
+        "name": "ExecuteVote"
       }
     ],
     "messages": [
       {
         "args": [
           {
-            "name": "template_code_hash",
-            "type": {
-              "displayName": [
-                "Hash"
-              ],
-              "type": 15
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "init"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 16
-        },
-        "selector": "0xa1ec5918"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
+            "name": "title",
             "type": {
               "displayName": [
                 "String"
               ],
-              "type": 17
+              "type": 9
             }
           },
           {
-            "name": "dao_manager_code_hash",
+            "name": "desc",
             "type": {
               "displayName": [
-                "Hash"
+                "String"
               ],
-              "type": 15
+              "type": 9
             }
           },
           {
-            "name": "components",
+            "name": "vote_time",
             "type": {
               "displayName": [
-                "BTreeMap"
+                "u64"
               ],
-              "type": 18
+              "type": 1
+            }
+          },
+          {
+            "name": "support_require_num",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "min_require_num",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "choices",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 9
             }
           }
         ],
         "docs": [],
         "mutates": true,
         "name": [
-          "add_template"
+          "new_vote"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "bool"
-          ],
-          "type": 16
-        },
-        "selector": "0x1db8b2fa"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "list_templates"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "Vec"
-          ],
-          "type": 21
-        },
-        "selector": "0x6d935a7e"
-      },
-      {
-        "args": [
-          {
-            "name": "index",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "query_template_by_index"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "DAOTemplate"
-          ],
-          "type": 22
-        },
-        "selector": "0x2728869d"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "query_template_addr"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "AccountId"
+            "u64"
           ],
           "type": 1
         },
-        "selector": "0x863a8656"
+        "selector": "0x093e59d4"
       },
       {
         "args": [
           {
-            "name": "index",
+            "name": "vote_id",
             "type": {
               "displayName": [
-                "u64"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "controller",
-            "type": {
-              "displayName": [
-                "AccountId"
+                "VoteId"
               ],
               "type": 1
             }
@@ -228,58 +197,153 @@
         "docs": [],
         "mutates": true,
         "name": [
-          "instance_by_template"
+          "execute"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0xa01a3bfd"
+      },
+      {
+        "args": [
+          {
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "support_choice",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "name": "voter",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 12
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "vote"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
             "bool"
           ],
-          "type": 16
+          "type": 8
         },
-        "selector": "0xc2119911"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "list_dao_instances"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "Vec"
-          ],
-          "type": 23
-        },
-        "selector": "0xea0dc02c"
+        "selector": "0x2202830d"
       },
       {
         "args": [
           {
-            "name": "owner",
+            "name": "vote_id",
             "type": {
               "displayName": [
-                "AccountId"
+                "VoteId"
               ],
               "type": 1
             }
           }
         ],
         "docs": [],
-        "mutates": true,
+        "mutates": false,
         "name": [
-          "list_dao_instances_by_owner"
+          "query_one_vote"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
+            "DisplayVote"
+          ],
+          "type": 17
+        },
+        "selector": "0xdd23bbf1"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_all_vote"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
             "Vec"
           ],
-          "type": 23
+          "type": 18
         },
-        "selector": "0x3caddb35"
+        "selector": "0xa1f8db86"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_executed_vote"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 18
+        },
+        "selector": "0x2b47bbb5"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_open_vote"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 18
+        },
+        "selector": "0x399571b3"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_wait_vote"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 18
+        },
+        "selector": "0xfe44cf9c"
       }
     ]
   },
@@ -293,271 +357,215 @@
               "ty": 1
             }
           },
-          "name": "owner"
+          "name": "votes_length"
         },
         {
           "layout": {
-            "enum": {
-              "dispatchKey": "0x0100000000000000000000000000000000000000000000000000000000000000",
-              "variants": {
-                "0": {
-                  "fields": [
-                    {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                                          "ty": 4
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0300000000000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
                       "layout": {
                         "cell": {
-                          "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                          "ty": 1
+                          "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 6
                         }
                       },
-                      "name": null
+                      "offset": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
                     }
-                  ]
-                },
-                "1": {
-                  "fields": []
+                  },
+                  "name": "values"
                 }
-              }
+              ]
             }
           },
-          "name": "template_addr"
+          "name": "votes"
         },
         {
           "layout": {
-            "enum": {
-              "dispatchKey": "0x0200000000000000000000000000000000000000000000000000000000000000",
-              "variants": {
-                "0": {
-                  "fields": [
-                    {
-                      "layout": {
-                        "struct": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 1
-                                }
-                              },
-                              "name": "account_id"
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
                             }
-                          ]
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0400000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 10
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0500000001000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 15
                         }
                       },
-                      "name": null
+                      "offset": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
                     }
-                  ]
-                },
-                "1": {
-                  "fields": []
+                  },
+                  "name": "values"
                 }
-              }
+              ]
             }
           },
-          "name": "template"
+          "name": "voters"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                      "ty": 3
+                    }
+                  },
+                  "name": "len"
+                },
+                {
+                  "layout": {
+                    "array": {
+                      "cellsPerElem": 1,
+                      "layout": {
+                        "cell": {
+                          "key": "0x0500000003000000000000000000000000000000000000000000000000000000",
+                          "ty": 16
+                        }
+                      },
+                      "len": 4294967295,
+                      "offset": "0x0600000002000000000000000000000000000000000000000000000000000000"
+                    }
+                  },
+                  "name": "elems"
+                }
+              ]
+            }
+          },
+          "name": "choices"
         },
         {
           "layout": {
             "cell": {
-              "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-              "ty": 4
+              "key": "0x0500000003000000000000000000000000000000000000000000000000000000",
+              "ty": 3
             }
           },
-          "name": "instance_index"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
-                {
-                  "layout": {
-                    "struct": {
-                      "fields": [
-                        {
-                          "layout": {
-                            "cell": {
-                              "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                              "ty": 5
-                            }
-                          },
-                          "name": "header"
-                        },
-                        {
-                          "layout": {
-                            "struct": {
-                              "fields": [
-                                {
-                                  "layout": {
-                                    "cell": {
-                                      "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                                      "ty": 6
-                                    }
-                                  },
-                                  "name": "len"
-                                },
-                                {
-                                  "layout": {
-                                    "array": {
-                                      "cellsPerElem": 1,
-                                      "layout": {
-                                        "cell": {
-                                          "key": "0x0500000001000000000000000000000000000000000000000000000000000000",
-                                          "ty": 7
-                                        }
-                                      },
-                                      "len": 4294967295,
-                                      "offset": "0x0600000000000000000000000000000000000000000000000000000000000000"
-                                    }
-                                  },
-                                  "name": "elems"
-                                }
-                              ]
-                            }
-                          },
-                          "name": "entries"
-                        }
-                      ]
-                    }
-                  },
-                  "name": "keys"
-                },
-                {
-                  "layout": {
-                    "hash": {
-                      "layout": {
-                        "cell": {
-                          "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
-                          "ty": 9
-                        }
-                      },
-                      "offset": "0x0500000001000000000000000000000000000000000000000000000000000000",
-                      "strategy": {
-                        "hasher": "Blake2x256",
-                        "postfix": "",
-                        "prefix": "0x696e6b20686173686d6170"
-                      }
-                    }
-                  },
-                  "name": "values"
-                }
-              ]
-            }
-          },
-          "name": "instance_map"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
-                {
-                  "layout": {
-                    "struct": {
-                      "fields": [
-                        {
-                          "layout": {
-                            "cell": {
-                              "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
-                              "ty": 5
-                            }
-                          },
-                          "name": "header"
-                        },
-                        {
-                          "layout": {
-                            "struct": {
-                              "fields": [
-                                {
-                                  "layout": {
-                                    "cell": {
-                                      "key": "0x0700000001000000000000000000000000000000000000000000000000000000",
-                                      "ty": 6
-                                    }
-                                  },
-                                  "name": "len"
-                                },
-                                {
-                                  "layout": {
-                                    "array": {
-                                      "cellsPerElem": 1,
-                                      "layout": {
-                                        "cell": {
-                                          "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
-                                          "ty": 12
-                                        }
-                                      },
-                                      "len": 4294967295,
-                                      "offset": "0x0800000001000000000000000000000000000000000000000000000000000000"
-                                    }
-                                  },
-                                  "name": "elems"
-                                }
-                              ]
-                            }
-                          },
-                          "name": "entries"
-                        }
-                      ]
-                    }
-                  },
-                  "name": "keys"
-                },
-                {
-                  "layout": {
-                    "hash": {
-                      "layout": {
-                        "cell": {
-                          "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
-                          "ty": 13
-                        }
-                      },
-                      "offset": "0x0700000002000000000000000000000000000000000000000000000000000000",
-                      "strategy": {
-                        "hasher": "Blake2x256",
-                        "postfix": "",
-                        "prefix": "0x696e6b20686173686d6170"
-                      }
-                    }
-                  },
-                  "name": "values"
-                }
-              ]
-            }
-          },
-          "name": "instance_map_by_owner"
+          "name": "choices_num"
         }
       ]
     }
   },
   "types": [
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "type": 2
-            }
-          ]
-        }
-      },
-      "path": [
-        "ink_env",
-        "types",
-        "AccountId"
-      ]
-    },
-    {
-      "def": {
-        "array": {
-          "len": 32,
-          "type": 3
-        }
-      }
-    },
-    {
-      "def": {
-        "primitive": "u8"
-      }
-    },
     {
       "def": {
         "primitive": "u64"
@@ -569,15 +577,15 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 3
             },
             {
               "name": "len",
-              "type": 6
+              "type": 3
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 3
             }
           ]
         }
@@ -601,7 +609,7 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 5
                 }
               ],
               "name": "Vacant"
@@ -609,7 +617,7 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 1
                 }
               ],
               "name": "Occupied"
@@ -618,7 +626,7 @@
         }
       },
       "params": [
-        4
+        1
       ],
       "path": [
         "ink_storage",
@@ -633,11 +641,11 @@
           "fields": [
             {
               "name": "next",
-              "type": 6
+              "type": 3
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 3
             }
           ]
         }
@@ -655,17 +663,17 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 7
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 3
             }
           ]
         }
       },
       "params": [
-        10
+        7
       ],
       "path": [
         "ink_storage",
@@ -679,126 +687,56 @@
         "composite": {
           "fields": [
             {
-              "name": "id",
-              "type": 4
-            },
-            {
-              "name": "owner",
+              "name": "vote_id",
               "type": 1
             },
             {
-              "name": "dao_manager",
-              "type": 11
+              "name": "executed",
+              "type": 8
             },
             {
-              "name": "dao_manager_addr",
+              "name": "title",
+              "type": 9
+            },
+            {
+              "name": "desc",
+              "type": 9
+            },
+            {
+              "name": "start_date",
               "type": 1
-            }
-          ]
-        }
-      },
-      "path": [
-        "main",
-        "main",
-        "DAOInstance"
-      ]
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
+            },
             {
-              "name": "account_id",
+              "name": "vote_time",
               "type": 1
-            }
-          ]
-        }
-      },
-      "path": [
-        "dao_manager",
-        "dao_manager",
-        "DAOManager"
-      ]
-    },
-    {
-      "def": {
-        "variant": {
-          "variants": [
-            {
-              "fields": [
-                {
-                  "type": 8
-                }
-              ],
-              "name": "Vacant"
             },
             {
-              "fields": [
-                {
-                  "type": 1
-                }
-              ],
-              "name": "Occupied"
-            }
-          ]
-        }
-      },
-      "params": [
-        1
-      ],
-      "path": [
-        "ink_storage",
-        "collections",
-        "stash",
-        "Entry"
-      ]
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "value",
-              "type": 14
+              "name": "support_require_num",
+              "type": 1
             },
             {
-              "name": "key_index",
-              "type": 6
-            }
-          ]
-        }
-      },
-      "params": [
-        14
-      ],
-      "path": [
-        "ink_storage",
-        "collections",
-        "hashmap",
-        "ValueEntry"
-      ]
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 4
-        }
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
+              "name": "min_require_num",
+              "type": 1
+            },
             {
-              "type": 2
+              "name": "support_num",
+              "type": 1
+            },
+            {
+              "name": "choice_index_lo",
+              "type": 3
+            },
+            {
+              "name": "choice_index_ho",
+              "type": 3
             }
           ]
         }
       },
       "path": [
-        "ink_env",
-        "types",
-        "Hash"
+        "vote_manager",
+        "vote_manager",
+        "Vote"
       ]
     },
     {
@@ -813,41 +751,43 @@
     },
     {
       "def": {
-        "composite": {
-          "fields": [
+        "variant": {
+          "variants": [
             {
-              "type": 20
+              "fields": [
+                {
+                  "type": 5
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 11
+                }
+              ],
+              "name": "Occupied"
             }
           ]
         }
       },
       "params": [
-        19
+        11
       ],
       "path": [
-        "BTreeMap"
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
       ]
     },
     {
       "def": {
         "tuple": [
-          17,
-          15
+          1,
+          12
         ]
-      }
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 19
-        }
-      }
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 22
-        }
       }
     },
     {
@@ -855,65 +795,139 @@
         "composite": {
           "fields": [
             {
-              "name": "id",
-              "type": 4
-            },
-            {
-              "name": "owner",
-              "type": 1
-            },
-            {
-              "name": "name",
-              "type": 17
-            },
-            {
-              "name": "dao_manager_code_hash",
-              "type": 15
-            },
-            {
-              "name": "components",
-              "type": 18
+              "type": 13
             }
           ]
         }
       },
       "path": [
-        "template_manager",
-        "template_manager",
-        "DAOTemplate"
+        "ink_env",
+        "types",
+        "AccountId"
       ]
     },
     {
       "def": {
-        "sequence": {
-          "type": 10
+        "array": {
+          "len": 32,
+          "type": 14
         }
       }
     },
     {
       "def": {
-        "variant": {
-          "variants": [
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
             {
-              "name": "None"
+              "name": "value",
+              "type": 3
             },
             {
-              "fields": [
-                {
-                  "type": 1
-                }
-              ],
-              "name": "Some"
+              "name": "key_index",
+              "type": 3
             }
           ]
         }
       },
       "params": [
-        1
+        3
       ],
       "path": [
-        "Option"
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
       ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "choice_id",
+              "type": 3
+            },
+            {
+              "name": "content",
+              "type": 9
+            },
+            {
+              "name": "yea",
+              "type": 1
+            }
+          ]
+        }
+      },
+      "path": [
+        "vote_manager",
+        "vote_manager",
+        "Choice"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "vote_id",
+              "type": 1
+            },
+            {
+              "name": "executed",
+              "type": 8
+            },
+            {
+              "name": "title",
+              "type": 9
+            },
+            {
+              "name": "desc",
+              "type": 9
+            },
+            {
+              "name": "start_date",
+              "type": 1
+            },
+            {
+              "name": "vote_time",
+              "type": 1
+            },
+            {
+              "name": "support_require_num",
+              "type": 1
+            },
+            {
+              "name": "min_require_num",
+              "type": 1
+            },
+            {
+              "name": "support_num",
+              "type": 1
+            },
+            {
+              "name": "choices",
+              "type": 9
+            }
+          ]
+        }
+      },
+      "path": [
+        "vote_manager",
+        "vote_manager",
+        "DisplayVote"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 17
+        }
+      }
     }
   ]
 }

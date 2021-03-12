@@ -1,12 +1,12 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x715840b7a4cc2631118fe7f8f14d33f34710b4b1de7579f6ac9261846dfe09e2",
+    "hash": "0x10cf6affda6013cfa10788ecea08f08527bb57869e9d458a47ab785ee64bbc4e",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.52.0-nightly"
+    "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
-    "name": "vault",
+    "name": "org",
     "version": "0.1.0",
     "authors": [
       "[your_name] <[your_email]>"
@@ -17,12 +17,21 @@
       {
         "args": [
           {
-            "name": "org_contract_address",
+            "name": "_creator",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
+            }
+          },
+          {
+            "name": "org_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
             }
           }
         ],
@@ -40,41 +49,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "token_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "name": "AddVaultTokenEvent"
-      },
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "token_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "name": "RemoveVaultTokenEvent"
-      },
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "token_address",
+            "name": "moderator",
             "type": {
               "displayName": [
                 "AccountId"
@@ -85,7 +60,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "balance",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -95,25 +70,14 @@
           }
         ],
         "docs": [],
-        "name": "GetTokenBalanceEvent"
+        "name": "AddDAOModeratorEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "token_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "from_address",
+            "name": "moderator",
             "type": {
               "displayName": [
                 "AccountId"
@@ -124,7 +88,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "value",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -134,25 +98,14 @@
           }
         ],
         "docs": [],
-        "name": "DepositTokenEvent"
+        "name": "RemoveDAOModeratorEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "token_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "to_address",
+            "name": "member",
             "type": {
               "displayName": [
                 "AccountId"
@@ -163,7 +116,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "value",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -173,122 +126,60 @@
           }
         ],
         "docs": [],
-        "name": "WithdrawTokenEvent"
+        "name": "AddDAOMemberEvent"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "org_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
+        "docs": [],
+        "name": "RemoveDAOMemberEvent"
       }
     ],
     "messages": [
       {
-        "args": [
-          {
-            "name": "caller",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
+        "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "check_authority"
+          "get_dao_creator"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "bool"
+            "AccountId"
           ],
-          "type": 14
+          "type": 4
         },
-        "selector": "0xaee06489"
-      },
-      {
-        "args": [
-          {
-            "name": "erc_20_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_vault_token"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xfde31b75"
-      },
-      {
-        "args": [
-          {
-            "name": "erc_20_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "remove_vault_token"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x4338d861"
+        "selector": "0x29e1aeed"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_token_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "ink_prelude",
-            "vec",
-            "Vec"
-          ],
-          "type": 15
-        },
-        "selector": "0x0ca614db"
-      },
-      {
-        "args": [
-          {
-            "name": "erc_20_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_balance_of"
+          "get_orgid"
         ],
         "payable": false,
         "returnType": {
@@ -297,113 +188,227 @@
           ],
           "type": 10
         },
-        "selector": "0x58bb0f42"
-      },
-      {
-        "args": [
-          {
-            "name": "erc_20_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "from_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "value",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "deposit"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x3ce5f4a6"
-      },
-      {
-        "args": [
-          {
-            "name": "erc_20_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "to_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "value",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "withdraw"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xb41251e9"
+        "selector": "0xa17b2868"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_transfer_history"
+          "get_dao_moderator_list"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "ink_prelude",
+            "alloc",
             "vec",
             "Vec"
           ],
-          "type": 16
+          "type": 11
         },
-        "selector": "0x324c23cf"
+        "selector": "0xbce489b4"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_members_list"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 11
+        },
+        "selector": "0xcf6c19d3"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_moderator_detail_list"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 12
+        },
+        "selector": "0xd1eb73e8"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_member_detail_list"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 12
+        },
+        "selector": "0xf594b278"
+      },
+      {
+        "args": [
+          {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "name": "moderator",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "add_dao_moderator"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x75b5bf28"
+      },
+      {
+        "args": [
+          {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "add_dao_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x34c0dfc4"
+      },
+      {
+        "args": [
+          {
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "remove_dao_moderator"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0xf555353e"
+      },
+      {
+        "args": [
+          {
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "remove_dao_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0xd0d0e013"
+      },
+      {
+        "args": [
+          {
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "resign"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0xd807454b"
       }
     ]
   },
@@ -488,7 +493,7 @@
               ]
             }
           },
-          "name": "tokens"
+          "name": "moderators"
         },
         {
           "layout": {
@@ -568,105 +573,25 @@
               ]
             }
           },
-          "name": "visible_tokens"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
-                {
-                  "layout": {
-                    "struct": {
-                      "fields": [
-                        {
-                          "layout": {
-                            "cell": {
-                              "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
-                              "ty": 1
-                            }
-                          },
-                          "name": "header"
-                        },
-                        {
-                          "layout": {
-                            "struct": {
-                              "fields": [
-                                {
-                                  "layout": {
-                                    "cell": {
-                                      "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
-                                      "ty": 2
-                                    }
-                                  },
-                                  "name": "len"
-                                },
-                                {
-                                  "layout": {
-                                    "array": {
-                                      "cellsPerElem": 1,
-                                      "layout": {
-                                        "cell": {
-                                          "key": "0x0500000003000000000000000000000000000000000000000000000000000000",
-                                          "ty": 9
-                                        }
-                                      },
-                                      "len": 4294967295,
-                                      "offset": "0x0600000002000000000000000000000000000000000000000000000000000000"
-                                    }
-                                  },
-                                  "name": "elems"
-                                }
-                              ]
-                            }
-                          },
-                          "name": "entries"
-                        }
-                      ]
-                    }
-                  },
-                  "name": "keys"
-                },
-                {
-                  "layout": {
-                    "hash": {
-                      "layout": {
-                        "cell": {
-                          "key": "0x0600000003000000000000000000000000000000000000000000000000000000",
-                          "ty": 11
-                        }
-                      },
-                      "offset": "0x0500000003000000000000000000000000000000000000000000000000000000",
-                      "strategy": {
-                        "hasher": "Blake2x256",
-                        "postfix": "",
-                        "prefix": "0x696e6b20686173686d6170"
-                      }
-                    }
-                  },
-                  "name": "values"
-                }
-              ]
-            }
-          },
-          "name": "transfer_history"
+          "name": "members"
         },
         {
           "layout": {
             "cell": {
-              "key": "0x0600000003000000000000000000000000000000000000000000000000000000",
+              "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
               "ty": 4
             }
           },
-          "name": "org_contract_address"
+          "name": "creator"
         },
         {
           "layout": {
             "cell": {
-              "key": "0x0700000003000000000000000000000000000000000000000000000000000000",
-              "ty": 4
+              "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+              "ty": 10
             }
           },
-          "name": "vault_contract_address"
+          "name": "org_id"
         }
       ]
     }
@@ -793,7 +718,7 @@
           "fields": [
             {
               "name": "value",
-              "type": 4
+              "type": 9
             },
             {
               "name": "key_index",
@@ -803,117 +728,13 @@
         }
       },
       "params": [
-        4
+        9
       ],
       "path": [
         "ink_storage",
         "collections",
         "hashmap",
         "ValueEntry"
-      ]
-    },
-    {
-      "def": {
-        "variant": {
-          "variants": [
-            {
-              "fields": [
-                {
-                  "type": 7
-                }
-              ],
-              "name": "Vacant"
-            },
-            {
-              "fields": [
-                {
-                  "type": 10
-                }
-              ],
-              "name": "Occupied"
-            }
-          ]
-        }
-      },
-      "params": [
-        10
-      ],
-      "path": [
-        "ink_storage",
-        "collections",
-        "stash",
-        "Entry"
-      ]
-    },
-    {
-      "def": {
-        "primitive": "u64"
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "value",
-              "type": 12
-            },
-            {
-              "name": "key_index",
-              "type": 2
-            }
-          ]
-        }
-      },
-      "params": [
-        12
-      ],
-      "path": [
-        "ink_storage",
-        "collections",
-        "hashmap",
-        "ValueEntry"
-      ]
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
-              "name": "transfer_id",
-              "type": 10
-            },
-            {
-              "name": "transfer_direction",
-              "type": 10
-            },
-            {
-              "name": "token_name",
-              "type": 13
-            },
-            {
-              "name": "from_address",
-              "type": 4
-            },
-            {
-              "name": "to_address",
-              "type": 4
-            },
-            {
-              "name": "value",
-              "type": 10
-            },
-            {
-              "name": "transfer_time",
-              "type": 10
-            }
-          ]
-        }
-      },
-      "path": [
-        "vault",
-        "vault",
-        "Transfer"
       ]
     },
     {
@@ -923,7 +744,7 @@
     },
     {
       "def": {
-        "primitive": "bool"
+        "primitive": "u64"
       }
     },
     {
@@ -936,8 +757,21 @@
     {
       "def": {
         "sequence": {
-          "type": 12
+          "type": 13
         }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          4,
+          9
+        ]
+      }
+    },
+    {
+      "def": {
+        "primitive": "bool"
       }
     }
   ]
