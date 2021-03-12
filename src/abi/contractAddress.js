@@ -1,4 +1,4 @@
 const mainAddress = {
-  main: "5Es1daxrUQbVi5w41wghTVnuwQAABc5Sw4E1mHVtuZ7guhdQ"
+  main: "5EBk6nLzSsvaXtHtg8RSEpkZi9LwBm4JcdFmg8BA1FKwD8U9"
 }
 export default mainAddress;
