@@ -35,6 +35,8 @@ const queryAllVote = async (votecontract) => {
     let dataobj = await votecontract.query.queryAllVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
 
+    console.log("query all votes", JSON.stringify(dataobj))
+
     return dataobj;
 }
 
@@ -121,6 +123,8 @@ const executeVote = async (votecontract,id,cb) => {
 }
 const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
 
+    console.log(`voteid ${voteid}, choiceid ${choiceid}`);
+    
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
 

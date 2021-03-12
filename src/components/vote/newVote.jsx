@@ -53,8 +53,11 @@ export default function NewVote(props) {
             vote_time:date,
             support_require_num:supportInput,
             min_require_num:min,
-            choices:optionlist.join(',')
+            // choices:optionlist.join(',')
+            choices:optionlist.join('|')
         }
+
+        console.log('new vote string', JSON.stringify(dataobj));
         await api.vote.newVote(votecontract,dataobj,(result)=> {
             setLoading(false);
             if(result){

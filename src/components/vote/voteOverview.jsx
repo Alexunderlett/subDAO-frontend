@@ -25,13 +25,18 @@ export default function VoteOverview (props){
                 const {
                     vote_id, title, desc, support_require_num, min_require_num, choices
                 } = data;
+
+                console.log("#############", choices);
+
+
                 settitle(title);
                 setvoteid(vote_id);
                 setdesc(desc);
                 setsupport(support_require_num);
                 setmin(min_require_num);
                 let arr = [], afterArr = [];
-                arr = choices.split(',');
+                // arr = choices.split(',');
+                arr = choices.split('|');
                 arr.map((i, index) => {
                     let obj = i.split(":");
                     afterArr[index] = {

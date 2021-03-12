@@ -51,7 +51,8 @@ export default function VoteView (props){
                 settitle(title);
                 setId(vote_id);
                 setdesc(desc);
-                setoptionlist(choices.split(','))
+                // setoptionlist(choices.split(','))
+                setoptionlist(choices.split('|'))
             });
             setLoading(false);
         };
