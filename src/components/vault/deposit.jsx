@@ -78,7 +78,7 @@ export default function Deposit(props){
 
         setShowModal(false);
 
-        await api.erc20.approveOp(erc20contract,amount,(result)=> {
+        await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount,(result)=> {
             setdeposit(true)
         })
 
