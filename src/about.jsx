@@ -71,7 +71,7 @@ export default function About(props) {
             const setInitBase = async () => {
                 setTips('Initializing Contracts');
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
-                    setbasestate(data)
+                    setbasestate(data);
                 });
             };
             setInitBase();
@@ -146,6 +146,7 @@ export default function About(props) {
             setTips('Get information');
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
+
                 let {owner, name, logo, desc} = data;
 
                 setName(name);
