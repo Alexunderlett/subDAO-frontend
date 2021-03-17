@@ -65,7 +65,7 @@ export default function Home(props) {
             <section className="padding">
                 <div className="container">
                     <div className="trheading">
-                        <h2 className="mb-0">SubDAO<br />One DAO serveres ALL</h2>
+                        <h2 className="mb-0">SubDAO<br />One DAO serves aLL</h2>
                     </div>
                 </div>
                 <div className="testimonial-bg">
