@@ -2,6 +2,14 @@
 
 This is the frontend of SubDAO. It will manage all DAO through the help of `subdao-contracts`.
 
+## Prerequisites
+It replys on the smart contracts in `subdao-contracts`. Before you start, you need deploy all the contracts in [subDAO-contracts](https://github.com/subdao-network/subdao-contracts).
+
+Please find the correct address for `main_v0.1`, and update the correct address in `public/config.js`.
+```
+
+```
+
 ### `yarn`
 
 Install packages needed for this App.
