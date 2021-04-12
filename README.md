@@ -7,7 +7,14 @@ Please install `Polkadot JS Extension` before you start. You can get it from her
 
 SubDAO frontend replys on the smart contracts in `subdao-contracts`, SubDAO Node in `subdao-node` and `Polkadot JS Extention` . Before you start, you need deploy all the contracts in [subDAO-contracts](https://github.com/subdao-network/subdao-contracts) on [subDAO-node](https://github.com/subdao-network/subdao-node).
 
-## Config
+### Get Code
+Please get the code from `https://github.com/SubDAO-Network/subDAO-frontend`
+
+```
+git clone https://github.com/SubDAO-Network/subDAO-frontend.git
+```
+
+### Config
 Please find the correct address for `main_v0.1`, and update the correct address in `public/config.js`.
 ```
 window.mainAddress = {
