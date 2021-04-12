@@ -3,7 +3,9 @@
 This is the frontend of SubDAO. It will manage all DAO through the help of `subdao-contracts`.
 
 ## Prerequisites
-It replys on the smart contracts in `subdao-contracts`. Before you start, you need deploy all the contracts in [subDAO-contracts](https://github.com/subdao-network/subdao-contracts).
+Please install `Polkadot JS Extention` before you start. You can get it from here https://polkadot.js.org/extension/
+
+SubDAO frontend replys on the smart contracts in `subdao-contracts`, SubDAO Node in `subdao-node` and `Polkadot JS Extention` . Before you start, you need deploy all the contracts in [subDAO-contracts](https://github.com/subdao-network/subdao-contracts) on [subDAO-node](https://github.com/subdao-network/subdao-node).
 
 ## Config
 Please find the correct address for `main_v0.1`, and update the correct address in `public/config.js`.
