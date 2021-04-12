@@ -1,5 +1,4 @@
 import ConnectContract from './connectContract';
-
 let loadMain = false;
 let maincontract;
 

@@ -37,10 +37,17 @@ export default function SecondStep(props) {
             setLoading(true);
             setTips('Initialize the template list');
             await api.main.listTemplates(maincontract).then(data => {
-                if (!data) return;
-                setlist(data);
-                setLoading(false);
-            });
+                if (!data){
+                    setTips('Main contract initialization failed');
+                    setTimeout( () => {
+                        props.history.push(`/`)
+                    },2000)
+                }else{
+                    setlist(data);
+                    setLoading(false);
+                }
+
+            })
 
         };
         setlisttemplate();

@@ -9,11 +9,12 @@ const listTemplates = async (maincontract) => {
     const AccountId = await Accounts.accountAddress();
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
+
     let data = await maincontract.query.listTemplates(AccountId, {value, gasLimit});
 
     data = publicJs.formatResult(data);
 
-    return data?data:[];
+    return data;
 
 };
 

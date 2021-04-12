@@ -64,7 +64,7 @@ export default function  Createnew(props) {
                             </div>
                             <div className='col-lg-8'>
                                 {type === 1 && <FirstStep handlerSet={setStep}/>}
-                                {type === 2 && <SecondStep handlerSet={setStep}/>}
+                                {type === 2 && <SecondStep handlerSet={setStep}  history={props.history}/>}
                                 {type === 3 && <ThirdStep handlerSet={setStep}/>}
                                 {type === 4 && <ForthStep handlerSet={setStep}  history={props.history}/>}
                             </div>
