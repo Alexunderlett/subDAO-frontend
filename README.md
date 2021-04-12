@@ -5,10 +5,17 @@ This is the frontend of SubDAO. It will manage all DAO through the help of `subd
 ## Prerequisites
 It replys on the smart contracts in `subdao-contracts`. Before you start, you need deploy all the contracts in [subDAO-contracts](https://github.com/subdao-network/subdao-contracts).
 
+## Config
 Please find the correct address for `main_v0.1`, and update the correct address in `public/config.js`.
 ```
-
+window.mainAddress = {
+    main: "<MAIN CONTRACT ADDRESS>",
+    rpc_server: "<SUBDAO NODE RPC>"
+};
 ```
+
+`<MAIN CONTRACT ADDRESS>` is the main contract's address after the contracts are deployed.
+`<SUBDAO NODE RPC>` is the websocket RPC provided by SubDAO Node. If you run it locally, it should be `ws://127.0.0.1:9944` by default.
 
 ### `yarn`
 
