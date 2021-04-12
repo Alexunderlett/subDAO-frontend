@@ -2,6 +2,7 @@
   "name": "subdao-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@babel/helper-builder-react-jsx": "^7.12.13",
@@ -90,21 +91,22 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "username": "git config user.name srdothunter",
     "email": "git config user.email srdothunter@gmail.com"
   },
   "eslintConfig": {
-
     "extends": [
       "react-app",
       "react-app/jest"
     ],
-    "rules":{
-      "jsx-a11y/anchor-is-valid":"off",
-      "react-hooks/exhaustive-deps":"off",
-      "no-eval":"off",
-      "no-unused-vars":"off",
-      "import/no-anonymous-default-export":"off"
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "no-eval": "off",
+      "no-unused-vars": "off",
+      "import/no-anonymous-default-export": "off"
     }
   },
   "browserslist": {
@@ -173,5 +175,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
   }
 }
