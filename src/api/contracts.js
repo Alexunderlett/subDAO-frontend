@@ -5,7 +5,9 @@ import mainConnect from './mainContract'
 
 import {ApiPromise, WsProvider} from '@polkadot/api';
 
-const ws_server = 'ws://39.101.70.206:9944';
+const ws_server = window.mainAddress.rpc_server;
+
+// const ws_server = 'ws://39.101.70.206:9944';
 
 const SubstrateContext = React.createContext();
 
