@@ -1,7 +1,48 @@
+.maincontainer{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.bg-video{
+  width: 100vw;
+  height: 100vh;
+  left:0;
+  top:0;
+  z-index: -1;
+  vertical-align:bottom;
+  display:block;
+  position:fixed;
+  overflow: hidden;
+}
+
+.v1{
+  display: flex;
+  width: 100vw;
+  height: auto;
+}
+.bodycontainer{
+  flex-grow: 1;
+}
+
+
+
 .header {
-  padding-top: 30px;
-  width: 100%;
-  box-sizing: border-box;
+
+  &>.row{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  .lftTit{
+    padding: 45px 70px;
+  }
+  .logoMid{
+    padding-top: 30px;
+    text-align: center;
+  }
   .rightText{
     text-align: right;
   }
@@ -21,30 +62,42 @@
     }
   }
   .header-button{
-    select{
-      width: 50%;
-      text-align: right;
-      display: inline-block;
-    }
-    .topName{
-      font-size: 16px;
-      span{
-        color: #d51073;
-        text-transform : uppercase;
-        font-weight: bold;
-      }
-    }
+    text-align: right;
+    padding-right: 70px;
+    //display: flex;
+    //justify-content: space-between;
+    //select{
+    //  width: 50%;
+    //  text-align: right;
+    //  display: inline-block;
+    //}
+    //.topName{
+    //  font-size: 16px;
+    //  span{
+    //    color: #d51073;
+    //    text-transform : uppercase;
+    //    font-weight: bold;
+    //  }
+    //}
   }
-  .btn {
-    padding: 13px 30px;
-    color: #fff;
-    background-color: #d51073;
-    border-radius: 50px;
-    font-weight: 500;
-    margin-right: 15px;
-    &:hover {
-      background-color: #000;
-      color: #ffffff;
+
+  .rhtBtn {
+    margin-top: 36px;
+
+    .img{
+      height: 38px;
+    }
+    .switchLang{
+      height: 38px;
+      line-height: 38px;
+      margin-top: 7px;
+      font-size: 14px;
+      display: inline-block;
+      span{
+        padding-right: 6px;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
     }
   }
 }
@@ -67,40 +120,205 @@
 
 
 
-footer {
-  overflow: hidden;
-}
 .footer-top {
   margin: 70px 0 40px;
   .col-12{
     text-align: center;
   }
-  .trFooter-Form-button {
-    background-color: #433a8b;
-    border-color:#433a8b ;
-    //position: absolute;
-    min-width: 250px;
-    line-height: 60px;
-    color: #ffffff;
-    font-size: 24px;
-    border-radius: 30px;
-    padding: 0 15px;
-    //right: 24px;
-    //top: 50%;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-  }
-  .trFooter-Form-button:hover {
-    background-color: #000000;
-  }
 }
 .footer{
+  overflow: hidden;
+  padding: 50px 70px;
+  font-size: 12px;
+  .rht{
+    text-align: right;
+  }
   a{
-    margin-right: 20px;
+    margin-left: 40px;
     color: #999999;
+    display: inline-block;
+    text-decoration: none;
+
+  }
+}
+
+.homeTips{
+  width: 730px;
+  margin: 0 auto;
+  text-align: center;
+  .hometitle{
+    color: #ffffff;
+    line-height: 42px;
+    font-size: 36px;
+    padding-bottom: 30px;
+    margin-top: 90px;
+  }
+  .homeDesc{
+    line-height: 21px;
+    font-size: 18px;
+    color: #A8B0C1;
+    text-transform: capitalize;
+    padding-bottom: 70px;
+  }
+  .header-button{
+    margin-top: 90px;
+  }
+  .connect{
+    cursor: pointer;
+
+    font-size: 14px;
+    padding: 9px 27px;
+    border-radius: 57px;
+
+    background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+    border:0;
+    margin: 1px;
+    margin-right: 21px;
+    color: #ffffff;
+    outline: none;
+
+    //&:link{color:#fff}
+    &:hover,&:focus{
+      background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+      border:0;
+      margin: 1px;
+      margin-right: 21px;
+      color: #ffffff;
+      outline: none;
+      //background-image: linear-gradient(#4B69F2,#EE42D1),linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+    }
+    &:active {
+      background: linear-gradient(90deg, rgba(75, 105, 242, 0.6) 0%, rgba(238, 66, 209, 0.6) 100%), linear-gradient(0deg, #000000, #000000);
+      border: 0;
+      margin: 1px;
+      margin-right: 21px;
+      color: #ffffff;
+      outline: none;
+    }
+  }
+}
+
+.leftSide{
+  max-width: 218px;
+  word-break:break-all;
+  color: #A8B0C1;
+  font-size: 12px;
+  line-height: 16px;
+  margin-left: 70px;
+  img{
+    width: 218px;
+    height: 218px;
+    border-radius: 15px;
+  }
+  h2{
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 37px;
+  }
+  .titleTips{
+    font-size: 12px;
+    line-height: 16px;
+    color: #A8B0C1;
+    padding-bottom: 47px;
+  }
+  .lftname{
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 37px;
+  }
+  li{
+    margin-bottom: 20px;
+    &:first-child{
+      margin-bottom: 0;
+    }
+  }
+}
+.selectAccount{
+  width: 710px;
+  margin: 138px auto 0;
+  text-align: center;
+  h3{
+    font-size: 36px;
+    line-height: 47px;
+    text-align: center;
+    text-transform: capitalize;
+    color: #FFFFFF;
+    padding-bottom: 10px;
+  }
+  .accountTips{
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    text-transform: capitalize;
+    color: #A8B0C1;
+  }
+  .firstSelect{
+    padding: 26px;
+    background: #140B3680;
+    border-radius: 15px;
+    width: 350px;
+    margin: 200px auto 270px;
+
+    select {
+
+      border: 0;
+      appearance:none;
+      -moz-appearance:none;
+      -webkit-appearance:none;
+
+      background: url('../images/select.png') no-repeat scroll right center transparent;
+      color: #ffffff;
+    }
+
+
+    /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+    select::-ms-expand { display: none; }
+  }
+
+  button{
+    cursor: pointer;
+    width: 240px;
+
+    font-size: 14px;
+    padding: 9px 27px;
+    border-radius: 57px;
+    outline: none;
+
+    background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+    border:0;
+    margin: 1px;
+    color: #ffffff;
+    &:hover,&:focus{
+      background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+      border:0;
+      color: #ffffff;
+    }
+    &:active{
+      background: linear-gradient(90deg, rgba(75, 105, 242, 0.6) 0%, rgba(238, 66, 209, 0.6) 100%), linear-gradient(0deg, #000000, #000000);
+      border:0;
+      margin: 1px;
+      color: #ffffff;
+      outline: none;
+    }
+  }
+  .createMy{
+    margin: 80px 0 360px;
+  }
+}
+.homebtm{
+  color: #ffffff;
+  .modal-header .close{
+
+
+    width: 24px!important;
+    height: 24px!important;
+    background-size: 100%!important;
+  }
+}
+.exit{
+  img{
+    width: 18px;
+    margin-right: 10px;
     display: inline-block;
   }
 }

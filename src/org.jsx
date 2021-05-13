@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import PageBackground from "./components/pagebackground";
-import {Button} from "react-bootstrap";
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
 
-import Loading from "./components/loading/Loading";
+import Loading from './components/loading/Loading';
+import Left from './components/left';
+import Back from './images/prev.png';
+import mana from './images/mana.png';
+import add from './images/Add.png';
+import Addnew from './components/org/addNew'
+import {useTranslation} from "react-i18next";
 
 export default function Org(props) {
 
@@ -12,36 +16,37 @@ export default function Org(props) {
     const {orgcontract} = state;
 
     const [loading,setLoading]= useState(false);
+    const [addshow,setaddshow]= useState(false);
+    const [typeName,settypeName]= useState('');
     const [tips,setTips]= useState('');
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
     const [memberlist, setmemberlist] = useState([]);
-    const [logo, setLogo] = useState('');
+
+    let { t } = useTranslation();
 
     useEffect(() => {
         setId(props.match.params.id);
-        let logo = sessionStorage.getItem('logo');
-        setLogo(logo);
     }, []);
 
+
+    const setall = async () => {
+        setLoading(true);
+        setTips(t('InitializeORG'));
+
+        await api.org.getDaoModeratorList(orgcontract).then(data => {
+            if (!data) return;
+            setlist(data)
+        });
+        await api.org.getDaoMembersList(orgcontract).then(data => {
+            if (!data) return;
+            setmemberlist(data)
+        });
+        setLoading(false);
+    };
     useEffect(() => {
         if (orgcontract == null) return;
-
-        const setall = async () => {
-            setLoading(true);
-            setTips('Initialize the ORG page');
-
-            await api.org.getDaoModeratorList(orgcontract).then(data => {
-                if (!data) return;
-                setlist(data)
-            });
-            await api.org.getDaoMembersList(orgcontract).then(data => {
-                if (!data) return;
-                setmemberlist(data)
-            });
-            setLoading(false);
-        };
         setall();
     }, [orgcontract]);
 
@@ -49,52 +54,70 @@ export default function Org(props) {
         props.history.push(`/manage/${id}`)
     }
     const handleClicktoAbout = () => {
-        props.history.push(`/about/${id}`)
+        props.history.push(`/home/about/${id}`)
+    }
+    const handleClose = () => {
+        setaddshow(false)
+    }
+    const handleAdd = (type) => {
+        settypeName(type)
+        setaddshow(true)
     }
 
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
             <section>
-                <PageBackground/>
-                <div className="container">
-                    <div className="createSingle row">
-                        <div className='col-lg-4'>
-                            <div>
-                                <img src={logo} alt=""/>
+                <div className=" row">
+                    <div className='col-lg-3'>
+                        <Left />
+                    </div>
+                    <div className='col-lg-9'>
+                        <div className='voteTop'>
+                            <div className='voteLft' onClick={handleClicktoAbout}>
+                                <img src={Back} alt=""/> {t('Back')}
                             </div>
+                            <button className='btnR' onClick={handleClicktoManage}><img src={mana} alt=""/>{t('Manage')}</button>
+
                         </div>
-                        <div className='col-lg-8'>
+                        <Addnew  handleClose={handleClose} showTips={addshow} typeName={typeName} refresh={setall}/>
+                        <div className='orgBrdr'>
                             <ul className="org">
                                 <li>
-                                    <h6>Moderators</h6>
+                                    <div className="titleOrg">
+                                        <h6>{t('Moderators')}</h6>
+                                        <button className='btnAdd' onClick={()=>handleAdd('Moderators')}><img src={add} alt=""/>{t('Add')}</button>
+                                    </div>
                                     <div className='orgbg'>
-
                                         {
-                                            list.map((i, index) => <dl key={`moderator_${index}`}>
-                                                <dt>{i[1]}</dt>
-                                                <dd><a href="#" target='_blank'>{i[0]}</a></dd>
-                                            </dl>)
+                                            list.map((i,index) => <div>
+                                                <dl key={`moderator_${index}_${i[0]}`}>
+                                                    <dt>{i[1]}</dt>
+                                                    <dd><a href="#" target='_blank'>{i[0]}</a></dd>
+                                                </dl>
+                                            </div>)
                                         }
+
                                     </div>
                                 </li>
                                 <li>
-                                    <h6>Members</h6>
+                                    <div className="titleOrg">
+                                        <h6>{t('Members')}</h6>
+                                        <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
+                                    </div>
                                     <div className='orgbg'>
                                         {
-                                            memberlist.map((i, index) => <dl key={`member_${index}`}>
-                                                <dt>{i[1]}</dt>
-                                                <dd><a href="#" target='_blank'>{i[0]}</a></dd>
-                                            </dl>)
+                                            memberlist.map((i,index) => <div>
+                                                <dl key={`members_${index}_${i[0]}`}>
+                                                    <dt>{i[1]}</dt>
+                                                    <dd><a href="#" target='_blank'>{i[0]}</a></dd>
+                                                </dl></div>)
                                         }
                                     </div>
-                                </li>
-                                <li className='brdr'>
-                                    <Button variant="outline-primary" onClick={handleClicktoAbout}>Back</Button>
-                                    <Button variant="primary" onClick={handleClicktoManage}>Manage</Button>
                                 </li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </section>

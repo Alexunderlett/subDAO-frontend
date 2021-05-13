@@ -1,10 +1,18 @@
 .loading{
   text-align: center;
-  padding: 50px 0;
+
+
+  .modal-content{
+    background: #130b37;
+    border-radius: 15px;
+    padding: 62px 0 53px;
+  }
+  h4{
+    color: #ffffff;
+  }
 }
   .spinner{
-    display: inline-block;
-    margin-right: 20px;
+    margin-bottom: 44px;
   }
 .waiting{
   display: inline-block;

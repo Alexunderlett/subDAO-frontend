@@ -31,5 +31,7 @@ module.exports = {
     homepage:null,
     homepageState: null,
 
+    myDao:null,
+
 
 };

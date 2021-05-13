@@ -36,7 +36,11 @@ const setDAO = async (daoManagercontract,obj,cb) => {
 
     if (daoManagercontract === null || !daoManagercontract || !daoManagercontract.tx || !AccountId) return;
 
-    const{base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
+    let {base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
+
+    erc20_initial_supply= erc20_initial_supply?erc20_initial_supply:1;
+    erc20_decimals= erc20_decimals?erc20_decimals:0;
+
 
     const data = await daoManagercontract.tx.init({value, gasLimit:-1}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized ) {

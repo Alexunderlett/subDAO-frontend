@@ -3,26 +3,37 @@ import * as history from 'history';
 import {Form} from "react-bootstrap";
 import Accounts from '../api/Account';
 import {useSubstrate} from "../api/contracts";
+import {Modal} from "react-bootstrap";
+
+import { useTranslation, Trans, Translation } from 'react-i18next'
+
+import logoWhite from '../images/logoWhite.png';
+import arrow from '../images/Polygon.png';
+import close from  '../images/shutdownW.png'
 
 const createHashHistory = history.createHashHistory();
 
-export default function Headertop() {
+export default function Headertop(props) {
     const {dispatch} = useSubstrate();
 
-    const [showHeader, setshowHeader] = useState(false);
+    let { t ,i18n} = useTranslation()
+
     const [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
 
+    const [showButton, setShowButton] = useState(false);
+    const [showExit, setshowExit] = useState(false);
+    const [daoExit, setdaoExit] = useState(false);
+    const [first, setfirst] = useState(false);
+
     useEffect(() => {
-        setshowHeader(createHashHistory.location.pathname !== '/');
+        setshowExit(createHashHistory.location.pathname === '/create');
+        setfirst(createHashHistory.location.pathname === '/home');
         createHashHistory.listen((obj) => {
-            setshowHeader(createHashHistory.location.pathname !== '/')
+            setshowExit(createHashHistory.location.pathname === '/create')
+            setfirst(createHashHistory.location.pathname === '/home')
         });
-    }, [setshowHeader]);
-
-    useEffect(() => {
-
-    }, []);
+    }, [showExit,first]);
 
     useEffect(() => {
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
@@ -38,51 +49,76 @@ export default function Headertop() {
     const backHome = () => {
         createHashHistory.push(`/`)
     }
-
-    const selectAccounts = async(e) => {
-        let selected = allList.filter(i => i.address === e.target.value);
-        setselected(selected);
-        sessionStorage.setItem('account', JSON.stringify(selected));
-
-        dispatch({type: 'SET_ALLACCOUNTS',payload:selected});
+    const account = JSON.parse(sessionStorage.getItem('account'));
+    const handleClick = ()=> {
+        if(account === null || !account.length){
+            setShowButton(true);
+        }else{
+            createHashHistory.push('/create')
+        }
     }
-    const connectWallet = async () => {
-        const accoutlist = await Accounts.accountlist();
-        setallList(accoutlist);
+    const handleExit = ()=> {
+        createHashHistory.push('/')
+    }
+    const handleMyClick = ()=> {
+        if(account === null || !account.length){
+            setShowButton(true);
+        }else{
+            dispatch({type: 'MYDAO'});
+            createHashHistory.push('/')
+            setdaoExit(true)
+        }
+    }
+    const exitMyClick = ()=> {
+        if(account === null || !account.length){
+            setShowButton(true);
+        }else{
+            dispatch({type: 'NOMAY'});
+            setdaoExit(false)
+        }
     }
 
-    return (<div className='container header'>
+    return (<div className='header'>
         <div className="row">
-            <div className='col-6 leftText'>
-                {
-                    showHeader &&
-                    <div>
-                        <span onClick={backNav}><i className='fa fa-chevron-left'/>Prev</span>
-                        <span onClick={backHome}>Home</span>
-                    </div>
-                }
-            </div>
-            <div className='col-6 rightText'>
+            <div className="col-4 lftTit">SubDAO</div>
+            <div className="col-4 logoMid"><img src={logoWhite} alt=""/></div>
+            <div className="col-4 rhtBtn">
                 <div className="header-button">
+                    <Modal
+                        show={showButton}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        onHide={() => setShowButton(false)}
+                    >
+                        <Modal.Header closeButton>
+                                <i className='fa fa-user-times homeTop' />
+                        </Modal.Header>
+                        <Modal.Body className='homebtm'>
+                            <h4>Please connect wallet</h4>
+                        </Modal.Body>
+                    </Modal>
+
                     {
-                        !selected.length && !allList.length &&
-                        <button className='btn' onClick={connectWallet}>Connect Wallet</button>
+                        !showExit && !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>
                     }
-                    {!selected.length && !!allList.length &&
-                    <Form.Control as="select" onChange={(event) => selectAccounts(event)}>
-                        <option value=''>Select Option</option>
-                        {
-                            allList.map((opt) =>
-                                <option value={opt.address} key={opt.address}>{opt.meta.name}</option>
-                            )
-                        }
-                    </Form.Control>
+                    {
+                        showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('Exit')}</button>
                     }
-                    {!!selected.length &&
-                    <div className='topName'>Account: <span>{selected[0].meta.name}</span></div>
+                    {
+                        !daoExit && !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>
                     }
+                    {
+                        daoExit && !first && <button onClick={exitMyClick} className="btn">{t('Exit')}</button>
+                    }
+
+                    <div className='switchLang'>
+                        <span onClick={()=>i18n.changeLanguage(i18n.language==='en'?'zh':'en')}>{i18n.language==='en'?'zh':'en'}</span>
+                        <img src={arrow} alt=""/>
+                    </div>
+
                 </div>
             </div>
+
 
         </div>
     </div>);

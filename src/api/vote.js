@@ -33,9 +33,8 @@ const queryAllVote = async (votecontract) => {
     if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
 
     let dataobj = await votecontract.query.queryAllVote(AccountId, {value, gasLimit});
+    // let dataobj = await votecontract.query.queryHistoryVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
-
-    console.log("query all votes", JSON.stringify(dataobj))
 
     return dataobj;
 }
@@ -47,6 +46,7 @@ const queryOneVote = async (votecontract, id) => {
     if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
 
     let dataobj = await votecontract.query.queryOneVote(AccountId, {value, gasLimit}, id);
+    // let dataobj = await votecontract.query.queryActiveVote(AccountId, {value, gasLimit}, id);
     dataobj = publicJs.formatResult(dataobj);
 
     return dataobj;
@@ -60,6 +60,7 @@ const queryWaitVote = async (votecontract) => {
 
 
     let dataobj = await votecontract.query.queryWaitVote(AccountId, {value, gasLimit});
+    // let dataobj = await votecontract.query.queryPendingVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
     return dataobj;
 }
@@ -124,7 +125,7 @@ const executeVote = async (votecontract,id,cb) => {
 const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
 
     console.log(`voteid ${voteid}, choiceid ${choiceid}`);
-    
+
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
 

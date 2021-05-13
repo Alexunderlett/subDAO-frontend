@@ -12,6 +12,7 @@ class VoteEcharts extends Component {
         myChart.setOption({
             tooltip: {
                 trigger: 'item',
+                confine:true,
                 formatter: "{a} <br/>{b}:  ({d}%)"
             },
             legend: {
@@ -19,6 +20,11 @@ class VoteEcharts extends Component {
                 orient: 'vertical',
                 x: 'right',
                 icon: 'circle',
+                textStyle: {
+                    fontSize: 14,
+                    color: '#fff',
+
+                }
             },
             series: [
                 {

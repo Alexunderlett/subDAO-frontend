@@ -100,6 +100,11 @@ const reducer = (state, action) => {
         case 'SET_HOME':
             return { ...state, homepage: action.payload,homepageState:'READY'};
 
+        case 'MYDAO':
+            return { ...state, myDao:'TRUE'};
+
+        case 'NOMAY':
+            return { ...state, myDao:'FALSE'};
 
         default:
             throw new Error(`Unknown type: ${action.type}`);

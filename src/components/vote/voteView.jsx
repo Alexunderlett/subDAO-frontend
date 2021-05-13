@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form} from "react-bootstrap";
-import PageBackground from "../pagebackground";
+import {Button, Form, FormControl, FormLabel, InputGroup, Modal} from "react-bootstrap";
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api/index";
 import Loading from "../loading/Loading";
+import newVote from "../../images/newvoting.png";
+import {useTranslation} from "react-i18next";
 
 
 export default function VoteView (props){
@@ -23,28 +24,32 @@ export default function VoteView (props){
     const [logo, setLogo] = useState('');
     const [afterchoice, setafterchoice] = useState(false);
 
+    let { t } = useTranslation();
+
     useEffect(() => {
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
     useEffect(() => {
         if(afterchoice){
-            props.history.push(`/voteOverview/${props.match.params.id}/${voteid}`);
+            // props.history.push(`/voteOverview/${props.id}/${voteid}`);
             setLoading(false);
+            props.handleClose()
         }
 
     }, [afterchoice]);
 
     useEffect(() => {
-        setvoteid(props.match.params.voteid);
-        setId(props.match.params.id);
+        console.log(props.id,props.voteid)
+        setvoteid(props.voteid);
+        setId(props.id);
 
 
         const setOnevote = async() => {
-            setLoading(true);
-            setTips('Initialize the vote page');
-            await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
+
+            await api.vote.queryOneVote(votecontract, props.voteid).then(data => {
                 if (!data) return;
+                console.log(data)
                 const {
                     vote_id, title, desc, choices
                 } = data;
@@ -53,18 +58,20 @@ export default function VoteView (props){
                 setdesc(desc);
                 // setoptionlist(choices.split(','))
                 setoptionlist(choices.split('|'))
+
             });
-            setLoading(false);
+            // setLoading(false);
         };
         setOnevote();
-    }, []);
+    }, [props.voteid,props.id]);
 
     const handleClicktoVote = () => {
-        props.history.push(`/vote/${props.match.params.id}`)
+        props.history.push(`/vote/${props.id}`)
     }
     const handleClicktoOverview = async () => {
         setLoading(true);
-        setTips('Voting');
+        setTips( t('Voting'));
+
         await api.vote.VoteChoice(votecontract,voteid,selected,(data)=>{
             setafterchoice(data)
         });
@@ -73,70 +80,53 @@ export default function VoteView (props){
     const handleRadio = (e) =>{
         setselected(e.target.value)
     }
-
+    let {handleClose, showTips} = props;
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-            <section>
-                <PageBackground/>
-                <div className="container">
-                    <div className="createSingle row">
-                        <div className='col-lg-4'>
-                            <div>
-                                <img src={logo} alt=""/>
-                            </div>
 
-                        </div>
-                        <div className='col-lg-8'>
-                            <ul>
-                                <li className='timeTop'>
-                                    <i className='fa fa-clock-o'/> 03:59:28
-                                </li>
-                                <li className='VotetitleTop'>
-                                    <div>
-                                        <p>{id}. {title} </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className='voteContent'>
-                                        <p>{desc}</p>
-                                    </div>
-                                </li>
+            <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
+                <Modal.Header closeButton>
+                    <Modal.Title><img src={newVote} alt=""/><span> {t('Voting')}</span></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <section>
+                        <ul>
+                            <li className='VotetitleTop'>{title}</li>
+                            <li className='voteContent'>{desc}</li>
+                            <li>
+                                {optionlist.map((i, index) => (
 
-                                <li>
-                                    {optionlist.map((i, index) => (
-
-                                        <div key={index}>
-                                            <div className="row">
-                                                <div className="col-12 radioOption">
-                                                    <Form.Group controlId="formBasicCheckbox">
-                                                        <Form.Check
-                                                            type="radio"
-                                                            label={i.split(":")[0]}
-                                                            id={`radio_${index}`}
-                                                            value={index}
-                                                            name='radiobutton' onChange={handleRadio}/>
-                                                    </Form.Group>
-                                                </div>
-
+                                    <div key={index}>
+                                        <div className="row">
+                                            <div className="col-12 radioOption">
+                                                <Form.Group controlId="formBasicCheckbox">
+                                                    <Form.Check
+                                                        type="radio"
+                                                        label={i.split(":")[0]}
+                                                        id={`radio_${index}`}
+                                                        value={index+1}
+                                                        name='radiobutton' onChange={handleRadio}/>
+                                                </Form.Group>
                                             </div>
+
                                         </div>
-                                    ))
-                                    }
+                                    </div>
+                                ))
+                                }
 
 
-                                </li>
+                            </li>
+                            <li className='NextBrdr'>
+                                {/*<Button variant="outline-primary" className='leftBtn'*/}
+                                {/*        onClick={handleClicktoVote}>Cancel</Button>*/}
+                                <Button variant="primary" onClick={handleClicktoOverview}>{t('Decide')}</Button>
+                            </li>
+                        </ul>
+                    </section>
+                </Modal.Body>
+            </Modal>
 
-                                <li className='brdr pl-1'>
-                                    <Button variant="outline-primary" className='leftBtn'
-                                            onClick={handleClicktoVote}>Cancel</Button>
-                                    <Button variant="primary" onClick={handleClicktoOverview}>Vote</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
         </div>
     )

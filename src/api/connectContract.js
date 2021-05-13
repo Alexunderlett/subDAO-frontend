@@ -14,6 +14,21 @@ import voteAbi from '../abi/target/vote_manager_v0.1';
 
 import daoManagerAbi from '../abi/target/dao_manager_v0.1';
 
+// 3.0
+// import mainAbi from '../abi/release3/main_v0.1';
+//
+// import baseAbi from '../abi/release3/base_v0.1';
+//
+// import erc20Abi from '../abi/release3/erc20_v0.1';
+//
+// import orgAbi from '../abi/release3/org_v0.1';
+//
+// import vaultAbi from '../abi/release3/vault_v0.1';
+//
+// import voteAbi from '../abi/release3/vote_manager_v0.1';
+//
+// import daoManagerAbi from '../abi/release3/dao_manager_v0.1';
+
 
 const ConnectContract = async (api,type,address) =>{
     if(!api){

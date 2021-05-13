@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import PageBackground from "../pagebackground";
 import VoteEcharts from "./voteEcharts";
-import { Button} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
+import Left from "../left";
+import Back from "../../images/prev.png";
+import {useTranslation} from "react-i18next";
 
 export default function VoteOverview (props){
     const {state} = useSubstrate();
@@ -14,6 +15,8 @@ export default function VoteOverview (props){
     const [support, setsupport] = useState('');
     const [min, setmin] = useState('');
     const [optionlist, setoptionlist] = useState([]);
+
+    let { t } = useTranslation();
 
     const handleClicktoVote = () => {
        props.history.push(`/vote/${props.match.params.id}`)
@@ -26,16 +29,12 @@ export default function VoteOverview (props){
                     vote_id, title, desc, support_require_num, min_require_num, choices
                 } = data;
 
-                console.log("#############", choices);
-
-
                 settitle(title);
                 setvoteid(vote_id);
                 setdesc(desc);
                 setsupport(support_require_num);
                 setmin(min_require_num);
                 let arr = [], afterArr = [];
-                // arr = choices.split(',');
                 arr = choices.split('|');
                 arr.map((i, index) => {
                     let obj = i.split(":");
@@ -47,6 +46,7 @@ export default function VoteOverview (props){
                 });
                 if (afterArr.length) {
                     setoptionlist(afterArr);
+                    console.log(choices)
                 }
 
             });
@@ -58,52 +58,51 @@ export default function VoteOverview (props){
     return (
         <div>
             <section>
-                <PageBackground />
-                <div className="container">
-                    <div className="createSingle row">
-                        <div className='col-lg-4 bg'>
-                            <ul>
-                                <li>
-                                    Voting Number: {voteid}
-                                </li>
-                                {/*<li>status:*/}
-                                {/*    <Badge variant="primary"><i className="fa fa-remove"/> Failed</Badge>*/}
-                                {/*    <Badge variant="success"><i className="fa fa-check"/> Success</Badge>*/}
-                                {/*    <Badge variant="secondary"><i className="fa fa-retweet"/> Pending</Badge>*/}
-                                {/*</li>*/}
-                                <li>
-                                    {/*Creator: Hongfei <a href="">43ertowjtrejorejtwoot43ertowjtrejorejtwoot</a>*/}
-                                </li>
-                                <li>
-                                    Title: {title}
-                                </li>
-                                <li>
-                                    support require number: {support}
-                                </li>
-                                <li>
-                                    min require number: {min}
-                                </li>
-                                <li>
-                                    <div>
-                                        Voting Description:
-                                    </div>
-                                    <div>
-                                        {desc}
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className='brdr'>
-                                <Button variant="outline-primary" onClick={handleClicktoVote}>Back</Button>
+                <div className="row">
+                        <div className="col-lg-3">
+                            <Left />
+                        </div>
+                        <div className="col-lg-9">
+                            <div className='voteTop mt10'>
+                                <div className='voteLft' onClick={handleClicktoVote}>
+                                    <img src={Back} alt=""/> {t('Back')}
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className='col-lg-4 bg overView'>
+                                    <ul>
+                                        <li>
+                                            <h6>{t('Title')}</h6>
+                                            <div>{title}</div>
+                                        </li>
+                                        <li>
+                                            <div>{voteid}</div>
+                                            <h6>{t('VotingNumber')}</h6>
+                                        </li>
+
+                                        <li>
+                                            <div>{support}</div>
+                                            <h6>{t('supportnumber')}</h6>
+                                        </li>
+                                        <li>
+                                            <div>{min}</div>
+                                            <h6>{t('minnumber')}</h6>
+                                        </li>
+                                        <li>
+                                            <h6>{t('VotingDescription')}</h6>
+                                            <div>{desc}</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className='col-lg-8 bg'>
+                                    {
+                                        optionlist.length&&<VoteEcharts optionlist={optionlist} />
+                                    }
+
+                                </div>
                             </div>
                         </div>
-                        <div className='col-lg-8 bg'>
-                            {
-                                optionlist.length&&<VoteEcharts optionlist={optionlist} />
-                            }
-
-                        </div>
                     </div>
-                </div>
             </section>
 
         </div>

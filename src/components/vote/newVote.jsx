@@ -1,26 +1,18 @@
 import React, { useEffect, useState} from 'react';
-import {Button, FormControl, InputGroup} from "react-bootstrap";
-// import Datetime from 'react-datetime';
-import PageBackground from "../pagebackground";
+import {Button, FormControl, FormLabel, InputGroup, Modal} from 'react-bootstrap';
 
-// import moment from 'moment';
-import {useSubstrate} from "../../api/contracts";
+import {useSubstrate} from '../../api/contracts';
 import api from "../../api";
 
 import Loading from "../loading/Loading";
-
-// var yesterday = moment().subtract(1, 'day');
-// var valid = function (current) {
-//     return current.isAfter(yesterday);
-// };
-//
-// let inputProps = {
-//     placeholder: 'Please select end time',
-//     // disabled:true
-// };
+import newVote from '../../images/newvoting.png';
+import NewVoteTop from './newVoteTop';
+import remove from "../../images/shutdown.png";
+import add from "../../images/Add.png";
+import {useTranslation} from "react-i18next";
 
 export default function NewVote(props) {
-    // this.datetimeRef = createRef();
+
 
     const {state} = useSubstrate();
     const {votecontract} = state;
@@ -34,34 +26,30 @@ export default function NewVote(props) {
     const [id, setId] = useState(null);
     const [supportInput, setsupportInput] = useState('');
     const [min, setmin] = useState('');
-    const [logo, setLogo] = useState('');
+    const [type, settype] = useState(1);
 
     const [optionlist, setoptionlist] = useState( ['','','']);
-    useEffect(() => {
-        setId(props.match.params.id);
-        let logo = sessionStorage.getItem('logo');
-        setLogo(logo);
 
-    }, []);
+    let { t } = useTranslation();
+
 
     const handleClicktoVote = async () => {
         setLoading(true);
-        setTips('Create a new vote');
+        setTips(t('CreateNewVote'));
         let dataobj = {
             title,
             desc,
             vote_time:date,
             support_require_num:supportInput,
             min_require_num:min,
-            // choices:optionlist.join(',')
             choices:optionlist.join('|')
         }
-
-        console.log('new vote string', JSON.stringify(dataobj));
         await api.vote.newVote(votecontract,dataobj,(result)=> {
             setLoading(false);
             if(result){
-                props.history.push(`/vote/${id}`)
+                // props.history.push(`/vote/${id}`)
+                props.handleClose()
+                props.refresh()
             }
         });
     }
@@ -85,161 +73,184 @@ export default function NewVote(props) {
         arr[index] = e.target.value;
         setoptionlist([...arr])
     }
-
-    // const handleChange = (value) => {
-    //     setdate(value._d)
-    // }
-    // const renderInput = (itemprops, openCalendar, closeCalendar) => {
-    //     function clear() {
-    //         console.log(itemprops.value)
-    //         itemprops.onChange({target: {value: ''}});
-    //     }
-    //
-    //     return (
-    //         <div>
-    //             <input {...itemprops} />
-    //             <button className="selectedCal" onClick={openCalendar} />
-    //             {
-    //                 itemprops.value.length !== 0 &&
-    //                 <div className='removeDate' onClick={clear}><i className='fa fa-close' /></div>
-    //             }
-    //
-    //         </div>
-    //     );
-    // }
-
     const handleInputChange = (e) => {
         const {name, value} = e.target;
         let str = `set${name}`
         eval(str)(value)
     }
-
+    const nextStep = (type)=>{
+        settype(type)
+    }
+    let {handleClose, showTips} = props;
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-            <section>
-                <PageBackground/>
-                <div className="container">
-                    <div className="createSingle row">
-                        <div className='col-lg-4'>
-                            <div>
-                                <img src={logo} alt=""/>
-                            </div>
-
-                        </div>
-                        <div className='col-lg-8'>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                placeholder="Please fill how long the vote durate by seconds"
-                                                name='date'
-                                                value={date}
-                                                onChange={handleInputChange}
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                    {/*<div className='voteBtn'>*/}
-                                    {/*    <Datetime*/}
-                                    {/*        renderInput={renderInput}*/}
-                                    {/*        inputProps={inputProps}*/}
-                                    {/*        isValidDate={valid}*/}
-                                    {/*        // ref={datetimeRef}*/}
-                                    {/*        onChange={handleChange}*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
-                                </li>
-                                <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                placeholder="Please fill the title"
-                                                name='title'
-                                                value={title}
-                                                onChange={handleInputChange}
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                placeholder="Please fill the minimum support require numbers."
-                                                name='supportInput'
-                                                value={supportInput}
-                                                onChange={handleInputChange}
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                placeholder="Please fill the minimum voter require numbers."
-                                                name='min'
-                                                value={min}
-                                                onChange={handleInputChange}
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <InputGroup>
-                                            <FormControl as="textarea"
-                                                         placeholder="Please fill description"
-                                                         name='desc'
-                                                         value={desc}
-                                                         onChange={handleInputChange}
-                                            />
-                                        </InputGroup>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    {optionlist.map((i, index) => (
-
-                                        <div key={index}>
-                                            <div className="row">
-                                                <div className="col-11">
-                                                    <InputGroup className="mb-3">
-                                                        <FormControl
-                                                            placeholder="fill the option"
-                                                            value={optionlist[index]}
-                                                            onChange={(event) => setAddress(event, index)}
-                                                        />
-                                                    </InputGroup>
+            <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
+                <Modal.Header closeButton>
+                    <Modal.Title><img src={newVote} alt=""/><span>{t('Newvoting')}</span></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div><NewVoteTop  type={type}/></div>
+                    <section>
+                        {
+                            type === 1 && <div>
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('Votingtime')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('Votingdurate')}
+                                                        name='date'
+                                                        value={date}
+                                                        autoComplete="off"
+                                                        onChange={handleInputChange}
+                                                    />
                                                 </div>
-                                                <div className="col-1">
-                                                    {
-                                                        !!index && index!==1 && <i className="fa fa-close remove"
-                                                                                        onClick={removeOption.bind(this, i, index)}/>
-                                                    }
+                                            </InputGroup>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('Title')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('fillTitle')}
+                                                        name='title'
+                                                        value={title}
+                                                        autoComplete="off"
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    </li>
 
+                                    <li className='NextBrdr'>
+                                        <Button variant="primary" onClick={()=>nextStep(2)}>{t('Next')}</Button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+
+                        {
+                            type === 2 &&<div>
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('MinimumSupport')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('FillMinimumSupport')}
+                                                        name='supportInput'
+                                                        value={supportInput}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('MinimumVoter')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('FillMinimumVoter')}
+                                                        name='min'
+                                                        value={min}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    </li>
+
+                                    <li className='NextBrdr button2'>
+                                        <Button variant="primary" onClick={()=>nextStep(1)}>{t('Back')}</Button>
+                                        <Button variant="primary" onClick={()=>nextStep(3)}>{t('Next')}</Button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        {
+                            type === 3 && <div>
+                                <ul>
+
+                                    <li>
+                                        <div>
+                                            <InputGroup>
+                                                <FormLabel>{t('Description')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl as="textarea"
+                                                                 placeholder={t('FillDescription')}
+                                                                 name='desc'
+                                                                 value={desc}
+                                                                 onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    </li>
+                                    <li className='NextBrdr button2'>
+                                        <Button variant="primary" onClick={()=>nextStep(2)}>{t('Back')}</Button>
+                                        <Button variant="primary" onClick={()=>nextStep(4)}>{t('Next')}</Button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+
+                        {
+                            type === 4 &&
+                            <div>
+                                <ul>
+
+                                    <li>
+                                        {optionlist.map((i, index) => (
+
+                                            <div key={index}>
+                                                <div className="row">
+                                                    <div className="col-12 flexBrdr">
+                                                        <InputGroup className="mb-3">
+                                                            <div className='inputBrdr'>
+                                                            <FormControl
+                                                                placeholder={t('FillOption')}
+                                                                value={optionlist[index]}
+                                                                onChange={(event) => setAddress(event, index)}
+                                                            />
+                                                            </div>
+                                                        </InputGroup>
+
+                                                        {
+                                                            !!index && index !== 1 &&   <img src={remove}  className="removerht"
+                                                                                         onClick={removeOption.bind(this, i, index)}/>
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
+                                        ))
+                                        }
+
+                                        <div className='NextBrdr NextBrdrAdd'>
+                                            <Button variant="light" onClick={addOption}><img src={add} className="addRht"/> {t('AddOption')}</Button>
                                         </div>
-                                    ))
-                                    }
 
-                                    <div>
-                                        <Button variant="light" onClick={addOption}><i
-                                            className="fa fa-plus"/> Add Option</Button>
-                                    </div>
+                                    </li>
 
-                                </li>
+                                    <li className='NextBrdr button2'>
+                                        <Button variant="primary" onClick={()=>nextStep(3)}>{t('Back')}</Button>
+                                        <Button variant="primary" onClick={handleClicktoVote}>{t('Create')}</Button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </section>
+                </Modal.Body>
+            </Modal>
 
-                                <li className='brdr'>
-                                    <Button variant="primary" onClick={handleClicktoVote}>Create</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
         </div>
     )

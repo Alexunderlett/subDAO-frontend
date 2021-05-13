@@ -8,11 +8,12 @@ export default function Loading(props){
         show={showLoading}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        className='loading'
         onHide={() => {}}
     >
-        <Modal.Body className='loading'>
+        <Modal.Body>
             <div className="spinner">
-                <Spinner animation="border" variant="primary" />
+                <Spinner animation="border" variant="light" />
             </div>
              <h4 className="waiting">{tips}</h4>
         </Modal.Body>

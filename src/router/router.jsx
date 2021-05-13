@@ -12,14 +12,17 @@ import Withdraw from '../components/vault/withdraw';
 import Org from '../org';
 import OrgManage from '../components/org/orgManage';
 
-import {HashRouter as Router, Route, Switch} from "react-router-dom";
+import {HashRouter as Router, Route, Switch,Redirect} from "react-router-dom";
 
 function routerlink() {
     return (
         <Router>
             <Switch>
-                <Route path="/" component={Home} exact/>
-                <Route   activeClassName="active"  path="/about/:id" component={About}/>
+                {/*<Route path="/" component={Home} exact/>*/}
+
+                <Route path="/home" component={Home} />
+                    {/*<Route  path="/about/:id" component={About}/>*/}
+                {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
                 <Route path="/create" component={Createnew}/>
                 <Route path="/Vote/:id" component={Vote}/>
                 <Route path="/newVote" component={NewVote}/>
@@ -30,6 +33,7 @@ function routerlink() {
                 <Route path="/withdraw/:id" component={Withdraw}/>
                 <Route path="/org/:id" component={Org}/>
                 <Route path="/manage/:id" component={OrgManage}/>
+                <Redirect from="/" to="/home" exact/>
             </Switch>
         </Router>);
 }

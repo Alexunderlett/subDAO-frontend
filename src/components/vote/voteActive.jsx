@@ -1,78 +1,64 @@
 import React, {useEffect, useState} from 'react';
-// import PageComponent from '../pageComponent.jsx';
-import {Table} from "react-bootstrap";
+
+import {Table} from 'react-bootstrap';
+import voteActive from '../../images/votingactive.png';
+
+import VoteView from '../vote/voteView';
+import NewVote from "./newVote";
+import {useTranslation} from "react-i18next";
 
 export default function VoteActive(props){
 
     const [indexList, setIndexList] = useState([]);
-    // const [totalNum, setTotalNum] = useState(0);
-    // const [totalData, setTotalData] = useState({});
-    // const [current, setCurrent] = useState(1);
-    // const [pageSize, setPageSize] = useState(5);
-    // const [totalPage, setTotalPage] = useState(0);
+    const [newshow, setnewshow] = useState(false);
+    const [voteid, setvoteid] = useState(false);
 
-
+    let { t } = useTranslation();
 
     useEffect(() => {
         if(props.list.length){
             setIndexList(props.list)
         }
 
-        // let totalNum = 52;
-        // setTotalData({})
-        // setTotalNum(totalNum)
-        //
-        // let totalPage = Math.ceil(totalNum / pageSize);
-        // setTotalPage(totalPage)
-        // pageClick(1);
 
     }, [props]);
 
-
+    const  handleClose = () => {
+        setnewshow(false)
+    }
     const handleView = (voteid) => {
-            const{id} = props;
-            props.history.push(`/voteView/${id}/${voteid}`)
-        }
 
-    // const pageClick = (pageNum) => {
-    //     if (pageNum !== current) {
-    //         setCurrent(pageNum)
-    //     }
-    //
-    // }
-    // const goNext = () => {
-    //
-    //     if (current < totalPage) {
-    //         pageClick(current + 1);
-    //     }
-    // }
-    //
-    // const goPrevClick = () => {
-    //     if (current > 1) {
-    //        pageClick(current - 1);
-    //     }
-    // }
+        setnewshow(true)
+            const{id} = props;
+        setvoteid(voteid)
+            // props.history.push(`/voteView/${id}/${voteid}`)
+    }
 
         return (
-            <div>
-                <Table striped bordered hover>
+            <div className='votePending'>
+                <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
+                <Table hover>
+                    <thead>
+                    <tr>
+                        <th>{t('Number')}</th>
+                        <th>{t('Title')}</th>
+                        <th>{t('View')}</th>
+                    </tr>
+                    </thead>
                     <tbody>
                     {
                         indexList.map((item)=><tr key={`active_${item.vote_id}`}>
                             <td>{item.vote_id}</td>
                             <td>{item.title}</td>
-                            <td><span onClick={()=>handleView(item.vote_id)}><i className="fa fa-sign-in"/> view</span></td>
+                            <td>
+                                <span onClick={()=>handleView(item.vote_id)}><img src={voteActive} alt=""/></span>
+
+                            </td>
+
                         </tr>)
                     }
                     </tbody>
                 </Table>
-                {/*<PageComponent total={totalNum}*/}
-                {/*               current={current}*/}
-                {/*               totalPage={totalPage}*/}
-                {/*               pageClick={pageClick.bind(this)}*/}
-                {/*               goPrev={goPrevClick.bind(this)}*/}
-                {/*               goNext={goNext.bind(this)}*/}
-                {/*/>*/}
             </div>
         )
 

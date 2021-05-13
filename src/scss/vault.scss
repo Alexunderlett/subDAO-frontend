@@ -5,35 +5,70 @@
   }
 }
 .vault{
-  h6{
+  h3{
     padding-left: 20px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #ffffff;
   }
-
+.vaultwrap{
+  margin-bottom: 57px;
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
   .vaultbg{
-    background: #f5f5f5;
-    padding:20px 20px 5px;
-    margin-bottom: 40px;
+    display: flex;
   }
-  dl{
-    width: 100%;
+  .vaultbalance{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    dl{
+      padding: 20px 20px 30px;
+      width: 150px;
+      height: 171px;
+      box-sizing: border-box;
 
-    dt{
-      font-weight: normal;
-      display: inline-block;
-      margin-right: 10px;
-    }
-    dd{
-      display: inline-block;
-      a{
-        padding-left:20px;
-
+      background: rgba(20, 11, 54, 0.5);
+      border-radius: 15px;
+      margin-right: 15px;
+      flex-shrink: 0;
+      &:last-child{
+        margin-right: 70px;
       }
-    }
 
+      dt{
+        font-weight: normal;
+        display: inline-block;
+        margin-right: 10px;
+        word-break:break-all!important;
+        font-size: 12px;
+        line-height: 16px;
+      }
+      dd{
+        display: inline-block;
+        font-size: 22px;
+        line-height: 29px;
+        color: #ffffff;
+        a{
+          padding-left:20px;
+
+        }
+      }
+
+    }
   }
+
+
   .hslist{
+    margin-right: 70px;
+    height: 358px;
+    overflow-y: auto;
+    margin-top: -20px;
     a{
-      padding: 0 10px!important;
+      color: #A8B0C1;
+      text-decoration: none;
     }
   }
   .qrcode{
@@ -57,6 +92,98 @@
     margin-bottom: 10px;
     padding-left: 20px;
   }
+
+
+  table{
+    margin-bottom: 30px;
+    border: 0;
+    border-collapse:   separate!important;;
+    border-spacing:0 20px!important;
+    th,td{
+      border: 0;
+    }
+    th{
+      font-size: 14px;
+      line-height: 16px;
+      font-weight: normal;
+      color: #A8B0C1;
+      &:last-child{
+        text-align: right;
+        padding-right: 25px;
+      }
+    }
+    tbody{
+      tr{
+        padding: 1px;
+        box-sizing: border-box;
+
+
+      }
+      tr:hover{
+        //border: none;
+        //font-size: 14px;
+        //line-height: 18px;
+        //color: #A8B0C1;
+        //background-image: linear-gradient(#2e2e2e,#2e2e2e),linear-gradient(90deg,  #4B69F2, #EE42D1);
+        //background-clip: content-box,padding-box;
+        //transition: filter .5s ease;
+
+
+        background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+        border:0;
+        margin: 1px;
+        margin-right: 21px;
+        color: #ffffff;
+        outline: none;
+      }
+    }
+    th{
+      &:first-child{
+        text-align: center;
+      }
+    }
+
+    td{
+      font-size: 14px;
+      line-height: 18px;
+      color: #A8B0C1;
+      background: #140B3680;
+      padding: 25px;
+
+      &:first-child{
+        text-align: center;
+        width: 51px;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+      }
+      &:last-child{
+        width: 51px;
+        text-align: right;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+
+      }
+    }
+    div{
+      display: inline-block;
+      color:#d51073;
+      .badge{
+        color: #ffffff;
+        padding:5px 0;
+        text-decoration: none!important;
+        cursor: default!important;
+      }
+    }
+    span{
+      cursor: pointer;
+      min-width: 80px;
+      display: inline-block;
+      color: #433a8b;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
 }
 .withdraw{
   .brdr{
@@ -64,5 +191,45 @@
     button{
       margin-right: 20px;
     }
+  }
+}
+.inputBrdr select.form-control{
+  height: 75px!important;
+}
+.topTipsBrdr{
+  position: relative;
+}
+.vaultTips{
+  position: absolute;
+  top:0;
+  left:0;
+  height: 110px;
+  background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+  width: calc(100% - 140px);
+  margin: 0 70px;
+  border-radius: 15px;
+  z-index: 999;
+  line-height: 110px;
+  color: #ffffff;
+  padding: 0 34px 0 88px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  img{
+    display: inline-block;
+    vertical-align: middle;
+    width: 28px;
+  }
+  .tipsNumber{
+    font-size: 48px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 0 81px;
+  }
+  .tipsDesc{
+    flex-grow: 1;
+  }
+  .closeBg{
+    cursor: pointer;
   }
 }

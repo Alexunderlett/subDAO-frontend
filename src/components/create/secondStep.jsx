@@ -3,6 +3,8 @@ import {Button, Form} from "react-bootstrap";
 import {useSubstrate} from '../../api/contracts';
 import api from "../../api";
 import Loading from "../loading/Loading";
+import {useTranslation} from "react-i18next";
+
 
 export default function SecondStep(props) {
     const {state} = useSubstrate();
@@ -11,8 +13,10 @@ export default function SecondStep(props) {
     const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
-    let [selected, setselected] = useState([]);
+    let [selected, setselected] = useState([{id:null}]);
     let [list, setlist] = useState([]);
+
+    let { t } = useTranslation();
 
     const toThirdStep = () => {
         props.handlerSet(3);
@@ -22,7 +26,11 @@ export default function SecondStep(props) {
         props.handlerSet(1)
     }
     const handleSelect = (e) => {
-        let template = list.filter(item => item.id === e.target.value);
+
+
+        let id = e.currentTarget.id;
+        let template = list.filter(item => item.id === id);
+        console.log(template,e.currentTarget.id)
         setselected(template)
 
     }
@@ -35,10 +43,10 @@ export default function SecondStep(props) {
     useEffect(() => {
         const setlisttemplate = async () => {
             setLoading(true);
-            setTips('Initialize the template list');
+            setTips(t('InitializeTemplate'));
             await api.main.listTemplates(maincontract).then(data => {
                 if (!data){
-                    setTips('Main contract initialization failed');
+                    setTips(t('initializationFailed'));
                     setTimeout( () => {
                         props.history.push(`/`)
                     },2000)
@@ -46,42 +54,34 @@ export default function SecondStep(props) {
                     setlist(data);
                     setLoading(false);
                 }
-
             })
-
         };
         setlisttemplate();
     }, [maincontract]);
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-            <ul>
-                <li><Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Please choose one template to create your DAO</Form.Label>
-                    <Form.Control as="select" onChange={handleSelect} value={selected && selected[0] && selected[0].id}>
-                        <option>please select option</option>
-                        {
-                            list.map(i => (
-                                <option key={i.id} value={i.id}>{i.name}</option>
-                            ))
-                        }
-                    </Form.Control>
-                </Form.Group></li>
+                <div className='topTitle'>{t('chooseTemplate')}</div>
+                <div className='marginAuto'>
+                    <div className='bgRht'>
+                        <div className="listBrdr">
+                            {
+                                list.map(i => (
 
-                <li>
-                    <div className="templateBrdr">
-                        {
-                            selected && selected[0] && !!selected[0].components.length && selected[0].components.map(item => (
-                                <div key={item[1]}>{item[0]}</div>
-                            ))
-                        }
+                                    <dl key={i.id} onClick={handleSelect} id={i.id} className={selected[0].id === i.id?'active':''}>
+                                        <dt >{i.name}</dt>
+                                        {i.components.map(item=>(<dd key={item[1]}>·  {item[0]}</dd>))}
+                                    </dl>
+                                ))
+                            }
+
+                        </div>
                     </div>
-                </li>
-                <li className='brdr'>
-                    <Button variant="outline-primary" className='leftBtn' onClick={toFirstStep}>Let me think~</Button>
-                    <Button variant="primary" onClick={toThirdStep}>Go Next</Button>
-                </li>
-            </ul>
+                </div>
+                <div className='step2brdr'>
+                    <Button variant="outline-primary" className='leftBtn' onClick={toFirstStep}>{t('think')}</Button>
+                    <Button variant="primary" onClick={toThirdStep}>{t('Next')}</Button>
+                </div>
         </div>)
         ;
 

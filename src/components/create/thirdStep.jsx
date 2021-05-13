@@ -1,325 +1,540 @@
-import React, {Component} from 'react';
-import {Button, Form, FormControl, InputGroup} from "react-bootstrap";
+import React, { useEffect, useState} from 'react';
+import {Button, Form, FormControl, InputGroup,Tabs,Tab} from "react-bootstrap";
+import remove from '../../images/shutdown.png';
+import add from '../../images/Add.png';
+import {useSubstrate} from "../../api/contracts";
+import api from "../../api";
+import Loading from "../loading/Loading";
+import {Trans, Translation, useTranslation} from 'react-i18next';
 
-class ThirdStep extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            form:{
-                admin: true,
-                token: true,
+export default function ThirdStep(props){
+
+    const {state, dispatch} = useSubstrate();
+    const {maincontract, daoManagercontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
+
+    const [admin,setAdmin]= useState(true);
+    const [token,setToken]= useState(true);
+    const [name,setname]= useState('');
+    const [symbol,setsymbol]= useState('');
+    const [supply,setsupply]= useState('');
+    const [adminlist,setadminlist]= useState([
+            {
                 name: '',
-                symbol: '',
-                supply: '',
-                adminlist: [
-                    {
-                        name: '',
-                        address: ''
-                    }
-                ],
-                tokenlist: [
-                    {
-                        address: '',
-                        token: ''
-                    }
-                ]
+                address: ''
             }
+    ]);
+    const [tokenlist,settokenlist]= useState([
+            {
+                address: '',
+                token: ''
+            }
+    ]);
 
-        };
+
+
+    const [start, setstart] = useState(false);
+
+    const [instanceByTemplate, setinstanceByTemplate] = useState(false);
+
+    const [logo, setlogo] = useState('');
+    const [daoname, setdaoname] = useState('');
+    const [desc, setdesc] = useState('');
+    const [ercUrl, setercUrl] = useState('');
+
+    const [baseC, setbaseC] = useState(null);
+
+    // const [contractlist,setcontractlist]= useState(null);
+    const [transfer,settransfer]= useState(false);
+
+    const [queryAddrs,setqueryAddrs]= useState(false);
+    const [daoinit,setDaoinit]= useState(false);
+    const [adminstate,setadminstate]= useState(false);
+
+    let { t } = useTranslation();
+
+
+   const toForthStep = () => {
+       let form = {
+           admin,
+           token,
+           name,
+           symbol,
+           supply,
+           adminlist,
+           tokenlist
+       }
+        sessionStorage.setItem('thirdStep',JSON.stringify(form))
+       toDataFormat()
     }
 
-    toForthStep = () => {
-        this.props.handlerSet(4);
-        sessionStorage.setItem('thirdStep',JSON.stringify(this.state.form))
+    const toSecondStep = () => {
+       props.handlerSet(2)
     }
 
-    toSecondStep = () => {
-        this.props.handlerSet(2)
-    }
+    const addtoken = () => {
 
-    addtoken = () => {
-        let {tokenlist} = this.state.form;
         let newArray = [...tokenlist];
         newArray.push({
             address: '',
             token: ''
 
         });
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                tokenlist : newArray
-            };
-            return {
-                form
-            };
-        });
+        console.log("=====tokenlist",newArray)
+        settokenlist(newArray)
     }
-    addAdmin = () => {
-        let {adminlist} = this.state.form;
+    const addAdmin = () => {
         let newArray = [...adminlist];
         newArray.push({
             name: '',
             address: ''
 
         });
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                adminlist : newArray
-            };
-            return {
-                form
-            };
-        });
+        setadminlist(newArray)
     }
-    setAddress = (e, index) => {
-        let {tokenlist} = this.state.form;
+   const setAddress = (e, index) => {
+       let newArray = [...tokenlist];
         const {name, value} = e.target;
-        tokenlist[index][name] = value;
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                tokenlist
-            };
-            return {
-                form
-            };
-        });
+       newArray[index][name] = value;
+       settokenlist(newArray)
     }
-    setAdmin = (e, index) => {
-        let {adminlist} = this.state.form;
+   const setAdminInput = (e, index) => {
+       let newArray = [...adminlist];
         const {name, value} = e.target;
-        adminlist[index][name] = value;
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                adminlist
-            };
-            return {
-                form
-            };
-        });
+       newArray[index][name] = value;
+       setadminlist(newArray)
     }
 
-    removeToken(selectItem, index) {
-        let {tokenlist} = this.state.form;
-        tokenlist.splice(index, 1);
+    const removeToken = (selectItem, index) => {
+        let newArray = [...tokenlist];
+        newArray.splice(index, 1);
+        settokenlist(newArray)
 
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                tokenlist
-            };
-            return {
-                form
-            };
-        });
     }
-    removeAdmin(selectItem, index) {
-        let {adminlist} = this.state.form;
-        adminlist.splice(index, 1);
-
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                adminlist
-            };
-            return {
-                form
-            };
-        });
+   const removeAdmin = (selectItem, index) =>{
+       let newArray = [...adminlist];
+       newArray.splice(index, 1);
+       setadminlist(newArray)
     }
 
-    handleInput = (e) => {
+   const handleInput = (e) => {
         const {name, value} = e.target;
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                [name]: value
-            };
-            return {
-                form
-            };
-        });
+
+       switch(name){
+           case 'name':
+               setname(e.target.value)
+               break;
+           case 'symbol':
+               setsymbol(e.target.value)
+               break;
+           case 'supply':
+               setsupply(e.target.value)
+               break;
+       }
 
     }
 
-    handleCheck = (e) => {
+   const handleCheck = (e) => {
         const {name, value} = e.target;
-        this.setState((prevState) => {
-            const form = {
-                ...prevState.form,
-                [name]: !(value !== "false")
-            };
-            return {
-                form
-            };
-
-        });
+       switch(name){
+           case 'admin':
+               setAdmin(!JSON.parse(value))
+               break;
+           case 'token':
+               setToken(!JSON.parse(value))
+               break;
+       }
     }
-    componentDidMount() {
+
+    useEffect( () => {
         let form = JSON.parse(sessionStorage.getItem('thirdStep'));
         if(form){
-            this.setState({form})
+            setAdmin(form.admin);
+            setToken(form.token);
+            setname(form.name);
+            setsymbol(form.symbol);
+            setsupply(form.supply);
+            setadminlist(form.adminlist);
+            settokenlist(form.tokenlist);
         }
-    }
 
-    render() {
-        let { form:{admin, token, name, symbol,supply,tokenlist,adminlist}} = this.state;
-        return <ul>
-            <li>
-                <div className='steptitle'>
-                    DAO Admin
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check
-                            type="checkbox"
-                            label="DAO Admin"
-                            value={admin}
-                            checked={admin}
-                            name='admin'
-                            onChange={this.handleCheck}
-                        />
-                    </Form.Group>
-                </div>
-                <div>
-                    {adminlist.map((i, index) => (
+    }, []);
 
-                        <div key={index}>
-                            <div className="row">
-                                <div className="col-4">
-                                    <InputGroup className="mb-3">
-                                        <FormControl
-                                            placeholder="Fill the name"
-                                            value={adminlist[index].name}
-                                            name='name'
-                                            onChange={(event) => this.setAdmin(event, index)}
-                                        />
-                                    </InputGroup>
+   const toDataFormat = () =>{
+       const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
+       setdaoname(firstStep.name);
+       setdesc(firstStep.description);
+
+       const imgUrl = JSON.parse(sessionStorage.getItem('imgUrl'));
+       setlogo(imgUrl);
+
+       const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
+       setercUrl(secondStep[0].dao_manager_code_hash);
+
+       // const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
+       // // const {symbol,supply,admin,token,adminlist,tokenlist} = thirdStep;
+       // setsymbol(symbol);
+       // setsercSupply(supply);
+       // setadminstate(admin);
+       // settokenstate(token);
+       // if(admin){
+       //     setadminlist(adminlist);
+       // }
+       // if(token){
+       //     settokenlist(tokenlist);
+       // }
+
+       setstart(true)
+   }
+
+
+
+
+    useEffect( () => {
+        if(!start) return
+
+        const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
+
+        if(secondStep && secondStep[0] && secondStep[0].id){
+            const stepone = async () => {
+                setLoading(true)
+                setTips(t('InstanceByTemplate'));
+                await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
+                    setinstanceByTemplate(result)
+                    console.log("Step 1 =======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
+                });
+            };
+            stepone();
+        }
+    }, [maincontract,start]);
+
+
+    useEffect( () => {
+        if (instanceByTemplate){
+            console.log("Step 2 =======listDaoInstancesByOwner")
+            const steptwo = async () => {
+                setTips(t('ListDao'));
+                await api.main.listDaoInstancesByOwner(maincontract).then(data => {
+                    if (!data) return;
+                    if (data.length) {
+                        console.log("======listDaoInstancesByOwner", baseC, data)
+                        setbaseC(data && data.length ? data[data.length - 1] : [])
+                    }
+                });
+            };
+            steptwo()
+        }
+    }, [instanceByTemplate]);
+
+    useEffect( () => {
+        if (baseC != null && instanceByTemplate) {
+            console.log("Step 3 =======InitDAO")
+            const stepthree = async () => {
+                setTips(t('InitDAO'));
+                await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr, (data) => {
+                    setDaoinit(true)
+                });
+            };
+            stepthree();
+        }
+    }, [baseC]);
+    useEffect( () => {
+        if(daoinit && instanceByTemplate && baseC!=null){
+            console.log("Step 4 =======Upload information",baseC.dao_manager_addr);
+            let obj = {
+                base_name: daoname,
+                base_logo: logo,
+                base_desc: desc,
+                erc20_name: name,
+                erc20_symbol: symbol,
+                erc20_initial_supply: supply,
+                erc20_decimals: 0
+            };
+            console.log(obj)
+            if (daoManagercontract == null) return;
+            const stepfour = async () => {
+                setTips(t('Uploadinformation'));
+                await api.dao.setDAO(daoManagercontract, obj, (data) => {
+                    settransfer(true)
+                });
+            };
+            stepfour();
+        }
+    }, [daoinit]);
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    useEffect( () => {
+        if(daoinit && instanceByTemplate && baseC!=null && transfer){
+            if(token){
+                console.log("Step 5 ======= transfer",transfer,daoinit)
+                const stepfive = async () => {
+                    setTips(t('TransferTokens'));
+                    let arr=[];
+                    let index=0;
+                    for (let item of tokenlist) {
+                        if(index){
+                            while (!arr[index-1]){
+                                await delay(500);
+                            }
+                        }
+                        try{
+                            await api.dao.transferToken(daoManagercontract, item, (data) => {
+
+                                arr.push(data);
+                                setTips(` ${t('TransferTokens')}(${arr.length}/${tokenlist.length})`);
+                                if(arr.length===tokenlist.length){
+                                    setadminstate(true);
+                                }
+                            });
+                        }catch (e) {
+                            console.log(e);
+                        }
+                        index++;
+                    }
+
+                };
+                stepfive();
+
+            }else{
+                setadminstate(true);
+            }
+        }
+
+    }, [transfer]);
+    useEffect( () => {
+        if(adminstate && daoinit && instanceByTemplate && baseC!=null && transfer){
+            if(admin){
+                console.log("Step 6 ======= add moderators",admin , daoinit);
+                const stepsix = async () => {
+                    setTips(t('AddDaoModerators'));
+                    let arr=[];
+                    let index=0;
+                    for (let item of adminlist) {
+                        if(index){
+                            while (!arr[index-1]){
+                                await delay(500);
+                            }
+                        }
+                        try{
+                            await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
+                                arr.push(data);
+                                setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
+                                if(arr.length === adminlist.length){
+                                    setqueryAddrs(true);
+                                }
+                            });
+                        }catch (e) {
+                            console.log(e)
+                        }
+
+                        index++;
+                    }
+
+                };
+                stepsix();
+            }else {
+                setqueryAddrs(true);
+            }
+        }
+    }, [adminstate]);
+
+
+    useEffect( () => {
+        if( queryAddrs && daoinit && instanceByTemplate && baseC!=null && adminstate && transfer){
+            console.log("Step 7 ======= queryComponentAddrs",queryAddrs,daoinit)
+            const stepseven = async () => {
+                setTips(t('GetContractAddress'));
+                await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+                    console.log(data, daoManagercontract);
+                    // setcontractlist(data);
+
+                    sessionStorage.removeItem("step");
+                    sessionStorage.removeItem("secondStep");
+                    sessionStorage.removeItem("thirdStep");
+                    sessionStorage.removeItem("firstStep");
+                    sessionStorage.removeItem("ImageUrl");
+
+                    setTimeout(()=>{
+                        props.history.push(`home/about/${baseC.dao_manager_addr}`);
+                    },2000)
+                });
+            };
+            stepseven();
+        }
+    }, [queryAddrs]);
+        return <div>
+            <Loading showLoading={loading} tips={tips}/>
+            <Translation>{t =>
+                <Tabs defaultActiveKey="Moderators">
+                <Tab eventKey="Moderators" title={t('Moderators')}>
+                    <div className='steptitle'>
+                        <Form.Group controlId="formBasicCheckbox">
+
+                            <Form.Check
+                                type="checkbox"
+                                label={t('DAOAdmin')}
+                                value={admin}
+                                checked={admin}
+                                name='admin'
+                                onChange={handleCheck}
+                            />
+                        </Form.Group>
+                    </div>
+                    <div>
+                        {adminlist.map((i, index) => (
+
+                            <div key={index} className='norow'>
+                                <div className="row">
+                                    <div className="col-4">
+                                        <InputGroup className="mb-3">
+                                            <div className='inputBrdr'>
+                                            <FormControl
+                                                placeholder={t('FilltheName')}
+                                                value={adminlist[index].name}
+                                                name='name'
+                                                autoComplete="off"
+                                                onChange={(event) => setAdminInput(event, index)}
+                                            />
+                                            </div>
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-8 flexBrdr">
+                                        <InputGroup className="mb-3">
+                                            <div className='inputBrdr'>
+                                            <FormControl
+                                                placeholder={t('FillAddress')}
+                                                value={adminlist[index].address}
+                                                name='address'
+                                                autoComplete="off"
+                                                onChange={(event) => setAdminInput(event, index)}
+                                            />
+                                            </div>
+                                        </InputGroup>
+                                        {
+                                            !!index &&
+                                            <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht"/>
+                                        }
+                                    </div>
                                 </div>
+                            </div>
+                        ))
+                        }
+                        <div>
+                            <button className="addToken" onClick={addAdmin}><img src={add} className="addRht"/>{t('AddAdmin')}</button>
+                        </div>
+                    </div>
+                </Tab>
+                <Tab eventKey="Token" title={t('Token')} >
+                    <div className='steptitle'>
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check
+                                type="checkbox"
+                                label={t('Token')}
+                                value={token}
+                                checked={token}
+                                name='token'
+                                onChange={handleCheck}
+                            />
+                        </Form.Group>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                            <FormControl
+                                placeholder={t('FillToken')}
+                                value={name}
+                                checked={name}
+                                name='name'
+                                autoComplete="off"
+                                onChange={handleInput}
+                            /></div>
+                        </InputGroup>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                            <FormControl
+                                placeholder={t('FillSymbol')}
+                                value={symbol}
+                                checked={symbol}
+                                name='symbol'
+                                autoComplete="off"
+                                onChange={handleInput}
+                            />
+                            </div>
+                        </InputGroup>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                            <FormControl
+                                placeholder={t('FillSupply')}
+                                value={supply}
+                                checked={supply}
+                                name='supply'
+                                autoComplete="off"
+                                onChange={handleInput}
+                            />
+                            </div>
+                        </InputGroup>
+                    </div>
+                    {tokenlist.map((i, index) => (
+
+                        <div key={index} className='norow'>
+                            <div className="row">
                                 <div className="col-7">
                                     <InputGroup className="mb-3">
+                                        <div className='inputBrdr'>
                                         <FormControl
-                                            placeholder="Fill the address"
-                                            value={adminlist[index].address}
+                                            placeholder={t('FillAddress')}
+                                            value={tokenlist[index].address}
                                             name='address'
-                                            onChange={(event) => this.setAdmin(event, index)}
+                                            autoComplete="off"
+                                            onChange={(event) => setAddress(event, index)}
                                         />
+                                        </div>
                                     </InputGroup>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-5 flexBrdr">
+                                    <InputGroup className="mb-3">
+                                        <div className='inputBrdr'>
+                                        <FormControl
+                                            placeholder={t('FillTokenAmount')}
+                                            value={tokenlist[index].token}
+                                            name='token'
+                                            autoComplete="off"
+                                            onChange={(event) => setAddress(event, index)}
+                                        />
+                                        </div>
+                                    </InputGroup>
                                     {
                                         !!index &&
-                                        <i className="fa fa-close remove" onClick={this.removeAdmin.bind(this, i, index)}/>
-                                    }
+                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht"/>
 
+                                    }
                                 </div>
+
                             </div>
                         </div>
                     ))
                     }
+
                     <div>
-                        <Button variant="light" onClick={this.addAdmin}><i className="fa fa-plus"/> Add Admin</Button>
+                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht"/> {t('AddToken')}</button>
+
                     </div>
-                </div>
-            </li>
-
-            <li>
-                <div className='steptitle'>
-                    Token
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check
-                            type="checkbox"
-                            label="Token"
-                            value={token}
-                            checked={token}
-                            name='token'
-                            onChange={this.handleCheck}
-                        />
-                    </Form.Group>
-                </div>
-                <div>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Fill the name"
-                            value={name}
-                            checked={name}
-                            name='name'
-                            onChange={this.handleInput}
-                        />
-                    </InputGroup>
-                </div>
-                <div>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Fill the symbol"
-                            value={symbol}
-                            checked={symbol}
-                            name='symbol'
-                            onChange={this.handleInput}
-                        />
-                    </InputGroup>
-                </div>
-                <div>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            placeholder="Fill the total supply"
-                            value={supply}
-                            checked={supply}
-                            name='supply'
-                            onChange={this.handleInput}
-                        />
-                    </InputGroup>
-                </div>
-                {tokenlist.map((i, index) => (
-
-                    <div key={index}>
-                        <div className="row">
-                            <div className="col-7">
-                                <InputGroup className="mb-3">
-                                    <FormControl
-                                        placeholder="Fill the address"
-                                        value={tokenlist[index].address}
-                                        name='address'
-                                        onChange={(event) => this.setAddress(event, index)}
-                                    />
-                                </InputGroup>
-                            </div>
-                            <div className="col-4">
-                                <InputGroup className="mb-3">
-                                    <FormControl
-                                        placeholder="Fill the token"
-                                        value={tokenlist[index].token}
-                                        name='token'
-                                        onChange={(event) => this.setAddress(event, index)}
-                                    />
-                                </InputGroup>
-                            </div>
-                            <div className="col-1">
-                                {
-                                    !!index &&
-                                    <i className="fa fa-close remove" onClick={this.removeToken.bind(this, i, index)}/>
-                                }
-                                {/*<i className="fa fa-close remove" onClick={this.removeToken.bind(this, i, index)}/>*/}
-
-                            </div>
-                        </div>
-                    </div>
-                ))
+                </Tab>
+            </Tabs>
                 }
-
-                <div>
-                    <Button variant="light" onClick={this.addtoken}><i className="fa fa-plus"/> Add Token</Button>
+            </Translation>
+                <div className='step2brdr'>
+                    <Button variant="outline-primary" className='leftBtn' onClick={toSecondStep}><Trans>think</Trans></Button>
+                    <Button variant="primary" onClick={toForthStep}><Trans>Next</Trans></Button>
                 </div>
 
-            </li>
+            </div>;
 
-            <li className='brdr'>
-                <Button variant="outline-primary" className='leftBtn' onClick={this.toSecondStep}>Let me think~</Button>
-                <Button variant="primary" onClick={this.toForthStep}>Create it anyway !</Button>
-            </li>
-        </ul>;
-    }
 }
 
-export default ThirdStep;

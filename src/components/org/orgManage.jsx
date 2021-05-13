@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import PageBackground from "../pagebackground";
 import {Button} from "react-bootstrap";
 import ManageItem from "./manageItem";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
+import Left from "../left";
+import Back from "../../images/prev.png";
+import close from "../../images/shutdownW.png"
+import {useTranslation} from "react-i18next";
 
 export default function OrgManage(props){
 
@@ -19,14 +22,13 @@ export default function OrgManage(props){
     const [members, setMembers] = useState(false);
     const [showModalmoderators, setShowModalmoderators] = useState(false);
     const [showModalmembers, setShowModalmembers] = useState(false);
-    const [showAddmoderators, setShowAddmoderators] = useState(false);
-    const [showAddmembers, setShowAddmembers] = useState(false);
     const [addModerator, setaddModerator] = useState(false);
     const [addMember, setaddMember] = useState(false);
     const [logo, setLogo] = useState('');
     const [memberlist, setMemberlist] = useState([]);
     const [checklist, setChecklist] = useState([]);
 
+    let { t } = useTranslation();
 
     useEffect(() => {
         if(addModerator){
@@ -49,7 +51,7 @@ export default function OrgManage(props){
 
         const setAllList = async () => {
             setLoading(true);
-            setTips('Initialize the ORG  page');
+            setTips(t('InitializeORG'));
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
                 setChecklist(data)
@@ -73,7 +75,7 @@ export default function OrgManage(props){
         }
         if(type==='moderators'){
             setLoading(true);
-            setTips('Remove a DAO moderator');
+            setTips(t('RemoveModerator'));
             await api.org.removeDaoModerator(orgcontract,obj,function (result) {
                 setaddModerator(result)
             }).then(data => {
@@ -82,7 +84,7 @@ export default function OrgManage(props){
             });
         }else if(type==='members'){
             setLoading(true);
-            setTips('Remove a DAO member');
+            setTips(t('RemoveMember'));
             await api.org.removeDaoMember(orgcontract,obj,function (result) {
                 setaddMember(result)
             }).then(data => {
@@ -155,54 +157,31 @@ export default function OrgManage(props){
             setShowModalmembers(true)
         }
     }
-
-    const addModerators = (name) => {
-        if(name==="showAddmoderators"){
-            setShowAddmoderators(!showAddmoderators)
-        }else if(name==="showAddmembers"){
-            setShowAddmembers(!showAddmembers)
-        }
-
+    const handleClicktoOrg= () => {
+        props.history.push(`/org/${id}`)
     }
-    const handleClicktoOrg = () => {
-       props.history.push(`/org/${id}`)
+    const handleClicktoAbout = () => {
+        props.history.push(`/home/about/${id}`)
     }
-    const submitModerators = async (obj) =>{
-        setLoading(true);
-        setTips('Add a DAO Moderator');
-        await api.org.addDaoModerator(orgcontract,obj,function (result) {
-            setaddModerator(result)
-        });
-
-
-    }
-     const submitMembers = async (obj) =>{
-         setLoading(true);
-         setTips('Add a DAO Member');
-         await api.org.addDaoMember(orgcontract,obj,function (result) {
-             setaddMember(result)
-         });
-    }
-
 
         return <div>
             <Loading showLoading={loading} tips={tips}/>
             <section>
-                <PageBackground/>
-                <div className="container">
-                    <div className="bgwhite row">
-                        <div className='col-lg-4 bg'>
-                            <div>
-                                <img src={logo} alt=""/>
-                            </div>
-                            <div className='brdr '>
-                                <Button variant="outline-primary" onClick={handleClicktoOrg}>Back</Button>
-                            </div>
+                    <div className="row">
+                        <div className='col-lg-3'>
+                            <Left />
                         </div>
-                        <div className='col-lg-8'>
+                        <div className='col-lg-9 mr50'>
+                            <div className='voteTop'>
+                                <div className='voteLft' onClick={handleClicktoAbout}>
+                                    <img src={Back} alt=""/> Back
+                                </div>
+                                <button className='btnR' onClick={handleClicktoOrg}><img src={close} alt=""/>{t('Exit')}</button>
+
+                            </div>
                             <ul className="manage">
                                 <li>
-                                    <h6>Moderators</h6>
+                                    <h6>{t('Moderators')}</h6>
                                     <ManageItem
                                         list={checklist}
                                         chooseAll={moderators}
@@ -212,15 +191,12 @@ export default function OrgManage(props){
                                         isAllChecked={isAllChecked}
                                         handleClicktoview={handleClicktoview}
                                         showModal={showModalmoderators}
-                                        showAdd={showAddmoderators}
-                                        handleSubmit={submitModerators}
                                         handleClose={()=>setShowModalmoderators(false)}
-                                        addModerators={()=>addModerators('showAddmoderators')}
                                         delConfirm={()=>delConfirm('showModalmoderators')}
                                     />
                                 </li>
                                 <li>
-                                    <h6>Members</h6>
+                                    <h6>{t('Members')}</h6>
                                     <ManageItem
                                         list={memberlist}
                                         listname={'memberlist'}
@@ -230,17 +206,14 @@ export default function OrgManage(props){
                                         isAllChecked={isAllChecked}
                                         handleClicktoview={handleClicktoview}
                                         showModal={showModalmembers}
-                                        showAdd={showAddmembers}
                                         handleClose={()=>setShowModalmembers(false)}
-                                        handleSubmit={submitMembers}
-                                        addModerators={()=>addModerators('showAddmembers')}
                                         delConfirm={()=>delConfirm('showModalmembers')}
                                     />
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </div>
+
             </section>
 
         </div>;

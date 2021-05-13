@@ -54,11 +54,10 @@ export default function ForthStep(props) {
         if(token){
             settokenlist(tokenlist);
         }
-        const img = sessionStorage.getItem('ImageUrl');
-        setlogo(img);
+
 
     }, []);
-        useEffect( () => {
+    useEffect( () => {
 
         // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
         // 2.等待上链，in block，根据当前账户地址查询实例化的DAO列表，listDaoInstancesByOwner (owner: AccountId): Vec<DAOInstance>
@@ -174,7 +173,6 @@ export default function ForthStep(props) {
         }
 
     }, [transfer]);
-
     useEffect( () => {
         if(admin && daoinit && instanceByTemplate && baseC!=null && transfer){
             if(adminstate){
