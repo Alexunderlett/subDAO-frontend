@@ -23,6 +23,7 @@ export default function VoteView (props){
     const [selected, setselected] = useState('');
     const [logo, setLogo] = useState('');
     const [afterchoice, setafterchoice] = useState(false);
+    const [active, setActive] = useState(null);
 
     let { t } = useTranslation();
 
@@ -80,6 +81,10 @@ export default function VoteView (props){
     const handleRadio = (e) =>{
         setselected(e.target.value)
     }
+    const handleActive = (e) =>{
+        let index = e.currentTarget.id.split("_")[1];
+            setActive(index)
+    }
     let {handleClose, showTips} = props;
     return (
         <div>
@@ -94,20 +99,32 @@ export default function VoteView (props){
                         <ul>
                             <li className='VotetitleTop'>{title}</li>
                             <li className='voteContent'>{desc}</li>
-                            <li>
+                            <li className='voteSelect'>
                                 {optionlist.map((i, index) => (
 
                                     <div key={index}>
                                         <div className="row">
-                                            <div className="col-12 radioOption">
-                                                <Form.Group controlId="formBasicCheckbox">
-                                                    <Form.Check
-                                                        type="radio"
-                                                        label={i.split(":")[0]}
-                                                        id={`radio_${index}`}
-                                                        value={index+1}
-                                                        name='radiobutton' onChange={handleRadio}/>
-                                                </Form.Group>
+                                            <div className={active == index?'col-12 radioOption radioActive':'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
+                                                <div className="form-group">
+                                                    <div className="form-check"  >
+                                                        <label htmlFor={`radio_${index}`}>{i.split(":")[0]}</label>
+                                                        <input name="radiobutton"
+                                                               type="radio"
+                                                               id={`radio_${index}`}
+                                                               className="form-check-inputRadio"
+                                                               value={index+1}
+                                                               onClick={handleRadio}
+                                                         />
+                                                    </div>
+                                                </div>
+                                                {/*<Form.Group>*/}
+                                                {/*    <Form.Check*/}
+                                                {/*        type="radio"*/}
+                                                {/*        label={i.split(":")[0]}*/}
+                                                {/*        id={`radio_${index}`}*/}
+                                                {/*        value={index+1}*/}
+                                                {/*        name='radiobutton' onChange={handleRadio}/>*/}
+                                                {/*</Form.Group>*/}
                                             </div>
 
                                         </div>
