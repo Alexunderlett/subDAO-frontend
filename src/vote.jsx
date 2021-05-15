@@ -90,14 +90,6 @@ export default function Vote(props){
                                     <div className="wrapper">
                                         <ul className="vote displayFlex">
                                             <li>
-                                                <h6>{t('PendingVoting')}</h6>
-                                                <VotePending
-                                                    id={id}
-                                                    list={pendinglist}
-                                                    history={props.history}
-                                                />
-                                            </li>
-                                            <li>
                                                 <h6>{t('ActiveVoting')}</h6>
                                                 <VoteActive
                                                     id={id}
@@ -105,6 +97,15 @@ export default function Vote(props){
                                                     history={props.history}
                                                 />
                                             </li>
+                                            <li>
+                                                <h6>{t('PendingVoting')}</h6>
+                                                <VotePending
+                                                    id={id}
+                                                    list={pendinglist}
+                                                    history={props.history}
+                                                />
+                                            </li>
+
 
                                             <li>
                                                 <h6>{t('History')}</h6>
