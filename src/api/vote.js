@@ -32,7 +32,8 @@ const queryAllVote = async (votecontract) => {
 
     if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
 
-    let dataobj = await votecontract.query.queryAllVote(AccountId, {value, gasLimit});
+    let dataobj = await votecontract.query. queryxecutedVote(AccountId, {value, gasLimit});
+    // let dataobj = await votecontract.query.queryAllVote(AccountId, {value, gasLimit});
     // let dataobj = await votecontract.query.queryHistoryVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
 

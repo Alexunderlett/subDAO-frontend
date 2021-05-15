@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import shap1 from "./images/footer-shap-1.png";
-import shap2 from "./images/footer-shap-3.png";
 import {useSubstrate} from "./api/contracts";
 
 import api from './api/index';
 import Loading from "./components/loading/Loading";
+import votingimg from './images/voting.png';
+import orgimg from  './images/org.png';
+import vaultimg from "./images/vault.png";
+import {useTranslation} from "react-i18next";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
@@ -30,38 +32,37 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
+    let { t } = useTranslation();
+
     useEffect(() => {
         if (apiState !== 'READY') return;
-
         const setInitDAO = async () => {
             setLoading(true)
-            setTips('Initializing DAO Contracts')
+            setTips(t('InitializeDAO'))
+
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data)
             });
 
         };
         setInitDAO();
-    }, [apiState]);
+    }, [apiState,id]);
     useEffect(() => {
         setAId(props.match.params.id);
-    }, []);
-
+        console.log(props.match.params.id)
+    }, [props.match.params.id]);
     useEffect( () => {
         if (daoManagercontract == null && daostate) return;
         const queryAddrs = async () => {
-
-            setTips('Get Contract Address');
+            setTips(t('GetContractAddress'));
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
                     setcontractlist(data)
                 }
-
             });
-
         };
         queryAddrs();
-    }, [daoManagercontract, daostate]);
+    }, [daoManagercontract, daostate,id]);
 
     useEffect(() => {
 
@@ -69,7 +70,7 @@ export default function About(props) {
         if (base_addr != null) {
 
             const setInitBase = async () => {
-                setTips('Initializing Contracts');
+                setTips(t('InitializingContracts'));
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
                     setbasestate(data);
                 });
@@ -78,7 +79,7 @@ export default function About(props) {
         }
         if (vault_addr != null) {
             const setInitVault = async () => {
-                setTips('Initializing Contracts');
+                setTips(t('InitializingContracts'));
                 await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
                     setvaultstate(data)
                 });
@@ -88,7 +89,7 @@ export default function About(props) {
 
         if (org_addr != null) {
             const setInitOrg = async () => {
-                setTips('Initializing Contracts');
+                setTips(t('InitializingContracts'));
                 await api.org.InitOrg(state, dispatch, org_addr, (data) => {
                     setorgstate(data)
                 });
@@ -97,7 +98,7 @@ export default function About(props) {
         }
         if (vote_addr != null) {
             const setInitVote = async () => {
-                setTips('Initializing Contracts');
+                setTips(t('InitializingContracts'));
                 await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
                     setvotestate(data)
                 });
@@ -106,21 +107,23 @@ export default function About(props) {
         }
         if (erc20_addr != null) {
             const setInitErc20 = async () => {
-                setTips('Initializing Contracts');
+                setTips(t('InitializingContracts'));
                 await api.erc20.InitErc20(state, dispatch, erc20_addr);
             };
             setInitErc20();
         }
 
-    }, [daoManagercontract, contractlist]);
-
+    }, [daoManagercontract, contractlist,id]);
 
     useEffect(() => {
         sessionStorage.setItem('logo', logo)
-    }, [logo]);
+        sessionStorage.setItem('description', description)
+        sessionStorage.setItem('owner', owner)
+        sessionStorage.setItem('DaoName', name)
+    }, [logo,description,owner,name]);
     useEffect( () => {
         const setBalance = async () => {
-            setTips('Get balance Of tokens');
+            setTips(t('Getbalance'));
             let arr = [];
             let index = 0;
             for (let item of tokenlist) {
@@ -138,12 +141,12 @@ export default function About(props) {
             setbalancelist(arr)
         };
         setBalance();
-    }, [tokenlist]);
+    }, [tokenlist,id]);
     useEffect( () => {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
 
         const setBase = async () => {
-            setTips('Get information');
+            setTips(t('Getinformation'));
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
 
@@ -153,11 +156,14 @@ export default function About(props) {
                 setLogo(logo);
                 setDescription(desc);
                 setOwner(owner);
+
+                setTimeout(()=>{
+                    setLoading(false)
+                },2000)
             });
-            setLoading(false)
         };
         setBase();
-    }, [basecontract, basestate]);
+    }, [basecontract, basestate,id]);
 
     useEffect( () => {
         if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;
@@ -168,7 +174,7 @@ export default function About(props) {
             });
         };
         setToken();
-    }, [vaultcontract, vaultstate]);
+    }, [vaultcontract, vaultstate,id]);
 
     useEffect( () => {
         if (!votestate || contractlist.vote_addr == null || !contractlist.vote_addr) return;
@@ -180,7 +186,7 @@ export default function About(props) {
             });
         };
         setActiveVote();
-    }, [votecontract, votestate]);
+    }, [votecontract, votestate,id]);
 
     useEffect( () => {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
@@ -191,27 +197,10 @@ export default function About(props) {
             });
         };
         setModeratorList();
-        // const AccountId = await Accounts.accountAddress();
-        // const value = 0;
-        // const gasLimit = -1;
-        // if(erc20contract==null) return ;
-        // await erc20contract.query.name(AccountId, {value, gasLimit}).then(nameResult=>{
-        //     nameResult = publicJs.formatResult(nameResult);
-        //     console.log("erc20 token name:", nameResult);
-        // });
-        //
-        // await erc20contract.query.symbol(AccountId, {value, gasLimit}).then(nameResult=>{
-        //     nameResult = publicJs.formatResult(nameResult);
-        //     console.log("erc20 token symbol:",nameResult);
-        // });
-        //
-        // await erc20contract.query.totalSupply(AccountId, {value, gasLimit}).then(nameResult=>{
-        //     nameResult = publicJs.formatResult(nameResult);
-        //     console.log("erc20 token total supply:",nameResult);
-        // });
+
+    }, [orgcontract, orgstate,id]);
 
 
-    }, [orgcontract, orgstate]);
 
     const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
@@ -220,118 +209,108 @@ export default function About(props) {
         <div>
             <Loading showLoading={loading} tips={tips}/>
             <section className="section blog-single position-relative">
-                <div className="footershape-image-1">
-                    <img src={shap1} alt=''/>
-                </div>
-                <div className="footershape-image-3">
-                    <img src={shap2} alt=''/>
-                </div>
-                <div className="container">
-                    <div className="row">
-                        <aside className="col-lg-4">
-
-                            <div className='sidebar'>
-                                <div className='leftTop'>
-                                    <img src={logo} alt=''/>
-                                </div>
-                                <ul>
-                                    <li>{name}</li>
-                                    <li>Owner: {owner}</li>
-                                    <li>{description}</li>
-                                </ul>
-                            </div>
-
-                        </aside>
-                        <div className="col-lg-8 ">
-                            <div className='post-details'>
-                                <div>
-                                    <h4>Balance</h4>
-                                    <ul className='list balance'>
-                                        {
-                                            balancelist.map((item, index) =>
-                                                <li key={`balance_${index}`}>
-                                                    <a href="#"
-                                                       target='_blank'>{item.address}</a><span>{item.balance}</span>
-                                                </li>
-                                            )
-                                        }
-
-
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4>Moderators</h4>
-                                    <ul className='list'>
-                                        {
-                                            moderators.map((i, index) => <li key={moderators[index]}>
-                                                <span>{moderators[index][1]}</span>
-                                                <a href="#" target='_blank'>{moderators[index][0]}</a>
-                                            </li>)
-                                        }
-
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4>Contracts</h4>
-                                    {
-                                        contractlist != null && <ul className='list'>{
-                                            Object.keys(contractlist).map((key) => (
-                                                <li key={`contract_${key}`}>
-                                                    <span>{key}: </span>
-                                                    <a href="#" target='_blank'>{contractlist[key]}</a>
-                                                </li>))
-                                        }
-
-                                        </ul>
-                                    }
-                                </div>
-                                <div>
-                                    <h4>Votings</h4>
-                                    <ul className='list'>
-                                        {
-                                            activelist.map((item, index) => <li key={`votings_${index}`}>
-                                                {/*<span>Active: </span>*/}
-                                                <a href="#" target='_blank'>{item.title}</a>
-                                            </li>)
-                                        }
-
-                                    </ul>
-                                </div>
-                                <div>
-                                    <ul className="service-docs">
-                                        {
-                                            contractlist.vote_addr != null && <li>
-                                                <span onClick={() => handleClicktoType('vote')}>
-                                                    <i className="fa fa-street-view"/>
-                                                    Voting
-                                                </span>
-                                            </li>
-                                        }
-                                        {
-                                            contractlist.vault_addr != null && <li>
-                                            <span onClick={() => handleClicktoType('vault')}>
-                                                <i className="fa fa-star-o"/>
-                                                Vault
+                <div className="row">
+                    <aside className="col-lg-3">
+                        <ul className='leftSide'>
+                            <li>
+                                <h2>SubDAO</h2>
+                                <div className='titleTips'>{t('DAOdescription')}</div>
+                            </li>
+                            <li><img src={logo} alt=""/></li>
+                            <li className='lftname'>{name}</li>
+                            <li>{owner}</li>
+                            <li>{description}</li>
+                        </ul>
+                    </aside>
+                    <div className="col-lg-9 ">
+                        <div>
+                            <ul className="service-docs">
+                                {
+                                    contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>
+                                            <span>
+                                                <img src={votingimg} />
+                                                {t('Voting')}
                                             </span>
-                                            </li>
-                                        }
+                                    </li>
+                                }
+                                {
+                                    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>
+                                        <span>
+                                            <img src={vaultimg}/>
+                                            {t('Vault')}
+                                        </span>
+                                    </li>
+                                }
 
+                                {
+                                    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>
+                                        <span>
+                                            <img src={orgimg}/>
+                                            {t('Org')}
+                                        </span>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                        <div className="norow">
+                            <div className="row">
+                                <div className="col-lg-5">
+                                    <div className='balance'>
+                                        <h3>{t('Balance')}</h3>
+                                        <div className="listwrap">
+                                            <div className='listbg'>
+                                                <div className="listbalance">
+                                            {
+                                                balancelist.map((item, index) =>
+                                                    <dl key={`balance_${index}`}>
+                                                        <dd>{item.balance}</dd>
+                                                        <dt>{item.address}</dt>
+                                                    </dl>
+                                                )
+                                            }
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='balance'>
+                                        <h3>{t('Moderators')}</h3>
+                                        <div className="listwrap">
+                                            <div className='listbg'>
+                                                <div className="listbalance">
+                                            {
+                                                moderators.map((i, index) => <dl key={moderators[index]}>
+                                                    <dd>{moderators[index][1]}</dd>
+                                                    <dt>{moderators[index][0]}</dt>
+                                                </dl>)
+                                            }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-lg-7">
+
+                                    <div className='contracts'>
+                                        <h3>{t('Contracts')}</h3>
                                         {
-                                            contractlist.org_addr != null && <li>
-                                            <span onClick={() => handleClicktoType('org')}>
-                                                <i className="fa fa-building-o"/>
-                                                Org
-                                            </span>
-                                            </li>
+                                            contractlist != null && <ul className='list'>{
+                                                Object.keys(contractlist).map((key) => (
+                                                    (contractlist[key] != null && <li key={`contract_${key}`}>
+                                                        <span>{key} </span>
+                                                        {contractlist[key]}
+                                                        </li>
+                                                    ) ))
+                                            }
+                                            </ul>
                                         }
-
-
-                                    </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </section>
         </div>
     )
