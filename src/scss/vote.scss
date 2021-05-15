@@ -29,11 +29,57 @@
   margin: 30px 0 70px;
   color: #A8B0C1;
 }
-.radioOption{
-  word-wrap:break-word;
-  word-break:normal;
-  padding-left: 20px;
+.voteSelect{
+  .radioOption{
+    word-wrap:break-word;
+    word-break:normal;
+    //padding-left: 20px;
+    color: #ffffff;
+    font-weight: 300;
+    border-radius: 15px;
+    margin-bottom: 1em;
+    padding: 0;
+    border: 1px solid #281A62;
+    &:hover,&.radioActive{
+      border: none;
+      padding: 1px;
+      background-image: linear-gradient(#2e2e2e,#2e2e2e),linear-gradient(to bottom right,  #4B69F2, #EE42D1);
+      background-clip: content-box,padding-box;
+      transition: filter .5s ease;
+    }
+  }
+  .form-group{
+    padding: 20px;
+    margin-bottom: 0;
+
+    .form-check{
+      display: flex;
+      justify-content: space-between;
+    }
+    label{
+      margin-bottom: 0;
+    }
+    .form-check-inputRadio{
+    }
+
+    input[type='radio' i] {
+      appearance:none;
+       -moz-appearance: none;
+      background: rgb(100,100,100);
+      width: 22px;
+      height: 22px;
+      outline: none;
+      border-radius: 100%;
+    }
+    input[type='radio']:checked {
+      appearance: none;
+      //background: #f00;
+      background: url("../images/sel2.png") center;
+      background-size: 100%;
+    }
+  }
 }
+
 .vote{
   h6{
     color: #ffffff;
