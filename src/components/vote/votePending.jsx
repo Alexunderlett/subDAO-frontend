@@ -24,12 +24,12 @@ export default function VotePending(props) {
         }
 
     }, [props]);
-    useEffect(() => {
-        if(toTop){
-            props.history.push(`/vote`)
-        }
-
-    }, [toTop]);
+    // useEffect(() => {
+    //     if(toTop){
+    //         props.history.push(`/vote`)
+    //     }
+    //
+    // }, [toTop]);
 
 
     const triggerConfirm = (id)=>{

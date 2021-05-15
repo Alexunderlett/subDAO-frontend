@@ -227,7 +227,7 @@ export default function Vault(props){
                                         {
                                             historylist.map((item,index)=><tr key={`history_${index}`}>
                                                 <td>{item.value}</td>
-                                                <td><a href="#">{item.from_address}</a></td>
+                                                <td>{item.from_address}</td>
 
                                             </tr>)
                                         }

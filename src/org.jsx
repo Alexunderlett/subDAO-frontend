@@ -93,7 +93,7 @@ export default function Org(props) {
                                             list.map((i,index) => <div>
                                                 <dl key={`moderator_${index}_${i[0]}`}>
                                                     <dt>{i[1]}</dt>
-                                                    <dd><a href="#" target='_blank'>{i[0]}</a></dd>
+                                                    <dd>{i[0]}</dd>
                                                 </dl>
                                             </div>)
                                         }
@@ -110,7 +110,7 @@ export default function Org(props) {
                                             memberlist.map((i,index) => <div>
                                                 <dl key={`members_${index}_${i[0]}`}>
                                                     <dt>{i[1]}</dt>
-                                                    <dd><a href="#" target='_blank'>{i[0]}</a></dd>
+                                                    <dd>{i[0]}</dd>
                                                 </dl></div>)
                                         }
                                     </div>
