@@ -100,7 +100,7 @@ function Home(props) {
     }, [allAccounts,maincontract,myDao]);
     useEffect(() => {
         setimglist(homepage);
-        if(props.history.location.pathname.indexOf('/home')>-1 && homepage && homepage[0]){
+        if(props.history.location.pathname.indexOf('/home')>-1 && homepage && homepage[0] && myDao === 'TRUE'){
             props.history.push(`/home/about/${homepage[0].address}`)
         }else if(props.history.location.pathname.indexOf('/home')>-1 && homepage && !homepage.length){
             props.history.push(`/home`)
