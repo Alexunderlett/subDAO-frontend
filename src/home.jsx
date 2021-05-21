@@ -16,11 +16,12 @@ function Home(props) {
     const {state,dispatch} = useSubstrate();
     let { t } = useTranslation();
 
-    const {homepage,maincontract,allAccounts,myDao} = state;
+    const {homepage,maincontract,allAccounts,myDao,apiState} = state;
     const [loading,setLoading]= useState(false);
 
     const [showButton, setShowButton] = useState(false);
     const [show, setshow] = useState(false);
+    const [first, setfirst] = useState(true);
     const [imglist, setimglist] = useState([]);
 
     const [allList, setallList] = useState([]);
@@ -59,19 +60,19 @@ function Home(props) {
         if (selectedStorage) {
             setselected(selectedStorage)
         }
-
         if(!allAccounts && account){
             dispatch({type: 'SET_ALLACCOUNTS',payload:account});
         }
-
-
+        setfirst(false)
     }, []);
 
      useEffect(() => {
+
          if(maincontract==null || selected && !selected.length ) return ;
          const setInstances = async() => {
              setLoading(true);
              let addresslist = await api.main.listDaoInstances(maincontract);
+             console.log('===========addresslist============',addresslist)
              let arr = [];
 
              let mydaolist;
@@ -97,14 +98,19 @@ function Home(props) {
          };
          setInstances();
 
-    }, [allAccounts,maincontract,myDao]);
+    }, [allAccounts,maincontract,myDao,first]);
     useEffect(() => {
         setimglist(homepage);
-        if(props.history.location.pathname.indexOf('/home')>-1 && homepage && homepage[0] && myDao === 'TRUE'){
+        if( myDao === 'TRUE'){
             props.history.push(`/home/about/${homepage[0].address}`)
-        }else if(props.history.location.pathname.indexOf('/home')>-1 && homepage && !homepage.length){
-            props.history.push(`/home`)
+        }else{
+            if(props.history.location.pathname === '/home' && homepage && homepage[0]){
+                props.history.push(`/home/about/${homepage[0].address}`)
+            }else if(props.history.location.pathname.indexOf('/home')>-1 && homepage && !homepage.length){
+                props.history.push(`/home`)
+            }
         }
+
 
     }, [homepage,myDao]);
     return (<div>

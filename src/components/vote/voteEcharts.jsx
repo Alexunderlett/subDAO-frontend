@@ -13,7 +13,7 @@ class VoteEcharts extends Component {
             tooltip: {
                 trigger: 'item',
                 confine:true,
-                formatter: "{a} <br/>{b}:  ({d}%)"
+                formatter: "{a} <br/>{b}:  ({d}%)",
             },
             legend: {
                 show: true,
@@ -35,7 +35,11 @@ class VoteEcharts extends Component {
                     label: {
                         show: true,
                         formatter: '{b}:{c}\n\r({d}%)',
+                        textStyle: {
+                            color:  '#fff',
+                        },
                         position: 'left'
+
                     },
                     emphasis: {
                         label: {

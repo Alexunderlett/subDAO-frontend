@@ -39,7 +39,7 @@ export default function NewVote(props) {
         let dataobj = {
             title,
             desc,
-            vote_time:date,
+            vote_time:date*1000,
             support_require_num:supportInput,
             min_require_num:min,
             choices:optionlist.join('|')
@@ -47,7 +47,13 @@ export default function NewVote(props) {
         await api.vote.newVote(votecontract,dataobj,(result)=> {
             setLoading(false);
             if(result){
-                // props.history.push(`/vote/${id}`)
+                setdate('')
+                settitle('')
+                setdesc('')
+                setsupportInput('')
+                setmin('')
+                setoptionlist(['','',''])
+                settype(1)
                 props.handleClose()
                 props.refresh()
             }

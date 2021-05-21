@@ -11,12 +11,13 @@ function App(props) {
 
     return (
         <SubstrateContextProvider>
+            <div className="bg-video">
+                <video className="v1" autoPlay muted loop>
+                    <source src={mp4} />
+                </video>
+            </div>
             <div className='maincontainer'>
-                <div className="bg-video">
-                    <video className="v1" autoPlay muted loop>
-                        <source src={mp4} />
-                    </video>
-                </div>
+
                 {/*<div >*/}
                 {/*    <div>*/}
                 {/*        <button onClick={()=>i18n.changeLanguage(i18n.language=='en'?'zh':'en')}>{i18n.language=='en'?'zh':'en'}</button>*/}
@@ -35,6 +36,7 @@ function App(props) {
 
                 <FootBtm />
             </div>
+
       </SubstrateContextProvider>
     );
 }

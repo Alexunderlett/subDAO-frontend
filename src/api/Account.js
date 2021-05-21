@@ -23,7 +23,7 @@ const accountAddress = async () =>{
     const allInjected = await web3Enable('SubDAO');
     if (allInjected.length === 0) {
         console.error("!!!!! No wallet extention detected!!");
-        return;
+        // return;
     }
     const Accounts = JSON.parse(sessionStorage.getItem('account'));
     if (Accounts && Accounts.length > 0) {

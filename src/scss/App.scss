@@ -2,18 +2,29 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  z-index: 99;
+position: relative;
 }
 
 .bg-video{
   width: 100vw;
   height: 100vh;
   left:0;
-  top:0;
-  z-index: -1;
+  bottom:0;
+  //z-index: -1;
   vertical-align:bottom;
   display:block;
   position:fixed;
   overflow: hidden;
+
+  video{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    object-fit:fill;
+    bottom: 0;
+    left: 0;
+  }
 }
 
 .v1{
@@ -38,6 +49,10 @@
   }
   .lftTit{
     padding: 45px 70px;
+    a{
+      color: #A8B0C1;
+      text-decoration: none;
+    }
   }
   .logoMid{
     padding-top: 30px;

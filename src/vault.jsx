@@ -16,8 +16,8 @@ import {useTranslation} from "react-i18next";
 export default function Vault(props){
 
 
-        const {state} = useSubstrate();
-        const {vaultcontract} = state;
+        const {state,dispatch} = useSubstrate();
+        const {vaultcontract,allAccounts,apiState} = state;
 
         const [loading, setLoading] = useState(false);
         const [tips, setTips] = useState('');
@@ -124,12 +124,21 @@ export default function Vault(props){
                 if (!data) return;
                 sethistorylist(data)
             });
+
         };
 
-        useEffect(() => {
-            if (vaultcontract === null) return;
+    useEffect(async () => {
+        const initVaultcontract = async () =>{
+            let vault = JSON.parse(sessionStorage.getItem('contractlist'));
+            if(vaultcontract == null && vault!= null){
+                await api.vault.InitVault(state, dispatch, vault.vault_addr,(data) => {
+                    console.log('vaultcontract====',data);
+                });
+            }
             setAlllist();
-        }, []);
+        }
+        initVaultcontract()
+    }, [vaultcontract,allAccounts,apiState]);
 
         const handleClicktoDetail = (type) => {
             if (type === 'deposit') {

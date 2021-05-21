@@ -1,53 +1,45 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useSubstrate} from "../api/contracts";
 
-class Slick extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedID : null
+function Slick(props) {
+    const {state} = useSubstrate();
+    const [selectedID,setselectedID]= useState(null);
+    const [list,setList]= useState([]);
+
+    const {homepage} = state;
+
+    const handleClicktoAbout = (id) => {
+        props.history.push(`/home/about/${id}`)
+        setselectedID(id)
+    }
+    useEffect(() => {
+        if(homepage!=null){
+            setList(homepage)
         }
-    }
-    handleClicktoAbout(id) {
-        this.props.history.push(`/home/about/${id}`)
-        this.setState({
-            selectedID: id
-        })
-    }
-    componentDidMount() {
-        let list = JSON.parse(sessionStorage.getItem('homelist'))
-        if(list!=null){
-            this.setState({list})
-            // if(this.state.selectedID == null ){
-            //     // this.setState({selectedID:list[0].address})
-            // }
+        console.log("this.props.history.location.pathname",props.history.location.pathname)
 
-        }
-        console.log("this.props.history.location.pathname",this.props.history.location.pathname)
+        let str = props.history.location.pathname.split('/home/about/')[1]
+        setselectedID(str)
+    }, [homepage]);
 
-        let str = this.props.history.location.pathname.split('/home/about/')[1]
-        this.setState({selectedID:str})
+    return (
+        <div>
+        <div className='sliderBrdr'>
+            <ul>
+                {
+                    list.map((item,index)=>
+                        <li key={item.address} className={selectedID === item.address ?'active':''}>
+                            <img src={item.logo} alt="" onClick={()=>handleClicktoAbout(item.address,index)}/>
+                        </li>
+                    )
+                }
+            </ul>
 
-    }
-    render() {
-        const {list} = this.props;
-        return (
-            <div>
-            <div className='sliderBrdr'>
-                <ul>
-                    {
-                        list.map((item,index)=>
-                            <li key={item.address} className={this.state.selectedID === item.address ?'active':''}>
-                                <img src={item.logo} alt="" onClick={this.handleClicktoAbout.bind(this,item.address,index)}/>
-                            </li>
-                        )
-                    }
-                </ul>
+        </div>
 
-            </div>
+        </div>
+    );
 
-            </div>
-        );
-    }
 
 }
 export default Slick;

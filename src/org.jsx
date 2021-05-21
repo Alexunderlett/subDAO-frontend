@@ -12,8 +12,8 @@ import {useTranslation} from "react-i18next";
 
 export default function Org(props) {
 
-    const {state} = useSubstrate();
-    const {orgcontract} = state;
+    const {state,dispatch} = useSubstrate();
+    const {orgcontract,allAccounts,apiState} = state;
 
     const [loading,setLoading]= useState(false);
     const [addshow,setaddshow]= useState(false);
@@ -45,10 +45,21 @@ export default function Org(props) {
         });
         setLoading(false);
     };
-    useEffect(() => {
-        if (orgcontract == null) return;
-        setall();
-    }, [orgcontract]);
+
+    useEffect(async () => {
+        const initVoteContract = async () =>{
+            let org = JSON.parse(sessionStorage.getItem('contractlist'));
+            if(orgcontract == null && org!= null){
+                await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
+                    console.log('orgcontract====',data);
+                });
+            }
+            setall();
+        }
+        initVoteContract()
+    }, [orgcontract,allAccounts,apiState]);
+
+
 
     const handleClicktoManage = () => {
         props.history.push(`/manage/${id}`)
@@ -91,7 +102,7 @@ export default function Org(props) {
                                     <div className='orgbg'>
                                         {
                                             list.map((i,index) => <div>
-                                                <dl key={`moderator_${index}_${i[0]}`}>
+                                                <dl key={`moderators_${index}_${i[0]}`}>
                                                     <dt>{i[1]}</dt>
                                                     <dd>{i[0]}</dd>
                                                 </dl>

@@ -16,8 +16,8 @@ import {useTranslation} from "react-i18next";
 
 export default function Vote(props){
 
-    const {state} = useSubstrate();
-    const {votecontract} = state;
+    const {state,dispatch} = useSubstrate();
+    const {votecontract,allAccounts,apiState} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -40,9 +40,21 @@ export default function Vote(props){
     const  handleClicktoAbout = () => {
         props.history.push(`/home/about/${props.match.params.id}`);
     }
-    useEffect(() => {
+    useEffect(async () => {
         setAId(props.match.params.id);
     }, []);
+    useEffect(async () => {
+        const initVoteContract = async () =>{
+            let vote = JSON.parse(sessionStorage.getItem('contractlist'));
+            if(votecontract == null && vote!= null){
+                await api.vote.InitVote(state, dispatch, vote.vote_addr,(data) => {
+                    console.log('votecontract====',data);
+                });
+            }
+            setAll();
+        }
+        initVoteContract()
+    }, [votecontract,allAccounts,apiState]);
 
     const setAll = async() => {
         setLoading(true);
@@ -63,10 +75,6 @@ export default function Vote(props){
         });
         setLoading(false);
     };
-
-    useEffect(() => {
-        setAll();
-    }, []);
 
         return (
             <div>

@@ -80,7 +80,7 @@ export default function Headertop(props) {
 
     return (<div className='header'>
         <div className="row">
-            <div className="col-4 lftTit">SubDAO</div>
+            <div className="col-4 lftTit"><a href="https://www.subdao.network" target='_blank'>SubDAO</a></div>
             <div className="col-4 logoMid"><img src={logoWhite} alt=""/></div>
             <div className="col-4 rhtBtn">
                 <div className="header-button">

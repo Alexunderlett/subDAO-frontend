@@ -49,7 +49,6 @@ export default function About(props) {
     }, [apiState,id]);
     useEffect(() => {
         setAId(props.match.params.id);
-        console.log(props.match.params.id)
     }, [props.match.params.id]);
     useEffect( () => {
         if (daoManagercontract == null && daostate) return;
@@ -67,6 +66,7 @@ export default function About(props) {
     useEffect(() => {
 
         const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
+        sessionStorage.setItem('contractlist',JSON.stringify(contractlist))
         if (base_addr != null) {
 
             const setInitBase = async () => {

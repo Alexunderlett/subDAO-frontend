@@ -40,11 +40,13 @@ const initState = {...INIT_STATE};
 const SubstrateContextProvider = (props) => {
     const [state, dispatch] = useReducer(reducer, initState);
     console.log("=====state=====",state);
-
-    connect(state, dispatch);
-    mainConnect(state, dispatch)
-
-
+    const {api,maincontract} = state;
+    if(api == null ) {
+        connect(state, dispatch);
+    }
+    if(maincontract == null) {
+        mainConnect(state, dispatch)
+    }
     return <SubstrateContext.Provider value={{state,dispatch}}>
         {props.children}
     </SubstrateContext.Provider>;

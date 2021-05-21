@@ -96,9 +96,8 @@ export default function VoteOverview (props){
                                 </div>
                                 <div className='col-lg-8 bg'>
                                     {
-                                        optionlist.length&&<VoteEcharts optionlist={optionlist} />
+                                        !!optionlist.length&&<VoteEcharts optionlist={optionlist} />
                                     }
-
                                 </div>
                             </div>
                         </div>

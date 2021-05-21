@@ -10,7 +10,7 @@ import {Trans, Translation, useTranslation} from 'react-i18next';
 export default function ThirdStep(props){
 
     const {state, dispatch} = useSubstrate();
-    const {maincontract, daoManagercontract} = state;
+    const {maincontract, daoManagercontract,orgcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -46,10 +46,11 @@ export default function ThirdStep(props){
 
     const [baseC, setbaseC] = useState(null);
 
-    // const [contractlist,setcontractlist]= useState(null);
+    const [contractlist,setcontractlist]= useState(null);
     const [transfer,settransfer]= useState(false);
 
     const [queryAddrs,setqueryAddrs]= useState(false);
+    const [next,setnext]= useState(false);
     const [daoinit,setDaoinit]= useState(false);
     const [adminstate,setadminstate]= useState(false);
 
@@ -257,18 +258,51 @@ export default function ThirdStep(props){
             const stepfour = async () => {
                 setTips(t('Uploadinformation'));
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
-                    settransfer(true)
+                    setqueryAddrs(true)
                 });
             };
             stepfour();
         }
     }, [daoinit]);
 
+    useEffect( () => {
+        if( queryAddrs && daoinit && instanceByTemplate && baseC!=null){
+            console.log("Step 5 ======= queryComponentAddrs",queryAddrs,daoinit)
+            const stepseven = async () => {
+                setTips(t('GetContractAddress'));
+                await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+                    console.log(data, daoManagercontract);
+                    setcontractlist(data);
+
+
+                });
+            };
+            stepseven();
+        }
+    }, [queryAddrs]);
+
+    useEffect( () => {
+        if(daoinit && instanceByTemplate && baseC!=null && contractlist != null){
+
+                console.log("Step 6 ======= init orgcontract",transfer,daoinit)
+                const stepInit = async () => {
+                    setTips(t('InitializeORG'));
+                    await api.org.InitOrg(state, dispatch, contractlist.org_addr,(data) => {
+                        console.log('orgcontract====',data);
+                        settransfer(true)
+                    });
+                };
+                stepInit();
+
+        }
+
+    }, [contractlist]);
+
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     useEffect( () => {
         if(daoinit && instanceByTemplate && baseC!=null && transfer){
             if(token){
-                console.log("Step 5 ======= transfer",transfer,daoinit)
+                console.log("Step 7 ======= transfer",transfer,daoinit)
                 const stepfive = async () => {
                     setTips(t('TransferTokens'));
                     let arr=[];
@@ -306,7 +340,7 @@ export default function ThirdStep(props){
     useEffect( () => {
         if(adminstate && daoinit && instanceByTemplate && baseC!=null && transfer){
             if(admin){
-                console.log("Step 6 ======= add moderators",admin , daoinit);
+                console.log("Step 8 ======= add moderators",admin , daoinit);
                 const stepsix = async () => {
                     setTips(t('AddDaoModerators'));
                     let arr=[];
@@ -318,12 +352,22 @@ export default function ThirdStep(props){
                             }
                         }
                         try{
-                            await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
+                            // await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
+                            //     arr.push(data);
+                            //     setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
+                            //     if(arr.length === adminlist.length){
+                            //         setnext(true);
+                            //     }
+                            // });
+
+
+                            await api.org.addDaoModerator(orgcontract,item,function (data) {
                                 arr.push(data);
                                 setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
                                 if(arr.length === adminlist.length){
-                                    setqueryAddrs(true);
+                                    setnext(true);
                                 }
+
                             });
                         }catch (e) {
                             console.log(e)
@@ -335,35 +379,25 @@ export default function ThirdStep(props){
                 };
                 stepsix();
             }else {
-                setqueryAddrs(true);
+                setnext(true);
             }
         }
     }, [adminstate]);
-
-
     useEffect( () => {
-        if( queryAddrs && daoinit && instanceByTemplate && baseC!=null && adminstate && transfer){
-            console.log("Step 7 ======= queryComponentAddrs",queryAddrs,daoinit)
-            const stepseven = async () => {
-                setTips(t('GetContractAddress'));
-                await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-                    console.log(data, daoManagercontract);
-                    // setcontractlist(data);
+        if(next){
+            sessionStorage.removeItem("step");
+            sessionStorage.removeItem("secondStep");
+            sessionStorage.removeItem("thirdStep");
+            sessionStorage.removeItem("firstStep");
+            sessionStorage.removeItem("ImageUrl");
 
-                    sessionStorage.removeItem("step");
-                    sessionStorage.removeItem("secondStep");
-                    sessionStorage.removeItem("thirdStep");
-                    sessionStorage.removeItem("firstStep");
-                    sessionStorage.removeItem("ImageUrl");
-
-                    setTimeout(()=>{
-                        props.history.push(`home/about/${baseC.dao_manager_addr}`);
-                    },2000)
-                });
-            };
-            stepseven();
+            setTimeout(()=>{
+                props.history.push(`home/about/${baseC.dao_manager_addr}`);
+            },2000)
         }
-    }, [queryAddrs]);
+    }, [next]);
+
+
         return <div>
             <Loading showLoading={loading} tips={tips}/>
             <Translation>{t =>

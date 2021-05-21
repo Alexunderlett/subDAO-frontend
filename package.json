@@ -95,9 +95,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "username": "git config user.name srdothunter",
-    "email": "git config user.email srdothunter@gmail.com"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
