@@ -1,4 +1,4 @@
-import React, {useReducer, useContext} from 'react';
+import React, {useContext, useReducer} from 'react';
 import reducer from './reducer';
 import INIT_STATE from './initState';
 import mainConnect from './mainContract'
