@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {Table} from 'react-bootstrap';
 import voteActive from '../../images/votingactive.png';
-
+import view from '../../images/view.png';
 import VoteView from '../vote/voteView';
 import NewVote from "./newVote";
 import {useTranslation} from "react-i18next";
