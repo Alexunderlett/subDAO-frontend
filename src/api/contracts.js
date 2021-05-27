@@ -23,8 +23,8 @@ const connect = async (state, dispatch) => {
     const wsProvider = new WsProvider(ws_server);
     const api = await ApiPromise.create({
         provider: wsProvider, types: {
-            Address: 'AccountId',
-            LookupSource: 'AccountId'
+            Address: "MultiAddress",
+            LookupSource: "MultiAddress"
         }
     });
 

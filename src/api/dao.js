@@ -36,13 +36,40 @@ const setDAO = async (daoManagercontract,obj,cb) => {
 
     if (daoManagercontract === null || !daoManagercontract || !daoManagercontract.tx || !AccountId) return;
 
-    let {base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
+    let {base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals,token, tokenlist,admin,adminlist}=obj;
 
     erc20_initial_supply= erc20_initial_supply?erc20_initial_supply:1;
     erc20_decimals= erc20_decimals?erc20_decimals:0;
 
+    let objData= {
+        base: {
+            owner: AccountId,
+            name: base_name,
+            logo: base_logo,
+            desc: base_desc
+        },
+        erc20: {
+            owner:AccountId,
+            name: erc20_name,
+            symbol: erc20_symbol,
+            totalSupply: erc20_initial_supply,
+            decimals: erc20_decimals
+        },
+        // erc20Transfers: {},
+        org: {
+            owner:AccountId,
+            // moderators: {}
+        }
+    }
+    // if(token){
+    //     objData.erc20Transfers ={}
+    //    for(let item  in tokenlist) {
+    //        objData.erc20Transfers[tokenlist[item].address] = tokenlist[item].token;
+    //    }
+    // }
+    //    console.log(objData.erc20Transfers)
 
-    const data = await daoManagercontract.tx.init({value, gasLimit:-1}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)

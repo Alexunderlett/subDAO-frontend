@@ -56,6 +56,7 @@ export default function About(props) {
             setTips(t('GetContractAddress'));
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
+                    console.log("==============setcontractlist============",data)
                     setcontractlist(data)
                 }
             });
