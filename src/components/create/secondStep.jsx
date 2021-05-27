@@ -30,7 +30,6 @@ export default function SecondStep(props) {
 
         let id = e.currentTarget.id;
         let template = list.filter(item => item.id === id);
-        console.log(template,e.currentTarget.id)
         setselected(template)
 
     }
@@ -40,6 +39,13 @@ export default function SecondStep(props) {
             setselected(selected)
         }
     }, []);
+    useEffect(() => {
+
+        console.log(selected[0].id == null  ,list.length)
+        if ( selected[0].id == null && list.length) {
+            setselected([list[0]])
+        }
+    }, [selected,list]);
     useEffect(() => {
         const setlisttemplate = async () => {
             setLoading(true);

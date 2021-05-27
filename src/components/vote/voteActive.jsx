@@ -33,7 +33,10 @@ export default function VoteActive(props){
         setvoteid(voteid)
             // props.history.push(`/voteView/${id}/${voteid}`)
     }
-
+    const handleClicktoVoteview = (voteid) => {
+        let { id } = props;
+        props.history.push(`/voteOverview/${id}/${voteid}`)
+    }
         return (
             <div className='votePending'>
                 <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
@@ -50,8 +53,11 @@ export default function VoteActive(props){
                         indexList.map((item)=><tr key={`active_${item.vote_id}`}>
                             <td>{item.vote_id}</td>
                             <td>{item.title}</td>
-                            <td>
-                                <span onClick={()=>handleView(item.vote_id)}><img src={voteActive} alt=""/></span>
+                            <td className='voteViewTD'>
+                                <div>
+                                    <span onClick={()=>handleView(item.vote_id)}><img src={voteActive} alt=""/></span>
+                                    <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
+                                </div>
 
                             </td>
 

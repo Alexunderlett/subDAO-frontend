@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import {useSubstrate} from "./api/contracts";
 
 import api from './api/index';
@@ -6,7 +6,12 @@ import Loading from "./components/loading/Loading";
 import votingimg from './images/voting.png';
 import orgimg from  './images/org.png';
 import vaultimg from "./images/vault.png";
+import moreImg from "./images/menu.png";
+import transferImg from "./images/transfer.png";
+import exitImg from "./images/drop.png";
 import {useTranslation} from "react-i18next";
+
+import {Dropdown} from "react-bootstrap";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
@@ -32,12 +37,16 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
+
+    const [showMore, setShowMore] = useState(false);
+
     let { t } = useTranslation();
+    const myRef = useRef();
 
     useEffect(() => {
         if (apiState !== 'READY') return;
         const setInitDAO = async () => {
-            setLoading(true)
+            // setLoading(true)
             setTips(t('InitializeDAO'))
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
@@ -206,6 +215,24 @@ export default function About(props) {
     const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
     }
+
+    const handleMore = (val) => {
+        if (!showMore) {
+            document.addEventListener("click", handleOutsideClick, false);
+        } else {
+            document.removeEventListener("click", handleOutsideClick, false);
+        }
+
+        setShowMore(val)
+    };
+
+    const handleTransfer = () => {
+        console.log("========")
+    };
+
+    const handleOutsideClick = e => {
+        if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
+    };
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
@@ -234,8 +261,16 @@ export default function About(props) {
                                             </span>
                                     </li>
                                 }
+                                {/*{*/}
+                                {/*    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>*/}
+                                {/*        <span>*/}
+                                {/*            <img src={vaultimg}/>*/}
+                                {/*            {t('Vault')}*/}
+                                {/*        </span>*/}
+                                {/*    </li>*/}
+                                {/*} */}
                                 {
-                                    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>
+                                    <li onClick={() => handleClicktoType('vault')}>
                                         <span>
                                             <img src={vaultimg}/>
                                             {t('Vault')}
@@ -243,15 +278,49 @@ export default function About(props) {
                                     </li>
                                 }
 
+                                {/*{*/}
+                                {/*    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>*/}
+                                {/*        <span>*/}
+                                {/*            <img src={orgimg}/>*/}
+                                {/*            {t('Org')}*/}
+                                {/*        </span>*/}
+                                {/*    </li>*/}
+                                {/*}*/}
                                 {
-                                    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>
+                                    <li onClick={() => handleClicktoType('org')}>
                                         <span>
                                             <img src={orgimg}/>
                                             {t('Org')}
                                         </span>
                                     </li>
                                 }
+                                {
+                                    <li>
+                                        <div className='moreBtn'>
+                                            <div
+                                                 className={`moreBg ${showMore ? 'hasBg' :'noBg' }`}
+                                                >
+                                                <button className="btn">
+                                                <span onClick={handleMore} className='clickBtn' ref={myRef}>
+                                                    <img src={moreImg}/>
+                                                    {t('More')}
+                                                </span>
+                                                </button>
+                                                {
+                                                    showMore && <ul className='morelist'>
+                                                        <li onClick={handleTransfer}>
+                                                            <span><img src={transferImg} alt=""/></span>{t('transferBtn')}
+                                                        </li>
+                                                        <li><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
+                                                    </ul>
+                                                }
 
+                                            </div>
+                                        </div>
+
+
+                                    </li>
+                                }
                             </ul>
                         </div>
                         <div className="norow">

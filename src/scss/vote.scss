@@ -453,3 +453,16 @@
   }
 
 }
+.voteViewTD{
+
+  div{
+    min-width: 100px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  span{
+    min-width: auto!important;
+    box-sizing: border-box;
+    margin-left: 20px;
+  }
+}
