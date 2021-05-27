@@ -111,6 +111,7 @@ export default function Vote(props){
                                                     id={id}
                                                     list={pendinglist}
                                                     history={props.history}
+                                                    refresh={setAll}
                                                 />
                                             </li>
 

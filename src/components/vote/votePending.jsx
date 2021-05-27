@@ -6,6 +6,7 @@ import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import trigger from '../../images/trigger.png';
 import {useTranslation} from "react-i18next";
+import NewVote from "./newVote";
 
 export default function VotePending(props) {
     const {state} = useSubstrate();
@@ -48,6 +49,7 @@ export default function VotePending(props) {
         }).then(data => {
             if (!data) return;
             console.log("=============executeVote",data)
+            props.refresh()
         });
     }
 

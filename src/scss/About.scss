@@ -170,6 +170,7 @@
 
 .moreBtn{
   position: absolute;
+  z-index: 99;
   .hasBg{
     background: rgba(20, 11, 54, 0.5);
   }
@@ -178,7 +179,7 @@
   }
   .moreBg{
 
-    margin:-13px -35px;
+    margin:-17px -35px;
     padding: 4px!important;
     display: inline-block;
     border-radius: 27px;
@@ -216,6 +217,7 @@
     padding-left: 36px;
     li{
       padding: 15px 0;
+      cursor: pointer;
     }
     img{
       margin-right: 12px;

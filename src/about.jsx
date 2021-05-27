@@ -12,6 +12,9 @@ import exitImg from "./images/drop.png";
 import {useTranslation} from "react-i18next";
 
 import {Dropdown} from "react-bootstrap";
+import Transfer from "./components/transfer";
+import Deposit from "./components/vault/deposit";
+import ExitOrg from "./components/exitOrg";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
@@ -39,6 +42,8 @@ export default function About(props) {
 
 
     const [showMore, setShowMore] = useState(false);
+    const [showTransfer, setShowTransfer] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     let { t } = useTranslation();
     const myRef = useRef();
@@ -226,8 +231,26 @@ export default function About(props) {
         setShowMore(val)
     };
 
+    const handleExit = () => {
+        console.log(showModal)
+        setShowModal(true)
+
+    };
     const handleTransfer = () => {
-        console.log("========")
+        setShowTransfer(true)
+
+    };
+
+    const handleClose = () => {
+        setShowTransfer(false)
+    };
+
+    const handleExitClose = () => {
+        setShowModal(false)
+    };
+
+    const handleExitConfirm = () => {
+        setShowModal(false)
     };
 
     const handleOutsideClick = e => {
@@ -250,6 +273,14 @@ export default function About(props) {
                             <li>{description}</li>
                         </ul>
                     </aside>
+                    <Transfer
+                        showTips={showTransfer}
+                        handleClose={handleClose}
+                    />
+                    <ExitOrg
+                        handleClose={handleExitClose}
+                        handleConfirm={handleExitConfirm}
+                        showTips={showModal}/>
                     <div className="col-lg-9 ">
                         <div>
                             <ul className="service-docs">
@@ -311,7 +342,7 @@ export default function About(props) {
                                                         <li onClick={handleTransfer}>
                                                             <span><img src={transferImg} alt=""/></span>{t('transferBtn')}
                                                         </li>
-                                                        <li><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
+                                                        <li onClick={handleExit}><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
                                                     </ul>
                                                 }
 

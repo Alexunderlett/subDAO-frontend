@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, FormControl, FormLabel, InputGroup, Modal} from 'react-bootstrap';
 
 import {useSubstrate} from '../../api/contracts';
@@ -10,6 +10,8 @@ import NewVoteTop from './newVoteTop';
 import remove from "../../images/shutdown.png";
 import add from "../../images/Add.png";
 import {useTranslation} from "react-i18next";
+import Datetime from 'react-datetime';
+import moment from 'moment';
 
 export default function NewVote(props) {
 
@@ -31,7 +33,7 @@ export default function NewVote(props) {
     const [optionlist, setoptionlist] = useState( ['','','']);
 
     let { t } = useTranslation();
-
+    const datetimeRef = useRef();
 
     const handleClicktoVote = async () => {
         setLoading(true);
@@ -87,11 +89,51 @@ export default function NewVote(props) {
     const nextStep = (type)=>{
         settype(type)
     }
+
+    const yesterday = moment().subtract(1, 'day');
+    const valid = function (current) {
+        return current.isAfter(yesterday);
+    };
+
+    let inputProps = {
+        placeholder: 'Please select end time',
+        // disabled:true
+    };
+
+
+    const handleChange = (value) => {
+        // setdate(value._d)
+
+        const nowTime = Date.parse(new Date())
+        const dateTime = Date.parse(value._d)
+
+        setdate(dateTime-nowTime)
+
+    }
+    const renderInput = (itemprops, openCalendar, closeCalendar) => {
+        function clear() {
+            console.log(itemprops.value)
+            itemprops.onChange({target: {value: ''}});
+        }
+
+        return (
+            <div>
+                <input {...itemprops} />
+                <button className="selectedCal" onClick={openCalendar}/>
+                {
+                    itemprops.value.length !== 0 &&
+                    <div className='removeDate' onClick={clear}><i className='fa fa-close'/></div>
+                }
+
+            </div>
+        );
+    }
+
     let {handleClose, showTips} = props;
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-            <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
+            <Modal backdrop={false} show={showTips} onHide={handleClose} className='newVoteBrdr'>
                 <Modal.Header closeButton>
                     <Modal.Title><img src={newVote} alt=""/><span>{t('Newvoting')}</span></Modal.Title>
                 </Modal.Header>
@@ -106,13 +148,20 @@ export default function NewVote(props) {
                                             <InputGroup className="mb-3">
                                                 <FormLabel>{t('Votingtime')}</FormLabel>
                                                 <div className='inputBrdr'>
-                                                    <FormControl
-                                                        placeholder={t('Votingdurate')}
-                                                        name='date'
-                                                        value={date}
-                                                        autoComplete="off"
-                                                        onChange={handleInputChange}
-                                                    />
+                                                        <Datetime
+                                                            renderInput={renderInput}
+                                                            inputProps={inputProps}
+                                                            isValidDate={valid}
+                                                            ref={datetimeRef}
+                                                            onChange={handleChange}
+                                                            />
+                                                    {/*<FormControl*/}
+                                                    {/*    placeholder={t('Votingdurate')}*/}
+                                                    {/*    name='date'*/}
+                                                    {/*    value={date}*/}
+                                                    {/*    autoComplete="off"*/}
+                                                    {/*    onChange={handleInputChange}*/}
+                                                    {/*/>*/}
                                                 </div>
                                             </InputGroup>
                                         </div>
