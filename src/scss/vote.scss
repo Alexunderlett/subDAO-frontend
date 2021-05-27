@@ -135,7 +135,6 @@
       color: #A8B0C1;
       background: #140B3680;
       padding: 25px;
-
       &:first-child{
         text-align: center;
         width: 51px;
@@ -452,4 +451,17 @@
     line-height: 42px;
   }
 
+}
+.voteViewTD{
+
+  div{
+    min-width: 100px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  span{
+    min-width: auto!important;
+    box-sizing: border-box;
+    margin-left: 20px;
+  }
 }
