@@ -1,12 +1,12 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5627db32524e4844e623ec291643f6074d54f33fefc284c14e152d5d07a25d16",
+    "hash": "0x4f5413249486150f1720eff5b35e47b811070d000b8f462c6793d38248a4dc70",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
-    "name": "org",
+    "name": "github",
     "version": "0.1.0",
     "authors": [
       "[your_name] <[your_email]>"
@@ -15,26 +15,15 @@
   "spec": {
     "constructors": [
       {
-        "args": [
-          {
-            "name": "_creator",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
-          }
+        "args": [],
+        "docs": [],
+        "name": [
+          "default"
         ],
+        "selector": "0x6a3712e2"
+      },
+      {
+        "args": [],
         "docs": [],
         "name": [
           "new"
@@ -49,366 +38,219 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "moderator",
+            "name": "index",
             "type": {
               "displayName": [
-                "AccountId"
+                "Index"
               ],
-              "type": 4
+              "type": 1
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "org_id",
+            "name": "creator",
             "type": {
               "displayName": [
-                "u64"
+                "AccountId"
               ],
-              "type": 10
+              "type": 9
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "auditor",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
             }
           }
         ],
         "docs": [],
-        "name": "AddDAOModeratorEvent"
+        "name": "NewPR"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "moderator",
+            "name": "index",
             "type": {
               "displayName": [
-                "AccountId"
+                "Index"
               ],
-              "type": 4
+              "type": 1
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
-          }
-        ],
-        "docs": [],
-        "name": "RemoveDAOModeratorEvent"
-      },
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "member",
+            "name": "auditor",
             "type": {
               "displayName": [
                 "AccountId"
               ],
-              "type": 4
+              "type": 9
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "org_id",
+            "name": "result",
             "type": {
               "displayName": [
-                "u64"
+                "bool"
               ],
-              "type": 10
+              "type": 15
             }
           }
         ],
         "docs": [],
-        "name": "AddDAOMemberEvent"
-      },
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
-          }
-        ],
-        "docs": [],
-        "name": "RemoveDAOMemberEvent"
+        "name": "AuditPR"
       }
     ],
     "messages": [
       {
-        "args": [],
+        "args": [
+          {
+            "name": "repo_url",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 8
+            }
+          },
+          {
+            "name": "pr_number",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "github_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "account_id",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "name": "auditor_id",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 9
+            }
+          }
+        ],
         "docs": [],
-        "mutates": false,
+        "mutates": true,
         "name": [
-          "get_dao_creator"
+          "new_pull_request_auditor"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "AccountId"
+            "Result"
           ],
-          "type": 4
+          "type": 16
         },
-        "selector": "0x29e1aeed"
+        "selector": "0x7cac330d"
+      },
+      {
+        "args": [
+          {
+            "name": "index",
+            "type": {
+              "displayName": [
+                "Index"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_pull_request_audit_status"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 15
+        },
+        "selector": "0x673fdc68"
+      },
+      {
+        "args": [
+          {
+            "name": "index",
+            "type": {
+              "displayName": [
+                "Index"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "audit_result",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 15
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "audit_pull_request"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 16
+        },
+        "selector": "0x0adbe364"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_orgid"
+          "get_current_index"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
             "u64"
           ],
-          "type": 10
+          "type": 1
         },
-        "selector": "0xa17b2868"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_moderator_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 11
-        },
-        "selector": "0xbce489b4"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_members_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 11
-        },
-        "selector": "0xcf6c19d3"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_moderator_detail_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 12
-        },
-        "selector": "0xd1eb73e8"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_member_detail_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 12
-        },
-        "selector": "0xf594b278"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 9
-            }
-          },
-          {
-            "name": "moderator",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x75b5bf28"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 9
-            }
-          },
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_dao_member"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x34c0dfc4"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "remove_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xf555353e"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "remove_dao_member"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xd0d0e013"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "resign"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xd807454b"
+        "selector": "0x3fa5f3ff"
       }
     ]
   },
@@ -417,6 +259,15 @@
       "fields": [
         {
           "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "length"
+        },
+        {
+          "layout": {
             "struct": {
               "fields": [
                 {
@@ -426,8 +277,8 @@
                         {
                           "layout": {
                             "cell": {
-                              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                              "ty": 1
+                              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
                             }
                           },
                           "name": "header"
@@ -439,8 +290,8 @@
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
-                                      "ty": 2
+                                      "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
                                     }
                                   },
                                   "name": "len"
@@ -451,12 +302,12 @@
                                       "cellsPerElem": 1,
                                       "layout": {
                                         "cell": {
-                                          "key": "0x0100000001000000000000000000000000000000000000000000000000000000",
-                                          "ty": 3
+                                          "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                                          "ty": 4
                                         }
                                       },
                                       "len": 4294967295,
-                                      "offset": "0x0200000000000000000000000000000000000000000000000000000000000000"
+                                      "offset": "0x0300000000000000000000000000000000000000000000000000000000000000"
                                     }
                                   },
                                   "name": "elems"
@@ -476,11 +327,11 @@
                     "hash": {
                       "layout": {
                         "cell": {
-                          "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
-                          "ty": 8
+                          "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 6
                         }
                       },
-                      "offset": "0x0100000001000000000000000000000000000000000000000000000000000000",
+                      "offset": "0x0200000001000000000000000000000000000000000000000000000000000000",
                       "strategy": {
                         "hasher": "Blake2x256",
                         "postfix": "",
@@ -493,7 +344,7 @@
               ]
             }
           },
-          "name": "moderators"
+          "name": "pullrequests"
         },
         {
           "layout": {
@@ -506,8 +357,8 @@
                         {
                           "layout": {
                             "cell": {
-                              "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
-                              "ty": 1
+                              "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 2
                             }
                           },
                           "name": "header"
@@ -519,8 +370,8 @@
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
-                                      "ty": 2
+                                      "key": "0x0400000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
                                     }
                                   },
                                   "name": "len"
@@ -531,12 +382,12 @@
                                       "cellsPerElem": 1,
                                       "layout": {
                                         "cell": {
-                                          "key": "0x0300000002000000000000000000000000000000000000000000000000000000",
-                                          "ty": 3
+                                          "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 12
                                         }
                                       },
                                       "len": 4294967295,
-                                      "offset": "0x0400000001000000000000000000000000000000000000000000000000000000"
+                                      "offset": "0x0500000001000000000000000000000000000000000000000000000000000000"
                                     }
                                   },
                                   "name": "elems"
@@ -556,11 +407,11 @@
                     "hash": {
                       "layout": {
                         "cell": {
-                          "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
-                          "ty": 8
+                          "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
                         }
                       },
-                      "offset": "0x0300000002000000000000000000000000000000000000000000000000000000",
+                      "offset": "0x0400000002000000000000000000000000000000000000000000000000000000",
                       "strategy": {
                         "hasher": "Blake2x256",
                         "postfix": "",
@@ -573,25 +424,7 @@
               ]
             }
           },
-          "name": "members"
-        },
-        {
-          "layout": {
-            "cell": {
-              "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
-              "ty": 4
-            }
-          },
-          "name": "creator"
-        },
-        {
-          "layout": {
-            "cell": {
-              "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
-              "ty": 10
-            }
-          },
-          "name": "org_id"
+          "name": "auditorresults"
         }
       ]
     }
@@ -599,19 +432,24 @@
   "types": [
     {
       "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
               "name": "last_vacant",
-              "type": 2
+              "type": 3
             },
             {
               "name": "len",
-              "type": 2
+              "type": 3
             },
             {
               "name": "len_entries",
-              "type": 2
+              "type": 3
             }
           ]
         }
@@ -635,7 +473,7 @@
             {
               "fields": [
                 {
-                  "type": 7
+                  "type": 5
                 }
               ],
               "name": "Vacant"
@@ -643,7 +481,7 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 1
                 }
               ],
               "name": "Occupied"
@@ -652,7 +490,7 @@
         }
       },
       "params": [
-        4
+        1
       ],
       "path": [
         "ink_storage",
@@ -666,41 +504,12 @@
         "composite": {
           "fields": [
             {
-              "type": 5
-            }
-          ]
-        }
-      },
-      "path": [
-        "ink_env",
-        "types",
-        "AccountId"
-      ]
-    },
-    {
-      "def": {
-        "array": {
-          "len": 32,
-          "type": 6
-        }
-      }
-    },
-    {
-      "def": {
-        "primitive": "u8"
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
               "name": "next",
-              "type": 2
+              "type": 3
             },
             {
               "name": "prev",
-              "type": 2
+              "type": 3
             }
           ]
         }
@@ -718,17 +527,17 @@
           "fields": [
             {
               "name": "value",
-              "type": 9
+              "type": 7
             },
             {
               "name": "key_index",
-              "type": 2
+              "type": 3
             }
           ]
         }
       },
       "params": [
-        9
+        7
       ],
       "path": [
         "ink_storage",
@@ -739,40 +548,194 @@
     },
     {
       "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "repo_url",
+              "type": 8
+            },
+            {
+              "name": "pr_number",
+              "type": 1
+            },
+            {
+              "name": "github_id",
+              "type": 1
+            },
+            {
+              "name": "account_id",
+              "type": 9
+            }
+          ]
+        }
+      },
+      "path": [
+        "github",
+        "github",
+        "PullRequest"
+      ]
+    },
+    {
+      "def": {
         "primitive": "str"
       }
     },
     {
       "def": {
-        "primitive": "u64"
-      }
+        "composite": {
+          "fields": [
+            {
+              "type": 10
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
     },
     {
       "def": {
-        "sequence": {
-          "type": 4
+        "array": {
+          "len": 32,
+          "type": 11
         }
       }
     },
     {
       "def": {
-        "sequence": {
-          "type": 13
-        }
+        "primitive": "u8"
       }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 5
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 13
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        13
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
     },
     {
       "def": {
         "tuple": [
-          4,
+          1,
           9
         ]
       }
     },
     {
       "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 15
+            },
+            {
+              "name": "key_index",
+              "type": 3
+            }
+          ]
+        }
+      },
+      "params": [
+        15
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
         "primitive": "bool"
       }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 17
+                }
+              ],
+              "name": "Ok"
+            },
+            {
+              "fields": [
+                {
+                  "type": 18
+                }
+              ],
+              "name": "Err"
+            }
+          ]
+        }
+      },
+      "params": [
+        17,
+        18
+      ],
+      "path": [
+        "Result"
+      ]
+    },
+    {
+      "def": {
+        "tuple": []
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "CallerIsNotAuditor"
+            },
+            {
+              "discriminant": 1,
+              "name": "PRIsNotRegisted"
+            }
+          ]
+        }
+      },
+      "path": [
+        "github",
+        "github",
+        "Error"
+      ]
     }
   ]
 }

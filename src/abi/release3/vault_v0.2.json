@@ -1,12 +1,12 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5627db32524e4844e623ec291643f6074d54f33fefc284c14e152d5d07a25d16",
-    "language": "ink! 3.0.0-rc1",
+    "hash": "0xc70f2ca8e9c95afcf4ea6a3d1328b01499e1d633505d031a644b9b93351cc1ef",
+    "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
-    "name": "org",
+    "name": "vault",
     "version": "0.1.0",
     "authors": [
       "[your_name] <[your_email]>"
@@ -17,21 +17,12 @@
       {
         "args": [
           {
-            "name": "_creator",
+            "name": "org_contract_address",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
-            }
-          },
-          {
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
             }
           }
         ],
@@ -39,7 +30,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -49,63 +40,41 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "moderator",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
             }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
           }
         ],
         "docs": [],
-        "name": "AddDAOModeratorEvent"
+        "name": "AddVaultTokenEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "moderator",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
             }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "org_id",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 10
-            }
           }
         ],
         "docs": [],
-        "name": "RemoveDAOModeratorEvent"
+        "name": "RemoveVaultTokenEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "member",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -116,7 +85,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "org_id",
+            "name": "balance",
             "type": {
               "displayName": [
                 "u64"
@@ -126,14 +95,25 @@
           }
         ],
         "docs": [],
-        "name": "AddDAOMemberEvent"
+        "name": "GetTokenBalanceEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "member",
+            "name": "token_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 13
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "from_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -144,7 +124,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "org_id",
+            "name": "value",
             "type": {
               "displayName": [
                 "u64"
@@ -154,32 +134,161 @@
           }
         ],
         "docs": [],
-        "name": "RemoveDAOMemberEvent"
+        "name": "DepositTokenEvent"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "token_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 13
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "to_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
+        "docs": [],
+        "name": "WithdrawTokenEvent"
       }
     ],
     "messages": [
       {
-        "args": [],
+        "args": [
+          {
+            "name": "caller",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_dao_creator"
+          "check_authority"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "AccountId"
+            "bool"
           ],
-          "type": 4
+          "type": 14
         },
-        "selector": "0x29e1aeed"
+        "selector": "0x2e7c1f44"
+      },
+      {
+        "args": [
+          {
+            "name": "erc_20_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "add_vault_token"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x420a0900"
+      },
+      {
+        "args": [
+          {
+            "name": "erc_20_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "remove_vault_token"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x3a3ac188"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_orgid"
+          "get_token_list"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink_prelude",
+            "vec",
+            "Vec"
+          ],
+          "type": 15
+        },
+        "selector": "0x600804bc"
+      },
+      {
+        "args": [
+          {
+            "name": "erc_20_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_balance_of"
         ],
         "payable": false,
         "returnType": {
@@ -188,140 +297,42 @@
           ],
           "type": 10
         },
-        "selector": "0xa17b2868"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_moderator_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 11
-        },
-        "selector": "0xbce489b4"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_members_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 11
-        },
-        "selector": "0xcf6c19d3"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_moderator_detail_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 12
-        },
-        "selector": "0xd1eb73e8"
-      },
-      {
-        "args": [],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "get_dao_member_detail_list"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
-          ],
-          "type": 12
-        },
-        "selector": "0xf594b278"
+        "selector": "0x1c18fd00"
       },
       {
         "args": [
           {
-            "name": "name",
+            "name": "erc_20_address",
             "type": {
               "displayName": [
-                "String"
+                "AccountId"
               ],
-              "type": 9
+              "type": 4
             }
           },
           {
-            "name": "moderator",
+            "name": "from_address",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x75b5bf28"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 9
             }
           },
           {
-            "name": "member",
+            "name": "value",
             "type": {
               "displayName": [
-                "AccountId"
+                "u64"
               ],
-              "type": 4
+              "type": 10
             }
           }
         ],
         "docs": [],
         "mutates": true,
         "name": [
-          "add_dao_member"
+          "deposit"
         ],
         "payable": false,
         "returnType": {
@@ -330,24 +341,42 @@
           ],
           "type": 14
         },
-        "selector": "0x34c0dfc4"
+        "selector": "0x2d10c9bd"
       },
       {
         "args": [
           {
-            "name": "member",
+            "name": "erc_20_address",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 4
             }
+          },
+          {
+            "name": "to_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
           }
         ],
         "docs": [],
         "mutates": true,
         "name": [
-          "remove_dao_moderator"
+          "withdraw"
         ],
         "payable": false,
         "returnType": {
@@ -356,59 +385,25 @@
           ],
           "type": 14
         },
-        "selector": "0xf555353e"
+        "selector": "0x410fcc9d"
       },
       {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
+        "args": [],
         "docs": [],
-        "mutates": true,
+        "mutates": false,
         "name": [
-          "remove_dao_member"
+          "get_transfer_history"
         ],
         "payable": false,
         "returnType": {
           "displayName": [
-            "bool"
+            "ink_prelude",
+            "vec",
+            "Vec"
           ],
-          "type": 14
+          "type": 16
         },
-        "selector": "0xd0d0e013"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "resign"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0xd807454b"
+        "selector": "0x7c9f68dd"
       }
     ]
   },
@@ -493,7 +488,7 @@
               ]
             }
           },
-          "name": "moderators"
+          "name": "tokens"
         },
         {
           "layout": {
@@ -573,25 +568,105 @@
               ]
             }
           },
-          "name": "members"
+          "name": "visible_tokens"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                              "ty": 1
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                                      "ty": 2
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0500000003000000000000000000000000000000000000000000000000000000",
+                                          "ty": 9
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0600000002000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0600000003000000000000000000000000000000000000000000000000000000",
+                          "ty": 11
+                        }
+                      },
+                      "offset": "0x0500000003000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "transfer_history"
         },
         {
           "layout": {
             "cell": {
-              "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
+              "key": "0x0600000003000000000000000000000000000000000000000000000000000000",
               "ty": 4
             }
           },
-          "name": "creator"
+          "name": "org_contract_address"
         },
         {
           "layout": {
             "cell": {
-              "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
-              "ty": 10
+              "key": "0x0700000003000000000000000000000000000000000000000000000000000000",
+              "ty": 4
             }
           },
-          "name": "org_id"
+          "name": "vault_contract_address"
         }
       ]
     }
@@ -603,15 +678,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 2
+              "type": 2,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 2
+              "type": 2,
+              "typeName": "u32"
             }
           ]
         }
@@ -635,7 +713,8 @@
             {
               "fields": [
                 {
-                  "type": 7
+                  "type": 7,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -643,7 +722,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -666,7 +746,8 @@
         "composite": {
           "fields": [
             {
-              "type": 5
+              "type": 5,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -696,11 +777,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             }
           ]
         }
@@ -718,17 +801,19 @@
           "fields": [
             {
               "name": "value",
-              "type": 9
+              "type": 4,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 2
+              "type": 2,
+              "typeName": "KeyIndex"
             }
           ]
         }
       },
       "params": [
-        9
+        4
       ],
       "path": [
         "ink_storage",
@@ -739,12 +824,127 @@
     },
     {
       "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 7,
+                  "typeName": "VacantEntry"
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 10,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 12,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 2,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        12
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "transfer_id",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "transfer_direction",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "token_name",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "from_address",
+              "type": 4,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "to_address",
+              "type": 4,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "value",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "transfer_time",
+              "type": 10,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "vault",
+        "vault",
+        "Transfer"
+      ]
+    },
+    {
+      "def": {
         "primitive": "str"
       }
     },
     {
       "def": {
-        "primitive": "u64"
+        "primitive": "bool"
       }
     },
     {
@@ -757,21 +957,8 @@
     {
       "def": {
         "sequence": {
-          "type": 13
+          "type": 12
         }
-      }
-    },
-    {
-      "def": {
-        "tuple": [
-          4,
-          9
-        ]
-      }
-    },
-    {
-      "def": {
-        "primitive": "bool"
       }
     }
   ]

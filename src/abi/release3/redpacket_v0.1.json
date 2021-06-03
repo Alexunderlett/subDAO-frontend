@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x0dc5f24ae38d7f5864b98f8868b6794d45bfc0f12d8798f993facd985f40a955",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0x8180f08d549929a9b76f8e708216cdac8ef073e4dad49ba7eb9a3a6eb9834141",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
@@ -39,7 +39,7 @@
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       }
     ],
     "docs": [],
@@ -66,6 +66,28 @@
                 "AccountId"
               ],
               "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "token_type",
+            "type": {
+              "displayName": [
+                "u8"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "name": "total_tokens",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
             }
           }
         ],
@@ -148,72 +170,11 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "u64"
-          ],
-          "type": 4
-        },
-        "selector": "0x1c30b046"
-      },
-      {
-        "args": [
-          {
-            "name": "token_addr",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 1
-            }
-          },
-          {
-            "name": "total_tokens",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "transfer_token"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
             "bool"
           ],
           "type": 15
         },
-        "selector": "0x051dcbf9"
-      },
-      {
-        "args": [
-          {
-            "name": "token_addr",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 1
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "allowance_token"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "u64"
-          ],
-          "type": 4
-        },
-        "selector": "0x5d462ef7"
+        "selector": "0x37f34492"
       },
       {
         "args": [
@@ -257,7 +218,7 @@
           ],
           "type": 15
         },
-        "selector": "0xb388803f"
+        "selector": "0xa560f4c2"
       },
       {
         "args": [
@@ -283,7 +244,7 @@
           ],
           "type": 15
         },
-        "selector": "0xa5a47441"
+        "selector": "0x65483da9"
       },
       {
         "args": [
@@ -309,7 +270,7 @@
           ],
           "type": 10
         },
-        "selector": "0xf7156ae4"
+        "selector": "0x934cfe72"
       },
       {
         "args": [],
@@ -325,7 +286,7 @@
           ],
           "type": 1
         },
-        "selector": "0xfeaea4fa"
+        "selector": "0x66154539"
       }
     ]
   },
@@ -448,8 +409,7 @@
         "composite": {
           "fields": [
             {
-              "type": 2,
-              "typeName": "[u8; 32]"
+              "type": 2
             }
           ]
         }
@@ -484,18 +444,15 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6,
-              "typeName": "Index"
+              "type": 6
             },
             {
               "name": "len",
-              "type": 6,
-              "typeName": "u32"
+              "type": 6
             },
             {
               "name": "len_entries",
-              "type": 6,
-              "typeName": "u32"
+              "type": 6
             }
           ]
         }
@@ -519,8 +476,7 @@
             {
               "fields": [
                 {
-                  "type": 8,
-                  "typeName": "VacantEntry"
+                  "type": 8
                 }
               ],
               "name": "Vacant"
@@ -528,8 +484,7 @@
             {
               "fields": [
                 {
-                  "type": 4,
-                  "typeName": "T"
+                  "type": 4
                 }
               ],
               "name": "Occupied"
@@ -553,13 +508,11 @@
           "fields": [
             {
               "name": "next",
-              "type": 6,
-              "typeName": "Index"
+              "type": 6
             },
             {
               "name": "prev",
-              "type": 6,
-              "typeName": "Index"
+              "type": 6
             }
           ]
         }
@@ -577,13 +530,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 10,
-              "typeName": "V"
+              "type": 10
             },
             {
               "name": "key_index",
-              "type": 6,
-              "typeName": "KeyIndex"
+              "type": 6
             }
           ]
         }
@@ -604,68 +555,55 @@
           "fields": [
             {
               "name": "id",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "creator",
-              "type": 1,
-              "typeName": "AccountId"
+              "type": 1
             },
             {
               "name": "total_number",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "claimed_number",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "token_type",
-              "type": 3,
-              "typeName": "u8"
+              "type": 3
             },
             {
               "name": "if_random",
-              "type": 3,
-              "typeName": "u8"
+              "type": 3
             },
             {
               "name": "token_addr",
-              "type": 1,
-              "typeName": "AccountId"
+              "type": 1
             },
             {
               "name": "password",
-              "type": 11,
-              "typeName": "Hash"
+              "type": 11
             },
             {
               "name": "remaining_tokens",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "start_time",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "end_time",
-              "type": 4,
-              "typeName": "u64"
+              "type": 4
             },
             {
               "name": "claim_list",
-              "type": 12,
-              "typeName": "BTreeMap<AccountId, u64>"
+              "type": 12
             },
             {
               "name": "is_refund",
-              "type": 15,
-              "typeName": "bool"
+              "type": 15
             }
           ]
         }
@@ -681,8 +619,7 @@
         "composite": {
           "fields": [
             {
-              "type": 2,
-              "typeName": "[u8; 32]"
+              "type": 2
             }
           ]
         }
@@ -698,8 +635,7 @@
         "composite": {
           "fields": [
             {
-              "type": 14,
-              "typeName": "[(K, V)]"
+              "type": 14
             }
           ]
         }

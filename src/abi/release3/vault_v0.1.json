@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xf019816ce3da047b795a43c40b9010208ed81bf6680652f726b1ae822b3e6c95",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0x03cc871a613021937307614222ab7f15c6d5c308e0780bda76c984d3487bed2b",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
@@ -24,22 +24,13 @@
               ],
               "type": 4
             }
-          },
-          {
-            "name": "auth_contract_address",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
           }
         ],
         "docs": [],
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       }
     ],
     "docs": [],
@@ -196,24 +187,6 @@
               ],
               "type": 4
             }
-          },
-          {
-            "name": "contract_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
-          },
-          {
-            "name": "function_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
           }
         ],
         "docs": [],
@@ -228,7 +201,7 @@
           ],
           "type": 14
         },
-        "selector": "0x2e7c1f44"
+        "selector": "0xaee06489"
       },
       {
         "args": [
@@ -254,7 +227,7 @@
           ],
           "type": 14
         },
-        "selector": "0x420a0900"
+        "selector": "0xfde31b75"
       },
       {
         "args": [
@@ -280,7 +253,7 @@
           ],
           "type": 14
         },
-        "selector": "0x3a3ac188"
+        "selector": "0x4338d861"
       },
       {
         "args": [],
@@ -298,7 +271,7 @@
           ],
           "type": 15
         },
-        "selector": "0x600804bc"
+        "selector": "0x0ca614db"
       },
       {
         "args": [
@@ -324,7 +297,7 @@
           ],
           "type": 10
         },
-        "selector": "0x1c18fd00"
+        "selector": "0x58bb0f42"
       },
       {
         "args": [
@@ -368,7 +341,7 @@
           ],
           "type": 14
         },
-        "selector": "0x2d10c9bd"
+        "selector": "0x3ce5f4a6"
       },
       {
         "args": [
@@ -412,7 +385,7 @@
           ],
           "type": 14
         },
-        "selector": "0x410fcc9d"
+        "selector": "0xb41251e9"
       },
       {
         "args": [],
@@ -430,7 +403,7 @@
           ],
           "type": 16
         },
-        "selector": "0x7c9f68dd"
+        "selector": "0x324c23cf"
       }
     ]
   },
@@ -694,15 +667,6 @@
             }
           },
           "name": "vault_contract_address"
-        },
-        {
-          "layout": {
-            "cell": {
-              "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
-              "ty": 4
-            }
-          },
-          "name": "auth_contract_address"
         }
       ]
     }
@@ -714,18 +678,15 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             },
             {
               "name": "len",
-              "type": 2,
-              "typeName": "u32"
+              "type": 2
             },
             {
               "name": "len_entries",
-              "type": 2,
-              "typeName": "u32"
+              "type": 2
             }
           ]
         }
@@ -749,8 +710,7 @@
             {
               "fields": [
                 {
-                  "type": 7,
-                  "typeName": "VacantEntry"
+                  "type": 7
                 }
               ],
               "name": "Vacant"
@@ -758,8 +718,7 @@
             {
               "fields": [
                 {
-                  "type": 4,
-                  "typeName": "T"
+                  "type": 4
                 }
               ],
               "name": "Occupied"
@@ -782,8 +741,7 @@
         "composite": {
           "fields": [
             {
-              "type": 5,
-              "typeName": "[u8; 32]"
+              "type": 5
             }
           ]
         }
@@ -813,13 +771,11 @@
           "fields": [
             {
               "name": "next",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             },
             {
               "name": "prev",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             }
           ]
         }
@@ -837,13 +793,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 4,
-              "typeName": "V"
+              "type": 4
             },
             {
               "name": "key_index",
-              "type": 2,
-              "typeName": "KeyIndex"
+              "type": 2
             }
           ]
         }
@@ -865,8 +819,7 @@
             {
               "fields": [
                 {
-                  "type": 7,
-                  "typeName": "VacantEntry"
+                  "type": 7
                 }
               ],
               "name": "Vacant"
@@ -874,8 +827,7 @@
             {
               "fields": [
                 {
-                  "type": 10,
-                  "typeName": "T"
+                  "type": 10
                 }
               ],
               "name": "Occupied"
@@ -904,13 +856,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 12,
-              "typeName": "V"
+              "type": 12
             },
             {
               "name": "key_index",
-              "type": 2,
-              "typeName": "KeyIndex"
+              "type": 2
             }
           ]
         }
@@ -931,38 +881,31 @@
           "fields": [
             {
               "name": "transfer_id",
-              "type": 10,
-              "typeName": "u64"
+              "type": 10
             },
             {
               "name": "transfer_direction",
-              "type": 10,
-              "typeName": "u64"
+              "type": 10
             },
             {
               "name": "token_name",
-              "type": 13,
-              "typeName": "String"
+              "type": 13
             },
             {
               "name": "from_address",
-              "type": 4,
-              "typeName": "AccountId"
+              "type": 4
             },
             {
               "name": "to_address",
-              "type": 4,
-              "typeName": "AccountId"
+              "type": 4
             },
             {
               "name": "value",
-              "type": 10,
-              "typeName": "u64"
+              "type": 10
             },
             {
               "name": "transfer_time",
-              "type": 10,
-              "typeName": "u64"
+              "type": 10
             }
           ]
         }
