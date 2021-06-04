@@ -5,6 +5,7 @@
   "YourAccount": "Your Account",
   "SelectAccount": "Please Select Your Account",
   "SelectOption": "Please Select Option",
+  "noWallet": "Please install Polkadot wallet first",
   "CreateDAO": "Create My DAO",
   "connect": "Please connect wallet",
   "noDao": "You are not a member of any DAO",

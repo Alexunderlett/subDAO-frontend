@@ -5,6 +5,7 @@
   "YourAccount": "您的账号",
   "SelectAccount": "请选择您要登录的账号",
   "SelectOption": "请选择",
+  "noWallet": "请先安装Polkadot钱包",
   "CreateDAO": "创建我的DAO",
   "connect": "请先连接钱包",
   "noDao": "您暂未加入任何 DAO",
