@@ -84,6 +84,7 @@ function Home(props) {
              if (mydaolist && mydaolist.length) {
 
                  for (let item of mydaolist) {
+
                      const data = await api.base.InitHome(state, item.dao_manager_addr);
                      const logo = data && data.logo?data.logo:'';
                      arr.push({
