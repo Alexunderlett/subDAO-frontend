@@ -42,6 +42,7 @@ export default function VoteView (props){
 
     useEffect(() => {
         console.log(props.id,props.voteid)
+        if(props.id == null) return;
         setvoteid(props.voteid);
         setId(props.id);
 
@@ -50,14 +51,13 @@ export default function VoteView (props){
 
             await api.vote.queryOneVote(votecontract, props.voteid).then(data => {
                 if (!data) return;
-                console.log(data)
+
                 const {
                     vote_id, title, desc, choices
-                } = data;
+                } = data[0];
                 settitle(title);
                 setId(vote_id);
                 setdesc(desc);
-                // setoptionlist(choices.split(','))
                 setoptionlist(choices.split('|'))
 
             });

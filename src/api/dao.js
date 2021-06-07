@@ -64,10 +64,17 @@ const setDAO = async (daoManagercontract,obj,cb) => {
     // if(token){
     //     objData.erc20Transfers ={}
     //    for(let item  in tokenlist) {
-    //        objData.erc20Transfers[tokenlist[item].address] = tokenlist[item].token;
+    //        objData.erc20Transfers[tokenlist[item].address] = parseInt(tokenlist[item].token);
     //    }
     // }
-    //    console.log(objData.erc20Transfers)
+    //
+    // if(admin){
+    //     objData.org.moderators ={}
+    //    for(let item  in adminlist) {
+    //        objData.org.moderators[adminlist[item].name] = adminlist[item].address;
+    //    }
+    // }
+    //    console.log(objData)
 
     const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized ) {

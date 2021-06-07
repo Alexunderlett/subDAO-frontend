@@ -42,6 +42,8 @@ export default function AddNew(props){
             setaddModerator(result)
             props.handleClose()
             props.refresh()
+            setname('')
+            setaddress('')
         });
     }
     const submitMembers = async (obj) =>{
@@ -51,6 +53,8 @@ export default function AddNew(props){
             setaddMember(result)
             props.handleClose()
             props.refresh()
+            setname('')
+            setaddress('')
         });
     }
 

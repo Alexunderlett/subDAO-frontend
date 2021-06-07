@@ -9,12 +9,12 @@ const accountlist = async () => {
 
     if (allInjected.length === 0) {
         console.error("!!!!! No wallet extention detected!!");
-        return;
+        return "No wallet extention detected!!";
     }
     const allAccounts = await web3Accounts();
     if (!allAccounts) {
         console.error("no valid accounts available!");
-        return;
+        return "No valid accounts available!";
     }
     return allAccounts;
 }

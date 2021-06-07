@@ -20,6 +20,7 @@ function Home(props) {
     const [loading,setLoading]= useState(false);
 
     const [showButton, setShowButton] = useState(false);
+    const [walletTips, setWalletTips] = useState(false);
     const [show, setshow] = useState(false);
     const [first, setfirst] = useState(true);
     const [imglist, setimglist] = useState([]);
@@ -50,7 +51,11 @@ function Home(props) {
 
         setshowlist(true);
         const accoutlist = await Accounts.accountlist();
-        setallList(accoutlist);
+        if(typeof(accoutlist)==="string"){
+            setWalletTips(true)
+        }else{
+            setallList(accoutlist);
+        }
     }
 
     useEffect(() => {
@@ -133,6 +138,18 @@ function Home(props) {
                     </div>
                 }
             </section>
+        <Modal
+            show={walletTips}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => setWalletTips(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{t('noWallet')}</h4>
+            </Modal.Body>
+        </Modal>
         {
             !showlist && !selected.length && <section className='container homeTips'>
                 <div className="hometitle">
@@ -162,7 +179,7 @@ function Home(props) {
                     <Form.Control as="select" onChange={(event) => selectAccounts(event)}>
                         <option value=''>{t('SelectOption')}</option>
                         {
-                            allList.map((opt) =>
+                            allList && allList.length && allList.map((opt) =>
                                 <option value={opt.address} key={opt.address}>{opt.meta.name}</option>
                             )
                         }

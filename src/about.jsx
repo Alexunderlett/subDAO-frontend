@@ -222,13 +222,13 @@ export default function About(props) {
     }
 
     const handleMore = (val) => {
-        if (!showMore) {
-            document.addEventListener("click", handleOutsideClick, false);
-        } else {
-            document.removeEventListener("click", handleOutsideClick, false);
-        }
+        // if (!showMore) {
+        //     document.addEventListener("click", handleOutsideClick, false);
+        // } else {
+        //     document.removeEventListener("click", handleOutsideClick, false);
+        // }
 
-        setShowMore(val)
+        // setShowMore(val)
     };
 
     const handleExit = () => {

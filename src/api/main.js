@@ -19,6 +19,7 @@ const listTemplates = async (maincontract) => {
 
 };
 
+
 const listDaoInstances = async (maincontract) => {
 
     const AccountId = await Accounts.accountAddress();
@@ -31,15 +32,16 @@ const listDaoInstances = async (maincontract) => {
 
 };
 
-
+const mainAddress = window.mainAddress;
 const listDaoInstancesByOwner = async (maincontract) => {
 
     const AccountId = await Accounts.accountAddress();
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
     let data = await maincontract.query.listDaoInstancesByOwner(AccountId, {value, gasLimit},AccountId);
-    console.log("====listDaoInstancesByOwner",data)
+
     data = publicJs.formatResult(data);
+    console.log("====listDaoInstancesByOwner",data)
 
     return data;
 
@@ -55,7 +57,7 @@ const instanceByTemplate = async (maincontract,id,cb) => {
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
 
-    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId,124)
+    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId,1003)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isFinalized) {
                 console.log('main.instanceByTemplate finalized', result);

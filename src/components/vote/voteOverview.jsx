@@ -25,10 +25,10 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
+                let dataArr = data.filter(i=>i.vote_id === props.match.params.voteid)
                 const {
                     vote_id, title, desc, support_require_num, min_require_num, choices
-                } = data;
-
+                } = dataArr[0];
                 settitle(title);
                 setvoteid(vote_id);
                 setdesc(desc);
@@ -46,7 +46,6 @@ export default function VoteOverview (props){
                 });
                 if (afterArr.length) {
                     setoptionlist(afterArr);
-                    console.log(choices)
                 }
 
             });

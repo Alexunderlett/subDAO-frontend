@@ -40,8 +40,6 @@ export default function SecondStep(props) {
         }
     }, []);
     useEffect(() => {
-
-        console.log(selected[0].id == null  ,list.length)
         if ( selected[0].id == null && list.length) {
             setselected([list[0]])
         }

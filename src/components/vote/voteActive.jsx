@@ -4,7 +4,6 @@ import {Table} from 'react-bootstrap';
 import voteActive from '../../images/votingactive.png';
 import view from '../../images/view.png';
 import VoteView from '../vote/voteView';
-import NewVote from "./newVote";
 import {useTranslation} from "react-i18next";
 
 export default function VoteActive(props){
@@ -19,8 +18,6 @@ export default function VoteActive(props){
         if(props.list.length){
             setIndexList(props.list)
         }
-
-
     }, [props]);
 
     const  handleClose = () => {
@@ -29,17 +26,22 @@ export default function VoteActive(props){
     const handleView = (voteid) => {
 
         setnewshow(true)
-            const{id} = props;
+            // const{id} = props;
         setvoteid(voteid)
             // props.history.push(`/voteView/${id}/${voteid}`)
     }
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
         props.history.push(`/voteOverview/${id}/${voteid}`)
+        // setviewshow(true)
+
     }
         return (
             <div className='votePending'>
-                <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
+                {
+                    newshow &&   <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
+                }
+
                 <Table hover>
                     <thead>
                     <tr>
