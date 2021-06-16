@@ -1,6 +1,7 @@
 import ConnectContract from './connectContract';
 import publicJs from "../utils/publicJs";
 import Accounts from "./Account";
+import { randomAsHex } from '@polkadot/util-crypto';
 
 let daoManagercontract;
 const InitDAO = async (state,dispatch,address,cb) =>  {
@@ -74,9 +75,12 @@ const setDAO = async (daoManagercontract,obj,cb) => {
     //        objData.org.moderators[adminlist[item].name] = adminlist[item].address;
     //    }
     // }
-    //    console.log(objData)
+       console.log(objData)
 
-    const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    const version = randomAsHex();
+    console.log('======version=====',version)
+
+    const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData,version).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)

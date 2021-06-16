@@ -104,11 +104,12 @@ export default function NewVote(props) {
     const handleChange = (value) => {
         // setdate(value._d)
 
+
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
 
         setdate(dateTime-nowTime)
-
+        console.log("===========--------------value._d)",dateTime-nowTime)
     }
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
         function clear() {
@@ -280,7 +281,7 @@ export default function NewVote(props) {
                                                         </InputGroup>
 
                                                         {
-                                                            !!index && index !== 1 &&   <img src={remove}  className="removerht"
+                                                            !!index && index !== 1 &&   <img src={remove}  className="removerht"  alt=''
                                                                                          onClick={removeOption.bind(this, i, index)}/>
                                                         }
                                                     </div>
@@ -290,7 +291,7 @@ export default function NewVote(props) {
                                         }
 
                                         <div className='NextBrdr NextBrdrAdd'>
-                                            <Button variant="light" onClick={addOption}><img src={add} className="addRht"/> {t('AddOption')}</Button>
+                                            <Button variant="light" onClick={addOption}><img src={add} className="addRht" alt=''/> {t('AddOption')}</Button>
                                         </div>
 
                                     </li>

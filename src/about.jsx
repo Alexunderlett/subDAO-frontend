@@ -13,7 +13,6 @@ import {useTranslation} from "react-i18next";
 
 import {Dropdown} from "react-bootstrap";
 import Transfer from "./components/transfer";
-import Deposit from "./components/vault/deposit";
 import ExitOrg from "./components/exitOrg";
 
 export default function About(props) {
@@ -40,10 +39,14 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
-
     const [showMore, setShowMore] = useState(false);
     const [showTransfer, setShowTransfer] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [isMember, setisMember] = useState(false);
+    const [isModerator, setisModerator] = useState(false);
+    const [isOwner, setisOwner] = useState(false);
+    const [delMem, setdelMem] = useState(false);
+    const [delAdmin, setdelAdmin] = useState(false);
 
     let { t } = useTranslation();
     const myRef = useRef();
@@ -51,8 +54,8 @@ export default function About(props) {
     useEffect(() => {
         if (apiState !== 'READY') return;
         const setInitDAO = async () => {
-            // setLoading(true)
-            setTips(t('InitializeDAO'))
+            setLoading(true)
+            setTips(t('InitializeDAO'));
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data)
@@ -80,8 +83,8 @@ export default function About(props) {
 
     useEffect(() => {
 
-        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr} = contractlist;
-        sessionStorage.setItem('contractlist',JSON.stringify(contractlist))
+        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
+        sessionStorage.setItem('contractlist',JSON.stringify(contractlist));
         if (base_addr != null) {
 
             const setInitBase = async () => {
@@ -111,6 +114,15 @@ export default function About(props) {
             };
             setInitOrg();
         }
+        if (auth_addr != null) {
+            const setInitAuth = async () => {
+                setTips(t('InitializingContracts'));
+                await api.auth.InitAuth(state, dispatch, org_addr, (data) => {
+                    console.log("====",data)
+                });
+            };
+            setInitAuth();
+        }
         if (vote_addr != null) {
             const setInitVote = async () => {
                 setTips(t('InitializingContracts'));
@@ -131,9 +143,9 @@ export default function About(props) {
     }, [daoManagercontract, contractlist,id]);
 
     useEffect(() => {
-        sessionStorage.setItem('logo', logo)
-        sessionStorage.setItem('description', description)
-        sessionStorage.setItem('owner', owner)
+        sessionStorage.setItem('logo', logo);
+        sessionStorage.setItem('description', description);
+        sessionStorage.setItem('owner', owner);
         sessionStorage.setItem('DaoName', name)
     }, [logo,description,owner,name]);
     useEffect( () => {
@@ -215,26 +227,35 @@ export default function About(props) {
 
     }, [orgcontract, orgstate,id]);
 
-
+    useEffect( () => {
+        if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
+        const whoAmI = async () => {
+            await api.org.whoAmI(orgcontract).then(data => {
+                if (!data) return;
+                setisMember(data[0])
+                setisModerator(data[1])
+                setisOwner(data[2])
+            });
+        };
+        whoAmI();
+    }, [orgcontract, orgstate,id]);
 
     const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
     }
 
     const handleMore = (val) => {
-        // if (!showMore) {
-        //     document.addEventListener("click", handleOutsideClick, false);
-        // } else {
-        //     document.removeEventListener("click", handleOutsideClick, false);
-        // }
+        if (!showMore) {
+            document.addEventListener("click", handleOutsideClick, false);
+        } else {
+            document.removeEventListener("click", handleOutsideClick, false);
+        }
 
-        // setShowMore(val)
+        setShowMore(val)
     };
 
     const handleExit = () => {
-        console.log(showModal)
         setShowModal(true)
-
     };
     const handleTransfer = () => {
         setShowTransfer(true)
@@ -249,11 +270,46 @@ export default function About(props) {
         setShowModal(false)
     };
 
-    const handleExitConfirm = () => {
-        setShowModal(false)
+    const handleExitConfirm = async() => {
+        setShowModal(false);
+        setLoading(true);
+        setTips(t('ExitDAO'));
+        if(isMember){
+            await api.org.resign(orgcontract,function (result) {
+                if (!result) return;
+                setdelMem(true)
+            });
+        }else{
+            setdelMem(true)
+        }
     };
 
+    useEffect( () => {
+        if (orgcontract == null || !delMem) return;
+        const setAdmin = async () => {
+            if(isModerator){
+                    setTimeout(async()=>{
+                        await api.org.resign(orgcontract,function (result) {
+                            if (!result) return;
+                            setdelAdmin(true)
+                        });
+                    },5000)
+             }else{
+                setdelAdmin(true)
+            }
+        };
+        setAdmin();
+
+    }, [delMem]);
+    useEffect( () => {
+        if (orgcontract == null || !delAdmin || !delMem) return;
+
+        setTimeout(async()=>{
+            window.location.reload()
+        },5000)
+    }, [delAdmin]);
     const handleOutsideClick = e => {
+        if(myRef.current==null) return;
         if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
     };
     return (
@@ -279,7 +335,7 @@ export default function About(props) {
                     />
                     <ExitOrg
                         handleClose={handleExitClose}
-                        handleConfirm={handleExitConfirm}
+                        handleConfirm={()=>handleExitConfirm()}
                         showTips={showModal}/>
                     <div className="col-lg-9 ">
                         <div>
@@ -287,7 +343,7 @@ export default function About(props) {
                                 {
                                     contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>
                                             <span>
-                                                <img src={votingimg} />
+                                                <img src={votingimg} alt=''/>
                                                 {t('Voting')}
                                             </span>
                                     </li>
@@ -303,7 +359,7 @@ export default function About(props) {
                                 {
                                     <li onClick={() => handleClicktoType('vault')}>
                                         <span>
-                                            <img src={vaultimg}/>
+                                            <img src={vaultimg} alt=''/>
                                             {t('Vault')}
                                         </span>
                                     </li>
@@ -320,12 +376,12 @@ export default function About(props) {
                                 {
                                     <li onClick={() => handleClicktoType('org')}>
                                         <span>
-                                            <img src={orgimg}/>
+                                            <img src={orgimg} alt=''/>
                                             {t('Org')}
                                         </span>
                                     </li>
                                 }
-                                {
+                                { (isOwner || isMember|| isModerator) &&
                                     <li>
                                         <div className='moreBtn'>
                                             <div
@@ -333,16 +389,22 @@ export default function About(props) {
                                                 >
                                                 <button className="btn">
                                                 <span onClick={handleMore} className='clickBtn' ref={myRef}>
-                                                    <img src={moreImg}/>
+                                                    <img src={moreImg} alt=''/>
                                                     {t('More')}
                                                 </span>
                                                 </button>
                                                 {
-                                                    showMore && <ul className='morelist'>
-                                                        <li onClick={handleTransfer}>
-                                                            <span><img src={transferImg} alt=""/></span>{t('transferBtn')}
-                                                        </li>
-                                                        <li onClick={handleExit}><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
+                                                    showMore &&(isOwner || isMember|| isModerator) && <ul className='morelist'>
+                                                        {
+                                                            isOwner &&  <li onClick={handleTransfer}>
+                                                                <span><img src={transferImg} alt=""/></span>{t('transferBtn')}
+                                                            </li>
+                                                        }
+                                                        { (isMember || isModerator)&&
+                                                            <li onClick={handleExit}><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
+                                                        }
+
+
                                                     </ul>
                                                 }
 

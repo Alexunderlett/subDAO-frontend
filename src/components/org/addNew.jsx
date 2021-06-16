@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Button, FormControl, FormLabel, Modal} from "react-bootstrap";
+import {Button, FormControl, FormLabel, InputGroup, Modal, Tab} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
 import {useTranslation} from "react-i18next";
+import remove from "../../images/shutdown.png";
+import add from "../../images/Add.png";
 
 export default function AddNew(props){
 
@@ -20,6 +22,12 @@ export default function AddNew(props){
 
     const [addModerator, setaddModerator] = useState(false);
     const [addMember, setaddMember] = useState(false);
+    const [adminlist,setadminlist]= useState([
+        {
+            name: '',
+            address: ''
+        }
+    ]);
 
     let { t } = useTranslation();
 
@@ -75,6 +83,20 @@ export default function AddNew(props){
             submitMembers(obj)
         }
     }
+    const setAdminInput = (e, index) => {
+        let newArray = [...adminlist];
+        const {name, value} = e.target;
+        newArray[index][name] = value;
+        setadminlist(newArray)
+    }
+    const removeAdmin = (selectItem, index) =>{
+        let newArray = [...adminlist];
+        newArray.splice(index, 1);
+        setadminlist(newArray)
+    }
+    const handleBatch = () =>{
+        props.handleBatch()
+    }
 
     let {handleClose, showTips,typeName} = props;
     return <div>
@@ -82,7 +104,7 @@ export default function AddNew(props){
 
         <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
             <Modal.Header closeButton>
-                <Modal.Title><img src={addnew} alt=""/><span >{typeName}</span></Modal.Title>
+                <Modal.Title><img src={add} alt=""/><span >{typeName}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <section>
@@ -116,13 +138,12 @@ export default function AddNew(props){
                                 <Button variant="primary"  onClick={()=>handleSubmit(typeName)}>
                                     Add
                                 </Button>
+                                <Button variant="primary"  onClick={()=>handleBatch()}>
+                                    Batch Import
+                                </Button>
                             </div>
                         </li>
                     </ul>
-
-
-
-
 
                 </section>
             </Modal.Body>

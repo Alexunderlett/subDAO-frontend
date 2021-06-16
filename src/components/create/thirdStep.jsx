@@ -133,6 +133,8 @@ export default function ThirdStep(props){
            case 'supply':
                setsupply(e.target.value)
                break;
+           default:
+               break;
        }
 
     }
@@ -145,6 +147,8 @@ export default function ThirdStep(props){
                break;
            case 'token':
                setToken(!JSON.parse(value))
+               break;
+           default:
                break;
        }
     }
@@ -459,7 +463,7 @@ export default function ThirdStep(props){
                                         </InputGroup>
                                         {
                                             !!index &&
-                                            <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht"/>
+                                            <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht" alt=''/>
                                         }
                                     </div>
                                 </div>
@@ -467,7 +471,7 @@ export default function ThirdStep(props){
                         ))
                         }
                         <div>
-                            <button className="addToken" onClick={addAdmin}><img src={add} className="addRht"/>{t('AddAdmin')}</button>
+                            <button className="addToken" onClick={addAdmin}><img src={add} className="addRht"  alt=''/>{t('AddAdmin')}</button>
                         </div>
                     </div>
                 </Tab>
@@ -556,7 +560,7 @@ export default function ThirdStep(props){
                                     </InputGroup>
                                     {
                                         !!index &&
-                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht"/>
+                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht" alt=''/>
 
                                     }
                                 </div>
@@ -567,7 +571,7 @@ export default function ThirdStep(props){
                     }
 
                     <div>
-                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht"/> {t('AddToken')}</button>
+                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht" alt=''/> {t('AddToken')}</button>
 
                     </div>
                 </Tab>

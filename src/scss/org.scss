@@ -57,7 +57,19 @@
 
     }
   }
-
+  .auth{
+    dd:last-child{
+      display: none;
+    }
+    &>div:hover{
+      dd:last-child{
+        display: block;
+        img{
+          cursor: pointer;
+        }
+      }
+    }
+  }
   dl{
     padding: 25px;
     display: flex;
@@ -72,6 +84,9 @@
       display: inline-block;
       word-break:break-all;
       margin-bottom: 0;
+      &:nth-child(3){
+        padding-left: 20px;
+      }
       a{
         color: #A8B0C1;
         text-decoration: none;
@@ -253,8 +268,451 @@
     }
   }
 }
-.addnew{
-  li{
+
+.orgSelect{
+  .col-3{
+    padding: 0;
+  }
+  .radioOption{
+    color: #ffffff;
+    margin-bottom: 1em;
+    padding: 0!important;
+  }
+  .form-group{
+    padding-bottom:15px;
+    margin-bottom: 0;
+
+    .form-check{
+      display: flex;
+      justify-content: flex-start;
+      padding-left: 0;
+    }
+    label{
+      margin-bottom: 0;
+    }
+    input[type='checkbox' i] {
+      appearance:none;
+       -moz-appearance: none;
+      background:transparent;
+      border: 2px solid #A8B0C1;
+      width: 22px;
+      height: 22px;
+      outline: none;
+      border-radius: 6px;
+      margin-right: 12px;
+    }
+    input[type='checkbox']:checked {
+      appearance: none;
+      border: none;
+      background: url("../images/Checkbox_sel.png") center;
+      background-size: 100%;
+    }
+  }
+}
+.authBrdr{
+  .modal-dialog{
+    margin-top: 0;
+  }
+  .modal-dialog{
+    width: 842px!important;
+    max-width: 842px!important;
+  }
+  .modal-content{
+    background: #130b37;
+    width: 100%;
+    padding:40px;
+    border-radius: 40px;
+    box-sizing: border-box;
+  }
+  .modal-header{
+    color: #ffffff;
+    font-size: 18px!important;
+    border: 0;
+    text-transform: capitalize;
+    img{
+      width: 26px;
+    }
+    span{
+      padding-left: 20px;
+      display: inline-block;
+      font-size: 18px;
+    }
+    .close{
+      width: 32px;
+      background: url("../images/shutdownW.png");
+      opacity: 1;
+      span{
+        display: none;
+      }
+    }
+  }
+
+}
+.btmBtn{
+  display: flex;
+  justify-content: center;
+}
+.NextBrdr100{
+  width: 542px;
+  margin-top: 12px;
+  button{
+    width: 100%;
+    background: #160947CC;
+    //border: 0;
+    color: #A8B0C1;
+    height: 75px;
+    border-radius: 15px;
+    margin: 1px;
+    border: 1px solid #281A62
 
   }
+}
+.topRhtBtn{
+  background: transparent;
+  cursor: pointer;
+  border: 1px solid #EE42D1;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 0 23px!important;
+  border-radius: 57px;
+  outline: none;
+  //margin: 1px;
+  height: 44px;
+  margin-top: -10px;
+  margin-right: 20px;
+  &:hover,&:focus{
+    background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+    border:0;
+  }
+  &:active{
+    background: linear-gradient(90deg, rgba(75, 105, 242, 0.6) 0%, rgba(238, 66, 209, 0.6) 100%), linear-gradient(0deg, #000000, #000000);
+    border:0;
+  }
+  img{
+    width: 20px;
+    margin-right: 10px;
+  }
+}
+
+.applyBrdr{
+  .modal-dialog{
+    margin-top: 0;
+  }
+  .modal-dialog{
+    width: 648px!important;
+    max-width: 648px!important;
+  }
+  .modal-content{
+    background: #130b37;
+    width: 100%;
+    padding:40px;
+    border-radius: 40px;
+    box-sizing: border-box;
+  }
+  .modal-header{
+    color: #ffffff;
+    font-size: 32px!important;
+    border: 0;
+    text-transform: capitalize;
+    img{
+      width: 42px;
+    }
+    span{
+      padding-left: 20px;
+      display: inline-block;
+      font-size: 32px;
+    }
+    .close{
+      width: 32px;
+      background: url("../images/shutdownW.png");
+      opacity: 1;
+      span{
+        display: none;
+      }
+    }
+  }
+
+}
+.btmBtn{
+  display: flex;
+  justify-content: center;
+}
+.topRhtBtn{
+  background: transparent;
+  cursor: pointer;
+  border: 1px solid #EE42D1;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 0 23px!important;
+  border-radius: 57px;
+  outline: none;
+  //margin: 1px;
+  height: 44px;
+  margin-top: -10px;
+  margin-right: 20px;
+  &:hover,&:focus{
+    background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+    border:0;
+  }
+  &:active{
+    background: linear-gradient(90deg, rgba(75, 105, 242, 0.6) 0%, rgba(238, 66, 209, 0.6) 100%), linear-gradient(0deg, #000000, #000000);
+    border:0;
+  }
+  img{
+    width: 20px;
+    margin-right: 10px;
+  }
+
+}
+.applylist{
+  max-height:60vh;
+  overflow-y: auto;
+  li{
+    border-bottom: 1px solid #A8B0C1;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+    .firstTitle{
+      flex-grow: 1;
+      font-size: 14px;
+      line-height: 18px;
+      padding-bottom: 30px;
+      .title{
+        font-size: 20px;
+        line-height: 23px;
+        text-transform: capitalize;
+        color: #FFFFFF;
+        padding-bottom: 15px;
+      }
+    }
+    &>img{
+      width: 32px;
+      display: inline-block;
+      margin-left: 30px;
+      cursor: pointer;
+    }
+  }
+}
+
+
+.newMemberBrdr{
+  .modal-dialog{
+    width: 622px!important;
+    max-width: 985px!important;
+    margin-top: 0;
+  }
+  .modal-content{
+    //background: #1E0F56;
+    background: #130b37;
+    //width: 622px;
+    padding:40px 40px 60px;
+    border-radius: 0px 0px 35px 35px;
+
+  }
+  .modal-footer{
+    border: 0;
+  }
+  .modal-header{
+    color: #ffffff;
+    font-size: 32px;
+    border: 0;
+    //padding: 86px 0 0 46px;
+    text-transform: capitalize;
+    img{
+      width: 42px;
+      height: 42px;
+    }
+    span{
+      padding-left: 33px;
+      display: inline-block;    font-size: 32px;
+    }
+    .close{
+      width: 42px;
+      height: 42px;
+      background: url("../images/shutdownW.png");
+      opacity: 1;
+      margin-top: 5px ;
+      span{
+        display: none;
+      }
+    }
+  }
+  .form-label{
+    margin-left: 10px;
+  }
+  .inputBrdr textarea.form-control{
+
+    height: 250px!important;
+
+  }
+  .NextBrdr{
+    width: 100%;
+    margin-top: 40px;
+  }
+  .NextBrdrAdd{
+    margin-top: 20px;
+  }
+  .button2{
+    display: flex;
+    justify-content: space-between;
+    button:first-child{
+      margin-right: 20px;
+    }
+    button:last-child{
+      //background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+      //border:0;
+      margin-right: 0;
+      //color: #ffffff;
+    }
+  }
+
+}
+.batchBrdr{
+  .modal-dialog{
+    width: 985px!important;
+    max-width: 985px!important;
+    margin-top: 0;
+  }
+  .modal-content{
+    background: #130b37;
+    padding:40px 40px 60px;
+    border-radius: 0px 0px 35px 35px;
+
+  }
+  .modal-footer{
+    border: 0;
+  }
+  .modal-header{
+    color: #ffffff;
+    font-size: 32px;
+    border: 0;
+    text-transform: capitalize;
+    img{
+      width: 42px;
+      height: 42px;
+    }
+    span{
+      padding-left: 33px;
+      display: inline-block;    font-size: 32px;
+    }
+    .close{
+      width: 42px;
+      height: 42px;
+      background: url("../images/shutdownW.png");
+      opacity: 1;
+      margin-top: 5px ;
+      span{
+        display: none;
+      }
+    }
+  }
+  .form-label{
+    margin-left: 10px;
+  }
+  .inputBrdr textarea.form-control{
+
+    height: 250px!important;
+
+  }
+  .NextBrdr{
+    width: 100%;
+    margin-top: 40px;
+  }
+  .NextBrdrAdd{
+    margin-top: 20px;
+  }
+  .button2{
+    display: flex;
+    justify-content: space-between;
+    button:first-child{
+      margin-right: 20px;
+    }
+    button:last-child{
+      //background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
+      //border:0;
+      margin-right: 0;
+      //color: #ffffff;
+    }
+  }
+
+}
+.batchTop{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+  margin-bottom: 40px;
+  padding-right: 10px;
+  color: #ffffff;
+  .voteLft{
+    cursor: pointer;
+  }
+  .btnRTop{
+    cursor: pointer;
+    img{
+      margin-right: 16px;
+    }
+  }
+}
+.batchlist {
+  max-height: 50vh;
+  overflow-y: auto;
+  .inputBrdr {
+
+    .form-control{
+      color: #ffffff;
+      border: 0;
+      background: transparent;
+      padding: 24px!important;
+      height: auto!important;
+    }
+
+  }
+}
+.applytipsBrdr{
+  color: #ffffff;
+  .modal-dialog{
+    margin-top: 0;
+  }
+  .modal-content{
+    //background: #1E0F56;
+    background: #130b37;
+    width: 622px;
+    padding:40px 40px 60px;
+    border-radius: 0px 0px 35px 35px;
+
+  }
+  .modal-header{
+    color: #ffffff;
+    font-size: 32px;
+    border: 0;
+    //padding: 86px 0 0 46px;
+    text-transform: capitalize;
+    img{
+      width: 42px;
+      height: 42px;
+    }
+    span{
+      padding-left: 33px;
+      display: inline-block;    font-size: 32px;
+    }
+    .close{
+      width: 42px;
+      height: 42px;
+      background: url("../images/shutdownW.png");
+      opacity: 1;
+      margin-top: 5px ;
+      span{
+        display: none;
+      }
+    }
+  }
+
+  .modal-header .close{
+    width: 24px!important;
+    height: 24px!important;
+    background-size: 100%!important;
+  }
+
 }

@@ -9,66 +9,46 @@ import {useTranslation} from "react-i18next";
 
  const Transfer = forwardRef((props, ref) =>{
     const {state} = useSubstrate();
-    const {vaultcontract,erc20contract} = state;
+    const {orgcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
-    const [selected, setSelected] = useState(null);
-    const [amount, setAmount] = useState('');
-    const [deposit, setdeposit] = useState(false);
-
-
+    const [address, setAddress] = useState('');
      let { t } = useTranslation();
 
-    useEffect( () => {
-
-        if(!deposit)return;
-        let obj = {
-            amount,selected
-        }
+    const handleChange = (e) => {
+        const {value} = e.target;
+        setAddress(value)
+    }
+    const handleConfirm= async()=>{
+        console.log(address)
+        setLoading(true);
+        setTips(t('transferOrg'));
 
         const setdeposittrs =async () => {
-            await api.vault.deposit(vaultcontract, obj, (result) => {
+            await api.org.transferOwnership(orgcontract, address, (result) => {
                 if (result) {
                     setLoading(false);
                     props.handleClose()
-                    props.setShow()
-                    setdeposit(false)
+                    window.location.reload()
                 }
             });
 
         };
         setdeposittrs();
 
-    }, [deposit]);
-
-    const handleChange = (e) => {
-        const {value} = e.target;
-        setAmount(value)
-    }
-    const handleConfirm= async()=>{
-        setLoading(true);
-        setTips(t('Createdeposit'));
-        await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount,(result)=> {
-            setdeposit(true)
-        })
-
-    }
-    const handleSelect = (e) => {
-        setSelected(e.target.value)
     }
 
 
      useImperativeHandle(ref, () => ({
          resultToVault: () => {
             return {
-                selected,
-                amount
+                address
             }
          },
          amountToNull:()=>{
-             setAmount('')
+             setAddress('')
          }
      }));
 
@@ -86,13 +66,12 @@ import {useTranslation} from "react-i18next";
                         <ul className="withdraw">
 
                             <li>
-
                                 <InputGroup className="mb-3">
                                     <FormLabel>{t('fillAddress')}</FormLabel>
                                     <div className="inputBrdr">
                                     <FormControl
                                         placeholder={t('fillAddress')}
-                                        value={amount}
+                                        value={address}
                                         name='address'
                                         onChange={handleChange}
                                     />

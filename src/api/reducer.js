@@ -85,6 +85,16 @@ const reducer = (state, action) => {
         case 'VOTE_ERROR':
             return { ...state, votecontract: null, votecontractState: 'ERROR' };
 
+        // auth
+        case 'LOAD_AUTH':
+            return { ...state, authcontractState: 'LOAD_AUTH' };
+
+        case 'SET_AUTH':
+            return { ...state, authcontract: action.payload, authcontractState: 'READY' };
+
+        case 'AUTH_ERROR':
+            return { ...state, authcontract: null, vauthcontractState: 'ERROR' };
+
         // DAO
         case 'LOAD_DAO':
             return { ...state, daoManagercontractState: 'LOAD_DAO' };

@@ -7,6 +7,7 @@ import {useSubstrate} from "../../api/contracts";
 import trigger from '../../images/trigger.png';
 import {useTranslation} from "react-i18next";
 import NewVote from "./newVote";
+import view from "../../images/view.png";
 
 export default function VotePending(props) {
     const {state} = useSubstrate();
@@ -52,7 +53,12 @@ export default function VotePending(props) {
             props.refresh()
         });
     }
+    const handleClicktoVoteview = (voteid) => {
+        let { id } = props;
+        props.history.push(`/voteOverview/${id}/${voteid}`)
+        // setviewshow(true)
 
+    }
     return (<div className='votePending'>
             <VoteModalTips
                 handleClose={handleClose}
@@ -71,7 +77,10 @@ export default function VotePending(props) {
                     list.map((item)=><tr key={`Pending_${item.vote_id}`}>
                         <td>{item.vote_id}</td>
                         <td>{item.title}</td>
-                        <td><span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span></td>
+                        <td>
+                            <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>
+                            <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
+                        </td>
                     </tr>)
                 }
                 </tbody>

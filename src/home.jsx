@@ -73,7 +73,7 @@ function Home(props) {
 
      useEffect(() => {
 
-         if(maincontract==null || selected && !selected.length ) return ;
+         if(maincontract==null || (selected && !selected.length) ) return ;
          const setInstances = async() => {
              setLoading(true);
              let addresslist = await api.main.listDaoInstances(maincontract);

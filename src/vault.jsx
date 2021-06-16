@@ -30,7 +30,7 @@ export default function Vault(props){
         const [list, setlist] = useState([]);
         const [tokenlist, settokenlist] = useState([]);
         const [historylist, sethistorylist] = useState([]);
-        const [withDrawS, setwithDrawS] = useState(true);
+        // const [withDrawS, setwithDrawS] = useState(true);
         const [TipsNum, setTipsNum] = useState(0);
         const [TipsAddress, setTipsAddress] = useState(0);
         const [type, setType] = useState(true);
@@ -56,15 +56,15 @@ export default function Vault(props){
             setId(props.match.params.id);
 
         }, []);
-        useEffect(() => {
-            if (vaultcontract == null) return;
-            const checkAuthority = async () => {
-                await api.vault.checkAuthority(vaultcontract).then(data => {
-                    setwithDrawS(data)
-                });
-            };
-            checkAuthority();
-        }, [vaultcontract]);
+        // useEffect(() => {
+        //     if (vaultcontract == null) return;
+        //     const checkAuthority = async () => {
+        //         await api.vault.checkAuthority(vaultcontract).then(data => {
+        //             setwithDrawS(data)
+        //         });
+        //     };
+        //     checkAuthority();
+        // }, [vaultcontract]);
         const setbalance = async () => {
             let arr = [{
                 token: '',
@@ -90,18 +90,23 @@ export default function Vault(props){
         const setShow = (type) => {
 
             if (type === 'deposit') {
-                let obj = childRef.current.resultToVault();
+                let obj
+                if(childRef.current != null){
+                    obj = childRef.current.resultToVault();
+                }
+
                 setTipsNum(obj.amount)
                 setTipsAddress(obj.selected)
                 setType(true)
                 childRef.current.amountToNull()
-            } else {
-                let obj = withdrawRef.current.resultToVault();
-                setTipsNum(obj.amount)
-                setTipsAddress(obj.address)
-                setType(false)
-                withdrawRef.current.amountToNull()
             }
+            // else {
+            //     let obj = withdrawRef.current.resultToVault();
+            //     setTipsNum(obj.amount)
+            //     setTipsAddress(obj.address)
+            //     setType(false)
+            //     withdrawRef.current.amountToNull()
+            // }
 
             setshowvaultTips(true)
 
@@ -200,11 +205,15 @@ export default function Vault(props){
                                 <div>
                                     <button className='btnR' onClick={() => handleClicktoDetail('deposit')}><img
                                         src={depositimg} alt=""/>{t('deposit')}</button>
-                                    {
-                                        withDrawS &&
-                                        <button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img
-                                            src={withdrawimg} alt=""/>{t('withdraw')}</button>
-                                    }
+                                    {/*{*/}
+                                    {/*    withDrawS &&*/}
+                                    {/*    <button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                                    {/*        src={withdrawimg} alt=""/>{t('withdraw')}</button>*/}
+                                    {/*} */}
+
+                                        {/*<button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                                        {/*    src={withdrawimg} alt=""/>{t('withdraw')}</button>*/}
+
                                 </div>
 
 

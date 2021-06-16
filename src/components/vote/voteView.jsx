@@ -104,7 +104,7 @@ export default function VoteView (props){
 
                                     <div key={index}>
                                         <div className="row">
-                                            <div className={active == index?'col-12 radioOption radioActive':'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
+                                            <div className={parseInt(active) === index?'col-12 radioOption radioActive':'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
                                                 <div className="form-group">
                                                     <div className="form-check"  >
                                                         <label htmlFor={`radio_${index}`}>{i.split(":")[0]}</label>
@@ -112,7 +112,7 @@ export default function VoteView (props){
                                                                type="radio"
                                                                id={`radio_${index}`}
                                                                className="form-check-inputRadio"
-                                                               value={index+1}
+                                                               value={index}
                                                                onClick={handleRadio}
                                                          />
                                                     </div>
