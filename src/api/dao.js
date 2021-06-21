@@ -53,7 +53,7 @@ const setDAO = async (daoManagercontract,obj,cb) => {
             owner:AccountId,
             name: erc20_name,
             symbol: erc20_symbol,
-            totalSupply: erc20_initial_supply,
+            total_supply: erc20_initial_supply,
             decimals: erc20_decimals
         },
         // erc20Transfers: {},
@@ -62,19 +62,25 @@ const setDAO = async (daoManagercontract,obj,cb) => {
             // moderators: {}
         }
     }
-    // if(token){
-    //     objData.erc20Transfers ={}
-    //    for(let item  in tokenlist) {
-    //        objData.erc20Transfers[tokenlist[item].address] = parseInt(tokenlist[item].token);
-    //    }
-    // }
-    //
-    // if(admin){
-    //     objData.org.moderators ={}
-    //    for(let item  in adminlist) {
-    //        objData.org.moderators[adminlist[item].name] = adminlist[item].address;
-    //    }
-    // }
+    if(token){
+        objData.erc20Transfers =[]
+        let i = 0;
+       for(let item  in tokenlist) {
+           // objData.erc20Transfers[tokenlist[item].address] = parseInt(tokenlist[item].token);
+           objData.erc20Transfers[i] = [tokenlist[item].address,parseInt(tokenlist[item].token)];
+           i++;
+       }
+    }
+
+    if(admin){
+        objData.org.moderators =[]
+        let i = 0;
+       for(let item  in adminlist) {
+           // objData.org.moderators[adminlist[item].name] = adminlist[item].address;
+           objData.org.moderators[i] = [adminlist[item].name,adminlist[item].address];
+           i++;
+       }
+    }
        console.log(objData)
 
     const version = randomAsHex();

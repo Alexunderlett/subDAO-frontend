@@ -36,6 +36,7 @@
   "Members": "成员",
   "Add": "增加",
   "InitializeORG": "初始化组织页面",
+  "triggerStatus": "是否直接加入组织？",
   "setFreeAddMember": "设置添加成员方式",
   "RemoveModerator": "删除管理员",
   "RemoveMember": "删除成员",

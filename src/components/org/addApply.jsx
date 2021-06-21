@@ -44,11 +44,12 @@ export default function AddApply(props){
         await api.org.applyMember(orgcontract,name,function (result) {
             setaddMember(result)
             props.handleClose()
+            props.refresh()
             setname('')
         });
     }
 
-    let {handleClose, showTips,typeName} = props;
+    let {handleClose, showTips} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
 
@@ -60,10 +61,10 @@ export default function AddApply(props){
                 <section>
                     <ul className='addnew'>
                         <li>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>{t('FilltheName')}</FormLabel>
                             <div className="inputBrdr">
                                 <FormControl
-                                    placeholder="Please fill the name."
+                                    placeholder={t('FilltheName')}
                                     name='name'
                                     value={name}
                                     autoComplete="off"

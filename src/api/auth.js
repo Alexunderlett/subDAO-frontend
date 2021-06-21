@@ -26,17 +26,17 @@ const InitAuth = async (state, dispatch,address,cb) =>  {
 
 const value = 0;
 const gasLimit = -1;
-//
-// const getDaoModeratorList = async (orgcontract) => {
-//
-//     const AccountId = await Accounts.accountAddress();
-//     if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
-//
-//     let data = await orgcontract.query.getDaoModeratorDetailList(AccountId, {value, gasLimit});
-//     data = publicJs.formatResult(data);
-//     return data;
-//
-// };
+
+const showActions = async (orgcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
+
+    let data = await orgcontract.query.showActionsByContract(AccountId, {value, gasLimit},'org');
+    data = publicJs.formatResult(data);
+    return data;
+
+};
 // const whoAmI = async (orgcontract) => {
 //
 //     const AccountId = await Accounts.accountAddress();
@@ -201,5 +201,6 @@ const gasLimit = -1;
 
 export default {
     InitAuth,
+    showActions,
 
 }

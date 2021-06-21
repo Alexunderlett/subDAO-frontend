@@ -16,6 +16,8 @@ import ApplyList from './components/org/ApplyList'
 import ApplyTips from './components/org/ApplyTips'
 import AddBatch from './components/org/addbatch'
 import {useTranslation} from "react-i18next";
+import TriggerBtn from "./images/triggerBtn.png";
+import TriggerBtnActive from "./images/triggerBtnActive.png";
 
 export default function Org(props) {
 
@@ -40,6 +42,8 @@ export default function Org(props) {
     const [isModerator, setisModerator] = useState(false);
     const [isOwner, setisOwner] = useState(false);
     const [applyAuth, setapplyAuth] = useState(false);
+    const [triggerStatus, settriggerStatus] = useState(false);
+    const [triggerTips, settriggerTips] = useState(false);
 
     let { t } = useTranslation();
 
@@ -62,6 +66,7 @@ export default function Org(props) {
         const getFree = async () =>{
             await api.org.getFreeAddMember(orgcontract).then(data => {
                 console.error("getFreeAddMember====",data)
+                settriggerStatus(data)
                 setapplyAuth(data)
             });
         }
@@ -95,8 +100,6 @@ export default function Org(props) {
         }
         initVoteContract()
     }, [orgcontract,allAccounts,apiState]);
-
-
 
 
     const handleClicktoManage = () => {
@@ -147,7 +150,12 @@ export default function Org(props) {
     const handleAppTipsClose = () => {
         setshowTips(false)
     }
+    const handleTriggerTips = () => {
+        settriggerTips(!triggerTips)
+    }
     const handleSetApply = async() => {
+        settriggerStatus(!triggerStatus);
+        settriggerTips(!triggerTips)
         setLoading(true);
         setTips(t('setFreeAddMember'));
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
@@ -156,8 +164,6 @@ export default function Org(props) {
 
             setLoading(false);
         });
-
-
     }
 
     return (
@@ -179,7 +185,22 @@ export default function Org(props) {
                             {
                                 isOwner &&
                                 <div>
-                                    <button className='topRhtBtn' onClick={handleSetApply}>设置</button>
+                                    <div className='btnRht10'>
+                                        {
+                                            triggerTips && <div className='triggerTips'>
+                                                <div className="trigger3" />
+                                                {t('triggerStatus')}
+                                            </div>
+                                        }
+
+                                        {
+                                            !triggerStatus &&<img src={TriggerBtn} alt=""  onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
+                                        }
+                                        {
+                                            triggerStatus &&<img src={TriggerBtnActive} alt="" onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
+                                        }
+                                    </div>
+
                                         <button className='topRhtBtn' onClick={handleApplistShow}><img src={applyList}
                                                                                                        alt=""/>{t('applyList')}
                                         </button>
@@ -191,7 +212,14 @@ export default function Org(props) {
                                 </div>
                             }
                         </div>
-                        <Addnew  handleClose={handleClose} showTips={addshow} typeName={typeName} refresh={setall} handleBatch={handleBatch}/>
+                        <Addnew
+                            handleClose={handleClose}
+                            showTips={addshow}
+                            typeName={typeName}
+                            refresh={setall}
+                            handleBatch={handleBatch}
+                            applyAuth={applyAuth}
+                        />
                         <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
                         <AddBatch
                             handleClose={handleBatchClose}
@@ -226,7 +254,7 @@ export default function Org(props) {
                                     <div className="titleOrg">
                                         <h6>{t('Members')}</h6>
                                         {
-                                            !applyAuth && <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
+                                            applyAuth && <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
                                         }
                                         {
                                             !applyAuth && <button className='btnAdd' onClick={()=>handleaddApply()}><img src={add} alt=""/>{t('apply')}</button>

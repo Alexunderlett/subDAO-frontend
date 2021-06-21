@@ -17,11 +17,6 @@ export default function AddBatch(props){
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
-    const [name,setname]= useState('');
-    const [address,setaddress]= useState('');
-
-
-    const [addModerator, setaddModerator] = useState(false);
     const [addMember, setaddMember] = useState(false);
     const [adminlist,setadminlist]= useState([
         {
@@ -32,57 +27,25 @@ export default function AddBatch(props){
 
     let { t } = useTranslation();
 
-    useEffect(() => {
-        if(addModerator){
-            setLoading(false);
-        }
-    }, [addModerator]);
-    useEffect(() => {
-        if(addMember){
-            setLoading(false);
-        }
-    }, [addMember]);
 
-
-    const submitModerators = async (obj) =>{
-        setLoading(true);
-        setTips(t('AddModerator'));
-        await api.org.addDaoModerator(orgcontract,obj,function (result) {
-            setaddModerator(result)
-            props.handleClose()
-            props.refresh()
-            setname('')
-            setaddress('')
-        });
-    }
-    const submitMembers = async (obj) =>{
+    const handleSubmit = async () => {
         setLoading(true);
         setTips(t('AddMember'));
-        await api.org.addDaoMember(orgcontract,obj,function (result) {
-            setaddMember(result)
-            props.handleClose()
-            props.refresh()
-            setname('')
-            setaddress('')
-        });
-    }
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        let str = `set${name}`
-        eval(str)(value)
-    }
-    const handleSubmit = (type) => {
-        const obj= {
-            address,
-            name
-        };
+        let obj = [];
+        let i = 0;
+        for(let item  in adminlist) {
 
-        if(type==="Moderators"){
-            submitModerators(obj)
-        }else {
-            submitMembers(obj)
+            obj[i] = [adminlist[item].name,adminlist[item].address];
+            i++;
         }
+
+        await api.org.batchAddMember(orgcontract,obj,function (result) {
+            setLoading(false);
+            props.handleClose();
+            props.refresh();
+
+        });
     }
     const setAdminInput = (e, index) => {
         let newArray = [...adminlist];
@@ -108,13 +71,13 @@ export default function AddBatch(props){
         props.handleBatchAdd()
     }
 
-    let {handleClose, showTips,typeName} = props;
+    let {handleClose, showTips} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
 
         <Modal  show={showTips} onHide={handleClose} className='batchBrdr'>
             <Modal.Header closeButton>
-                <Modal.Title><img src={addnew} alt=""/><span >Members</span></Modal.Title>
+                <Modal.Title><img src={addnew} alt=""/><span >{t('Members')}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <section>
@@ -174,7 +137,7 @@ export default function AddBatch(props){
                     </ul>
                     <div>
                         <div className='NextBrdr'>
-                            <Button variant="primary"  onClick={()=>handleSubmit(typeName)}>
+                            <Button variant="primary"  onClick={()=>handleSubmit()}>
                                 Add
                             </Button>
                         </div>

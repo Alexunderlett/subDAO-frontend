@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next";
 export default function AddAuth(props){
 
     const {state} = useSubstrate();
-    const {orgcontract} = state;
+    const {authcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -49,22 +49,39 @@ export default function AddAuth(props){
         }
     }, [addModerator]);
 
-    const submitModerators = async (obj) =>{
-        setLoading(true);
-        setTips(t('AddModerator'));
-        await api.org.addDaoModerator(orgcontract,obj,function (result) {
-            setaddModerator(result)
-            props.handleClose()
-        });
-    }
+    // useEffect(() => {
+    //     if(authcontract == null) return;
+    //     const initList = async () =>{
+    //         setLoading(true);
+    //         setTips(t('InitializeORG'));
+    //
+    //         await api.auth.showActions(authcontract).then(data => {
+    //             if (!data) return;
+    //             setoptionlist(data)
+    //             console.error(data)
+    //             setLoading(true);
+    //         });
+    //     }
+    //     initList();
+    // }, []);
 
-    const handleSubmit = () => {
-        const obj= {
-            address,
-            name
-        };
-        submitModerators(obj)
-    }
+
+    // const submitModerators = async (obj) =>{
+    //     setLoading(true);
+    //     setTips(t('AddModerator'));
+    //     await api.org.addDaoModerator(orgcontract,obj,function (result) {
+    //         setaddModerator(result)
+    //         props.handleClose()
+    //     });
+    // }
+    //
+    // const handleSubmit = () => {
+    //     const obj= {
+    //         address,
+    //         name
+    //     };
+    //     submitModerators(obj)
+    // }
     const handleActive = (e) =>{
         let index = e.currentTarget.id.split("_")[1];
         setActive(index)

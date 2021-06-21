@@ -217,6 +217,20 @@ const transferOwnership = async (orgcontract,address,cb) => {
          });
 
 };
+const batchAddMember = async (orgcontract,obj,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.batchAddDaoMember({value, gasLimit}, obj)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized) {
+                cb(true)
+            }
+         });
+};
 
 const setFreeAddMember = async (orgcontract,freeAdd,cb) => {
 
@@ -260,4 +274,5 @@ export default {
     resign,
     setFreeAddMember,
     getFreeAddMember,
+    batchAddMember,
 }

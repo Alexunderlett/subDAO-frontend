@@ -93,12 +93,13 @@ export default function Vault(props){
                 let obj
                 if(childRef.current != null){
                     obj = childRef.current.resultToVault();
+                    setTipsNum(obj.amount)
+                    setTipsAddress(obj.selected)
+                    setType(true)
+                    childRef.current.amountToNull()
                 }
 
-                setTipsNum(obj.amount)
-                setTipsAddress(obj.selected)
-                setType(true)
-                childRef.current.amountToNull()
+
             }
             // else {
             //     let obj = withdrawRef.current.resultToVault();

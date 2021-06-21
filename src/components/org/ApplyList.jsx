@@ -58,7 +58,7 @@ export default function ApplyList(props){
 
         <Modal  show={showTips} onHide={handleClose} centered={true} className='applyBrdr'>
             <Modal.Header closeButton>
-                <Modal.Title><img src={applyList} alt=""/><span >apply List</span></Modal.Title>
+                <Modal.Title><img src={applyList} alt=""/><span >{t('applyList')}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <section>
