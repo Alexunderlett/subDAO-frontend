@@ -5,12 +5,18 @@ import voteActive from '../../images/votingactive.png';
 import view from '../../images/view.png';
 import VoteView from '../vote/voteView';
 import {useTranslation} from "react-i18next";
+import {useSubstrate} from "../../api/contracts";
+import api from "../../api";
 
 export default function VoteActive(props){
 
+    const {state,dispatch} = useSubstrate();
+    const {votecontract,allAccounts,apiState} = state;
+
     const [indexList, setIndexList] = useState([]);
     const [newshow, setnewshow] = useState(false);
-    const [voteid, setvoteid] = useState(false);
+    const [voteid, setvoteid] = useState(null);
+
 
     let { t } = useTranslation();
 
@@ -23,6 +29,7 @@ export default function VoteActive(props){
     const  handleClose = () => {
         setnewshow(false)
     }
+
     const handleView = (voteid) => {
 
         setnewshow(true)
@@ -30,6 +37,8 @@ export default function VoteActive(props){
         setvoteid(voteid)
             // props.history.push(`/voteView/${id}/${voteid}`)
     }
+
+
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
         props.history.push(`/voteOverview/${id}/${voteid}`)

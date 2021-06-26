@@ -24,6 +24,8 @@ export default function VoteView (props){
     const [logo, setLogo] = useState('');
     const [afterchoice, setafterchoice] = useState(false);
     const [active, setActive] = useState(null);
+    const [disabledVote, setdisabledVote] = useState(false);
+    const [toaddress, settoaddress] = useState('');
 
     let { t } = useTranslation();
 
@@ -40,6 +42,16 @@ export default function VoteView (props){
 
     }, [afterchoice]);
 
+    useEffect( () => {
+        if(votecontract == null ||  voteid == null)return;
+        const queryVoter = async () =>{
+            await api.vote.queryVoter(votecontract, voteid).then(data => {
+                setdisabledVote(data)
+            });
+        }
+        queryVoter();
+    }, [voteid]);
+
     useEffect(() => {
         console.log(props.id,props.voteid)
         if(props.id == null) return;
@@ -51,15 +63,14 @@ export default function VoteView (props){
 
             await api.vote.queryOneVote(votecontract, props.voteid).then(data => {
                 if (!data) return;
-
                 const {
-                    vote_id, title, desc, choices
-                } = data[0];
+                    vote_id, title, desc, choices, to_address
+                } = data;
                 settitle(title);
                 setId(vote_id);
                 setdesc(desc);
+                settoaddress(to_address);
                 setoptionlist(choices.split('|'))
-
             });
             // setLoading(false);
         };
@@ -98,7 +109,11 @@ export default function VoteView (props){
                     <section>
                         <ul>
                             <li className='VotetitleTop'>{title}</li>
-                            <li className='voteContent'>{desc}</li>
+                            <li className='voteContent'>
+                               <div className='desc'>{desc}</div>
+                                <div>Receiver's address:{toaddress}</div>
+                                <div>Receiver's address:{toaddress}</div>
+                            </li>
                             <li className='voteSelect'>
                                 {optionlist.map((i, index) => (
 
@@ -137,7 +152,8 @@ export default function VoteView (props){
                             <li className='NextBrdr'>
                                 {/*<Button variant="outline-primary" className='leftBtn'*/}
                                 {/*        onClick={handleClicktoVote}>Cancel</Button>*/}
-                                <Button variant="primary" onClick={handleClicktoOverview}>{t('Decide')}</Button>
+                                <Button variant="primary" onClick={handleClicktoOverview}
+                                disabled={disabledVote}>{t('Decide')}</Button>
                             </li>
                         </ul>
                     </section>

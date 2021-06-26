@@ -14,6 +14,7 @@ export default function VoteOverview (props){
     const [desc, setdesc] = useState('');
     const [support, setsupport] = useState('');
     const [min, setmin] = useState('');
+    const [toaddress, settoaddress] = useState('');
     const [optionlist, setoptionlist] = useState([]);
 
     let { t } = useTranslation();
@@ -25,13 +26,15 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
-                let dataArr = data.filter(i=>i.vote_id === props.match.params.voteid)
+
+
                 const {
-                    vote_id, title, desc, support_require_num, min_require_num, choices
-                } = dataArr[0];
+                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address
+                } = data;
                 settitle(title);
                 setvoteid(vote_id);
                 setdesc(desc);
+                settoaddress(to_address);
                 setsupport(support_require_num);
                 setmin(min_require_num);
                 let arr = [], afterArr = [];

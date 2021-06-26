@@ -275,7 +275,7 @@ export default function About(props) {
         setLoading(true);
         setTips(t('ExitDAO'));
         if(isMember){
-            await api.org.resign(orgcontract,function (result) {
+            await api.org.resignMember(orgcontract,function (result) {
                 if (!result) return;
                 setdelMem(true)
             });
@@ -289,7 +289,7 @@ export default function About(props) {
         const setAdmin = async () => {
             if(isModerator){
                     setTimeout(async()=>{
-                        await api.org.resign(orgcontract,function (result) {
+                        await api.org.resignModerator(orgcontract,function (result) {
                             if (!result) return;
                             setdelAdmin(true)
                         });

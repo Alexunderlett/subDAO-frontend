@@ -17,7 +17,7 @@ export default function NewVote(props) {
 
 
     const {state} = useSubstrate();
-    const {votecontract} = state;
+    const {votecontract,erc20address} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -29,6 +29,9 @@ export default function NewVote(props) {
     const [supportInput, setsupportInput] = useState('');
     const [min, setmin] = useState('');
     const [type, settype] = useState(1);
+    const [to_address, setto_address] = useState('');
+    const [valueAmount, setvalueAmount] = useState('');
+    const [erc20_address, seterc20_address] = useState('');
 
     const [optionlist, setoptionlist] = useState( ['','','']);
 
@@ -44,14 +47,18 @@ export default function NewVote(props) {
             vote_time:date*1000,
             support_require_num:supportInput,
             min_require_num:min,
-            choices:optionlist.join('|')
+            choices:optionlist.join('|'),
+            erc20_address,
+            to_address,valueAmount
         }
-        await api.vote.newVote(votecontract,dataobj,(result)=> {
+        await api.vote.newVoteTransfer(votecontract,dataobj,(result)=> {
             setLoading(false);
             if(result){
                 setdate('')
                 settitle('')
                 setdesc('')
+                setvalueAmount('')
+                setto_address('')
                 setsupportInput('')
                 setmin('')
                 setoptionlist(['','',''])
@@ -102,14 +109,10 @@ export default function NewVote(props) {
 
 
     const handleChange = (value) => {
-        // setdate(value._d)
-
-
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
 
         setdate(dateTime-nowTime)
-        console.log("===========--------------value._d)",dateTime-nowTime)
     }
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
         function clear() {
@@ -292,16 +295,58 @@ export default function NewVote(props) {
 
                                         <div className='NextBrdr NextBrdrAdd'>
                                             <Button variant="light" onClick={addOption}><img src={add} className="addRht" alt=''/> {t('AddOption')}</Button>
+
                                         </div>
 
                                     </li>
 
                                     <li className='NextBrdr button2'>
                                         <Button variant="primary" onClick={()=>nextStep(3)}>{t('Back')}</Button>
-                                        <Button variant="primary" onClick={handleClicktoVote}>{t('Create')}</Button>
+                                        <Button variant="primary" onClick={()=>nextStep(5)}>{t('Next')}</Button>
+
                                     </li>
                                 </ul>
                             </div>
+                        }
+                        {
+                            type === 5 &&
+                            <ul>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormLabel>{t('fillAddress')}</FormLabel>
+                                            <div className='inputBrdr'>
+                                                <FormControl
+                                                    placeholder={t('fillAddress')}
+                                                    name='to_address'
+                                                    value={to_address}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                        </InputGroup>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <InputGroup className="mb-3">
+                                            <FormLabel>{t('fillAmount')}</FormLabel>
+                                            <div className='inputBrdr'>
+                                                <FormControl
+                                                    placeholder={t('fillAmount')}
+                                                    name='valueAmount'
+                                                    value={valueAmount}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                        </InputGroup>
+                                    </div>
+                                </li>
+
+                                <li className='NextBrdr button2'>
+                                    <Button variant="primary" onClick={()=>nextStep(4)}>{t('Back')}</Button>
+                                    <Button variant="primary" onClick={handleClicktoVote}>{t('Create')}</Button>
+                                </li>
+                            </ul>
                         }
                     </section>
                 </Modal.Body>

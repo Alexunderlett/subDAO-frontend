@@ -48,10 +48,11 @@ const queryOneVote = async (votecontract, id) => {
 
     if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
 
-    // let dataobj = await votecontract.query.queryOneVote(AccountId, {value, gasLimit}, id);
-    let dataobj = await votecontract.query.queryActiveVote(AccountId, {value, gasLimit});
+    let dataobj = await votecontract.query.queryOneVote(AccountId, {value, gasLimit}, id);
+    // let dataobj = await votecontract.query.queryActiveVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
 
+    console.info('dataobj====',dataobj)
     return dataobj;
 }
 
@@ -93,6 +94,17 @@ const queryExecutedVote = async (votecontract) => {
     return dataobj;
 }
 
+const queryVoter = async (votecontract,id) => {
+
+    const AccountId = await Accounts.accountAddress();
+
+    if (votecontract === null || !votecontract || !votecontract.query || !AccountId) return;
+
+    let dataobj = await votecontract.query.queryVoterVoteOne(AccountId, {value, gasLimit},id,AccountId);
+    dataobj = publicJs.formatResult(dataobj);
+    return dataobj;
+}
+
 const newVote = async (votecontract,obj,cb) => {
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
@@ -103,6 +115,23 @@ const newVote = async (votecontract,obj,cb) => {
     let data;
 
    await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices)
+       .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+        if (result.status.isFinalized) {
+            cb(true)
+        }
+        });
+    return data;
+}
+const newVoteTransfer = async (votecontract,obj,cb) => {
+    const AccountId = await Accounts.accountAddress();
+    const injector = await Accounts.accountInjector();
+
+    const { title, desc, vote_time, support_require_num, min_require_num, choices,erc20_address,to_address,valueAmount} = obj;
+
+    if (votecontract === null || !votecontract || !votecontract.tx || !AccountId) return;
+    let data;
+
+   await votecontract.tx.newVoteWithTransfer({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices,erc20_address,to_address,valueAmount)
        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized) {
             cb(true)
@@ -139,17 +168,18 @@ const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             console.error("[[[[[[[[[[[result.status]]]]]]]]]",result)
 
-            if (result.status.isInBlock) {
-                console.log('Included at block hash', result.status.asInBlock.toHex());
-                console.log('Events:');
-
-                result.events.forEach(({ event: { data, method, section }, phase }) => {
-                    console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
-                    console.error(data);
-                });
-            }
 
             if (result.status.isFinalized) {
+
+                // console.log('Events:');
+                // let ContractEmitted= false;
+                // result.events.forEach(({ event: { data, method, section }, phase }) => {
+                //     console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+                //     console.error(data);
+                //     if(method==='ContractEmitted'){
+                //         ContractEmitted = true
+                //     }
+                // });
                 cb(true)
             }
     })
@@ -163,8 +193,10 @@ export default {
     queryOpenVote,
     queryExecutedVote,
     newVote,
+    newVoteTransfer,
     executeVote,
     VoteChoice,
+    queryVoter,
 }
 
 

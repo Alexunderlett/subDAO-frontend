@@ -23,11 +23,14 @@
 }
 .voteContent{
   font-size: 20px;
-  line-height: 23px;
+  line-height: 1.5em;
   word-wrap:break-word;
   word-break:normal;
   margin: 30px 0 70px;
   color: #A8B0C1;
+  .desc{
+    padding-bottom: 20px;
+  }
 }
 .voteSelect{
   .radioOption{
@@ -429,7 +432,7 @@
 }
 .overView{
   li{
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     &:last-child,&:first-child{
       div{
         font-size: 20px;

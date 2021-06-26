@@ -139,14 +139,26 @@ const applyMember = async (orgcontract,name,cb) => {
 };
 
 
-const resign = async (orgcontract,cb)=>{
+const resignModerator = async (orgcontract,cb)=>{
 
     const AccountId = await Accounts.accountAddress();
     if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
 
     const injector = await Accounts.accountInjector();
 
-    await orgcontract.tx.resign({value, gasLimit},AccountId)
+    await orgcontract.tx.resignModerator({value, gasLimit},AccountId)
+    .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            cb(true)
+         });
+}
+const resignMember = async (orgcontract,cb)=>{
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.resignMember({value, gasLimit},AccountId)
     .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             cb(true)
          });
@@ -169,7 +181,7 @@ const removeDaoMember = async (orgcontract,obj,cb) => {
                     if(AccountId !== address){
                         cb(true)
                     }else{
-                        resign(orgcontract,cb)
+                        resignMember(orgcontract,cb)
                     }
                 }
              });
@@ -192,7 +204,7 @@ const removeDaoModerator = async (orgcontract,obj,cb) => {
                 if(AccountId !== address){
                     cb(true)
                 }else{
-                    resign(orgcontract,cb)
+                    resignModerator(orgcontract,cb)
                 }
             }
          });
@@ -271,7 +283,8 @@ export default {
     removeDaoModerator,
     transferOwnership,
     whoAmI,
-    resign,
+    resignModerator,
+    resignMember,
     setFreeAddMember,
     getFreeAddMember,
     batchAddMember,
