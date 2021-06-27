@@ -108,7 +108,12 @@ function Home(props) {
     useEffect(() => {
         setimglist(homepage);
         if( myDao === 'TRUE'){
-            props.history.push(`/home/about/${homepage[0].address}`)
+            if(homepage && homepage[0]){
+                props.history.push(`/home/about/${homepage[0].address}`)
+            }else{
+                props.history.push(`/home`)
+            }
+
         }else{
             if(props.history.location.pathname === '/home' && homepage && homepage[0]){
                 props.history.push(`/home/about/${homepage[0].address}`)
