@@ -123,5 +123,6 @@
   "TransferTokens": "Transfer Tokens",
   "AddDaoModerators": "Add Dao Moderators",
   "ReceiverAddress": "Receiver's address",
-  "UpdateAuthority": "Update Authority"
+  "UpdateAuthority": "Update Authority",
+  "triggering": "Trigger transfer token"
 }

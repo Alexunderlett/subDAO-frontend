@@ -115,7 +115,6 @@ export default function Vault(props){
             beforelen = historylist.length
 
             await await setAlllist()
-            console.error('before======',beforelen,afterlen)
             if(afterlen>beforelen){
                 setshowvaultTips(true)
             }

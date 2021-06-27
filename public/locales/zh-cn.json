@@ -123,5 +123,6 @@
   "TransferTokens": "代币转账",
   "AddDaoModerators": "增加DAO管理员",
   "ReceiverAddress": "接收者地址",
-  "UpdateAuthority": "修改权限"
+  "UpdateAuthority": "修改权限",
+  "triggering": "触发转账"
 }

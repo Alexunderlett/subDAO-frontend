@@ -14,30 +14,18 @@ export default function AddAuth(props){
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
-
-    // const [optionlist, setoptionlist] = useState([
-    //     {
-    //         name:'create a DAO'
-    //     }
-    //     ,{
-    //         name:'create a DAO'
-    //     }
-    //     ,{
-    //         name:'Vote'
-    //     },{
-    //         name:'Add member'
-    //     },{
-    //         name:'create a DAO'
-    //     }
-    //     ,{
-    //         name:'Vote'
-    //     },{
-    //         name:'Add member'
-    //     }
-    //     ]);
     const [active, setActive] = useState(null);
+    const [optionlist, setoptionlist] = useState([]);
 
     let { t } = useTranslation();
+
+    useEffect(() => {
+        let arr = props.authlist
+        arr.map(i=>{
+            i.checked = false;
+        })
+        setoptionlist(arr)
+    }, [props.authlist]);
 
     const handleActive = (e) =>{
         let index = e.currentTarget.id.split("_")[1];
@@ -45,17 +33,32 @@ export default function AddAuth(props){
     }
     const isChecked = (e, obj) =>{
         let currentbool = e.target.checked;
+        let arr = optionlist
+        arr.map(item => {
+            if (item.action_id === obj.action_id) {
+                item.checked = currentbool;
+            }
+            return item;
+        });
+        setoptionlist(arr)
+    }
 
-        // // let listobj =  eval(listname);
-        //
-        // listobj.map(item => {
-        //     if (item.id === obj.id) {
-        //         item.checked = currentbool;
-        //     }
-        //     return item;
-        // });
-        //
-        // // setChecklist([...listobj])
+    const confirmAuth = async () =>{
+        setLoading(true);
+        setTips(t('triggering'));
+        let arr = authlist.filter(i=>i.checked === true);
+        for (let item of arr) {
+            let obj={
+                contract_name: arr[0].contract_name,
+                function_name: arr[0].function_name
+            }
+            console.error("====arr",arr,obj)
+            await api.auth.grantPermission(authcontract,obj,(data) => {
+               console.log(data)
+            });
+        }
+        setLoading(false);
+        props.handleClose();
     }
 
     let {handleClose, showTips,authlist} = props;
@@ -70,7 +73,7 @@ export default function AddAuth(props){
                 <section>
                     <ul className='orgSelect'>
                         <li className="row">
-                            {authlist.map((i, index) => (
+                            {optionlist.map((i, index) => (
 
                                 <div key={index} className='col-3'>
                                     <div>
@@ -97,7 +100,7 @@ export default function AddAuth(props){
                         </li>
                         <li className='btmBtn'>
                             <div className='NextBrdr100'>
-                                <Button variant="primary" >{t('Confirm')}</Button>
+                                <Button variant="primary" onClick={confirmAuth}>{t('Confirm')}</Button>
                             </div>
                         </li>
                     </ul>

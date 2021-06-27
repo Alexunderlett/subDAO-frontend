@@ -8,10 +8,14 @@ import trigger from '../../images/trigger.png';
 import {useTranslation} from "react-i18next";
 import NewVote from "./newVote";
 import view from "../../images/view.png";
+import Loading from "../loading/Loading";
 
 export default function VotePending(props) {
     const {state} = useSubstrate();
     const {votecontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [showModal, setShowModal] = useState(false);
     const [list, setList] = useState([]);
@@ -26,12 +30,7 @@ export default function VotePending(props) {
         }
 
     }, [props]);
-    // useEffect(() => {
-    //     if(toTop){
-    //         props.history.push(`/vote`)
-    //     }
-    //
-    // }, [toTop]);
+
 
 
     const triggerConfirm = (id)=>{
@@ -45,22 +44,23 @@ export default function VotePending(props) {
     const handleConfirm = async (e) => {
         setShowModal(false);
         let { id } = props;
-        await api.vote.executeVote(votecontract,selectid,(data)=>{
-            settoTop(data)
-        }).then(data => {
-            if (!data) return;
 
-            // props.refresh()
+        setLoading(true);
+        setTips(t('triggering'));
+
+        await api.vote.executeVote(votecontract,selectid,(data)=>{
+
+            setLoading(false);
+            settoTop(data)
             props.history.push(`/voteOverview/${id}/${selectid}`)
         });
     }
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
         props.history.push(`/voteOverview/${id}/${voteid}`)
-        // setviewshow(true)
-
     }
     return (<div className='votePending'>
+        <Loading showLoading={loading} tips={tips}/>
             <VoteModalTips
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}

@@ -36,7 +36,6 @@ export default function ApplyList(props){
 
 
     const handleAprove = async (i) =>{
-       console.error(i)
         const obj= {
             address:i[0],
             name:i[1]

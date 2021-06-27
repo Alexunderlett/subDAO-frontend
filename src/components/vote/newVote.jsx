@@ -31,7 +31,6 @@ export default function NewVote(props) {
     const [type, settype] = useState(1);
     const [to_address, setto_address] = useState('');
     const [valueAmount, setvalueAmount] = useState('');
-    const [erc20_address, seterc20_address] = useState('');
 
     const [optionlist, setoptionlist] = useState( ['','','']);
 
@@ -44,11 +43,11 @@ export default function NewVote(props) {
         let dataobj = {
             title,
             desc,
-            vote_time:date*1000,
+            vote_time:date,
             support_require_num:supportInput,
             min_require_num:min,
             choices:optionlist.join('|'),
-            erc20_address,
+            erc20_address: erc20address,
             to_address,valueAmount
         }
         await api.vote.newVoteTransfer(votecontract,dataobj,(result)=> {
@@ -116,7 +115,6 @@ export default function NewVote(props) {
     }
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
         function clear() {
-            console.log(itemprops.value)
             itemprops.onChange({target: {value: ''}});
         }
 

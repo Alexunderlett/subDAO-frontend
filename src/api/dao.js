@@ -60,6 +60,10 @@ const setDAO = async (daoManagercontract,obj,cb) => {
         org: {
             owner:AccountId,
             // moderators: {}
+        },
+        auth: {
+            owner:AccountId,
+            // moderators: {}
         }
     }
     if(token){

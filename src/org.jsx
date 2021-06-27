@@ -65,7 +65,6 @@ export default function Org(props) {
         whoAmI();
         const getFree = async () =>{
             await api.org.getFreeAddMember(orgcontract).then(data => {
-                console.error("getFreeAddMember====",data)
                 settriggerStatus(data)
                 setapplyAuth(data)
             });
@@ -93,6 +92,11 @@ export default function Org(props) {
             let org = JSON.parse(sessionStorage.getItem('contractlist'));
             if(orgcontract == null && org!= null){
                 await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
+                    console.log('orgcontract====',data);
+                });
+            }
+            if(orgcontract == null && org!= null){
+                await api.erc20.InitErc20(state, dispatch, org.erc20_addr,(data) => {
                     console.log('orgcontract====',data);
                 });
             }
@@ -138,7 +142,6 @@ export default function Org(props) {
     const handleAuth = async () => {
         setauthshow(true)
         let list = await api.auth.showActions(authcontract);
-        console.error("======authlist",list)
         setauthlist(list)
     }
     const handleAuthClose = () => {
@@ -171,9 +174,7 @@ export default function Org(props) {
         setLoading(true);
         setTips(t('setFreeAddMember'));
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
-            console.error('setFreeAddMember====',!applyAuth);
             setapplyAuth(!applyAuth)
-
             setLoading(false);
         });
     }
