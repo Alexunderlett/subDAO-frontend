@@ -111,8 +111,8 @@ export default function VoteView (props){
                             <li className='VotetitleTop'>{title}</li>
                             <li className='voteContent'>
                                <div className='desc'>{desc}</div>
-                                <div>Receiver's address:{toaddress}</div>
-                                <div>Receiver's address:{toaddress}</div>
+                                <div>{t('ReceiverAddress')}: {toaddress}</div>
+                                <div>{t('Amount')}: {toaddress}</div>
                             </li>
                             <li className='voteSelect'>
                                 {optionlist.map((i, index) => (

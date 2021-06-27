@@ -25,7 +25,7 @@ const reducer = (state, action) => {
 
         //accounts
         case 'LOAD_ALLACCOUNTS':
-            return { ...state, allaccountsState: 'LOAD_ALLACCOUNTS' };
+            return { ...state, allaccountsState: 'LOAD_ALLACCOUNTS', allAccounts:null};
 
         case 'SET_ALLACCOUNTS':
             return { ...state, allAccounts: action.payload, allaccountsState: 'READY' };

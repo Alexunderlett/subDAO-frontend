@@ -291,6 +291,7 @@
       margin-bottom: 0;
     }
     input[type='checkbox' i] {
+      flex-shrink: 0;
       appearance:none;
        -moz-appearance: none;
       background:transparent;

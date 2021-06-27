@@ -22,7 +22,7 @@ import TriggerBtnActive from "./images/triggerBtnActive.png";
 export default function Org(props) {
 
     const {state,dispatch} = useSubstrate();
-    const {orgcontract,allAccounts,apiState,orgstate} = state;
+    const {orgcontract,allAccounts,apiState,authcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [addshow,setaddshow]= useState(false);
@@ -37,6 +37,7 @@ export default function Org(props) {
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
     const [memberlist, setmemberlist] = useState([]);
+    const [authlist, setauthlist] = useState([]);
 
     const [isMember, setisMember] = useState(false);
     const [isModerator, setisModerator] = useState(false);
@@ -99,7 +100,16 @@ export default function Org(props) {
             setall();
         }
         initVoteContract()
-    }, [orgcontract,allAccounts,apiState]);
+        const initAuthContract = async () =>{
+            let auth = JSON.parse(sessionStorage.getItem('contractlist'));
+            if(authcontract == null && auth!= null){
+                await api.auth.InitAuth(state, dispatch, auth.auth_addr,(data) => {
+                    console.log('orgcontract====',data);
+                });
+            }
+        }
+        initAuthContract()
+    }, [orgcontract,allAccounts,apiState,authcontract]);
 
 
     const handleClicktoManage = () => {
@@ -126,8 +136,11 @@ export default function Org(props) {
         settypeName(type);
         setaddshow(true)
     }
-    const handleAuth = () => {
+    const handleAuth = async () => {
         setauthshow(true)
+        let list = await api.auth.showActions(authcontract);
+        console.error("======authlist",list)
+        setauthlist(list)
     }
     const handleAuthClose = () => {
         setauthshow(false)
@@ -228,7 +241,7 @@ export default function Org(props) {
                             handleBatch={handleBatch}
                             handleBatchAdd={handleBatchAdd}
                         />
-                        <AddAuth  handleClose={handleAuthClose} showTips={authshow} />
+                        <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist} />
                         <div className='orgBrdr'>
                             <ul className="org">
                                 <li>
@@ -238,13 +251,16 @@ export default function Org(props) {
                                             isOwner &&  <button className='btnAdd' onClick={()=>handleAdd('Moderators')}><img src={add} alt=""/>{t('Add')}</button>
                                         }
                                     </div>
-                                    <div className='orgbg auth'>
+                                    <div  className={isOwner?'orgbg auth':'orgbg'}>
                                         {
                                             list.map((i,index) => <div key={`moderators_${index}_${i[0]}`}>
                                                 <dl>
                                                     <dt>{i[1]}</dt>
                                                     <dd>{i[0]}</dd>
-                                                    <dd><img src={auth} alt="" onClick={handleAuth}/></dd>
+                                                    {
+                                                        isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth()}/></dd>
+                                                    }
+
                                                 </dl>
                                             </div>)
                                         }

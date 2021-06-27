@@ -9,16 +9,13 @@ import {useTranslation} from "react-i18next";
 
 export default function AddAuth(props){
 
-    const {state} = useSubstrate();
-    const {authcontract} = state;
+    const {state,dispatch} = useSubstrate();
+    const {authcontract,allAccounts,apiState} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
-    const [name,setname]= useState('');
-    const [address,setaddress]= useState('');
 
-    const [addModerator, setaddModerator] = useState(false);
     const [optionlist, setoptionlist] = useState([
         {
             name:'create a DAO'
@@ -43,62 +40,24 @@ export default function AddAuth(props){
 
     let { t } = useTranslation();
 
-    useEffect(() => {
-        if(addModerator){
-            setLoading(false);
-        }
-    }, [addModerator]);
 
-    // useEffect(() => {
-    //     if(authcontract == null) return;
-    //     const initList = async () =>{
-    //         setLoading(true);
-    //         setTips(t('InitializeORG'));
-    //
-    //         await api.auth.showActions(authcontract).then(data => {
-    //             if (!data) return;
-    //             setoptionlist(data)
-    //             console.error(data)
-    //             setLoading(true);
-    //         });
-    //     }
-    //     initList();
-    // }, []);
-
-
-    // const submitModerators = async (obj) =>{
-    //     setLoading(true);
-    //     setTips(t('AddModerator'));
-    //     await api.org.addDaoModerator(orgcontract,obj,function (result) {
-    //         setaddModerator(result)
-    //         props.handleClose()
-    //     });
-    // }
-    //
-    // const handleSubmit = () => {
-    //     const obj= {
-    //         address,
-    //         name
-    //     };
-    //     submitModerators(obj)
-    // }
     const handleActive = (e) =>{
         let index = e.currentTarget.id.split("_")[1];
         setActive(index)
     }
-    let {handleClose, showTips} = props;
+    let {handleClose, showTips,authlist} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
 
         <Modal  show={showTips} onHide={handleClose} centered={true} className='authBrdr'>
             <Modal.Header closeButton>
-                <Modal.Title><img src={authWhite} alt=""/><span >Update Authority</span></Modal.Title>
+                <Modal.Title><img src={authWhite} alt=""/><span >{t('UpdateAuthority')}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <section>
                     <ul className='orgSelect'>
                         <li className="row">
-                            {optionlist.map((i, index) => (
+                            {authlist.map((i, index) => (
 
                                 <div key={index} className='col-3'>
                                     <div>
@@ -111,7 +70,7 @@ export default function AddAuth(props){
                                                            className="form-check-inputRadio"
                                                            value={index}
                                                     />
-                                                    <label htmlFor={`radio_${index}`}>{i.name}</label>
+                                                    <label htmlFor={`radio_${index}`}>{i.action_title}</label>
 
                                                 </div>
                                             </div>
@@ -128,16 +87,9 @@ export default function AddAuth(props){
                             </div>
                         </li>
                     </ul>
-
-
-
-
-
                 </section>
             </Modal.Body>
         </Modal>
-
-
     </div>;
 
 }

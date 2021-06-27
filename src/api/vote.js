@@ -166,9 +166,6 @@ const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
 
     await votecontract.exec('vote', {value, gasLimit}, voteid,choiceid,AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            console.error("[[[[[[[[[[[result.status]]]]]]]]]",result)
-
-
             if (result.status.isFinalized) {
 
                 // console.log('Events:');

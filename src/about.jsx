@@ -117,7 +117,7 @@ export default function About(props) {
         if (auth_addr != null) {
             const setInitAuth = async () => {
                 setTips(t('InitializingContracts'));
-                await api.auth.InitAuth(state, dispatch, org_addr, (data) => {
+                await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
                     console.log("====",data)
                 });
             };

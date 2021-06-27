@@ -27,26 +27,17 @@ const InitAuth = async (state, dispatch,address,cb) =>  {
 const value = 0;
 const gasLimit = -1;
 
-const showActions = async (orgcontract) => {
+const showActions = async (authcontract) => {
 
     const AccountId = await Accounts.accountAddress();
-    if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
+    if (authcontract === null || !authcontract || !authcontract.query || !AccountId) return;
 
-    let data = await orgcontract.query.showActionsByContract(AccountId, {value, gasLimit},'org');
+    let data = await authcontract.query.showActionsByContract(AccountId, {value, gasLimit},'vault');
     data = publicJs.formatResult(data);
     return data;
 
 };
-// const whoAmI = async (orgcontract) => {
-//
-//     const AccountId = await Accounts.accountAddress();
-//     if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
-//
-//     let data = await orgcontract.query.whoAmI(AccountId, {value, gasLimit});
-//     data = publicJs.formatResult(data);
-//     return data;
-//
-// };
+
 //
 // const getDaoMembersList = async (orgcontract) => {
 //

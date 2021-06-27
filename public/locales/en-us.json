@@ -121,5 +121,7 @@
   "InitDAO": "Init DAO",
   "Uploadinformation": "Upload DAO's information",
   "TransferTokens": "Transfer Tokens",
-  "AddDaoModerators": "Add Dao Moderators"
+  "AddDaoModerators": "Add Dao Moderators",
+  "ReceiverAddress": "Receiver's address",
+  "UpdateAuthority": "Update Authority"
 }

@@ -121,5 +121,7 @@
   "InitDAO": "初始化DAO",
   "Uploadinformation": "上传DAO信息",
   "TransferTokens": "代币转账",
-  "AddDaoModerators": "增加DAO管理员"
+  "AddDaoModerators": "增加DAO管理员",
+  "ReceiverAddress": "接收者地址",
+  "UpdateAuthority": "修改权限"
 }

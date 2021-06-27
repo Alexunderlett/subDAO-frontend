@@ -44,13 +44,14 @@ export default function VotePending(props) {
     }
     const handleConfirm = async (e) => {
         setShowModal(false);
-
+        let { id } = props;
         await api.vote.executeVote(votecontract,selectid,(data)=>{
             settoTop(data)
         }).then(data => {
             if (!data) return;
-            console.log("=============executeVote",data)
-            props.refresh()
+
+            // props.refresh()
+            props.history.push(`/voteOverview/${id}/${selectid}`)
         });
     }
     const handleClicktoVoteview = (voteid) => {
@@ -77,7 +78,7 @@ export default function VotePending(props) {
                     list.map((item)=><tr key={`Pending_${item.vote_id}`}>
                         <td>{item.vote_id}</td>
                         <td>{item.title}</td>
-                        <td>
+                        <td className='voteViewTD'>
                             <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>
                             <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
                         </td>

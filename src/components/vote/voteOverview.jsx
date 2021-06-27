@@ -91,6 +91,14 @@ export default function VoteOverview (props){
                                             <h6>{t('minnumber')}</h6>
                                         </li>
                                         <li>
+                                            <div>{min}</div>
+                                            <h6>{t('Amount')}</h6>
+                                        </li>
+                                        <li>
+                                            <h6>{t('ReceiverAddress')}</h6>
+                                            <div className='address'>{desc}</div>
+                                        </li>
+                                        <li>
                                             <h6>{t('VotingDescription')}</h6>
                                             <div>{desc}</div>
                                         </li>
