@@ -10,7 +10,7 @@ import withdrawimg from "./images/Withdraw.png";
 import Deposit from './components/vault/deposit';
 import sel from './images/Sel.png';
 import close from './images/shutdownW.png';
-import Withdraw from "./components/vault/withdraw";
+// import Withdraw from "./components/vault/withdraw";
 import {useTranslation} from "react-i18next";
 
 export default function Vault(props){
@@ -34,6 +34,7 @@ export default function Vault(props){
         const [TipsNum, setTipsNum] = useState(0);
         const [TipsAddress, setTipsAddress] = useState(0);
         const [type, setType] = useState(true);
+
 
         let {t} = useTranslation();
 
@@ -87,7 +88,8 @@ export default function Vault(props){
         useEffect(() => {
             setbalance();
         }, [list, historylist]);
-        const setShow = (type) => {
+        let beforelen,afterlen;
+        const setShow = async (type) => {
 
             if (type === 'deposit') {
                 let obj
@@ -109,11 +111,19 @@ export default function Vault(props){
             //     withdrawRef.current.amountToNull()
             // }
 
-            setshowvaultTips(true)
 
-            setTimeout(() => {
+            beforelen = historylist.length
+
+            await await setAlllist()
+            console.error('before======',beforelen,afterlen)
+            if(afterlen>beforelen){
+                setshowvaultTips(true)
+            }
+
+            setTimeout(async() => {
                 setshowvaultTips(false)
-                setAlllist()
+
+
             }, 3000)
 
 
@@ -129,6 +139,8 @@ export default function Vault(props){
             await api.vault.getTransferHistory(vaultcontract).then(data => {
                 if (!data) return;
                 sethistorylist(data)
+                afterlen = data.length
+
             });
 
         };
@@ -167,14 +179,14 @@ export default function Vault(props){
 
                         <div><img src={sel} alt=""/></div>
                         <div className='tipsNumber'>{TipsNum}</div>
-                        {
-                            type && <div className='tipsDesc'>{t('sentfrom')}{TipsAddress}</div>
-                        }
-                        {
-                            !type && <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>
-                        }
+                        {/*{*/}
+                        {/*    type && <div className='tipsDesc'>{t('sentfrom')}{TipsAddress}</div>*/}
+                        {/*}*/}
+                        {/*{*/}
+                        {/*    !type && <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>*/}
+                        {/*}*/}
 
-
+                        <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>
                         <div className='closeBg' onClick={() => handleClickClose()}><img src={close} alt=""/></div>
 
                     </div>
@@ -187,12 +199,12 @@ export default function Vault(props){
                     setShow={() => setShow('deposit')}
                     ref={childRef}
                 />
-                <Withdraw
-                    handleClose={handleClose}
-                    showTips={newWithdraw}
-                    setShow={() => setShow('withdraw')}
-                    ref={withdrawRef}
-                />
+                {/*<Withdraw*/}
+                {/*    handleClose={handleClose}*/}
+                {/*    showTips={newWithdraw}*/}
+                {/*    setShow={() => setShow('withdraw')}*/}
+                {/*    ref={withdrawRef}*/}
+                {/*/>*/}
                 <section>
                     <div className="row">
                         <div className='col-lg-3'>

@@ -81,7 +81,8 @@ export default function Headertop(props) {
         sessionStorage.removeItem('account');
         dispatch({type: 'LOAD_ALLACCOUNTS'});
         setselected([])
-        createHashHistory.push('/')
+        createHashHistory.push('/home')
+        window.location.reload()
 
     }
 
@@ -120,9 +121,9 @@ export default function Headertop(props) {
                     {/*{*/}
                     {/*    <button  className="btn">{t('Exit')}</button>*/}
                     {/*}*/}
-                    {  !!selected.length && <div className='addressBrdr'>
+                    {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
                         {selected[0].address}
-                        <span onClick={exitAccount}> <img src={close} alt=""/>{t('Exit')}</span>
+                        <span> <img src={close} alt=""/>{t('Exit')}</span>
 
                     </div>}
                     <div className='switchLang'>

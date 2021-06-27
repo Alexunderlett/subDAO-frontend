@@ -3,7 +3,6 @@ import {Button, FormControl, FormLabel, Modal} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
-import auth from '../../images/Vector.png';
 import authWhite from '../../images/auth.png';
 import {useTranslation} from "react-i18next";
 
@@ -16,35 +15,49 @@ export default function AddAuth(props){
     const [tips,setTips]= useState('');
 
 
-    const [optionlist, setoptionlist] = useState([
-        {
-            name:'create a DAO'
-        }
-        ,{
-            name:'create a DAO'
-        }
-        ,{
-            name:'Vote'
-        },{
-            name:'Add member'
-        },{
-            name:'create a DAO'
-        }
-        ,{
-            name:'Vote'
-        },{
-            name:'Add member'
-        }
-        ]);
+    // const [optionlist, setoptionlist] = useState([
+    //     {
+    //         name:'create a DAO'
+    //     }
+    //     ,{
+    //         name:'create a DAO'
+    //     }
+    //     ,{
+    //         name:'Vote'
+    //     },{
+    //         name:'Add member'
+    //     },{
+    //         name:'create a DAO'
+    //     }
+    //     ,{
+    //         name:'Vote'
+    //     },{
+    //         name:'Add member'
+    //     }
+    //     ]);
     const [active, setActive] = useState(null);
 
     let { t } = useTranslation();
-
 
     const handleActive = (e) =>{
         let index = e.currentTarget.id.split("_")[1];
         setActive(index)
     }
+    const isChecked = (e, obj) =>{
+        let currentbool = e.target.checked;
+
+        // // let listobj =  eval(listname);
+        //
+        // listobj.map(item => {
+        //     if (item.id === obj.id) {
+        //         item.checked = currentbool;
+        //     }
+        //     return item;
+        // });
+        //
+        // // setChecklist([...listobj])
+    }
+
     let {handleClose, showTips,authlist} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
@@ -68,7 +81,8 @@ export default function AddAuth(props){
                                                            type="checkbox"
                                                            id={`radio_${index}`}
                                                            className="form-check-inputRadio"
-                                                           value={index}
+                                                           value={i.action_id}
+                                                           onChange={e => isChecked(e, i)}
                                                     />
                                                     <label htmlFor={`radio_${index}`}>{i.action_title}</label>
 
@@ -83,7 +97,7 @@ export default function AddAuth(props){
                         </li>
                         <li className='btmBtn'>
                             <div className='NextBrdr100'>
-                                <Button variant="primary" >Confirm</Button>
+                                <Button variant="primary" >{t('Confirm')}</Button>
                             </div>
                         </li>
                     </ul>

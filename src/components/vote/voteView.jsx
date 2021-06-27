@@ -26,6 +26,7 @@ export default function VoteView (props){
     const [active, setActive] = useState(null);
     const [disabledVote, setdisabledVote] = useState(false);
     const [toaddress, settoaddress] = useState('');
+    const [toValue, settovalule] = useState('');
 
     let { t } = useTranslation();
 
@@ -64,12 +65,13 @@ export default function VoteView (props){
             await api.vote.queryOneVote(votecontract, props.voteid).then(data => {
                 if (!data) return;
                 const {
-                    vote_id, title, desc, choices, to_address
+                    vote_id, title, desc, choices, to_address,transfer_value
                 } = data;
                 settitle(title);
                 setId(vote_id);
                 setdesc(desc);
                 settoaddress(to_address);
+                settovalule(transfer_value);
                 setoptionlist(choices.split('|'))
             });
             // setLoading(false);
@@ -112,7 +114,7 @@ export default function VoteView (props){
                             <li className='voteContent'>
                                <div className='desc'>{desc}</div>
                                 <div>{t('ReceiverAddress')}: {toaddress}</div>
-                                <div>{t('Amount')}: {toaddress}</div>
+                                <div>{t('Amount')}: {toValue}</div>
                             </li>
                             <li className='voteSelect'>
                                 {optionlist.map((i, index) => (

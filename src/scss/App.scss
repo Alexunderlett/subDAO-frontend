@@ -101,12 +101,13 @@ position: relative;
       right: 70px;
       width: 800px;
       vertical-align: middle;
+      cursor: pointer;
       span{
         //border-bottom: 1px dashed #fff;
         margin-left: 20px;
         padding: 0;
         color: #ffffff;
-        cursor: pointer;
+        z-index: 9999999!important;
         display: inline-block;
       }
       img{

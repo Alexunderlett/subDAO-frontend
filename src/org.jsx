@@ -63,7 +63,6 @@ export default function Org(props) {
             });
         };
         whoAmI();
-
         const getFree = async () =>{
             await api.org.getFreeAddMember(orgcontract).then(data => {
                 console.error("getFreeAddMember====",data)
