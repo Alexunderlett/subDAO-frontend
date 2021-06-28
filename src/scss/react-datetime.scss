@@ -8,14 +8,13 @@
 .rdtPicker {
   display: none;
   position: absolute;
-  min-width: 250px;
-  padding: 4px;
+  width: 100%;
+  padding: 20px;
   margin-top: 1px;
   z-index: 99999 !important;
   //background: #fff;
-  background: #fafafa;
+  background:#160947CC;
   box-shadow: 0 1px 3px rgba(0,0,0,.1);
-  border: 1px solid #f9f9f9;
 }
 .rdtOpen .rdtPicker {
   display: block;
@@ -46,7 +45,7 @@
 .rdtPicker td.rdtMinute:hover,
 .rdtPicker td.rdtSecond:hover,
 .rdtPicker .rdtTimeToggle:hover {
-  background: #eeeeee;
+  background: #3A2886;
   cursor: pointer;
 }
 .rdtPicker td.rdtOld,
@@ -92,7 +91,8 @@
   cursor: not-allowed;
 }
 .rdtPicker th {
-  border-bottom: 1px solid #f9f9f9;
+  //border-bottom: 1px solid #f9f9f9;
+  padding-bottom: 20px;
 }
 .rdtPicker .dow {
   width: 14.2857%;
@@ -129,11 +129,12 @@
   cursor: pointer;
 }
 .rdtPicker thead tr:first-of-type th:hover {
-  background: #eeeeee;
+  background: #3A2886;
 }
 
-.rdtPicker tfoot {
-  border-top: 1px solid #f9f9f9;
+.rdtPicker tfoot  td{
+  //border-top: 1px solid #f9f9f9;
+  padding: 20px 0;
 }
 
 .rdtPicker button {
@@ -142,7 +143,7 @@
   cursor: pointer;
 }
 .rdtPicker button:hover {
-  background-color: #eee;
+  background-color: #3A2886;
 }
 
 .rdtPicker thead button {
@@ -158,7 +159,7 @@ td.rdtYear {
 }
 td.rdtMonth:hover,
 td.rdtYear:hover {
-  background: #eee;
+  background: #3A2886;
 }
 
 .rdtCounters {
@@ -195,7 +196,7 @@ td.rdtYear:hover {
   user-select: none;
 }
 .rdtCounter .rdtBtn:hover {
-  background: #eee;
+  background: #3A2886;
 }
 .rdtCounter .rdtCount {
   height: 20%;
@@ -219,11 +220,11 @@ td.rdtYear:hover {
 }
 
 .selectedCal{
-  background: #f00;
   background: transparent;
+  border: 0;
   position: absolute;
   top:0;
   left: 0;
   width: 100%;
-  height: 38px;
+  height: 100%;
 }

@@ -6,10 +6,16 @@ import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import trigger from '../../images/trigger.png';
 import {useTranslation} from "react-i18next";
+import NewVote from "./newVote";
+import view from "../../images/view.png";
+import Loading from "../loading/Loading";
 
 export default function VotePending(props) {
     const {state} = useSubstrate();
     const {votecontract} = state;
+
+    const [loading,setLoading]= useState(false);
+    const [tips,setTips]= useState('');
 
     const [showModal, setShowModal] = useState(false);
     const [list, setList] = useState([]);
@@ -24,12 +30,7 @@ export default function VotePending(props) {
         }
 
     }, [props]);
-    // useEffect(() => {
-    //     if(toTop){
-    //         props.history.push(`/vote`)
-    //     }
-    //
-    // }, [toTop]);
+
 
 
     const triggerConfirm = (id)=>{
@@ -42,16 +43,24 @@ export default function VotePending(props) {
     }
     const handleConfirm = async (e) => {
         setShowModal(false);
+        let { id } = props;
+
+        setLoading(true);
+        setTips(t('triggering'));
 
         await api.vote.executeVote(votecontract,selectid,(data)=>{
+
+            setLoading(false);
             settoTop(data)
-        }).then(data => {
-            if (!data) return;
-            console.log("=============executeVote",data)
+            props.history.push(`/voteOverview/${id}/${selectid}`)
         });
     }
-
+    const handleClicktoVoteview = (voteid) => {
+        let { id } = props;
+        props.history.push(`/voteOverview/${id}/${voteid}`)
+    }
     return (<div className='votePending'>
+        <Loading showLoading={loading} tips={tips}/>
             <VoteModalTips
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}
@@ -69,7 +78,10 @@ export default function VotePending(props) {
                     list.map((item)=><tr key={`Pending_${item.vote_id}`}>
                         <td>{item.vote_id}</td>
                         <td>{item.title}</td>
-                        <td><span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span></td>
+                        <td className='voteViewTD'>
+                            <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>
+                            <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
+                        </td>
                     </tr>)
                 }
                 </tbody>

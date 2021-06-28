@@ -1,5 +1,6 @@
 import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
+import { randomAsHex } from '@polkadot/util-crypto';
 
 const value = 0;
 const gasLimit = -1;
@@ -18,6 +19,7 @@ const listTemplates = async (maincontract) => {
 
 };
 
+
 const listDaoInstances = async (maincontract) => {
 
     const AccountId = await Accounts.accountAddress();
@@ -30,15 +32,16 @@ const listDaoInstances = async (maincontract) => {
 
 };
 
-
+const mainAddress = window.mainAddress;
 const listDaoInstancesByOwner = async (maincontract) => {
 
     const AccountId = await Accounts.accountAddress();
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
     let data = await maincontract.query.listDaoInstancesByOwner(AccountId, {value, gasLimit},AccountId);
-    console.log("====listDaoInstancesByOwner",data)
+
     data = publicJs.formatResult(data);
+    console.log("====listDaoInstancesByOwner",data)
 
     return data;
 
@@ -48,11 +51,13 @@ const instanceByTemplate = async (maincontract,id,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
+    const version = randomAsHex();
+    console.log('======version=====',version)
 
     if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
 
 
-    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId)
+    let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId,version)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isFinalized) {
                 console.log('main.instanceByTemplate finalized', result);

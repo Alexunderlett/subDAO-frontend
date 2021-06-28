@@ -1,4 +1,4 @@
-import React, {useReducer, useContext} from 'react';
+import React, {useContext, useReducer} from 'react';
 import reducer from './reducer';
 import INIT_STATE from './initState';
 import mainConnect from './mainContract'
@@ -23,8 +23,8 @@ const connect = async (state, dispatch) => {
     const wsProvider = new WsProvider(ws_server);
     const api = await ApiPromise.create({
         provider: wsProvider, types: {
-            Address: 'AccountId',
-            LookupSource: 'AccountId'
+            Address: "MultiAddress",
+            LookupSource: "MultiAddress"
         }
     });
 

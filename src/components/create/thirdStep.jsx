@@ -133,6 +133,8 @@ export default function ThirdStep(props){
            case 'supply':
                setsupply(e.target.value)
                break;
+           default:
+               break;
        }
 
     }
@@ -145,6 +147,8 @@ export default function ThirdStep(props){
                break;
            case 'token':
                setToken(!JSON.parse(value))
+               break;
+           default:
                break;
        }
     }
@@ -251,138 +255,149 @@ export default function ThirdStep(props){
                 erc20_name: name,
                 erc20_symbol: symbol,
                 erc20_initial_supply: supply,
-                erc20_decimals: 0
+                erc20_decimals: 0,
+                token,
+                tokenlist,
+                admin,
+                adminlist
             };
             console.log(obj)
             if (daoManagercontract == null) return;
             const stepfour = async () => {
                 setTips(t('Uploadinformation'));
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
-                    setqueryAddrs(true)
+                    // setqueryAddrs(true)
+                    setnext(true);
                 });
             };
             stepfour();
         }
     }, [daoinit]);
 
-    useEffect( () => {
-        if( queryAddrs && daoinit && instanceByTemplate && baseC!=null){
-            console.log("Step 5 ======= queryComponentAddrs",queryAddrs,daoinit)
-            const stepseven = async () => {
-                setTips(t('GetContractAddress'));
-                await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-                    console.log(data, daoManagercontract);
-                    setcontractlist(data);
+    // useEffect( () => {
+    //     if( queryAddrs && daoinit && instanceByTemplate && baseC!=null){
+    //         console.log("Step 5 ======= queryComponentAddrs",queryAddrs,daoinit)
+    //         const stepseven = async () => {
+    //             setTips(t('GetContractAddress'));
+    //             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+    //                 console.log(data, daoManagercontract);
+    //                 setcontractlist(data);
+    //
+    //
+    //             });
+    //         };
+    //         stepseven();
+    //     }
+    // }, [queryAddrs]);
+
+    // useEffect( () => {
+    //     if(daoinit && instanceByTemplate && baseC!=null && contractlist != null){
+    //
+    //             console.log("Step 6 ======= init orgcontract",transfer,daoinit)
+    //             const stepInit = async () => {
+    //                 setTips(t('InitializeORG'));
+    //                 await api.org.InitOrg(state, dispatch, contractlist.org_addr,(data) => {
+    //                     console.log('orgcontract====',data);
+    //                     settransfer(true)
+    //                 });
+    //             };
+    //             stepInit();
+    //
+    //     }
+    //
+    // }, [contractlist]);
+
+    // const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    // useEffect( () => {
+    //     if(daoinit && instanceByTemplate && baseC!=null && transfer){
+    //         if(token){
+    //             console.log("Step 7 ======= transfer",transfer,daoinit)
+    //             const stepfive = async () => {
+    //                 setTips(t('TransferTokens'));
+    //                 let arr=[];
+    //                 let index=0;
+    //                 for (let item of tokenlist) {
+    //                     if(index){
+    //                         while (!arr[index-1]){
+    //                             await delay(500);
+    //                         }
+    //                     }
+    //                     try{
+    //                         await api.dao.transferToken(daoManagercontract, item, (data) => {
+    //
+    //                             arr.push(data);
+    //                             setTips(` ${t('TransferTokens')}(${arr.length}/${tokenlist.length})`);
+    //                             if(arr.length===tokenlist.length){
+    //                                 setadminstate(true);
+    //                             }
+    //                         });
+    //                     }catch (e) {
+    //                         console.log(e);
+    //                     }
+    //                     index++;
+    //                 }
+    //
+    //             };
+    //             stepfive();
+    //
+    //         }else{
+    //             setadminstate(true);
+    //         }
+    //     }
+    //
+    // }, [transfer]);
+    // useEffect( () => {
+    //     if(adminstate && daoinit && instanceByTemplate && baseC!=null && transfer){
+    //         if(admin){
+    //             console.log("Step 8 ======= add moderators",admin , daoinit);
+    //             const stepsix = async () => {
+    //                 setTips(t('AddDaoModerators'));
+    //                 let arr=[];
+    //                 let index=0;
+    //                 for (let item of adminlist) {
+    //                     if(index){
+    //                         while (!arr[index-1]){
+    //                             await delay(500);
+    //                         }
+    //                     }
+    //                     try{
+    //                         // await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
+    //                         //     arr.push(data);
+    //                         //     setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
+    //                         //     if(arr.length === adminlist.length){
+    //                         //         setnext(true);
+    //                         //     }
+    //                         // });
+    //
+    //
+    //                         await api.org.addDaoModerator(orgcontract,item,function (data) {
+    //                             arr.push(data);
+    //                             setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
+    //                             if(arr.length === adminlist.length){
+    //                                 setnext(true);
+    //                             }
+    //
+    //                         });
+    //                     }catch (e) {
+    //                         console.log(e)
+    //                     }
+    //
+    //                     index++;
+    //                 }
+    //
+    //             };
+    //             stepsix();
+    //         }else {
+    //             setnext(true);
+    //         }
+    //     }
+    // }, [adminstate]);
 
 
-                });
-            };
-            stepseven();
-        }
-    }, [queryAddrs]);
-
-    useEffect( () => {
-        if(daoinit && instanceByTemplate && baseC!=null && contractlist != null){
-
-                console.log("Step 6 ======= init orgcontract",transfer,daoinit)
-                const stepInit = async () => {
-                    setTips(t('InitializeORG'));
-                    await api.org.InitOrg(state, dispatch, contractlist.org_addr,(data) => {
-                        console.log('orgcontract====',data);
-                        settransfer(true)
-                    });
-                };
-                stepInit();
-
-        }
-
-    }, [contractlist]);
-
-    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-    useEffect( () => {
-        if(daoinit && instanceByTemplate && baseC!=null && transfer){
-            if(token){
-                console.log("Step 7 ======= transfer",transfer,daoinit)
-                const stepfive = async () => {
-                    setTips(t('TransferTokens'));
-                    let arr=[];
-                    let index=0;
-                    for (let item of tokenlist) {
-                        if(index){
-                            while (!arr[index-1]){
-                                await delay(500);
-                            }
-                        }
-                        try{
-                            await api.dao.transferToken(daoManagercontract, item, (data) => {
-
-                                arr.push(data);
-                                setTips(` ${t('TransferTokens')}(${arr.length}/${tokenlist.length})`);
-                                if(arr.length===tokenlist.length){
-                                    setadminstate(true);
-                                }
-                            });
-                        }catch (e) {
-                            console.log(e);
-                        }
-                        index++;
-                    }
-
-                };
-                stepfive();
-
-            }else{
-                setadminstate(true);
-            }
-        }
-
-    }, [transfer]);
-    useEffect( () => {
-        if(adminstate && daoinit && instanceByTemplate && baseC!=null && transfer){
-            if(admin){
-                console.log("Step 8 ======= add moderators",admin , daoinit);
-                const stepsix = async () => {
-                    setTips(t('AddDaoModerators'));
-                    let arr=[];
-                    let index=0;
-                    for (let item of adminlist) {
-                        if(index){
-                            while (!arr[index-1]){
-                                await delay(500);
-                            }
-                        }
-                        try{
-                            // await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
-                            //     arr.push(data);
-                            //     setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
-                            //     if(arr.length === adminlist.length){
-                            //         setnext(true);
-                            //     }
-                            // });
 
 
-                            await api.org.addDaoModerator(orgcontract,item,function (data) {
-                                arr.push(data);
-                                setTips(`${t('AddDaoModerators')} (${arr.length}/${adminlist.length})`);
-                                if(arr.length === adminlist.length){
-                                    setnext(true);
-                                }
 
-                            });
-                        }catch (e) {
-                            console.log(e)
-                        }
 
-                        index++;
-                    }
-
-                };
-                stepsix();
-            }else {
-                setnext(true);
-            }
-        }
-    }, [adminstate]);
     useEffect( () => {
         if(next){
             sessionStorage.removeItem("step");
@@ -448,7 +463,7 @@ export default function ThirdStep(props){
                                         </InputGroup>
                                         {
                                             !!index &&
-                                            <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht"/>
+                                            <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht" alt=''/>
                                         }
                                     </div>
                                 </div>
@@ -456,7 +471,7 @@ export default function ThirdStep(props){
                         ))
                         }
                         <div>
-                            <button className="addToken" onClick={addAdmin}><img src={add} className="addRht"/>{t('AddAdmin')}</button>
+                            <button className="addToken" onClick={addAdmin}><img src={add} className="addRht"  alt=''/>{t('AddAdmin')}</button>
                         </div>
                     </div>
                 </Tab>
@@ -545,7 +560,7 @@ export default function ThirdStep(props){
                                     </InputGroup>
                                     {
                                         !!index &&
-                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht"/>
+                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht" alt=''/>
 
                                     }
                                 </div>
@@ -556,7 +571,7 @@ export default function ThirdStep(props){
                     }
 
                     <div>
-                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht"/> {t('AddToken')}</button>
+                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht" alt=''/> {t('AddToken')}</button>
 
                     </div>
                 </Tab>

@@ -527,7 +527,9 @@
       color: #ffffff;
       outline: none;
     }
+
   }
+
   .btn-outline-primary{
     color: #ffffff;
     border: none;
@@ -607,5 +609,16 @@
     display: inline-block;
   }
 }
-
-
+.btn-primary.disabled, .btn-primary:disabled{
+  width: 100%;
+  background: #160947CC;
+  color: #A8B0C1;
+  height: 75px;
+  border-radius: 15px;
+  margin: 1px;
+  border: 1px solid #281A62;
+  &:hover{
+    border: 1px solid #281A62;
+    background: #160947CC;
+  }
+}

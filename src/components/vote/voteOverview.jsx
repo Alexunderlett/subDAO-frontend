@@ -14,7 +14,9 @@ export default function VoteOverview (props){
     const [desc, setdesc] = useState('');
     const [support, setsupport] = useState('');
     const [min, setmin] = useState('');
+    const [toaddress, settoaddress] = useState('');
     const [optionlist, setoptionlist] = useState([]);
+    const [toValue, settovalule] = useState('');
 
     let { t } = useTranslation();
 
@@ -25,13 +27,16 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
-                const {
-                    vote_id, title, desc, support_require_num, min_require_num, choices
-                } = data;
 
+
+                const {
+                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value
+                } = data;
                 settitle(title);
                 setvoteid(vote_id);
                 setdesc(desc);
+                settoaddress(to_address);
+                settovalule(transfer_value);
                 setsupport(support_require_num);
                 setmin(min_require_num);
                 let arr = [], afterArr = [];
@@ -46,7 +51,6 @@ export default function VoteOverview (props){
                 });
                 if (afterArr.length) {
                     setoptionlist(afterArr);
-                    console.log(choices)
                 }
 
             });
@@ -87,6 +91,14 @@ export default function VoteOverview (props){
                                         <li>
                                             <div>{min}</div>
                                             <h6>{t('minnumber')}</h6>
+                                        </li>
+                                        <li>
+                                            <div>{toValue}</div>
+                                            <h6>{t('Amount')}</h6>
+                                        </li>
+                                        <li>
+                                            <h6>{t('ReceiverAddress')}</h6>
+                                            <div className='address'>{toaddress}</div>
                                         </li>
                                         <li>
                                             <h6>{t('VotingDescription')}</h6>

@@ -23,11 +23,14 @@
 }
 .voteContent{
   font-size: 20px;
-  line-height: 23px;
+  line-height: 1.5em;
   word-wrap:break-word;
   word-break:normal;
   margin: 30px 0 70px;
   color: #A8B0C1;
+  .desc{
+    padding-bottom: 20px;
+  }
 }
 .voteSelect{
   .radioOption{
@@ -142,7 +145,7 @@
         border-bottom-left-radius: 15px;
       }
       &:last-child{
-        width: 51px;
+        min-width: 51px;
         text-align: right;
         border-top-right-radius: 15px;
         border-bottom-right-radius: 15px;
@@ -207,7 +210,7 @@
 .voteTop{
   display: flex;
   justify-content: space-between;
-  margin: 10px 70px 50px 0;
+  margin: 40px 70px 50px 0;
   min-height: 60px;
   .voteLft{
     margin-top: 40px;
@@ -428,7 +431,7 @@
 }
 .overView{
   li{
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     &:last-child,&:first-child{
       div{
         font-size: 20px;
@@ -436,6 +439,9 @@
         color: #ffffff;
 
       }
+    }
+    .address{
+      font-size: 18px;
     }
   }
   h6{

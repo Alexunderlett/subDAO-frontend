@@ -75,7 +75,7 @@ function Home(props) {
 
      useEffect(() => {
 
-         if(maincontract==null || selected && !selected.length ) return ;
+         if(maincontract==null || (selected && !selected.length) ) return ;
          const setInstances = async() => {
              setLoading(true);
              let addresslist = await api.main.listDaoInstances(maincontract);
@@ -91,6 +91,7 @@ function Home(props) {
              if (mydaolist && mydaolist.length) {
 
                  for (let item of mydaolist) {
+
                      const data = await api.base.InitHome(state, item.dao_manager_addr);
                      const logo = data && data.logo?data.logo:'';
                      arr.push({
@@ -108,8 +109,14 @@ function Home(props) {
     }, [allAccounts,maincontract,myDao,first]);
     useEffect(() => {
         setimglist(homepage);
-        if( myDao === 'TRUE' && homepage && homepage[0]){
-            props.history.push(`/home/about/${homepage[0].address}`)
+
+        if( myDao === 'TRUE'){
+            if(homepage && homepage[0]){
+                props.history.push(`/home/about/${homepage[0].address}`)
+            }else{
+                props.history.push(`/home`)
+            }
+            
         }else{
             if(props.history.location.pathname === '/home' && homepage && homepage[0]){
                 props.history.push(`/home/about/${homepage[0].address}`)

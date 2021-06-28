@@ -1,6 +1,7 @@
 import ConnectContract from './connectContract';
 import publicJs from "../utils/publicJs";
 import Accounts from "./Account";
+import { randomAsHex } from '@polkadot/util-crypto';
 
 let daoManagercontract;
 const InitDAO = async (state,dispatch,address,cb) =>  {
@@ -36,13 +37,60 @@ const setDAO = async (daoManagercontract,obj,cb) => {
 
     if (daoManagercontract === null || !daoManagercontract || !daoManagercontract.tx || !AccountId) return;
 
-    let {base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals}=obj;
+    let {base_name,base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply,erc20_decimals,token, tokenlist,admin,adminlist}=obj;
 
     erc20_initial_supply= erc20_initial_supply?erc20_initial_supply:1;
     erc20_decimals= erc20_decimals?erc20_decimals:0;
 
+    let objData= {
+        base: {
+            owner: AccountId,
+            name: base_name,
+            logo: base_logo,
+            desc: base_desc
+        },
+        erc20: {
+            owner:AccountId,
+            name: erc20_name,
+            symbol: erc20_symbol,
+            total_supply: erc20_initial_supply,
+            decimals: erc20_decimals
+        },
+        // erc20Transfers: {},
+        org: {
+            owner:AccountId,
+            // moderators: {}
+        },
+        auth: {
+            owner:AccountId,
+            // moderators: {}
+        }
+    }
+    if(token){
+        objData.erc20Transfers =[]
+        let i = 0;
+       for(let item  in tokenlist) {
+           // objData.erc20Transfers[tokenlist[item].address] = parseInt(tokenlist[item].token);
+           objData.erc20Transfers[i] = [tokenlist[item].address,parseInt(tokenlist[item].token)];
+           i++;
+       }
+    }
 
-    const data = await daoManagercontract.tx.init({value, gasLimit:-1}, base_name, base_logo,base_desc,erc20_name,erc20_symbol,erc20_initial_supply, erc20_decimals).signAndSend(AccountId, { signer: injector.signer }, (result) => {
+    if(admin){
+        objData.org.moderators =[]
+        let i = 0;
+       for(let item  in adminlist) {
+           // objData.org.moderators[adminlist[item].name] = adminlist[item].address;
+           objData.org.moderators[i] = [adminlist[item].name,adminlist[item].address];
+           i++;
+       }
+    }
+       console.log(objData)
+
+    const version = randomAsHex();
+    console.log('======version=====',version)
+
+    const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData,version).signAndSend(AccountId, { signer: injector.signer }, (result) => {
         if (result.status.isFinalized ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)

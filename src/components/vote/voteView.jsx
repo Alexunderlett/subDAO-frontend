@@ -24,6 +24,9 @@ export default function VoteView (props){
     const [logo, setLogo] = useState('');
     const [afterchoice, setafterchoice] = useState(false);
     const [active, setActive] = useState(null);
+    const [disabledVote, setdisabledVote] = useState(false);
+    const [toaddress, settoaddress] = useState('');
+    const [toValue, settovalule] = useState('');
 
     let { t } = useTranslation();
 
@@ -40,8 +43,19 @@ export default function VoteView (props){
 
     }, [afterchoice]);
 
+    useEffect( () => {
+        if(votecontract == null ||  voteid == null)return;
+        const queryVoter = async () =>{
+            await api.vote.queryVoter(votecontract, voteid).then(data => {
+                setdisabledVote(data)
+            });
+        }
+        queryVoter();
+    }, [voteid]);
+
     useEffect(() => {
         console.log(props.id,props.voteid)
+        if(props.id == null) return;
         setvoteid(props.voteid);
         setId(props.id);
 
@@ -50,16 +64,15 @@ export default function VoteView (props){
 
             await api.vote.queryOneVote(votecontract, props.voteid).then(data => {
                 if (!data) return;
-                console.log(data)
                 const {
-                    vote_id, title, desc, choices
+                    vote_id, title, desc, choices, to_address,transfer_value
                 } = data;
                 settitle(title);
                 setId(vote_id);
                 setdesc(desc);
-                // setoptionlist(choices.split(','))
+                settoaddress(to_address);
+                settovalule(transfer_value);
                 setoptionlist(choices.split('|'))
-
             });
             // setLoading(false);
         };
@@ -98,13 +111,17 @@ export default function VoteView (props){
                     <section>
                         <ul>
                             <li className='VotetitleTop'>{title}</li>
-                            <li className='voteContent'>{desc}</li>
+                            <li className='voteContent'>
+                               <div className='desc'>{desc}</div>
+                                <div>{t('ReceiverAddress')}: {toaddress}</div>
+                                <div>{t('Amount')}: {toValue}</div>
+                            </li>
                             <li className='voteSelect'>
                                 {optionlist.map((i, index) => (
 
                                     <div key={index}>
                                         <div className="row">
-                                            <div className={active == index?'col-12 radioOption radioActive':'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
+                                            <div className={parseInt(active) === index?'col-12 radioOption radioActive':'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
                                                 <div className="form-group">
                                                     <div className="form-check"  >
                                                         <label htmlFor={`radio_${index}`}>{i.split(":")[0]}</label>
@@ -112,7 +129,7 @@ export default function VoteView (props){
                                                                type="radio"
                                                                id={`radio_${index}`}
                                                                className="form-check-inputRadio"
-                                                               value={index+1}
+                                                               value={index}
                                                                onClick={handleRadio}
                                                          />
                                                     </div>
@@ -137,7 +154,8 @@ export default function VoteView (props){
                             <li className='NextBrdr'>
                                 {/*<Button variant="outline-primary" className='leftBtn'*/}
                                 {/*        onClick={handleClicktoVote}>Cancel</Button>*/}
-                                <Button variant="primary" onClick={handleClicktoOverview}>{t('Decide')}</Button>
+                                <Button variant="primary" onClick={handleClicktoOverview}
+                                disabled={disabledVote}>{t('Decide')}</Button>
                             </li>
                         </ul>
                     </section>

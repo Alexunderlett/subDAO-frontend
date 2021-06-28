@@ -10,7 +10,7 @@ const InitErc20 = async (state, dispatch, address) =>  {
 
     try {
         erc20contract = await ConnectContract(api, 'erc20',address);
-        dispatch({ type: 'SET_ERC20', payload: erc20contract });
+        dispatch({ type: 'SET_ERC20', payload: {erc20contract,address} });
     } catch (e) {
         console.error(e);
     }

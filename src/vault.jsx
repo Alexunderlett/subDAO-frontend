@@ -10,7 +10,7 @@ import withdrawimg from "./images/Withdraw.png";
 import Deposit from './components/vault/deposit';
 import sel from './images/Sel.png';
 import close from './images/shutdownW.png';
-import Withdraw from "./components/vault/withdraw";
+// import Withdraw from "./components/vault/withdraw";
 import {useTranslation} from "react-i18next";
 
 export default function Vault(props){
@@ -30,10 +30,11 @@ export default function Vault(props){
         const [list, setlist] = useState([]);
         const [tokenlist, settokenlist] = useState([]);
         const [historylist, sethistorylist] = useState([]);
-        const [withDrawS, setwithDrawS] = useState(true);
+        // const [withDrawS, setwithDrawS] = useState(true);
         const [TipsNum, setTipsNum] = useState(0);
         const [TipsAddress, setTipsAddress] = useState(0);
         const [type, setType] = useState(true);
+
 
         let {t} = useTranslation();
 
@@ -56,15 +57,15 @@ export default function Vault(props){
             setId(props.match.params.id);
 
         }, []);
-        useEffect(() => {
-            if (vaultcontract == null) return;
-            const checkAuthority = async () => {
-                await api.vault.checkAuthority(vaultcontract).then(data => {
-                    setwithDrawS(data)
-                });
-            };
-            checkAuthority();
-        }, [vaultcontract]);
+        // useEffect(() => {
+        //     if (vaultcontract == null) return;
+        //     const checkAuthority = async () => {
+        //         await api.vault.checkAuthority(vaultcontract).then(data => {
+        //             setwithDrawS(data)
+        //         });
+        //     };
+        //     checkAuthority();
+        // }, [vaultcontract]);
         const setbalance = async () => {
             let arr = [{
                 token: '',
@@ -87,27 +88,41 @@ export default function Vault(props){
         useEffect(() => {
             setbalance();
         }, [list, historylist]);
-        const setShow = (type) => {
+        let beforelen,afterlen;
+        const setShow = async (type) => {
 
             if (type === 'deposit') {
-                let obj = childRef.current.resultToVault();
-                setTipsNum(obj.amount)
-                setTipsAddress(obj.selected)
-                setType(true)
-                childRef.current.amountToNull()
-            } else {
-                let obj = withdrawRef.current.resultToVault();
-                setTipsNum(obj.amount)
-                setTipsAddress(obj.address)
-                setType(false)
-                withdrawRef.current.amountToNull()
+                let obj
+                if(childRef.current != null){
+                    obj = childRef.current.resultToVault();
+                    setTipsNum(obj.amount)
+                    setTipsAddress(obj.selected)
+                    setType(true)
+                    childRef.current.amountToNull()
+                }
+
+
+            }
+            // else {
+            //     let obj = withdrawRef.current.resultToVault();
+            //     setTipsNum(obj.amount)
+            //     setTipsAddress(obj.address)
+            //     setType(false)
+            //     withdrawRef.current.amountToNull()
+            // }
+
+
+            beforelen = historylist.length
+
+            await await setAlllist()
+            if(afterlen>beforelen){
+                setshowvaultTips(true)
             }
 
-            setshowvaultTips(true)
-
-            setTimeout(() => {
+            setTimeout(async() => {
                 setshowvaultTips(false)
-                setAlllist()
+
+
             }, 3000)
 
 
@@ -123,6 +138,8 @@ export default function Vault(props){
             await api.vault.getTransferHistory(vaultcontract).then(data => {
                 if (!data) return;
                 sethistorylist(data)
+                afterlen = data.length
+
             });
 
         };
@@ -161,14 +178,14 @@ export default function Vault(props){
 
                         <div><img src={sel} alt=""/></div>
                         <div className='tipsNumber'>{TipsNum}</div>
-                        {
-                            type && <div className='tipsDesc'>{t('sentfrom')}{TipsAddress}</div>
-                        }
-                        {
-                            !type && <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>
-                        }
+                        {/*{*/}
+                        {/*    type && <div className='tipsDesc'>{t('sentfrom')}{TipsAddress}</div>*/}
+                        {/*}*/}
+                        {/*{*/}
+                        {/*    !type && <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>*/}
+                        {/*}*/}
 
-
+                        <div className='tipsDesc'>{t('sentto')}{TipsAddress}</div>
                         <div className='closeBg' onClick={() => handleClickClose()}><img src={close} alt=""/></div>
 
                     </div>
@@ -181,12 +198,12 @@ export default function Vault(props){
                     setShow={() => setShow('deposit')}
                     ref={childRef}
                 />
-                <Withdraw
-                    handleClose={handleClose}
-                    showTips={newWithdraw}
-                    setShow={() => setShow('withdraw')}
-                    ref={withdrawRef}
-                />
+                {/*<Withdraw*/}
+                {/*    handleClose={handleClose}*/}
+                {/*    showTips={newWithdraw}*/}
+                {/*    setShow={() => setShow('withdraw')}*/}
+                {/*    ref={withdrawRef}*/}
+                {/*/>*/}
                 <section>
                     <div className="row">
                         <div className='col-lg-3'>
@@ -200,11 +217,15 @@ export default function Vault(props){
                                 <div>
                                     <button className='btnR' onClick={() => handleClicktoDetail('deposit')}><img
                                         src={depositimg} alt=""/>{t('deposit')}</button>
-                                    {
-                                        withDrawS &&
-                                        <button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img
-                                            src={withdrawimg} alt=""/>{t('withdraw')}</button>
-                                    }
+                                    {/*{*/}
+                                    {/*    withDrawS &&*/}
+                                    {/*    <button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                                    {/*        src={withdrawimg} alt=""/>{t('withdraw')}</button>*/}
+                                    {/*} */}
+
+                                        {/*<button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                                        {/*    src={withdrawimg} alt=""/>{t('withdraw')}</button>*/}
+
                                 </div>
 
 

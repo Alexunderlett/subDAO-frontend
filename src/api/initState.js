@@ -15,6 +15,7 @@ module.exports = {
 
     erc20contractState: null,
     erc20contract:null,
+    erc20address:null,
 
     orgcontractState: null,
     orgcontract:null,
@@ -27,6 +28,9 @@ module.exports = {
 
     daoManagercontractState: null,
     daoManagercontract:null,
+
+    authcontractState: null,
+    authcontract:null,
 
     homepage:null,
     homepageState: null,

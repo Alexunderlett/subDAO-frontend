@@ -14,11 +14,11 @@ import close from  '../images/shutdownW.png'
 const createHashHistory = history.createHashHistory();
 
 export default function Headertop(props) {
-    const {dispatch} = useSubstrate();
+    const {state,dispatch} = useSubstrate();
+    const {allAccounts} = state;
 
     let { t ,i18n} = useTranslation()
 
-    const [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
 
     const [showButton, setShowButton] = useState(false);
@@ -40,7 +40,7 @@ export default function Headertop(props) {
         if (selectedStorage) {
             setselected(selectedStorage)
         }
-    }, []);
+    }, [allAccounts]);
 
     const backNav = () => {
         createHashHistory.goBack()
@@ -77,6 +77,14 @@ export default function Headertop(props) {
             setdaoExit(false)
         }
     }
+    const exitAccount = ()=> {
+        sessionStorage.removeItem('account');
+        dispatch({type: 'LOAD_ALLACCOUNTS'});
+        setselected([])
+        createHashHistory.push('/home')
+        window.location.reload()
+
+    }
 
     return (<div className='header'>
         <div className="row">
@@ -110,7 +118,14 @@ export default function Headertop(props) {
                     {
                         daoExit && !first && <button onClick={exitMyClick} className="btn">{t('Exit')}</button>
                     }
+                    {/*{*/}
+                    {/*    <button  className="btn">{t('Exit')}</button>*/}
+                    {/*}*/}
+                    {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
+                        {selected[0].address}
+                        <span> <img src={close} alt=""/>{t('Exit')}</span>
 
+                    </div>}
                     <div className='switchLang'>
                         <span onClick={()=>i18n.changeLanguage(i18n.language==='en'?'zh':'en')}>{i18n.language==='en'?'zh':'en'}</span>
                         <img src={arrow} alt=""/>

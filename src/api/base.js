@@ -37,6 +37,7 @@ const InitHome = async (state,address) => {
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
+    if( !data || !data.base_addr)return;
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
 
     let logo = await basecontract.query.getBase(AccountId, {value, gasLimit});

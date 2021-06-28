@@ -1,6 +1,7 @@
 import ConnectContract from './connectContract';
 import Accounts from "./Account";
 import publicJs from "../utils/publicJs";
+import api from "./index";
 
 let orgcontract;
 const InitOrg = async (state, dispatch,address,cb) =>  {
@@ -36,6 +37,16 @@ const getDaoModeratorList = async (orgcontract) => {
     return data;
 
 };
+const whoAmI = async (orgcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.query || !AccountId) return;
+
+    let data = await orgcontract.query.whoAmI(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+    return data;
+
+};
 
 const getDaoMembersList = async (orgcontract) => {
 
@@ -44,6 +55,17 @@ const getDaoMembersList = async (orgcontract) => {
 
 
     let data = await orgcontract.query.getDaoMemberDetailList(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+    return data;
+
+};
+const getApplyList = async (orgcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+
+    let data = await orgcontract.query.getDaoApplyMemberDetailList(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
     return data;
 
@@ -82,15 +104,61 @@ const addDaoMember = async (orgcontract,obj,cb) => {
     return data;
 };
 
+const ApproveMember = async (orgcontract,obj,cb) => {
 
-const resign = async (orgcontract,cb)=>{
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const {name,address} = obj;
+    const injector = await Accounts.accountInjector();
+
+    let data = await orgcontract.tx.approveMember({value, gasLimit}, name,address)
+            .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+                if (result.status.isFinalized) {
+
+                    cb(true)
+                }
+             });
+    return data;
+};
+
+const applyMember = async (orgcontract,name,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
 
     const injector = await Accounts.accountInjector();
 
-    await orgcontract.tx.resign({value, gasLimit},AccountId)
+    let data = await orgcontract.tx.applyMember({value, gasLimit}, name,AccountId)
+            .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+                if (result.status.isFinalized) {
+                    cb(true)
+                }
+             });
+    return data;
+};
+
+
+const resignModerator = async (orgcontract,cb)=>{
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.resignModerator({value, gasLimit},AccountId)
+    .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            cb(true)
+         });
+}
+const resignMember = async (orgcontract,cb)=>{
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.resignMember({value, gasLimit},AccountId)
     .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             cb(true)
          });
@@ -113,7 +181,7 @@ const removeDaoMember = async (orgcontract,obj,cb) => {
                     if(AccountId !== address){
                         cb(true)
                     }else{
-                        resign(orgcontract,cb)
+                        resignMember(orgcontract,cb)
                     }
                 }
              });
@@ -136,19 +204,88 @@ const removeDaoModerator = async (orgcontract,obj,cb) => {
                 if(AccountId !== address){
                     cb(true)
                 }else{
-                    resign(orgcontract,cb)
+                    resignModerator(orgcontract,cb)
                 }
             }
          });
 
 };
 
+const transferOwnership = async (orgcontract,address,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.transferOwnership({value, gasLimit}, address)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized) {
+
+                if(AccountId !== address){
+                    cb(true)
+                }
+            }
+         });
+
+};
+const batchAddMember = async (orgcontract,obj,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+    await orgcontract.tx.batchAddDaoMember({value, gasLimit}, obj)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized) {
+                cb(true)
+            }
+         });
+};
+
+const setFreeAddMember = async (orgcontract,freeAdd,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    const injector = await Accounts.accountInjector();
+
+
+    await orgcontract.tx.setCanFreeAddMember({value, gasLimit}, freeAdd)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized) {
+                cb(true)
+            }
+         });
+};
+const getFreeAddMember = async (orgcontract) => {
+
+
+    const AccountId = await Accounts.accountAddress();
+    if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
+
+    let data = await orgcontract.query.getCanFreeAddMember(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+    return data;
+};
+
 export default {
     InitOrg,
     getDaoModeratorList,
     getDaoMembersList,
+    getApplyList,
     addDaoModerator,
     addDaoMember,
+    ApproveMember,
+    applyMember,
     removeDaoMember,
     removeDaoModerator,
+    transferOwnership,
+    whoAmI,
+    resignModerator,
+    resignMember,
+    setFreeAddMember,
+    getFreeAddMember,
+    batchAddMember,
 }

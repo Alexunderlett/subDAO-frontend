@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Button, FormControl, FormLabel, Modal} from "react-bootstrap";
+import {Button, FormControl, FormLabel, InputGroup, Modal, Tab} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
 import {useTranslation} from "react-i18next";
+import remove from "../../images/shutdown.png";
+import add from "../../images/Add.png";
 
 export default function AddNew(props){
 
@@ -20,6 +22,12 @@ export default function AddNew(props){
 
     const [addModerator, setaddModerator] = useState(false);
     const [addMember, setaddMember] = useState(false);
+    const [adminlist,setadminlist]= useState([
+        {
+            name: '',
+            address: ''
+        }
+    ]);
 
     let { t } = useTranslation();
 
@@ -42,6 +50,8 @@ export default function AddNew(props){
             setaddModerator(result)
             props.handleClose()
             props.refresh()
+            setname('')
+            setaddress('')
         });
     }
     const submitMembers = async (obj) =>{
@@ -51,6 +61,8 @@ export default function AddNew(props){
             setaddMember(result)
             props.handleClose()
             props.refresh()
+            setname('')
+            setaddress('')
         });
     }
 
@@ -71,23 +83,37 @@ export default function AddNew(props){
             submitMembers(obj)
         }
     }
+    const setAdminInput = (e, index) => {
+        let newArray = [...adminlist];
+        const {name, value} = e.target;
+        newArray[index][name] = value;
+        setadminlist(newArray)
+    }
+    const removeAdmin = (selectItem, index) =>{
+        let newArray = [...adminlist];
+        newArray.splice(index, 1);
+        setadminlist(newArray)
+    }
+    const handleBatch = () =>{
+        props.handleBatch()
+    }
 
-    let {handleClose, showTips,typeName} = props;
+    let {handleClose, showTips,typeName,applyAuth} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
 
         <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
             <Modal.Header closeButton>
-                <Modal.Title><img src={addnew} alt=""/><span >{typeName}</span></Modal.Title>
+                <Modal.Title><img src={add} alt=""/><span >{t(typeName)}</span></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <section>
                     <ul className='addnew'>
                         <li>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>{t('FilltheName')}</FormLabel>
                             <div className="inputBrdr">
                                 <FormControl
-                                    placeholder="Please fill the name."
+                                    placeholder={t('FilltheName')}
                                     name='name'
                                     value={name}
                                     autoComplete="off"
@@ -96,10 +122,10 @@ export default function AddNew(props){
                             </div>
                         </li>
                         <li>
-                            <FormLabel>Address</FormLabel>
+                            <FormLabel>{t('FillAddress')}</FormLabel>
                             <div className="inputBrdr">
                                 <FormControl
-                                    placeholder="Please fill the address"
+                                    placeholder={t('FillAddress')}
                                     name='address'
                                     value={address}
                                     autoComplete="off"
@@ -112,13 +138,16 @@ export default function AddNew(props){
                                 <Button variant="primary"  onClick={()=>handleSubmit(typeName)}>
                                     Add
                                 </Button>
+                                {
+                                    typeName === 'Members' && applyAuth &&
+                                    <Button variant="primary"  onClick={()=>handleBatch()} className='top20'>
+                                        Batch Import
+                                    </Button>
+                                }
+
                             </div>
                         </li>
                     </ul>
-
-
-
-
 
                 </section>
             </Modal.Body>

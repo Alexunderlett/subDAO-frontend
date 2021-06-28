@@ -64,7 +64,7 @@ class FirstStep extends Component {
                             <div className='imgBrdr'>
                                 <img src={imgUrl} alt=""/>
                                 {
-                                    <img src={closeBtn} className='removeBrdr'  onClick={this.removeImage}/>
+                                    <img src={closeBtn} className='removeBrdr'  onClick={this.removeImage} alt=''/>
                                 }
                             </div>
                         </div>

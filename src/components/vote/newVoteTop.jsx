@@ -18,6 +18,9 @@ export default  class NewVoteTop extends Component{
                         <li className={this.props.type === 4?'active step4':'step4'}>
                             <span>4</span>
                         </li>
+                        <li className={this.props.type === 5?'active step5':'step5'}>
+                            <span>5</span>
+                        </li>
                     </ul>
 
 

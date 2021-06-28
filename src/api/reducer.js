@@ -25,7 +25,7 @@ const reducer = (state, action) => {
 
         //accounts
         case 'LOAD_ALLACCOUNTS':
-            return { ...state, allaccountsState: 'LOAD_ALLACCOUNTS' };
+            return { ...state, allaccountsState: 'LOAD_ALLACCOUNTS', allAccounts:null};
 
         case 'SET_ALLACCOUNTS':
             return { ...state, allAccounts: action.payload, allaccountsState: 'READY' };
@@ -48,7 +48,7 @@ const reducer = (state, action) => {
             return { ...state, erc20contractState: 'LOAD_ERC20' };
 
         case 'SET_ERC20':
-            return { ...state, erc20contract: action.payload, erc20contractState: 'READY' };
+            return { ...state, erc20contract: action.payload.erc20contract,erc20address:action.payload.address, erc20contractState: 'READY' };
 
         case 'ERC20_ERROR':
             return { ...state, erc20contract: null, erc20contractState: 'ERROR' };
@@ -84,6 +84,16 @@ const reducer = (state, action) => {
 
         case 'VOTE_ERROR':
             return { ...state, votecontract: null, votecontractState: 'ERROR' };
+
+        // auth
+        case 'LOAD_AUTH':
+            return { ...state, authcontractState: 'LOAD_AUTH' };
+
+        case 'SET_AUTH':
+            return { ...state, authcontract: action.payload, authcontractState: 'READY' };
+
+        case 'AUTH_ERROR':
+            return { ...state, authcontract: null, vauthcontractState: 'ERROR' };
 
         // DAO
         case 'LOAD_DAO':

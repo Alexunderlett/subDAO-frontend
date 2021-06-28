@@ -5,6 +5,7 @@ import vault from './vault';
 import org from './org';
 import dao from './dao';
 import erc20 from './erc20';
+import auth from './auth';
 
 export default {
     base,
@@ -14,4 +15,5 @@ export default {
     org,
     dao,
     erc20,
+    auth,
 };
