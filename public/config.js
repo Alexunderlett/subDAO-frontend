@@ -5,8 +5,8 @@ window.mainAddress = {
     // rpc_server: "ws://39.101.70.206:9944"
 
     // 3.0
-    // main: "5GiM7G3gWLZosby8oAfjFK7es8c1qjMPG32rRGAZqeeLCEqU",
-    main: "5FaJDEj2t4MH4szwVQhV7nFYPbgRVkf8EJB49HgtH1hc4dHW",
+    main: "5GiM7G3gWLZosby8oAfjFK7es8c1qjMPG32rRGAZqeeLCEqU",
+    // main: "5ERyuE3zDRQZzNd5n6NSJKaFuojAUQu7gH7QEV2X4zDHCX2q",
     rpc_server: "ws://39.101.70.206:39944"
 
 };
