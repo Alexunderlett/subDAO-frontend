@@ -91,7 +91,7 @@ const setDAO = async (daoManagercontract,obj,cb) => {
     console.log('======version=====',version)
 
     const data = await daoManagercontract.tx.initByParams({value, gasLimit:-1}, objData,version).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized ) {
+        if (result.status.isFinalized || result.status.isInBlock) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             console.log(result)
             cb(true)
