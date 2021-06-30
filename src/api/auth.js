@@ -48,7 +48,7 @@ const grantPermission = async (authcontract,obj,cb) => {
 
      await authcontract.tx.grantPermission({value, gasLimit}, AccountId, contract_name, function_name)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized ) {
+            if (result.status.isFinalized || result.status.isInBlock ) {
                 cb(true)
              }
          });

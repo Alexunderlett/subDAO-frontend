@@ -52,7 +52,6 @@ const queryOneVote = async (votecontract, id) => {
     // let dataobj = await votecontract.query.queryActiveVote(AccountId, {value, gasLimit});
     dataobj = publicJs.formatResult(dataobj);
 
-    console.info('dataobj====',dataobj)
     return dataobj;
 }
 
@@ -116,7 +115,7 @@ const newVote = async (votecontract,obj,cb) => {
 
    await votecontract.tx.newVote({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices)
        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized) {
+        if (result.status.isFinalized || result.status.isInBlock) {
             cb(true)
         }
         });
@@ -133,7 +132,7 @@ const newVoteTransfer = async (votecontract,obj,cb) => {
 
    await votecontract.tx.newVoteWithTransfer({value, gasLimit}, title, desc, vote_time, support_require_num, min_require_num, choices,erc20_address,to_address,valueAmount)
        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized) {
+        if (result.status.isFinalized || result.status.isInBlock) {
             cb(true)
         }
         });
@@ -150,7 +149,7 @@ const executeVote = async (votecontract,id,cb) => {
 
     await votecontract.exec('execute', {value, gasLimit}, id)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
                 cb(true)
             }
     })
@@ -166,7 +165,7 @@ const VoteChoice = async (votecontract,voteid,choiceid,cb) => {
 
     await votecontract.exec('vote', {value, gasLimit}, voteid,choiceid,AccountId)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
 
                 // console.log('Events:');
                 // let ContractEmitted= false;

@@ -41,27 +41,21 @@ const listDaoInstancesByOwner = async (maincontract) => {
     let data = await maincontract.query.listDaoInstancesByOwner(AccountId, {value, gasLimit},AccountId);
 
     data = publicJs.formatResult(data);
-    console.log("====listDaoInstancesByOwner",data)
 
     return data;
 
 };
 
 const instanceByTemplate = async (maincontract,id,cb) => {
-    console.error("===id",id)
-
     const AccountId = await Accounts.accountAddress();
     const injector = await Accounts.accountInjector();
     const version = randomAsHex();
-    console.log('======version=====',version)
-    console.log('======version=====',id, AccountId,version)
 
     if (maincontract === null || !maincontract || !AccountId) return;
 
 
     let data =  await maincontract.tx.instanceByTemplate({value, gasLimit:280000n * 1000000n}, id, AccountId,version)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            console.log(result)
             if (result.status.isFinalized || result.status.isInBlock) {
                 console.log('main.instanceByTemplate finalized', result);
                 cb(true)

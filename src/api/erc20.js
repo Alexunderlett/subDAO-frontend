@@ -28,7 +28,7 @@ const approveOp = async (erc20contract, spender, total,cb) => {
 
     await erc20contract.tx.approve({value, gasLimit}, spender, total)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-          if (result.status.isFinalized) {
+          if (result.status.isFinalized || result.status.isInBlock) {
              cb(true);
          }
        });

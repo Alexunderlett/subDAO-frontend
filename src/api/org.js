@@ -81,7 +81,7 @@ const addDaoModerator = async (orgcontract,obj,cb) => {
 
      await orgcontract.tx.addDaoModerator({value, gasLimit}, name,address)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized ) {
+            if (result.status.isFinalized || result.status.isInBlock ) {
                 cb(true)
              }
          });
@@ -96,7 +96,7 @@ const addDaoMember = async (orgcontract,obj,cb) => {
 
     let data = await orgcontract.tx.addDaoMember({value, gasLimit}, name,address)
             .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-                if (result.status.isFinalized) {
+                if (result.status.isFinalized || result.status.isInBlock) {
 
                     cb(true)
                 }

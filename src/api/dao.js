@@ -110,7 +110,7 @@ const transferToken =  async (daoManagercontract,obj,cb) => {
     const{address,token}=obj;
 
     await daoManagercontract.tx.transfer({value, gasLimit}, address, token,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized ) {
+        if (result.status.isFinalized || result.status.isInBlock ) {
             console.log(result.status.isFinalized ,result.status.isInBlock );
             cb(true)
         }
@@ -127,7 +127,7 @@ const addDaoModeratorTx =  async (daoManagercontract,obj,cb) => {
     const{address,name}=obj;
 
     await daoManagercontract.tx.addDaoModerator({value, gasLimit}, name,address,).signAndSend(AccountId, { signer: injector.signer }, (result) => {
-        if (result.status.isFinalized) {
+        if (result.status.isFinalized || result.status.isInBlock) {
             console.log(result.status.isFinalized ,result.status.isInBlock ,result);
             cb(true)
         }
