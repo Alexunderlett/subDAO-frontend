@@ -114,7 +114,7 @@ const ApproveMember = async (orgcontract,obj,cb) => {
 
     let data = await orgcontract.tx.approveMember({value, gasLimit}, name,address)
             .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-                if (result.status.isFinalized) {
+                if (result.status.isFinalized || result.status.isInBlock) {
 
                     cb(true)
                 }
@@ -131,7 +131,7 @@ const applyMember = async (orgcontract,name,cb) => {
 
     let data = await orgcontract.tx.applyMember({value, gasLimit}, name,AccountId)
             .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-                if (result.status.isFinalized) {
+                if (result.status.isFinalized || result.status.isInBlock) {
                     cb(true)
                 }
              });
@@ -199,7 +199,7 @@ const removeDaoModerator = async (orgcontract,obj,cb) => {
 
     await orgcontract.tx.removeDaoModerator({value, gasLimit}, address)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
 
                 if(AccountId !== address){
                     cb(true)
@@ -220,7 +220,7 @@ const transferOwnership = async (orgcontract,address,cb) => {
 
     await orgcontract.tx.transferOwnership({value, gasLimit}, address)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
 
                 if(AccountId !== address){
                     cb(true)
@@ -238,7 +238,7 @@ const batchAddMember = async (orgcontract,obj,cb) => {
 
     await orgcontract.tx.batchAddDaoMember({value, gasLimit}, obj)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
                 cb(true)
             }
          });
@@ -254,7 +254,7 @@ const setFreeAddMember = async (orgcontract,freeAdd,cb) => {
 
     await orgcontract.tx.setCanFreeAddMember({value, gasLimit}, freeAdd)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
-            if (result.status.isFinalized) {
+            if (result.status.isFinalized || result.status.isInBlock) {
                 cb(true)
             }
          });

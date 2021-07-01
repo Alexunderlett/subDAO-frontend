@@ -32,7 +32,7 @@ export default function NewVote(props) {
     const [to_address, setto_address] = useState('');
     const [valueAmount, setvalueAmount] = useState('');
 
-    const [optionlist, setoptionlist] = useState( ['','','']);
+    const [optionlist, setoptionlist] = useState( ['']);
 
     let { t } = useTranslation();
     const datetimeRef = useRef();
@@ -282,7 +282,7 @@ export default function NewVote(props) {
                                                         </InputGroup>
 
                                                         {
-                                                            !!index && index !== 1 &&   <img src={remove}  className="removerht"  alt=''
+                                                            !!index &&   <img src={remove}  className="removerht"  alt=''
                                                                                          onClick={removeOption.bind(this, i, index)}/>
                                                         }
                                                     </div>
