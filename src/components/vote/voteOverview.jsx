@@ -80,21 +80,25 @@ export default function VoteOverview (props){
                                             <div>{title}</div>
                                         </li>
                                         <li>
-                                            <div>{voteid}</div>
                                             <h6>{t('VotingNumber')}</h6>
+                                            <div>{voteid}</div>
+
                                         </li>
 
                                         <li>
-                                            <div>{support}</div>
                                             <h6>{t('supportnumber')}</h6>
+                                            <div>{support}</div>
+
                                         </li>
                                         <li>
-                                            <div>{min}</div>
                                             <h6>{t('minnumber')}</h6>
+                                            <div>{min}</div>
+
                                         </li>
                                         <li>
-                                            <div>{toValue}</div>
                                             <h6>{t('Amount')}</h6>
+                                            <div>{toValue}</div>
+
                                         </li>
                                         <li>
                                             <h6>{t('ReceiverAddress')}</h6>
