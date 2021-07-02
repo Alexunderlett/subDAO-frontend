@@ -187,7 +187,7 @@ export default function AddAuth(props){
                         <li className="row">
                             {optionlist.map((i, index) => (
 
-                                <div key={index} className='col-3'>
+                                <div key={index} className='col-4'>
                                     <div>
                                         {/*<div className={parseInt(active) === index?'radioOption radioActive':'radioOption'} id={`active_${index}`} onClick={handleActive}>*/}
                                             <div className={i.checked?'radioOption radioActive':'radioOption'} id={`active_${index}`} onClick={handleActive}>
@@ -201,7 +201,7 @@ export default function AddAuth(props){
                                                            onChange={e => isChecked(e, i)}
                                                            checked={i.checked}
                                                     />
-                                                    <label htmlFor={`radio_${index}`}>{i.action_title}{i.action_title}</label>
+                                                    <label htmlFor={`radio_${index}`}>{i.contract_name}: {i.action_title}</label>
 
                                                 </div>
                                             </div>

@@ -32,9 +32,16 @@ const showActions = async (authcontract) => {
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.query || !AccountId) return;
 
-    let data = await authcontract.query.showActionsByContract(AccountId, {value, gasLimit},'vault');
-    data = publicJs.formatResult(data);
-    return data;
+    let objArr = [ 'vote', 'vault', 'org'];
+    let result = [];
+
+    for(let item of objArr){
+        let data = await authcontract.query.showActionsByContract(AccountId, {value, gasLimit},item);
+        data = publicJs.formatResult(data);
+        result.push(...data)
+    }
+    
+    return result;
 
 };
 const showActionsByUser = async (authcontract) => {
