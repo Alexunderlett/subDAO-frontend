@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Modal} from "react-bootstrap";
+import {Button, Modal, Spinner} from "react-bootstrap";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
@@ -48,6 +48,7 @@ export default function AddAuth(props){
             setoptionlist(arr)
         }
         actionsByuser()
+
 
     }, [props.authlist]);
 
@@ -185,7 +186,7 @@ export default function AddAuth(props){
                 <section>
                     <ul className='orgSelect'>
                         <li className="row">
-                            {optionlist.map((i, index) => (
+                            { !!optionlist.length &&optionlist.map((i, index) => (
 
                                 <div key={index} className='col-4'>
                                     <div>
@@ -210,6 +211,9 @@ export default function AddAuth(props){
                                     </div>
                                 </div>
                             ))
+                            }
+                            {
+                                !optionlist.length && <Spinner animation="border" variant="light" />
                             }
                         </li>
                         <li className='btmBtn'>

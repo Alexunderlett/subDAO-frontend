@@ -40,7 +40,7 @@ const showActions = async (authcontract) => {
         data = publicJs.formatResult(data);
         result.push(...data)
     }
-    
+
     return result;
 
 };
