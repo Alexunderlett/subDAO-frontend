@@ -124,5 +124,8 @@
   "AddDaoModerators": "增加DAO管理员",
   "ReceiverAddress": "接收者地址",
   "UpdateAuthority": "修改权限",
-  "triggering": "触发转账"
+  "triggering": "触发转账",
+  "grantRevokePermission": "授予/取消权限",
+  "grantPermission": "授予权限",
+  "RevokePermission": "授予权限"
 }

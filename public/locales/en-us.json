@@ -124,5 +124,8 @@
   "AddDaoModerators": "Add Dao Moderators",
   "ReceiverAddress": "Receiver's address",
   "UpdateAuthority": "Update Authority",
-  "triggering": "Trigger transfer token"
+  "triggering": "Trigger transfer token",
+  "grantRevokePermission": "Grant/Revoke Permission",
+  "grantPermission": "Grant Permission",
+  "RevokePermission": "Revoke Permission"
 }

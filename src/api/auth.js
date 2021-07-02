@@ -37,12 +37,21 @@ const showActions = async (authcontract) => {
     return data;
 
 };
+const showActionsByUser = async (authcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (authcontract === null || !authcontract || !authcontract.query || !AccountId) return;
+
+    let data = await authcontract.query.showActionsByUser(AccountId, {value, gasLimit},AccountId);
+    data = publicJs.formatResult(data);
+    return data;
+
+};
 
 const grantPermission = async (authcontract,obj,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.tx || !AccountId) return;
-
     const {contract_name,function_name} = obj;
     const injector = await Accounts.accountInjector();
 
@@ -53,10 +62,26 @@ const grantPermission = async (authcontract,obj,cb) => {
              }
          });
 };
+const revokePermission = async (authcontract,obj,cb) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (authcontract === null || !authcontract || !authcontract.tx || !AccountId) return;
+    const {contract_name,function_name} = obj;
+    const injector = await Accounts.accountInjector();
+
+     await authcontract.tx.revokePermission({value, gasLimit}, AccountId, contract_name, function_name)
+        .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            if (result.status.isFinalized || result.status.isInBlock ) {
+                cb(true)
+             }
+         });
+};
 
 export default {
     InitAuth,
     showActions,
-    grantPermission
+    showActionsByUser,
+    grantPermission,
+    revokePermission
 
 }
