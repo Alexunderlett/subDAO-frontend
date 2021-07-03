@@ -27,7 +27,7 @@ class ManageItem extends Component {
        this.setState({form})
     }
     render() {
-       const {list, type, handleClicktoview, showModal, handleClose} = this.props;
+       const {list, type, handleClicktoview, showModal, handleClose,isModerator,isOwner} = this.props;
         const{form} = this.state;
         return (<div>
             <ModalTips handleClose={handleClose} showTips={showModal}/>
@@ -40,9 +40,17 @@ class ManageItem extends Component {
                             <tr key={`${type}_${index}_${item[0]}`}>
                                 <td>{item[1]}</td>
                                 <td>{item[0]}</td>
-                                <td>
-                                    <span className='deleteRemove' onClick={()=>handleClicktoview(item,type)} />
-                                </td>
+                                {
+                                    type === 'moderators' && isOwner &&  <td>
+                                        <span className='deleteRemove' onClick={()=>handleClicktoview(item,type)} />
+                                    </td>
+                                }
+                                {
+                                    type === 'members' && (isOwner||isModerator) &&  <td>
+                                        <span className='deleteRemove' onClick={()=>handleClicktoview(item,type)} />
+                                    </td>
+                                }
+
                             </tr>
                         )
                     )

@@ -116,7 +116,7 @@ export default function Org(props) {
 
 
     const handleClicktoManage = () => {
-        props.history.push(`/manage/${id}`)
+        props.history.push(`/manage/${id}/${isOwner?1:0}/${isModerator?1:0}`)
     }
     const handleClicktoAbout = () => {
         props.history.push(`/home/about/${id}`)
@@ -195,9 +195,10 @@ export default function Org(props) {
                                 <img src={Back} alt=""/> {t('Back')}
                             </div>
 
-                            {
-                                isOwner &&
+
                                 <div>
+                                    {
+                                    isOwner &&
                                     <div className='btnRht10'>
                                         {
                                             triggerTips && <div className='triggerTips'>
@@ -213,17 +214,22 @@ export default function Org(props) {
                                             triggerStatus &&<img src={TriggerBtnActive} alt="" onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
                                         }
                                     </div>
-
+                                }
+                                    {
+                                        isOwner &&
                                         <button className='topRhtBtn' onClick={handleApplistShow}><img src={applyList}
                                                                                                        alt=""/>{t('applyList')}
                                         </button>
-
+                                    }
+                                    { (isOwner ||isModerator )&&
                                         <button className='btnR' onClick={handleClicktoManage}><img src={mana}
                                                                                                     alt=""/>{t('Manage')}
                                         </button>
+                                    }
+
 
                                 </div>
-                            }
+
                         </div>
                         <Addnew
                             handleClose={handleClose}

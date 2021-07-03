@@ -27,6 +27,8 @@ export default function OrgManage(props){
     const [logo, setLogo] = useState('');
     const [memberlist, setMemberlist] = useState([]);
     const [checklist, setChecklist] = useState([]);
+    const [isOwner, setisOwner] = useState(false);
+    const [isModerator, setisModerator] = useState(false);
 
     let { t } = useTranslation();
 
@@ -44,6 +46,8 @@ export default function OrgManage(props){
     }, [addMember]);
     useEffect(() => {
         setId(props.match.params.id);
+        setisModerator(parseInt(props.match.params.isModerator));
+        setisOwner(parseInt(props.match.params.isOwner));
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
@@ -188,6 +192,8 @@ export default function OrgManage(props){
                                         type='moderators'
                                         isChecked={isChecked}
                                         listname={'checklist'}
+                                        isOwner={isOwner}
+                                        isModerator={isModerator}
                                         isAllChecked={isAllChecked}
                                         handleClicktoview={handleClicktoview}
                                         showModal={showModalmoderators}
@@ -200,6 +206,8 @@ export default function OrgManage(props){
                                     <ManageItem
                                         list={memberlist}
                                         listname={'memberlist'}
+                                        isOwner={isOwner}
+                                        isModerator={isModerator}
                                         chooseAll={members}
                                         type='members'
                                         isChecked={isChecked}

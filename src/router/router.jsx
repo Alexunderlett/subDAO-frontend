@@ -32,7 +32,7 @@ function routerlink() {
                 <Route path="/deposit/:id" component={Deposit}/>
                 <Route path="/withdraw/:id" component={Withdraw}/>
                 <Route path="/org/:id" component={Org}/>
-                <Route path="/manage/:id" component={OrgManage}/>
+                <Route path="/manage/:id/:isOwner/:isModerator" component={OrgManage}/>
                 <Redirect from="/" to="/home" exact/>
             </Switch>
         </Router>);
