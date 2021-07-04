@@ -32,7 +32,8 @@ const showActions = async (authcontract) => {
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.query || !AccountId) return;
 
-    let objArr = [ 'vote', 'vault', 'org'];
+    // let objArr = [ 'vote', 'vault', 'org'];
+    let objArr = [ 'vote'];
     let result = [];
 
     for(let item of objArr){
