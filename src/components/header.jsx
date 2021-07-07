@@ -142,7 +142,7 @@ export default function Headertop(props) {
                     </Modal>
                     {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
                         {AddresstoShow(selected[0].address)}
-                        <span> <img src={close} alt=""/>{t('Exit')}</span>
+                        <span> <img src={close} alt=""/>{t('logout')}</span>
 
                     </div>}
                     {
@@ -157,11 +157,15 @@ export default function Headertop(props) {
                         showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('ExitCreate')}</button>
                     }
                     {
-                        !daoExit && !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>
+                         !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>
                     }
-                    {
-                        daoExit && !first && <button onClick={exitMyClick} className="btn">{t('ExitMy')}</button>
-                    }
+
+                    {/*{*/}
+                    {/*    !daoExit && !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>*/}
+                    {/*}*/}
+                    {/*{*/}
+                    {/*    daoExit && !first && <button onClick={exitMyClick} className="btn">{t('ExitMy')}</button>*/}
+
                     {/*{*/}
                     {/*    <button  className="btn">{t('Exit')}</button>*/}
                     {/*}*/}
