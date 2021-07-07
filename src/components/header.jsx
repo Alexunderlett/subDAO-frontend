@@ -5,17 +5,20 @@ import Accounts from '../api/Account';
 import {useSubstrate} from "../api/contracts";
 import {Modal} from "react-bootstrap";
 
+import publicJs from "../utils/publicJs";
+
 import { useTranslation, Trans, Translation } from 'react-i18next'
 
 import logoWhite from '../images/logoWhite.png';
 import arrow from '../images/Polygon.png';
 import close from  '../images/shutdownW.png'
 
+
 const createHashHistory = history.createHashHistory();
 
 export default function Headertop(props) {
     const {state,dispatch} = useSubstrate();
-    const {allAccounts} = state;
+    const {allAccounts,api,maincontract,daoManagercontract,refreshBalance} = state;
 
     let { t ,i18n} = useTranslation()
 
@@ -25,6 +28,7 @@ export default function Headertop(props) {
     const [showExit, setshowExit] = useState(false);
     const [daoExit, setdaoExit] = useState(false);
     const [first, setfirst] = useState(false);
+    const [balanceOf, setbalanceOf] = useState(0);
 
     useEffect(() => {
         setshowExit(createHashHistory.location.pathname === '/create');
@@ -36,10 +40,31 @@ export default function Headertop(props) {
     }, [showExit,first]);
 
     useEffect(() => {
+        i18n.changeLanguage('en')
+    }, []);
+
+
+    const queryBalance = async (account) =>{
+
+        if(api == null || account == null || !account.length || !account[0].address) return;
+        const { data: balance } = await api.query.system.account(account[0].address);
+        let bl = balance.toHuman().free
+        setbalanceOf(bl)
+    }
+
+    useEffect(() => {
+       if(allAccounts == null ) return
+       queryBalance(allAccounts)
+        dispatch({type: 'NOREFRESH'});
+    }, [allAccounts,maincontract,daoManagercontract,refreshBalance]);
+    useEffect(() => {
+
+
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
         }
+
     }, [allAccounts]);
 
     const backNav = () => {
@@ -85,12 +110,22 @@ export default function Headertop(props) {
         window.location.reload()
 
     }
+    const AddresstoShow = (address)=> {
+        console.log(address)
+
+        let frontStr = address.substring(0,4);
+
+        let afterStr = address.substring(address.length-4,address.length);
+
+        return `${frontStr}...${afterStr}`
+
+    }
 
     return (<div className='header'>
         <div className="row">
-            <div className="col-4 lftTit"><a href="/">SubDAO</a></div>
-            <div className="col-4 logoMid"><img src={logoWhite} alt=""/></div>
-            <div className="col-4 rhtBtn">
+            <div className="col-4 lftTit"><a href="/"><img src={logoWhite} alt=""/></a></div>
+            {/*<div className="col-4 logoMid"><img src={logoWhite} alt=""/></div>*/}
+            <div className="col-8 rhtBtn">
                 <div className="header-button">
                     <Modal
                         show={showButton}
@@ -105,31 +140,36 @@ export default function Headertop(props) {
                             <h4>Please connect wallet</h4>
                         </Modal.Body>
                     </Modal>
+                    {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
+                        {AddresstoShow(selected[0].address)}
+                        <span> <img src={close} alt=""/>{t('Exit')}</span>
+
+                    </div>}
+                    {
+                        allAccounts !=null &&   <span className='balanceRht'>{balanceOf}</span>
+                    }
+
 
                     {
                         !showExit && !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>
                     }
                     {
-                        showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('Exit')}</button>
+                        showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('ExitCreate')}</button>
                     }
                     {
                         !daoExit && !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>
                     }
                     {
-                        daoExit && !first && <button onClick={exitMyClick} className="btn">{t('Exit')}</button>
+                        daoExit && !first && <button onClick={exitMyClick} className="btn">{t('ExitMy')}</button>
                     }
                     {/*{*/}
                     {/*    <button  className="btn">{t('Exit')}</button>*/}
                     {/*}*/}
-                    {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
-                        {selected[0].address}
-                        <span> <img src={close} alt=""/>{t('Exit')}</span>
 
-                    </div>}
-                    <div className='switchLang'>
-                        <span onClick={()=>i18n.changeLanguage(i18n.language==='en'?'zh':'en')}>{i18n.language==='en'?'zh':'en'}</span>
-                        <img src={arrow} alt=""/>
-                    </div>
+                    {/*<div className='switchLang'>*/}
+                    {/*    /!*<span onClick={()=>i18n.changeLanguage(i18n.language==='en'?'zh':'en')}>{i18n.language==='en'?'zh':'en'}</span>*!/*/}
+                    {/*    /!*<img src={arrow} alt=""/>*!/*/}
+                    {/*</div>*/}
 
                 </div>
             </div>

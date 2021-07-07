@@ -116,6 +116,12 @@ const reducer = (state, action) => {
         case 'NOMAY':
             return { ...state, myDao:'FALSE'};
 
+        case 'REFRESH':
+            return { ...state, refreshBalance:true};
+
+        case 'NOREFRESH':
+            return { ...state, refreshBalance:false};
+
         default:
             throw new Error(`Unknown type: ${action.type}`);
     }

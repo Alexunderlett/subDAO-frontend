@@ -312,6 +312,36 @@ export default function About(props) {
         if(myRef.current==null) return;
         if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
     };
+    const switchKey = (key) =>{
+        let str='';
+        switch (key) {
+            case 'base_addr':
+                str='Base Address';
+                break;
+            case 'erc20_addr':
+                str='ERC20 Address';
+                break;
+            case 'org_addr':
+                str='Org Address';
+                break;
+            case 'vault_addr':
+                str='Vault Address';
+                break;
+            case 'vote_addr':
+                str='Vote Address';
+                break;
+            case 'auth_addr':
+                str='Auth Address';
+                break;
+            case 'github_addr':
+                str='Github Address';
+                break;
+            default:
+                str = key;
+                break;
+        }
+        return str;
+    }
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
@@ -460,7 +490,7 @@ export default function About(props) {
                                             contractlist != null && <ul className='list'>{
                                                 Object.keys(contractlist).map((key) => (
                                                     (contractlist[key] != null && <li key={`contract_${key}`}>
-                                                        <span>{key} </span>
+                                                        <span>{switchKey(key)} </span>
                                                         {contractlist[key]}
                                                         </li>
                                                     ) ))

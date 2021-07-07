@@ -116,7 +116,7 @@ function Home(props) {
             }else{
                 props.history.push(`/home`)
             }
-            
+
         }else{
             if(props.history.location.pathname === '/home' && homepage && homepage[0]){
                 props.history.push(`/home/about/${homepage[0].address}`)
@@ -166,7 +166,7 @@ function Home(props) {
                  <div className='homeDesc'>
                      {t('homeDescription')}
                  </div>
-                <img src={homeimg} alt=""/>
+                {/*<img src={homeimg} alt=""/>*/}
                 <div className="header-button">
                     {
                         !showlist && !selected.length && !allList.length &&
@@ -181,11 +181,11 @@ function Home(props) {
             <div className='selectAccount'>
                 <div>
                     <h3>{t('YourAccount')}</h3>
-                    <div className='accountTips'>{t('SelectAccount')}</div>
+                    {/*<div className='accountTips'>{t('SelectAccount')}</div>*/}
                 </div>
                 <div className="firstSelect">
                     <Form.Control as="select" onChange={(event) => selectAccounts(event)}>
-                        <option value=''>{t('SelectOption')}</option>
+                        <option value=''>{t('SelectAccount')}</option>
                         {
                             allList && allList.length && allList.map((opt) =>
                                 <option value={opt.address} key={opt.address}>{opt.meta.name}</option>

@@ -1,5 +1,5 @@
 import React, {Component, useEffect} from 'react';
-import {Button, FormControl, InputGroup,FormLabel} from "react-bootstrap";
+import {Button, FormControl, InputGroup, FormLabel, Modal} from "react-bootstrap";
 import closeBtn from '../../images/shutdownW.png'
 import { Trans,Translation } from 'react-i18next';
 
@@ -9,6 +9,7 @@ class FirstStep extends Component {
         super(props);
         this.state = {
             imgUrl: '',
+            errTips: false,
             form:{
                 name: '',
                 // website: '',
@@ -40,13 +41,23 @@ class FirstStep extends Component {
 
     toSecondStep = () => {
         const {form,imgUrl} = this.state;
+
         sessionStorage.setItem('firstStep', JSON.stringify(form))
         sessionStorage.setItem('imgUrl', JSON.stringify(imgUrl))
-        this.props.handlerSet(2);
+
+        if(imgUrl && form.name &&form.description){
+            this.props.handlerSet(2);
+        }else{
+            this.setState({errTips:true});
+        }
+
 
     }
     handleImageChange = (e) => {
         this.setState({imgUrl:e.target.value});
+    }
+    seterrTips = (e) => {
+        this.setState({errTips:false});
     }
 
     removeImage = () => {
@@ -55,8 +66,20 @@ class FirstStep extends Component {
     }
 
     render() {
-        let {imgUrl ,form:{name,  description}} = this.state;
+        let {imgUrl ,form:{name,  description},errTips} = this.state;
         return <div className='row'>
+            <Modal
+                show={errTips}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={this.seterrTips}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>DAO Logo、DAO name、DAO description is Required</h4>
+                </Modal.Body>
+            </Modal>
                 <div className='col-3'>
                     {
                         imgUrl && <div className='uploadBrdr'>
@@ -76,7 +99,7 @@ class FirstStep extends Component {
                             <div className="inputBrdr">
 
                                 <Translation>{t => <FormControl type="text"
-                                       placeholder={t('FillImage')}
+                                       placeholder='Url'
                                        onChange={this.handleImageChange}/>}
                                 </Translation>
                             </div>
