@@ -14,20 +14,20 @@
 .vaultwrap{
   margin-bottom: 57px;
   width: 100%;
-  overflow-x: auto;
+  //overflow-x: auto;
   box-sizing: border-box;
 }
   .vaultbg{
     display: flex;
   }
   .vaultbalance{
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+    //display: flex;
+    //justify-content: flex-start;
+    //flex-wrap: nowrap;
     dl{
       padding: 20px 20px 30px;
-      width: 150px;
-      height: 171px;
+      //width: 150px;
+      //height: 171px;
       box-sizing: border-box;
 
       background: rgba(20, 11, 54, 0.5);
@@ -45,12 +45,14 @@
         word-break:break-all!important;
         font-size: 12px;
         line-height: 16px;
+        width: 100%;
       }
       dd{
         display: inline-block;
         font-size: 22px;
         line-height: 29px;
         color: #ffffff;
+        width: 100%;
         a{
           padding-left:20px;
 
