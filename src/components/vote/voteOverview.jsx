@@ -29,7 +29,6 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
-                console.error(data)
 
                 const {
                     vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed
