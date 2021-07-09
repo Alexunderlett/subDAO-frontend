@@ -111,7 +111,6 @@ export default function Headertop(props) {
 
     }
     const AddresstoShow = (address)=> {
-        console.log(address)
 
         let frontStr = address.substring(0,4);
 
@@ -140,9 +139,9 @@ export default function Headertop(props) {
                             <h4>Please connect wallet</h4>
                         </Modal.Body>
                     </Modal>
-                    {  !!selected.length && <div className='addressBrdr' onClick={exitAccount}>
+                    {  !!selected.length && <div className='addressBrdr'>
                         {AddresstoShow(selected[0].address)}
-                        <span> <img src={close} alt=""/>{t('logout')}</span>
+                        <span onClick={exitAccount}> <img src={close} alt=""/>{t('logout')}</span>
 
                     </div>}
                     {

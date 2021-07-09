@@ -17,6 +17,8 @@ export default function VoteOverview (props){
     const [toaddress, settoaddress] = useState('');
     const [optionlist, setoptionlist] = useState([]);
     const [toValue, settovalule] = useState('');
+    const [endtime, setendtime] = useState('');
+    const [executed, setexecuted] = useState('');
 
     let { t } = useTranslation();
 
@@ -27,12 +29,32 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
-
+                console.error(data)
 
                 const {
-                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value
+                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed
                 } = data;
+
+                let stime = start_date.replace(/,/g,'');
+                let vtime = vote_time.replace(/,/g,'');
+
+                let etime = parseInt(stime) + parseInt(vtime);
+                let date = new Date(etime);
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                let h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                let m = date.getMinutes();
+                m = m < 10 ? ('0' + m) : m;
+                let s = date.getSeconds();
+                s = s < 10 ? ('0' + s) : s;
+                setendtime(`${y}-${MM}-${d} ${h}:${m}:${s}`);
+
                 settitle(title);
+                setexecuted(executed);
                 setvoteid(vote_id);
                 setdesc(desc);
                 settoaddress(to_address);
@@ -76,6 +98,14 @@ export default function VoteOverview (props){
                                 <div className='col-lg-4 bg overView'>
                                     <ul>
                                         <li>
+                                            <h6>{t('VotingDescription')}</h6>
+                                            <div>{desc}</div>
+                                        </li>
+                                        <li>
+                                            <h6>Voting end at</h6>
+                                            <div className='endtime'>{endtime}</div>
+                                        </li>
+                                        <li>
                                             <h6>{t('Title')}</h6>
                                             <div>{title}</div>
                                         </li>
@@ -105,9 +135,10 @@ export default function VoteOverview (props){
                                             <div className='address'>{toaddress}</div>
                                         </li>
                                         <li>
-                                            <h6>{t('VotingDescription')}</h6>
-                                            <div>{desc}</div>
+                                            <h6>Transaction Status</h6>
+                                            <div className='address'>{executed?'Successful':'Failed'}</div>
                                         </li>
+
                                     </ul>
                                 </div>
                                 <div className='col-lg-8 bg'>

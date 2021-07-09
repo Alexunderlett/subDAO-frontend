@@ -40,6 +40,7 @@ export default function NewVote(props) {
     const handleClicktoVote = async () => {
         setLoading(true);
         setTips(t('CreateNewVote'));
+
         let dataobj = {
             title,
             desc,

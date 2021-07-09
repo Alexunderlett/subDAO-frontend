@@ -1,110 +1,228 @@
-import React, {useEffect, useState} from 'react';
-import {Button} from "react-bootstrap";
+import React, { useEffect, useState} from 'react';
+import {Button, Form, FormControl, InputGroup,Tabs,Tab} from "react-bootstrap";
+import remove from '../../images/shutdown.png';
+import add from '../../images/Add.png';
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api";
-
 import Loading from "../loading/Loading";
+import {Trans, Translation, useTranslation} from 'react-i18next';
 
-export default function ForthStep(props) {
+export default function ThirdStep(props){
+
     const {state, dispatch} = useSubstrate();
-    const {maincontract, daoManagercontract} = state;
+    const {maincontract, daoManagercontract,orgcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
+    const [admin,setAdmin]= useState(true);
+    const [token,setToken]= useState(true);
+    const [name,setname]= useState('');
+    const [symbol,setsymbol]= useState('');
+    const [supply,setsupply]= useState('');
+    const [adminlist,setadminlist]= useState([
+        {
+            name: '',
+            address: ''
+        }
+    ]);
+    const [tokenlist,settokenlist]= useState([
+        {
+            address: '',
+            token: ''
+        }
+    ]);
+
+
+
+    const [start, setstart] = useState(false);
+
     const [instanceByTemplate, setinstanceByTemplate] = useState(false);
-    const [name, setname] = useState('');
+
     const [logo, setlogo] = useState('');
+    const [daoname, setdaoname] = useState('');
     const [desc, setdesc] = useState('');
     const [ercUrl, setercUrl] = useState('');
-    const [symbol, setsymbol] = useState('');
-    const [ercSupply, setsercSupply] = useState('');
+
     const [baseC, setbaseC] = useState(null);
-    const [tokenlist,settokenlist]= useState([]);
-    const [adminlist,setadminlist]= useState([]);
+
     const [contractlist,setcontractlist]= useState(null);
     const [transfer,settransfer]= useState(false);
-    const [admin,setadmin]= useState(false);
+
     const [queryAddrs,setqueryAddrs]= useState(false);
+    const [next,setnext]= useState(false);
     const [daoinit,setDaoinit]= useState(false);
     const [adminstate,setadminstate]= useState(false);
-    const [tokenstate,settokenstate]= useState(false);
 
-    const handleClicktoAbout = () => {
-        props.history.push(`/about/${baseC.dao_manager_addr}`);
+    let { t } = useTranslation();
+
+
+    const toForthStep = () => {
+        let form = {
+            token,
+            name,
+            symbol,
+            supply,
+            tokenlist
+        }
+        sessionStorage.setItem('forthStep',JSON.stringify(form))
+        toDataFormat()
+    }
+
+    const toSecondStep = () => {
+        props.handlerSet(3)
+        let form = {
+            admin,
+            token,
+            name,
+            symbol,
+            supply,
+            adminlist,
+            tokenlist
+        }
+        sessionStorage.setItem('forthStep',JSON.stringify(form))
+    }
+
+    const addtoken = () => {
+
+        let newArray = [...tokenlist];
+        newArray.push({
+            address: '',
+            token: ''
+
+        });
+        settokenlist(newArray)
+    }
+
+    const setAddress = (e, index) => {
+        let newArray = [...tokenlist];
+        const {name, value} = e.target;
+        newArray[index][name] = value;
+        settokenlist(newArray)
+    }
+
+    const removeToken = (selectItem, index) => {
+        let newArray = [...tokenlist];
+        newArray.splice(index, 1);
+        settokenlist(newArray)
 
     }
+
+    const handleInput = (e) => {
+        const {name, value} = e.target;
+
+        switch(name){
+            case 'name':
+                setname(e.target.value)
+                break;
+            case 'symbol':
+                setsymbol(e.target.value)
+                break;
+            case 'supply':
+                setsupply(e.target.value)
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    const handleCheck = (e) => {
+        const {name, value} = e.target;
+        switch(name){
+            case 'admin':
+                setAdmin(!JSON.parse(value))
+                break;
+            case 'token':
+                setToken(!JSON.parse(value))
+                break;
+            default:
+                break;
+        }
+    }
+
     useEffect( () => {
+        let form = JSON.parse(sessionStorage.getItem('forthStep'));
+        if(form){
+            // setAdmin(form.admin);
+            setToken(form.token);
+            setname(form.name);
+            setsymbol(form.symbol);
+            setsupply(form.supply);
+            // setadminlist(form.adminlist);
+            settokenlist(form.tokenlist);
+        }
+
+    }, []);
+
+    const toDataFormat = () =>{
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
-        setname(firstStep.name);
+        setdaoname(firstStep.name);
         setdesc(firstStep.description);
 
+        const imgUrl = JSON.parse(sessionStorage.getItem('imgUrl'));
+        setlogo(imgUrl);
+
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
-        // setercUrl(secondStep[0].dao_manager_code_hash);
+        setercUrl(secondStep[0].dao_manager_code_hash);
 
         const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
-        const {symbol,supply,admin,token,adminlist,tokenlist} = thirdStep;
-        setsymbol(symbol);
-        setsercSupply(supply);
+        const {admin,adminlist} = thirdStep;
+
         setadminstate(admin);
-        settokenstate(token);
         if(admin){
             setadminlist(adminlist);
         }
-        if(token){
-            settokenlist(tokenlist);
-        }
 
 
-    }, []);
+
+        setstart(true)
+    }
+
+
+
+
     useEffect( () => {
+        if(!start) return
 
-        // 1.调用main合约实例化DAO，instanceByTemplate (index: u64, controller: AccountId): bool
-        // 2.等待上链，in block，根据当前账户地址查询实例化的DAO列表，listDaoInstancesByOwner (owner: AccountId): Vec<DAOInstance>
-        // 取当前id最大即最新的DAO实例
-        // 3.获取DAO地址后，调用初始化传入DAO名称和token初始化，init(&mut self, base_name: String, base_logo: String, base_desc: String,
-        //     erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool
-        // 4.获取DAO地址后，调用分配token，transfer(&mut self, to: AccountId, value: u64) -> bool
-        // 5.获取DAO地址后，调用增加管理员，add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool
-        // 6.初始化完成，查询DAO管理的组件地址，query_component_addrs(&self) -> DAOComponentAddrs
+        const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
 
-            const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
-            console.log(secondStep && secondStep[0] &&secondStep[0].id)
-            if(secondStep && secondStep[0] &&secondStep[0].id){
-                const stepone=async () => {
-                    setLoading(true)
-                    setTips('Instance By Template');
-                    await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
-                        setinstanceByTemplate(result)
-                        console.log("Step 1 =======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
-                    });
-                };
-                stepone();
-            }
+        if(secondStep && secondStep[0] && secondStep[0].id){
+            const stepone = async () => {
+                setLoading(true)
+                setTips(t('InstanceByTemplate'));
+                await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
+                    setinstanceByTemplate(result)
+                    console.log("Step 1 =======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
+                });
+            };
+            stepone();
+        }
+    }, [maincontract,start]);
 
 
-    }, [maincontract]);
     useEffect( () => {
         if (instanceByTemplate){
             console.log("Step 2 =======listDaoInstancesByOwner")
             const steptwo = async () => {
-                setTips('List Dao Instances By Owner');
+                setTips(t('ListDao'));
                 await api.main.listDaoInstancesByOwner(maincontract).then(data => {
                     if (!data) return;
                     if (data.length) {
                         console.log("======listDaoInstancesByOwner", baseC, data)
-                        setbaseC(data && data.length?data[data.length - 1]:[])
+                        setbaseC(data && data.length ? data[data.length - 1] : [])
                     }
                 });
             };
             steptwo()
         }
     }, [instanceByTemplate]);
+
     useEffect( () => {
-        if(baseC!=null && instanceByTemplate){
+        if (baseC != null && instanceByTemplate) {
             console.log("Step 3 =======InitDAO")
             const stepthree = async () => {
-                setTips('Init DAO');
+                setTips(t('InitDAO'));
                 await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr, (data) => {
                     setDaoinit(true)
                 });
@@ -114,161 +232,162 @@ export default function ForthStep(props) {
     }, [baseC]);
     useEffect( () => {
         if(daoinit && instanceByTemplate && baseC!=null){
-            console.log("Step 4 =======传内容",baseC.dao_manager_addr);
+            console.log("Step 4 =======Upload information",baseC.dao_manager_addr);
             let obj = {
-                base_name: name,
+                base_name: daoname,
                 base_logo: logo,
                 base_desc: desc,
-                erc20_name: ercUrl,
+                erc20_name: name,
                 erc20_symbol: symbol,
-                erc20_initial_supply: ercSupply,
-                erc20_decimals: 0
+                erc20_initial_supply: supply,
+                erc20_decimals: 0,
+                token,
+                tokenlist,
+                admin,
+                adminlist
             };
+            console.log(obj)
             if (daoManagercontract == null) return;
             const stepfour = async () => {
-                setTips('Upload DAO\'s information');
+                setTips(t('Uploadinformation'));
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
-                    settransfer(true)
+                    // setqueryAddrs(true)
+                    setnext(true);
                 });
             };
             stepfour();
         }
     }, [daoinit]);
-    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
     useEffect( () => {
-        if(daoinit && instanceByTemplate && baseC!=null && transfer){
-            if(tokenstate){
-                console.log("Step 5 ======= transfer",transfer,daoinit)
-                const stepfive = async () => {
-                    setTips('Transfer Tokens');
-                    let arr=[];
-                    let index=0;
-                    for (let item of tokenlist) {
-                        if(index){
-                            while (!arr[index-1]){
-                                await delay(500);
-                            }
-                        }
-                        try{
-                            await api.dao.transferToken(daoManagercontract, item, (data) => {
+        if(next){
+            sessionStorage.removeItem("step");
+            sessionStorage.removeItem("secondStep");
+            sessionStorage.removeItem("thirdStep");
+            sessionStorage.removeItem("forthStep");
+            sessionStorage.removeItem("firstStep");
+            sessionStorage.removeItem("ImageUrl");
 
-                                arr.push(data);
-                                setTips(`Transfer Tokens (${arr.length}/${tokenlist.length})`);
-                                if(arr.length===tokenlist.length){
-                                    setadmin(true);
-                                }
-                            });
-                        }catch (e) {
-                            console.log(e);
-                        }
-                        index++;
-                    }
-
-                };
-                stepfive();
-
-            }else{
-                setadmin(true);
-            }
+            setTimeout(()=>{
+                props.history.push(`home/about/${baseC.dao_manager_addr}`);
+            },2000)
         }
+    }, [next]);
 
-    }, [transfer]);
-    useEffect( () => {
-        if(admin && daoinit && instanceByTemplate && baseC!=null && transfer){
-            if(adminstate){
-                console.log("Step 6 ======= add moderators",admin , daoinit);
-                const stepsix = async () => {
-                    setTips('Add Dao Moderators');
-                    let arr=[];
-                    let index=0;
-                    for (let item of adminlist) {
-                       if(index){
-                           while (!arr[index-1]){
-                               await delay(500);
-                           }
-                       }
-                        try{
-                            await api.dao.addDaoModeratorTx(daoManagercontract, item, (data) => {
-                                arr.push(data);
-                                setTips(`Add Dao Moderators (${arr.length}/${adminlist.length})`);
-                                if(arr.length===adminlist.length){
-                                    setqueryAddrs(true);
-                                }
-                            });
-                        }catch (e) {
-                            console.log(e)
-                        }
 
-                    index++;
-                    }
-
-                };
-                stepsix();
-            }else {
-                setqueryAddrs(true);
-            }
-        }
-    }, [admin]);
-     useEffect( () => {
-         if( queryAddrs && daoinit && instanceByTemplate && baseC!=null && admin && transfer){
-             console.log("Step 7 ======= queryComponentAddrs",queryAddrs,daoinit)
-             const stepseven = async () => {
-                 setTips('Get contract address');
-                 await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-                     console.log(data, daoManagercontract);
-                     setcontractlist(data);
-                     setLoading(false);
-                     sessionStorage.removeItem("step");
-                     sessionStorage.removeItem("secondStep");
-                     sessionStorage.removeItem("thirdStep");
-                     sessionStorage.removeItem("firstStep");
-                     sessionStorage.removeItem("ImageUrl");
-                 });
-             };
-             stepseven();
-         }
-        }, [queryAddrs]);
-
-    return <ul>
+    return <div>
         <Loading showLoading={loading} tips={tips}/>
-        {
-            contractlist!=null && <li className='successful'>
-            <div className="successFont">
-                <h1>
-                    <span>S</span>
-                    <span>U</span>
-                    <span>C</span>
-                    <span>C</span>
-                    <span>e</span>
-                    <span>s</span>
-                    <span>s</span>
-                    <span>f</span>
-                    <span>u</span>
-                    <span>l</span>
-                </h1>
-            </div>
-            <div className="successInfo">Create {name} successful !!</div>
-        </li>}
-        {
-            contractlist!=null &&  <li className="addresslist">{
-                Object.keys(contractlist).map((key)=>(
-                    <div key={key}>
-                        <span>{key}</span>
-                        <a href="#">{contractlist[key]}</a>
-                </div>))
-            }
-            </li>
+        <Translation>{t =>
+                <div  title={t('Token')} >
+                    <div className='steptitle'>
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check
+                                type="checkbox"
+                                label={t('Token')}
+                                value={token}
+                                checked={token}
+                                name='token'
+                                onChange={handleCheck}
+                            />
+                        </Form.Group>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                                <FormControl
+                                    placeholder={t('FillToken')}
+                                    value={name}
+                                    checked={name}
+                                    name='name'
+                                    autoComplete="off"
+                                    onChange={handleInput}
+                                /></div>
+                        </InputGroup>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                                <FormControl
+                                    placeholder={t('FillSymbol')}
+                                    value={symbol}
+                                    checked={symbol}
+                                    name='symbol'
+                                    autoComplete="off"
+                                    onChange={handleInput}
+                                />
+                            </div>
+                        </InputGroup>
+                    </div>
+                    <div>
+                        <InputGroup className="mb-3">
+                            <div className='inputBrdr'>
+                                <FormControl
+                                    placeholder={t('FillSupply')}
+                                    value={supply}
+                                    checked={supply}
+                                    name='supply'
+                                    autoComplete="off"
+                                    onChange={handleInput}
+                                />
+                            </div>
+                        </InputGroup>
+                    </div>
+                    {tokenlist.map((i, index) => (
+
+                        <div key={index} className='norow'>
+                            <div className="row">
+                                <div className="col-7">
+                                    <InputGroup className="mb-3">
+                                        <div className='inputBrdr'>
+                                            <FormControl
+                                                placeholder={t('FillAddress')}
+                                                value={tokenlist[index].address}
+                                                name='address'
+                                                autoComplete="off"
+                                                onChange={(event) => setAddress(event, index)}
+                                            />
+                                        </div>
+                                    </InputGroup>
+                                </div>
+                                <div className="col-5 flexBrdr">
+                                    <InputGroup className="mb-3">
+                                        <div className='inputBrdr'>
+                                            <FormControl
+                                                placeholder={t('FillTokenAmount')}
+                                                value={tokenlist[index].token}
+                                                name='token'
+                                                type='number'
+                                                autoComplete="off"
+                                                onChange={(event) => setAddress(event, index)}
+                                            />
+                                        </div>
+                                    </InputGroup>
+                                    {
+                                        !!index &&
+                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht" alt=''/>
+
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    ))
+                    }
+
+                    <div>
+                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht" alt=''/> {t('AddToken')}</button>
+
+                    </div>
+                </div>
+
         }
+        </Translation>
+        <div className='step2brdr'>
+            <Button variant="outline-primary" className='leftBtn' onClick={toSecondStep}><Trans>think</Trans></Button>
+            <Button variant="primary" onClick={toForthStep}><Trans>Next</Trans></Button>
+        </div>
 
-
-        <li className='brdr'>
-            {/*<Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}>Previous</Button>*/}
-            {
-                contractlist!=null &&  <Button variant="primary" onClick={handleClicktoAbout}>Manage</Button>
-            }
-
-        </li>
-    </ul>;
-
+    </div>;
 
 }
+

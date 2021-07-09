@@ -102,7 +102,7 @@ position: relative;
       //width: 800px;
       display: inline-block;
       vertical-align: middle;
-      cursor: pointer;
+
       margin-right: 30px;
       span{
         //border-bottom: 1px dashed #fff;
@@ -111,6 +111,7 @@ position: relative;
         color: #ffffff;
         z-index: 9999999!important;
         display: inline-block;
+        cursor: pointer;
       }
       img{
         width: 20px;

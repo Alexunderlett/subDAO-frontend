@@ -17,7 +17,7 @@ import {useTranslation} from "react-i18next";
 export default function Vote(props){
 
     const {state,dispatch} = useSubstrate();
-    const {votecontract,allAccounts,apiState} = state;
+    const {votecontract,allAccounts,apiState,erc20contract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -49,6 +49,11 @@ export default function Vote(props){
             if(votecontract == null && vote!= null){
                 await api.vote.InitVote(state, dispatch, vote.vote_addr,(data) => {
                     console.log('votecontract====',data);
+                });
+            }
+            if(erc20contract == null && vote!= null){
+                await api.erc20.InitErc20(state, dispatch, vote.erc20_addr,(data) => {
+                    console.log('erc20contract====',data);
                 });
             }
             setAll();

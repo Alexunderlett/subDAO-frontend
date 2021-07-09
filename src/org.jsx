@@ -22,7 +22,7 @@ import TriggerBtnActive from "./images/triggerBtnActive.png";
 export default function Org(props) {
 
     const {state,dispatch} = useSubstrate();
-    const {orgcontract,allAccounts,apiState,authcontract} = state;
+    const {orgcontract,allAccounts,apiState,authcontract,erc20contract} = state;
 
     const [loading,setLoading]= useState(false);
     const [addshow,setaddshow]= useState(false);
@@ -90,29 +90,28 @@ export default function Org(props) {
     useEffect(async () => {
         const initVoteContract = async () =>{
             let org = JSON.parse(sessionStorage.getItem('contractlist'));
+            console.error("====contractlist",org)
             if(orgcontract == null && org!= null){
                 await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
                     console.log('orgcontract====',data);
                 });
             }
-            if(orgcontract == null && org!= null){
+
+            if(erc20contract == null && org!= null){
                 await api.erc20.InitErc20(state, dispatch, org.erc20_addr,(data) => {
-                    console.log('orgcontract====',data);
+                    console.log('erc20contract====',data);
                 });
+            }
+            if(authcontract == null && auth!= null){
+                await api.auth.InitAuth(state, dispatch, org.auth_addr,(data) => {
+                    console.log('authcontract====',data);
+                });
+
             }
             setall();
         }
-        initVoteContract()
-        const initAuthContract = async () =>{
-            let auth = JSON.parse(sessionStorage.getItem('contractlist'));
-            if(authcontract == null && auth!= null){
-                await api.auth.InitAuth(state, dispatch, auth.auth_addr,(data) => {
-                    console.log('orgcontract====',data);
-                });
-            }
-        }
-        initAuthContract()
-    }, [orgcontract,allAccounts,apiState,authcontract]);
+    initVoteContract()
+    }, [orgcontract,allAccounts,apiState,authcontract,erc20contract]);
 
 
     const handleClicktoManage = () => {
