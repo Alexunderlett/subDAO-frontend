@@ -97,16 +97,16 @@ export default function VoteOverview (props){
                                 <div className='col-lg-4 bg overView'>
                                     <ul>
                                         <li>
+                                            <h6>{t('Title')}</h6>
+                                            <div>{title}</div>
+                                        </li>
+                                        <li>
                                             <h6>{t('VotingDescription')}</h6>
                                             <div>{desc}</div>
                                         </li>
                                         <li>
-                                            <h6>Voting end at</h6>
+                                            <h6>Voting ends at</h6>
                                             <div className='endtime'>{endtime}</div>
-                                        </li>
-                                        <li>
-                                            <h6>{t('Title')}</h6>
-                                            <div>{title}</div>
                                         </li>
                                         <li>
                                             <h6>{t('VotingNumber')}</h6>
