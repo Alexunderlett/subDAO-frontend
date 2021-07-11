@@ -431,30 +431,14 @@
 }
 .overView{
   li{
-    margin-bottom: 40px;
-    &:last-child,&:first-child{
-      div{
-        font-size: 20px;
-        line-height: 23px;
-        color: #ffffff;
-
-      }
-    }
-    .address,.endtime{
-      font-size: 18px;
-    }
+    margin-bottom: 1.5rem;
   }
   h6{
-    font-size: 18px;
-    line-height: 21px;
     color: #A8B0C1;
     font-weight: normal;
-
   }
   div{
     color: #ffffff;
-    font-size: 36px;
-    line-height: 42px;
   }
 
 }
