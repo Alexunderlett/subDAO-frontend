@@ -17,7 +17,7 @@ import {useTranslation} from "react-i18next";
 export default function Vote(props){
 
     const {state,dispatch} = useSubstrate();
-    const {votecontract,allAccounts,apiState,erc20contract} = state;
+    const {votecontract,allAccounts,apiState,erc20contract,orgcontract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -26,6 +26,10 @@ export default function Vote(props){
     const [activelist, setActivelist] = useState([]);
     const [pendinglist, setPendinglist] = useState([]);
     const [historylist, setHistorylist] = useState([]);
+
+    const [isMember, setisMember] = useState(false);
+    const [isModerator, setisModerator] = useState(false);
+    const [isOwner, setisOwner] = useState(false);
 
     const [newshow, setnewshow] = useState(false);
 
@@ -43,6 +47,20 @@ export default function Vote(props){
     useEffect(async () => {
         setAId(props.match.params.id);
     }, []);
+
+    useEffect( () => {
+        if (orgcontract == null) return;
+        const whoAmI = async () => {
+            await api.org.whoAmI(orgcontract).then(data => {
+                if (!data) return;
+                setisMember(data[0])
+                setisModerator(data[1])
+                setisOwner(data[2])
+            });
+        };
+        whoAmI();
+    }, [orgcontract,id]);
+
     useEffect(async () => {
         const initVoteContract = async () =>{
             let vote = JSON.parse(sessionStorage.getItem('contractlist'));
@@ -56,10 +74,15 @@ export default function Vote(props){
                     console.log('erc20contract====',data);
                 });
             }
+            if(orgcontract == null && vote!= null){
+                await api.org.InitOrg(state, dispatch, vote.org_addr,(data) => {
+                    console.log('orgcontract====',data);
+                });
+            }
             setAll();
         }
         initVoteContract()
-    }, [votecontract,allAccounts,apiState]);
+    }, [votecontract,allAccounts,apiState,erc20contract,orgcontract]);
 
     const setAll = async() => {
         setLoading(true);
@@ -95,7 +118,9 @@ export default function Vote(props){
                                     <div className='voteLft' onClick={handleClicktoAbout}>
                                         <img src={Back} alt=""/> {t('Back')}
                                     </div>
-                                    <button className='btnR' onClick={handleClicktonewVote}><img src={voting} alt=""/>{t('Newvoting')}</button>
+                                    {
+                                        isModerator &&  <button className='btnR' onClick={handleClicktonewVote}><img src={voting} alt=""/>{t('Newvoting')}</button>
+                                    }
 
                                 </div>
                                 <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/>
@@ -128,7 +153,6 @@ export default function Vote(props){
                                                     list={historylist}
                                                     history={props.history}  />
                                             </li>
-
                                         </ul>
                                     </div>
 
@@ -136,7 +160,6 @@ export default function Vote(props){
 
                             </div>
                         </div>
-
                 </section>
 
             </div>

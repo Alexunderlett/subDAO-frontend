@@ -17,7 +17,7 @@ export default function Vault(props){
 
 
         const {state,dispatch} = useSubstrate();
-        const {vaultcontract,allAccounts,apiState} = state;
+        const {vaultcontract,allAccounts,apiState,erc20contract} = state;
 
         const [loading, setLoading] = useState(false);
         const [tips, setTips] = useState('');
@@ -152,10 +152,15 @@ export default function Vault(props){
                     console.log('vaultcontract====',data);
                 });
             }
+            if(erc20contract == null && vault!= null){
+                await api.erc20.InitErc20(state, dispatch, vault.erc20_addr,(data) => {
+                    console.log('erc20contract====',data);
+                });
+            }
             setAlllist();
         }
         initVaultcontract()
-    }, [vaultcontract,allAccounts,apiState]);
+    }, [vaultcontract,allAccounts,apiState,erc20contract]);
 
         const handleClicktoDetail = (type) => {
             if (type === 'deposit') {

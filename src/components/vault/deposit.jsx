@@ -8,8 +8,8 @@ import sender from "../../images/send.png";
 import {useTranslation} from "react-i18next";
 
  const Deposit = forwardRef((props,ref) =>{
-    const {state} = useSubstrate();
-    const {vaultcontract,erc20contract} = state;
+    const {state,dispatch} = useSubstrate();
+    const {vaultcontract,erc20contract,allAccounts,apiState} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -23,6 +23,7 @@ import {useTranslation} from "react-i18next";
      let { t } = useTranslation();
 
     useEffect( () => {
+        if(vaultcontract == null)return;
         const setTokenlist=async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
@@ -30,9 +31,9 @@ import {useTranslation} from "react-i18next";
             });
         };
         setTokenlist();
-    }, []);
+    }, [vaultcontract]);
 
-    useEffect( () => {
+     useEffect( () => {
 
         if(!deposit)return;
         let obj = {

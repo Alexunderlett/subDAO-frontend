@@ -45,6 +45,7 @@ export default function Org(props) {
     const [applyAuth, setapplyAuth] = useState(false);
     const [triggerStatus, settriggerStatus] = useState(false);
     const [triggerTips, settriggerTips] = useState(false);
+    const [address, setaddress] = useState('');
 
     let { t } = useTranslation();
 
@@ -138,13 +139,17 @@ export default function Org(props) {
         settypeName(type);
         setaddshow(true)
     }
-    const handleAuth = async () => {
+    const handleAuth = async (item) => {
         setauthshow(true)
         let list = await api.auth.showActions(authcontract);
         setauthlist(list)
+        setaddress(item)
     }
     const handleAuthClose = () => {
         setauthshow(false)
+        setaddress('')
+        setauthlist([])
+
     }
     const handleApplist = () => {
         setapplyshow(false)
@@ -174,6 +179,9 @@ export default function Org(props) {
         setTips(t('setFreeAddMember'));
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
             setapplyAuth(!applyAuth)
+            setLoading(false);
+        }).catch((error) => {
+            console.error("【【【【【【【【【",error);
             setLoading(false);
         });
     }
@@ -232,6 +240,7 @@ export default function Org(props) {
                         </div>
                         <Addnew
                             handleClose={handleClose}
+
                             showTips={addshow}
                             typeName={typeName}
                             refresh={setall}
@@ -246,7 +255,7 @@ export default function Org(props) {
                             handleBatch={handleBatch}
                             handleBatchAdd={handleBatchAdd}
                         />
-                        <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist} />
+                        <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
                         <div className='orgBrdr'>
                             <ul className="org">
                                 <li>
@@ -263,7 +272,7 @@ export default function Org(props) {
                                                     <dt>{i[1]}</dt>
                                                     <dd>{i[0]}</dd>
                                                     {
-                                                        isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth()}/></dd>
+                                                        isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>
                                                     }
 
                                                 </dl>

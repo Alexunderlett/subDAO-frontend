@@ -33,40 +33,82 @@ export default function NewVote(props) {
     const [valueAmount, setvalueAmount] = useState('');
 
     const [optionlist, setoptionlist] = useState( ['']);
+    const [optchecked, setoptchecked] = useState( true);
+    const [walletTips, setWalletTips] = useState( false);
+    const [errorTips, seterrorTips] = useState( '');
 
     let { t } = useTranslation();
     const datetimeRef = useRef();
 
     const handleClicktoVote = async () => {
-        setLoading(true);
-        setTips(t('CreateNewVote'));
 
-        let dataobj = {
-            title,
-            desc,
-            vote_time:date,
-            support_require_num:supportInput,
-            min_require_num:min,
-            choices:optionlist.join('|'),
-            erc20_address: erc20address,
-            to_address,valueAmount
-        }
-        await api.vote.newVoteTransfer(votecontract,dataobj,(result)=> {
-            setLoading(false);
-            if(result){
-                setdate('')
-                settitle('')
-                setdesc('')
-                setvalueAmount('')
-                setto_address('')
-                setsupportInput('')
-                setmin('')
-                setoptionlist(['','',''])
-                settype(1)
-                props.handleClose()
-                props.refresh()
+        if (optchecked){
+            if(to_address && valueAmount ){
+                setLoading(true);
+                setTips(t('CreateNewVote'));
+                let dataobj = {
+                    title,
+                    desc,
+                    vote_time:date,
+                    support_require_num:supportInput,
+                    min_require_num:min,
+                    choices:optionlist.join('|'),
+                    erc20_address: erc20address,
+                    to_address,valueAmount
+                }
+                console.error("CreateNewVote=====",dataobj)
+                await api.vote.newVoteTransfer(votecontract,dataobj,(result)=> {
+                    setLoading(false);
+                    if(result){
+                        setdate('')
+                        settitle('')
+                        setdesc('')
+                        setvalueAmount('')
+                        setto_address('')
+                        setsupportInput('')
+                        setmin('')
+                        setoptionlist(['','',''])
+                        settype(1)
+                        props.handleClose()
+                        props.refresh()
+                    }
+                });
+            }else{
+                setWalletTips(true)
+                seterrorTips('Receiver\'s address & Amount is requierd')
+
             }
-        });
+        }else{
+            setLoading(true);
+            setTips(t('CreateNewVote'));
+            let dataobj = {
+                title,
+                desc,
+                vote_time:date,
+                support_require_num:supportInput,
+                min_require_num:min,
+                choices:optionlist.join('|')
+            }
+            await api.vote.newVote(votecontract,dataobj,(result)=> {
+                setLoading(false);
+                if(result){
+                    setdate('')
+                    settitle('')
+                    setdesc('')
+                    setvalueAmount('')
+                    setto_address('')
+                    setsupportInput('')
+                    setmin('')
+                    setoptionlist(['','',''])
+                    settype(1)
+                    props.handleClose()
+                    props.refresh()
+                }
+            });
+        }
+
+
+
     }
 
     const removeOption =(selectItem, index) => {
@@ -94,7 +136,14 @@ export default function NewVote(props) {
         eval(str)(value)
     }
     const nextStep = (type)=>{
-        settype(type)
+        const nowTime = Date.parse(new Date());
+        if(type === 2 && date <= 0 ){
+            setWalletTips(true)
+            seterrorTips('Please fill  the correct time')
+        }else{
+            settype(type)
+        }
+
     }
 
     const yesterday = moment().subtract(1, 'day');
@@ -112,7 +161,8 @@ export default function NewVote(props) {
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
 
-        setdate(dateTime-nowTime)
+       setdate(dateTime-nowTime)
+
     }
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
         function clear() {
@@ -131,11 +181,28 @@ export default function NewVote(props) {
             </div>
         );
     }
+    const handleActive = (e) =>{
+        let values = JSON.parse(e.currentTarget.value)
+        setoptchecked(!values)
+    };
 
     let {handleClose, showTips} = props;
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
+            <Modal
+                show={walletTips}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => setWalletTips(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
+
             <Modal backdrop={false} show={showTips} onHide={handleClose} className='newVoteBrdr'>
                 <Modal.Header closeButton>
                     <Modal.Title><img src={newVote} alt=""/><span>{t('Newvoting')}</span></Modal.Title>
@@ -158,13 +225,6 @@ export default function NewVote(props) {
                                                             ref={datetimeRef}
                                                             onChange={handleChange}
                                                             />
-                                                    {/*<FormControl*/}
-                                                    {/*    placeholder={t('Votingdurate')}*/}
-                                                    {/*    name='date'*/}
-                                                    {/*    value={date}*/}
-                                                    {/*    autoComplete="off"*/}
-                                                    {/*    onChange={handleInputChange}*/}
-                                                    {/*/>*/}
                                                 </div>
                                             </InputGroup>
                                         </div>
@@ -311,35 +371,59 @@ export default function NewVote(props) {
                             type === 5 &&
                             <ul>
                                 <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormLabel>{t('fillAddress')}</FormLabel>
-                                            <div className='inputBrdr'>
-                                                <FormControl
-                                                    placeholder={t('fillAddress')}
-                                                    name='to_address'
-                                                    value={to_address}
-                                                    onChange={handleInputChange}
-                                                />
+                                    <div className='orgSelect'>
+                                        <div className={optchecked?'radioOption radioActive':'radioOption'} id={`active`} >
+                                            <div className="form-group">
+                                                <div className="form-check"  >
+                                                    <input name="radiobutton"
+                                                           type="checkbox"
+                                                           id={`radio`}
+                                                           className="form-check-inputRadio"
+                                                           value={optchecked}
+                                                           onChange={(e) => handleActive(e)}
+                                                           checked={optchecked}
+                                                    />
+                                                    <label htmlFor={`radio`}>add transfer</label>
+
+                                                </div>
                                             </div>
-                                        </InputGroup>
+                                        </div>
                                     </div>
+                                    {
+                                        optchecked &&  <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('fillAddress')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('fillAddress')}
+                                                        name='to_address'
+                                                        value={to_address}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    }
+
                                 </li>
-                                <li>
-                                    <div>
-                                        <InputGroup className="mb-3">
-                                            <FormLabel>{t('fillAmount')}</FormLabel>
-                                            <div className='inputBrdr'>
-                                                <FormControl
-                                                    placeholder={t('fillAmount')}
-                                                    name='valueAmount'
-                                                    value={valueAmount}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </InputGroup>
-                                    </div>
-                                </li>
+                                {
+                                    optchecked &&        <li>
+                                        <div>
+                                            <InputGroup className="mb-3">
+                                                <FormLabel>{t('fillAmount')}</FormLabel>
+                                                <div className='inputBrdr'>
+                                                    <FormControl
+                                                        placeholder={t('fillAmount')}
+                                                        name='valueAmount'
+                                                        value={valueAmount}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </InputGroup>
+                                        </div>
+                                    </li>
+                                }
+
 
                                 <li className='NextBrdr button2'>
                                     <Button variant="primary" onClick={()=>nextStep(4)}>{t('Back')}</Button>

@@ -55,6 +55,7 @@ const getDaoMembersList = async (orgcontract) => {
 
 
     let data = await orgcontract.query.getDaoMemberDetailList(AccountId, {value, gasLimit});
+
     data = publicJs.formatResult(data);
     return data;
 
@@ -254,6 +255,10 @@ const setFreeAddMember = async (orgcontract,freeAdd,cb) => {
 
     await orgcontract.tx.setCanFreeAddMember({value, gasLimit}, freeAdd)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
+            result.events.forEach(({ phase, event: { data, method, section } }) => {
+                console.error(`\t' ${phase}: ${section}.${method}:: ${data}`);
+            });
+            console.log("=========setCanFreeAddMember",result)
             if (result.status.isFinalized || result.status.isInBlock) {
                 cb(true)
             }

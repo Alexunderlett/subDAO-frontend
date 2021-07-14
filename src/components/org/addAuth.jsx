@@ -27,6 +27,8 @@ export default function AddAuth(props){
     let { t } = useTranslation();
 
     useEffect(() => {
+        setoptionlist([])
+        if(!props.address || !props.authlist)return
         let arr = props.authlist;
         arr.map(i => {
             i.checked = false;
@@ -35,7 +37,7 @@ export default function AddAuth(props){
 
         const actionsByuser = async () =>{
             let list = [];
-                list = await api.auth.showActionsByUser(authcontract);
+                list = await api.auth.showActionsByUser(authcontract,props.address);
             if(list && list.length){
                 list.map(i => {
                     arr.map(item => {
@@ -46,11 +48,11 @@ export default function AddAuth(props){
                 })
             }
             setoptionlist(arr)
+        };
+        if(props.address){
+            actionsByuser()
         }
-        actionsByuser()
-
-
-    }, [props.authlist]);
+    }, [props.authlist,props.address]);
 
     useEffect(() => {
 
@@ -59,6 +61,10 @@ export default function AddAuth(props){
           props.handleClose();
           setcancel([]);
           setselected([]);
+          setoptionlist([]);
+          setafterselected(false);
+          setaftercancel(false);
+          sethandleselected(false);
       }
 
     }, [afterselected,aftercancel]);
@@ -66,9 +72,15 @@ export default function AddAuth(props){
     useEffect(() => {
         if(!handleselected) return;
 
+        if(!selected.length){
+            setafterselected(true)
+            return
+        }
+
         const handlesel = async () =>{
             let afterArr = [];
             let index = 0;
+
             for (let item of selected) {
                 setTips(`${t('grantPermission')}...`);
                 if(index){
@@ -77,6 +89,7 @@ export default function AddAuth(props){
                     }
                 }
                 let obj={
+                    address:props.address,
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
@@ -99,8 +112,11 @@ export default function AddAuth(props){
     }, [handleselected]);
 
     useEffect(() => {
-        if(!handlecancel || !afterselected) return;
-
+        if(!afterselected) return;
+        if(!cancel.length){
+            setaftercancel(true)
+            return
+        }
         const handlecal = async () =>{
             let afterArr = [];
             let index = 0;
@@ -112,6 +128,7 @@ export default function AddAuth(props){
                     }
                 }
                 let obj={
+                    address:props.address,
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
@@ -131,7 +148,7 @@ export default function AddAuth(props){
         };
      handlecal()
 
-    }, [handlecancel,afterselected]);
+    }, [afterselected]);
 
     const handleActive = (e) =>{
 
@@ -159,19 +176,9 @@ export default function AddAuth(props){
     }
 
     const confirmAuth = async () =>{
-        console.log("======",selected,cancel)
-
         setLoading(true);
-        setTips(`${t('grantRevokePermission')}...`);
+        sethandleselected(true)
 
-        if(selected.length){
-            sethandleselected(true)
-        }else{
-            setafterselected(true)
-        }
-        if(cancel.length){
-            sethandlecancel(true)
-        }
     }
 
     let {handleClose, showTips,authlist} = props;
@@ -186,12 +193,12 @@ export default function AddAuth(props){
                 <section>
                     <ul className='orgSelect'>
                         <li className="row">
-                            { !!optionlist.length &&optionlist.map((i, index) => (
+                            { !!optionlist.length && optionlist.map((i, index) => (
 
                                 <div key={index} className='col-4'>
                                     <div>
                                         {/*<div className={parseInt(active) === index?'radioOption radioActive':'radioOption'} id={`active_${index}`} onClick={handleActive}>*/}
-                                            <div className={i.checked?'radioOption radioActive':'radioOption'} id={`active_${index}`} onClick={handleActive}>
+                                            <div className={i.checked?'radioOption radioActive':'radioOption'} id={`active_${index}`} >
                                             <div className="form-group">
                                                 <div className="form-check"  >
                                                     <input name="radiobutton"
@@ -213,7 +220,7 @@ export default function AddAuth(props){
                             ))
                             }
                             {
-                                !optionlist.length && <Spinner animation="border" variant="light" />
+                               !optionlist.length && <Spinner animation="border" variant="light" />
                             }
                         </li>
                         <li className='btmBtn'>

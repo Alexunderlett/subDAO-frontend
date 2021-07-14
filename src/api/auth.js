@@ -45,12 +45,12 @@ const showActions = async (authcontract) => {
     return result;
 
 };
-const showActionsByUser = async (authcontract) => {
+const showActionsByUser = async (authcontract,address) => {
 
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.query || !AccountId) return;
 
-    let data = await authcontract.query.showActionsByUser(AccountId, {value, gasLimit},AccountId);
+    let data = await authcontract.query.showActionsByUser(AccountId, {value, gasLimit},address);
     data = publicJs.formatResult(data);
     return data;
 
@@ -60,10 +60,10 @@ const grantPermission = async (authcontract,obj,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.tx || !AccountId) return;
-    const {contract_name,function_name} = obj;
+    const {address,contract_name,function_name} = obj;
     const injector = await Accounts.accountInjector();
 
-     await authcontract.tx.grantPermission({value, gasLimit}, AccountId, contract_name, function_name)
+     await authcontract.tx.grantPermission({value, gasLimit}, address, contract_name, function_name)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isFinalized || result.status.isInBlock ) {
                 cb(true)
@@ -74,10 +74,10 @@ const revokePermission = async (authcontract,obj,cb) => {
 
     const AccountId = await Accounts.accountAddress();
     if (authcontract === null || !authcontract || !authcontract.tx || !AccountId) return;
-    const {contract_name,function_name} = obj;
+    const {address,contract_name,function_name} = obj;
     const injector = await Accounts.accountInjector();
 
-     await authcontract.tx.revokePermission({value, gasLimit}, AccountId, contract_name, function_name)
+     await authcontract.tx.revokePermission({value, gasLimit}, address, contract_name, function_name)
         .signAndSend(AccountId, { signer: injector.signer }, (result) => {
             if (result.status.isFinalized || result.status.isInBlock ) {
                 cb(true)
