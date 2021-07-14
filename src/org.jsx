@@ -86,12 +86,12 @@ export default function Org(props) {
             setmemberlist(data)
         });
         setLoading(false);
+
     };
 
     useEffect(async () => {
         const initVoteContract = async () =>{
             let org = JSON.parse(sessionStorage.getItem('contractlist'));
-            console.error("====contractlist",org)
             if(orgcontract == null && org!= null){
                 await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
                     console.log('orgcontract====',data);

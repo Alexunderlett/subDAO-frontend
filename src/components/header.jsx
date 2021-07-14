@@ -47,9 +47,9 @@ export default function Headertop(props) {
     const queryBalance = async (account) =>{
 
         if(api == null || account == null || !account.length || !account[0].address) return;
-        const { data: balance } = await api.query.system.account(account[0].address);
-        let bl = balance.toHuman().free
-        setbalanceOf(bl)
+         await api.query.system.account(account[0].address,({ data: balance })=>{
+             setbalanceOf(balance.toHuman().free)
+        });
     }
 
     useEffect(() => {
