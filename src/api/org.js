@@ -54,15 +54,10 @@ const getDaoMembersList = async (orgcontract) => {
     const AccountId = await Accounts.accountAddress();
     if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
 
+    let data = await orgcontract.query.getDaoMemberDetailList(AccountId, {value, gasLimit});
 
-    // let data = await orgcontract.query.getDaoMemberDetailList(AccountId, {value, gasLimit});
-    console.log("=====getDaoMemberDetailList")
-    let data = await orgcontract.query.getDaoMemberDetailList([AccountId, {value, gasLimit}],result=>{
-        console.error("===getDaoMemberDetailList====",result)
-    });
-
-    // data = publicJs.formatResult(data);
-    // return data;
+    data = publicJs.formatResult(data);
+    return data;
 
 };
 const getApplyList = async (orgcontract) => {

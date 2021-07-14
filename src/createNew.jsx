@@ -13,7 +13,6 @@ export default function  Createnew(props) {
         settype(i);
         sessionStorage.setItem('step', i)
     }
-
         return (<div>
                 <section>
                     <div className="container">

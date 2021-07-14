@@ -4,11 +4,12 @@ import {useSubstrate} from '../../api/contracts';
 import api from "../../api";
 import Loading from "../loading/Loading";
 import {useTranslation} from "react-i18next";
+import mainConnect from '../../api/mainContract';
 
 
 export default function SecondStep(props) {
-    const {state} = useSubstrate();
-    const {maincontract} = state;
+    const {state, dispatch} = useSubstrate();
+    const {maincontract,apiState} = state;
 
     const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
@@ -46,6 +47,15 @@ export default function SecondStep(props) {
         }
     }, [selected,list]);
     useEffect(() => {
+
+        let account = JSON.parse(sessionStorage.getItem('account'));
+
+        if(apiState !== 'READY') return;
+        dispatch({type: 'LOAD_MAINCONTRACT'});
+
+    }, [apiState]);
+    useEffect(() => {
+        if(maincontract == null) return;
         const setlisttemplate = async () => {
             setLoading(true);
             setTips(t('InitializeTemplate'));

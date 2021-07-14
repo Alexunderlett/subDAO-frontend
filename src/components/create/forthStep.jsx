@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import {Button, Form, FormControl, InputGroup,Tabs,Tab} from "react-bootstrap";
+import {Button, Form, FormControl, InputGroup, Tabs, Tab, Modal} from "react-bootstrap";
 import remove from '../../images/shutdown.png';
 import add from '../../images/Add.png';
 import {useSubstrate} from "../../api/contracts";
@@ -32,9 +32,6 @@ export default function ThirdStep(props){
             token: ''
         }
     ]);
-
-
-
     const [start, setstart] = useState(false);
 
     const [instanceByTemplate, setinstanceByTemplate] = useState(false);
@@ -53,11 +50,13 @@ export default function ThirdStep(props){
     const [next,setnext]= useState(false);
     const [daoinit,setDaoinit]= useState(false);
     const [adminstate,setadminstate]= useState(false);
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
 
     let { t } = useTranslation();
 
 
-    const toForthStep = () => {
+    const Submit = () => {
         let form = {
             token,
             name,
@@ -69,8 +68,8 @@ export default function ThirdStep(props){
         toDataFormat()
     }
 
-    const toSecondStep = () => {
-        props.handlerSet(3)
+    const toThirdStep = () => {
+        props.handlerSet(3);
         let form = {
             admin,
             token,
@@ -113,13 +112,13 @@ export default function ThirdStep(props){
 
         switch(name){
             case 'name':
-                setname(e.target.value)
+                setname(e.target.value);
                 break;
             case 'symbol':
-                setsymbol(e.target.value)
+                setsymbol(e.target.value);
                 break;
             case 'supply':
-                setsupply(e.target.value)
+                setsupply(e.target.value);
                 break;
             default:
                 break;
@@ -174,8 +173,6 @@ export default function ThirdStep(props){
             setadminlist(adminlist);
         }
 
-
-
         setstart(true)
     }
 
@@ -183,17 +180,23 @@ export default function ThirdStep(props){
 
 
     useEffect( () => {
-        if(!start) return
+        if(!start) return;
 
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
 
         if(secondStep && secondStep[0] && secondStep[0].id){
             const stepone = async () => {
-                setLoading(true)
+                setLoading(true);
                 setTips(t('InstanceByTemplate'));
                 await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
-                    setinstanceByTemplate(result)
+                    setinstanceByTemplate(result);
                     console.log("Step 1 =======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
+                }).catch((error) => {
+                    seterrorShow(true)
+                    seterrorTips(`instance By Template: ${error.message}`)
+                    setLoading(false);
+                    setstart(false);
+
                 });
             };
             stepone();
@@ -253,6 +256,11 @@ export default function ThirdStep(props){
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
                     // setqueryAddrs(true)
                     setnext(true);
+                }).catch((error) => {
+                    seterrorShow(true)
+                    seterrorTips(`Upload information: ${error.message}`)
+                    setLoading(false);
+                    setstart(false);
                 });
             };
             stepfour();
@@ -277,6 +285,18 @@ export default function ThirdStep(props){
 
     return <div>
         <Loading showLoading={loading} tips={tips}/>
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
         <Translation>{t =>
                 <div  title={t('Token')} >
                     <div className='steptitle'>
@@ -383,8 +403,8 @@ export default function ThirdStep(props){
         }
         </Translation>
         <div className='step2brdr'>
-            <Button variant="outline-primary" className='leftBtn' onClick={toSecondStep}><Trans>think</Trans></Button>
-            <Button variant="primary" onClick={toForthStep}><Trans>Next</Trans></Button>
+            <Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}><Trans>think</Trans></Button>
+            <Button variant="primary" onClick={Submit}>Submit</Button>
         </div>
 
     </div>;

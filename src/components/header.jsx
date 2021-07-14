@@ -18,7 +18,7 @@ const createHashHistory = history.createHashHistory();
 
 export default function Headertop(props) {
     const {state,dispatch} = useSubstrate();
-    const {allAccounts,api,maincontract,daoManagercontract,refreshBalance} = state;
+    const {allAccounts,api,maincontract,daoManagercontract} = state;
 
     let { t ,i18n} = useTranslation()
 
@@ -55,8 +55,7 @@ export default function Headertop(props) {
     useEffect(() => {
        if(allAccounts == null ) return
        queryBalance(allAccounts)
-        dispatch({type: 'NOREFRESH'});
-    }, [allAccounts,maincontract,daoManagercontract,refreshBalance]);
+    }, [allAccounts,maincontract,daoManagercontract]);
     useEffect(() => {
 
 

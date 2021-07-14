@@ -36,7 +36,6 @@ module.exports = {
     homepageState: null,
 
     myDao:null,
-    refreshBalance:null,
 
 
 };
