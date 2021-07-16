@@ -249,7 +249,7 @@ export default function ThirdStep(props){
                 erc20_decimals: 0,
                 token,
                 tokenlist,
-                admin,
+                admin:adminstate,
                 adminlist
             };
             if (daoManagercontract == null) return;
