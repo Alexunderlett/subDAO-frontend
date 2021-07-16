@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import ManageItem from "./manageItem";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
@@ -8,11 +8,12 @@ import Left from "../left";
 import Back from "../../images/prev.png";
 import close from "../../images/shutdownW.png"
 import {useTranslation} from "react-i18next";
+import auth from "../../images/Vector.png";
 
 export default function OrgManage(props){
 
-    const {state} = useSubstrate();
-    const {orgcontract} = state;
+    const {state, dispatch} = useSubstrate();
+    const {orgcontract,allAccounts,apiState} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -30,20 +31,12 @@ export default function OrgManage(props){
     const [isOwner, setisOwner] = useState(false);
     const [isModerator, setisModerator] = useState(false);
 
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
+
     let { t } = useTranslation();
 
-    useEffect(() => {
-        if(addModerator){
-            setLoading(false);
-            props.history.push(`/org/${id}`)
-        }
-    }, [addModerator]);
-    useEffect(() => {
-        if(addMember){
-            setLoading(false);
-            props.history.push(`/org/${id}`)
-        }
-    }, [addMember]);
+
     useEffect(() => {
         setId(props.match.params.id);
         setisModerator(parseInt(props.match.params.isModerator));
@@ -51,28 +44,39 @@ export default function OrgManage(props){
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
     }, []);
+    const setAllList = async () => {
+        setLoading(true);
+        setTips(t('InitializeORG'));
+        await api.org.getDaoModeratorList(orgcontract).then(data => {
+            if (!data) return;
+            setChecklist(data)
+        });
+        await api.org.getDaoMembersList(orgcontract).then(data => {
+            if (!data) return;
+            setMemberlist(data)
+        });
+        setLoading(false);
+    };
     useEffect( () => {
 
-        const setAllList = async () => {
-            setLoading(true);
-            setTips(t('InitializeORG'));
-            await api.org.getDaoModeratorList(orgcontract).then(data => {
-                if (!data) return;
-                setChecklist(data)
-            });
-            await api.org.getDaoMembersList(orgcontract).then(data => {
-                if (!data) return;
-                setMemberlist(data)
-            });
-            setLoading(false);
-        };
+
         setAllList();
     }, [orgcontract]);
 
-    const handleClicktoview = async (item,type) =>{
-        // let {voteid} = this.state;
-        // this.props.history.push(`/voteView/${id}/${voteid}`)
+    useEffect(async () => {
+        const initVoteContract = async () =>{
+            let org = JSON.parse(sessionStorage.getItem('contractlist'));
+            if(orgcontract == null && org!= null){
+                await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
+                    console.log('orgcontract====',data);
+                });
+            }
+            setAllList();
+        }
+        initVoteContract()
+    }, [orgcontract,allAccounts,apiState]);
 
+    const handleClicktoview = async (item,type) =>{
         let obj={
             name:item[1],
             address:item[0]
@@ -80,19 +84,32 @@ export default function OrgManage(props){
         if(type==='moderators'){
             setLoading(true);
             setTips(t('RemoveModerator'));
-            await api.org.removeDaoModerator(orgcontract,obj,function (result) {
+            await api.org.removeDaoModerator(orgcontract,obj, (result)=> {
                 setaddModerator(result)
+                setLoading(false);
+                setAllList();
             }).then(data => {
                 if (!data) return;
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Remove Moderator: ${error.message}`)
+                setLoading(false);
 
             });
         }else if(type==='members'){
             setLoading(true);
             setTips(t('RemoveMember'));
-            await api.org.removeDaoMember(orgcontract,obj,function (result) {
+            await api.org.removeDaoMember(orgcontract,obj, (result)=> {
                 setaddMember(result)
+                setLoading(false);
+                setAllList();
             }).then(data => {
                 if (!data) return;
+
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Remove Member: ${error.message}`)
+                setLoading(false);
 
             });
         }
@@ -170,6 +187,18 @@ export default function OrgManage(props){
 
         return <div>
             <Loading showLoading={loading} tips={tips}/>
+            <Modal
+                show={errorShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => seterrorShow(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
             <section>
                     <div className="row">
                         <div className='col-lg-3'>

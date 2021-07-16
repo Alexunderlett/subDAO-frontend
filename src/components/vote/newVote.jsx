@@ -58,7 +58,7 @@ export default function NewVote(props) {
                     erc20_address: erc20address,
                     to_address,valueAmount
                 }
-                console.error("CreateNewVote=====",dataobj)
+
                 await api.vote.newVoteTransfer(votecontract,dataobj,(result)=> {
                     setLoading(false);
                     if(result){
@@ -188,7 +188,7 @@ export default function NewVote(props) {
         function clear() {
             itemprops.onChange({target: {value: ''}});
         }
-
+        itemprops.value = resultDate
         return (
             <div>
                 <input {...itemprops} />
@@ -241,28 +241,35 @@ export default function NewVote(props) {
                                             <InputGroup className="mb-3">
                                                 <FormLabel>{t('Votingtime')}</FormLabel>
                                                 <div className='inputBrdr'>
+                                                    <Datetime
+                                                        renderInput={renderInput}
+                                                        inputProps={inputProps}
+                                                        isValidDate={valid}
+                                                        ref={datetimeRef}
+                                                        onChange={handleChange}
+                                                    />
 
-                                                    {
-                                                        !date &&<Datetime
-                                                            renderInput={renderInput}
-                                                            inputProps={inputProps}
-                                                            isValidDate={valid}
-                                                            ref={datetimeRef}
-                                                            onChange={handleChange}
-                                                        />
-                                                    }
-                                                    {
-                                                        date &&<div>
-                                                            <FormControl
-                                                                name='date'
-                                                                value={resultDate}
-                                                                autoComplete="off"
-                                                                disabled
-                                                            />
-                                                            <img src={remove} className='removeInput' onClick={removeDate}/>
-                                                        </div>
+                                                    {/*{*/}
+                                                    {/*    !date &&<Datetime*/}
+                                                    {/*        renderInput={renderInput}*/}
+                                                    {/*        inputProps={inputProps}*/}
+                                                    {/*        isValidDate={valid}*/}
+                                                    {/*        ref={datetimeRef}*/}
+                                                    {/*        onChange={handleChange}*/}
+                                                    {/*    />*/}
+                                                    {/*}*/}
+                                                    {/*{*/}
+                                                    {/*    date &&<div>*/}
+                                                    {/*        <FormControl*/}
+                                                    {/*            name='date'*/}
+                                                    {/*            value={resultDate}*/}
+                                                    {/*            autoComplete="off"*/}
+                                                    {/*            disabled*/}
+                                                    {/*        />*/}
+                                                    {/*        <img src={remove} className='removeInput' onClick={removeDate}/>*/}
+                                                    {/*    </div>*/}
 
-                                                    }
+                                                    {/*}*/}
 
                                                 </div>
                                             </InputGroup>

@@ -11,7 +11,7 @@ import transferImg from "./images/transfer.png";
 import exitImg from "./images/drop.png";
 import {useTranslation} from "react-i18next";
 
-import {Dropdown} from "react-bootstrap";
+import {Dropdown, Modal} from "react-bootstrap";
 import Transfer from "./components/transfer";
 import ExitOrg from "./components/exitOrg";
 
@@ -47,6 +47,10 @@ export default function About(props) {
     const [isOwner, setisOwner] = useState(false);
     const [delMem, setdelMem] = useState(false);
     const [delAdmin, setdelAdmin] = useState(false);
+
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
+
 
     let { t } = useTranslation();
     const myRef = useRef();
@@ -283,6 +287,11 @@ export default function About(props) {
             await api.org.resignMember(orgcontract,function (result) {
                 if (!result) return;
                 setdelMem(true)
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Resign Member: ${error.message}`)
+                setLoading(false);
+
             });
         }else{
             setdelMem(true)
@@ -293,12 +302,15 @@ export default function About(props) {
         if (orgcontract == null || !delMem) return;
         const setAdmin = async () => {
             if(isModerator){
-                    setTimeout(async()=>{
-                        await api.org.resignModerator(orgcontract,function (result) {
-                            if (!result) return;
-                            setdelAdmin(true)
-                        });
-                    },5000)
+                await api.org.resignModerator(orgcontract,function (result) {
+                    if (!result) return;
+                    setdelAdmin(true)
+                }).catch((error) => {
+                    seterrorShow(true)
+                    seterrorTips(`Resign Moderator: ${error.message}`)
+                    setLoading(false);
+
+                });
              }else{
                 setdelAdmin(true)
             }
@@ -317,6 +329,15 @@ export default function About(props) {
         if(myRef.current==null) return;
         if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
     };
+    const AddresstoShow = (address)=> {
+
+        let frontStr = address.substring(0,4);
+
+        let afterStr = address.substring(address.length-4,address.length);
+
+        return `${frontStr}...${afterStr}`
+
+    }
     const switchKey = (key) =>{
         let str='';
         switch (key) {
@@ -349,7 +370,19 @@ export default function About(props) {
     }
     return (
         <div>
-            <Loading showLoading={loading} tips={tips}/>
+            <Loading showLoading={loading} tips={tips}/>     <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
+
             <section className="section blog-single position-relative">
                 <div className="row">
                     <aside className="col-lg-3">

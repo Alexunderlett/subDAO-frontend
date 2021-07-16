@@ -28,19 +28,10 @@ export default function AddNew(props){
             address: ''
         }
     ]);
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
 
     let { t } = useTranslation();
-
-    useEffect(() => {
-        if(addModerator){
-            setLoading(false);
-        }
-    }, [addModerator]);
-    useEffect(() => {
-        if(addMember){
-            setLoading(false);
-        }
-    }, [addMember]);
 
 
     const submitModerators = async (obj) =>{
@@ -52,6 +43,11 @@ export default function AddNew(props){
             props.refresh()
             setname('')
             setaddress('')
+            setLoading(false);
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Add Moderator: ${error.message}`)
+            setLoading(false);
         });
     }
     const submitMembers = async (obj) =>{
@@ -63,6 +59,11 @@ export default function AddNew(props){
             props.refresh()
             setname('')
             setaddress('')
+            setLoading(false);
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Add Member: ${error.message}`)
+            setLoading(false);
         });
     }
 
@@ -101,6 +102,18 @@ export default function AddNew(props){
     let {handleClose, showTips,typeName,applyAuth} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
 
         <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
             <Modal.Header closeButton>

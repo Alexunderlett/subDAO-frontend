@@ -22,6 +22,9 @@ export default function ApplyList(props){
 
     const [approveApply, setapproveApply] = useState(false);
 
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
+
     let { t } = useTranslation();
 
     useEffect(() => {
@@ -48,13 +51,28 @@ export default function ApplyList(props){
             setLoading(false);
             props.handleClose();
             props.refresh()
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Approve Member: ${error.message}`)
+            setLoading(false);
         });
     }
 
     let {handleClose, showTips} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
-
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
         <Modal  show={showTips} onHide={handleClose} centered={true} className='applyBrdr'>
             <Modal.Header closeButton>
                 <Modal.Title><img src={applyList} alt=""/><span >{t('applyList')}</span></Modal.Title>

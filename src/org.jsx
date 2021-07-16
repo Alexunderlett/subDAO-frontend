@@ -18,6 +18,7 @@ import AddBatch from './components/org/addbatch'
 import {useTranslation} from "react-i18next";
 import TriggerBtn from "./images/triggerBtn.png";
 import TriggerBtnActive from "./images/triggerBtnActive.png";
+import {Modal} from "react-bootstrap";
 
 export default function Org(props) {
 
@@ -46,6 +47,9 @@ export default function Org(props) {
     const [triggerStatus, settriggerStatus] = useState(false);
     const [triggerTips, settriggerTips] = useState(false);
     const [address, setaddress] = useState('');
+
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
 
     let { t } = useTranslation();
 
@@ -173,22 +177,36 @@ export default function Org(props) {
         settriggerTips(!triggerTips)
     }
     const handleSetApply = async() => {
-        settriggerStatus(!triggerStatus);
         settriggerTips(!triggerTips)
         setLoading(true);
         setTips(t('setFreeAddMember'));
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
-            setapplyAuth(!applyAuth)
+            setapplyAuth(!applyAuth);
+            settriggerStatus(!triggerStatus);
             setLoading(false);
         }).catch((error) => {
-            console.error("【【【【【【【【【",error);
+            seterrorShow(true)
+            seterrorTips(`Org: ${error.message}`)
             setLoading(false);
+
         });
     }
 
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
+            <Modal
+                show={errorShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => seterrorShow(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
             <section>
                 <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
                 <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />

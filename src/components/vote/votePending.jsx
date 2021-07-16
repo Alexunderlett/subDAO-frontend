@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 
-import {Table} from "react-bootstrap";
+import {Modal, Table} from "react-bootstrap";
 import VoteModalTips from "./votemodalTips";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
@@ -21,6 +21,9 @@ export default function VotePending(props) {
     const [list, setList] = useState([]);
     const [selectid, setselectid] = useState('');
     const [toTop, settoTop] = useState(false);
+
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
 
     let { t } = useTranslation();
 
@@ -53,6 +56,11 @@ export default function VotePending(props) {
             setLoading(false);
             settoTop(data)
             props.history.push(`/voteOverview/${id}/${selectid}`)
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Voting: ${error.message}`)
+            setLoading(false);
+
         });
     }
     const handleClicktoVoteview = (voteid) => {
@@ -61,6 +69,18 @@ export default function VotePending(props) {
     }
     return (<div className='votePending'>
         <Loading showLoading={loading} tips={tips}/>
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
             <VoteModalTips
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}

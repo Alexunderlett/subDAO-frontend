@@ -22,7 +22,8 @@ export default function AddAuth(props){
     const [afterselected, setafterselected] = useState(false);
     const [aftercancel, setaftercancel] = useState(false);
 
-
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
 
     let { t } = useTranslation();
 
@@ -93,17 +94,26 @@ export default function AddAuth(props){
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
-                try{
-                    await api.auth.grantPermission(authcontract,obj,(data) => {
-                        if(!data) return;
-                        afterArr.push(obj);
-                        if(selected.length === afterArr.length){
-                            setafterselected(true)
-                        }
-                    });
-                }catch (e) {
-                    console.log(e);
-                }
+
+                await api.auth.grantPermission(authcontract,obj,(data) => {
+                    if(!data) return;
+                    afterArr.push(obj);
+                    if(selected.length === afterArr.length){
+                        setafterselected(true)
+                    }
+                }).catch((error) => {
+                    seterrorShow(true)
+                    seterrorTips(`Grant Permission: ${error.message}`)
+                    setLoading(false);
+                    props.handleClose();
+                    setcancel([]);
+                    setselected([]);
+                    setoptionlist([]);
+                    setafterselected(false);
+                    setaftercancel(false);
+                    sethandleselected(false);
+                });
+
                 index++;
             }
         };
@@ -132,17 +142,26 @@ export default function AddAuth(props){
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
-                try{
+
                     await api.auth.revokePermission(authcontract,obj,(data) => {
                         if(!data) return;
                         afterArr.push(obj);
                         if(cancel.length === afterArr.length){
                             setaftercancel(true)
                         }
+                    }).catch((error) => {
+                        seterrorShow(true)
+                        seterrorTips(`Revoke Permission: ${error.message}`)
+                        setLoading(false);
+                        props.handleClose();
+                        setcancel([]);
+                        setselected([]);
+                        setoptionlist([]);
+                        setafterselected(false);
+                        setaftercancel(false);
+                        sethandleselected(false);
                     });
-                }catch (e) {
-                    console.log(e);
-                }
+
                 index++;
             }
         };
@@ -184,6 +203,19 @@ export default function AddAuth(props){
     let {handleClose, showTips,authlist} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
+
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
 
         <Modal  show={showTips} onHide={handleClose} centered={true} className='authBrdr'>
             <Modal.Header closeButton>

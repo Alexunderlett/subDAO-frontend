@@ -15,6 +15,9 @@ import {useTranslation} from "react-i18next";
     const [tips,setTips]= useState('');
 
     const [address, setAddress] = useState('');
+
+     const [errorShow,seterrorShow]= useState(false);
+     const [errorTips,seterrorTips]= useState('');
      let { t } = useTranslation();
 
     const handleChange = (e) => {
@@ -33,6 +36,10 @@ import {useTranslation} from "react-i18next";
                     props.handleClose()
                     window.location.reload()
                 }
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Transfer Ownership: ${error.message}`)
+                setLoading(false);
             });
 
         };
@@ -56,7 +63,18 @@ import {useTranslation} from "react-i18next";
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-
+            <Modal
+                show={errorShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => seterrorShow(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
             <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
                 <Modal.Header closeButton>
                     <Modal.Title><img src={sender} alt=""/><span>{t('transferBtn')}</span></Modal.Title>

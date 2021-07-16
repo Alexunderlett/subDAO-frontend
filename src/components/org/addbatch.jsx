@@ -24,7 +24,8 @@ export default function AddBatch(props){
             address: ''
         }
     ]);
-
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
     let { t } = useTranslation();
 
 
@@ -44,7 +45,17 @@ export default function AddBatch(props){
             setLoading(false);
             props.handleClose();
             props.refresh();
+            setadminlist([
+                {
+                    name: '',
+                    address: ''
+                }
+            ])
 
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Batch Add Member: ${error.message}`)
+            setLoading(false);
         });
     }
     const setAdminInput = (e, index) => {
@@ -74,6 +85,18 @@ export default function AddBatch(props){
     let {handleClose, showTips} = props;
     return <div>
         <Loading showLoading={loading} tips={tips}/>
+        <Modal
+            show={errorShow}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => seterrorShow(false)}
+            className='newVoteBrdr homebtm'
+        >
+            <Modal.Header closeButton />
+            <Modal.Body>
+                <h4>{errorTips}</h4>
+            </Modal.Body>
+        </Modal>
 
         <Modal  show={showTips} onHide={handleClose} className='batchBrdr'>
             <Modal.Header closeButton>

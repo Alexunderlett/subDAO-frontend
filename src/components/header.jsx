@@ -148,11 +148,14 @@ export default function Headertop(props) {
                     }
 
 
+                    {/*{*/}
+                    {/*    !showExit && !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>*/}
+                    {/*}*/}
+                    {/*{*/}
+                    {/*    showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('ExitCreate')}</button>*/}
+                    {/*}*/}
                     {
-                        !showExit && !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>
-                    }
-                    {
-                        showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('ExitCreate')}</button>
+                         !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>
                     }
                     {
                          !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>

@@ -19,6 +19,9 @@ import {useTranslation} from "react-i18next";
     const [deposit, setdeposit] = useState(false);
 
     const [list, setList] = useState([]);
+     const [errorShow,seterrorShow]= useState(false);
+     const [errorTips,seterrorTips]= useState('');
+
 
      let { t } = useTranslation();
 
@@ -48,6 +51,11 @@ import {useTranslation} from "react-i18next";
                     props.setShow()
                     setdeposit(false)
                 }
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Deposit: ${error.message}`)
+                setLoading(false);
+
             });
 
         };
@@ -64,6 +72,11 @@ import {useTranslation} from "react-i18next";
         setTips(t('Createdeposit'));
         await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount,(result)=> {
             setdeposit(true)
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Deposit approve: ${error.message}`)
+            setLoading(false);
+
         })
 
     }
@@ -88,7 +101,18 @@ import {useTranslation} from "react-i18next";
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-
+            <Modal
+                show={errorShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => seterrorShow(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
             <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
                 <Modal.Header closeButton>
                     <Modal.Title><img src={sender} alt=""/><span>{t('send')}</span></Modal.Title>

@@ -28,6 +28,9 @@ export default function VoteView (props){
     const [toaddress, settoaddress] = useState('');
     const [toValue, settovalule] = useState('');
 
+    const [errorShow,seterrorShow]= useState(false);
+    const [errorTips,seterrorTips]= useState('');
+
     let { t } = useTranslation();
 
     useEffect(() => {
@@ -88,6 +91,11 @@ export default function VoteView (props){
 
         await api.vote.VoteChoice(votecontract,voteid,selected,(data)=>{
             setafterchoice(data)
+        }).catch((error) => {
+            seterrorShow(true)
+            seterrorTips(`Vote: ${error.message}`)
+            setLoading(false);
+
         });
 
     }
@@ -102,7 +110,18 @@ export default function VoteView (props){
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>
-
+            <Modal
+                show={errorShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                onHide={() => seterrorShow(false)}
+                className='newVoteBrdr homebtm'
+            >
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <h4>{errorTips}</h4>
+                </Modal.Body>
+            </Modal>
             <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
                 <Modal.Header closeButton>
                     <Modal.Title><img src={newVote} alt=""/><span> {t('Voting')}</span></Modal.Title>
