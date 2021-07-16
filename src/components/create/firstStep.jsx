@@ -133,8 +133,6 @@ class FirstStep extends Component {
                         <InputGroup>
                             <FormLabel><Trans>DAODescription</Trans></FormLabel>
                             <div className='inputBrdr'>
-
-
                                 <Translation>{t =>
                                     <FormControl as="textarea"
                                                  placeholder={t('FillDAODescription')}

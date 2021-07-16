@@ -36,6 +36,8 @@ export default function NewVote(props) {
     const [optchecked, setoptchecked] = useState( true);
     const [walletTips, setWalletTips] = useState( false);
     const [errorTips, seterrorTips] = useState( '');
+    const [errorShow,seterrorShow]= useState(false);
+    const [resultDate,setresultDate]= useState('');
 
     let { t } = useTranslation();
     const datetimeRef = useRef();
@@ -72,6 +74,10 @@ export default function NewVote(props) {
                         props.handleClose()
                         props.refresh()
                     }
+                }).catch((error) => {
+                    setWalletTips(true)
+                    seterrorTips(`Create New Vote: ${error.message}`)
+                    setLoading(false);
                 });
             }else{
                 setWalletTips(true)
@@ -104,6 +110,10 @@ export default function NewVote(props) {
                     props.handleClose()
                     props.refresh()
                 }
+            }).catch((error) => {
+                setWalletTips(true)
+                seterrorTips(`Create New Vote: ${error.message}`)
+                setLoading(false);
             });
         }
 
@@ -139,7 +149,7 @@ export default function NewVote(props) {
         const nowTime = Date.parse(new Date());
         if(type === 2 && date <= 0 ){
             setWalletTips(true)
-            seterrorTips('Please fill  the correct time')
+            seterrorTips('Please fill the correct time')
         }else{
             settype(type)
         }
@@ -156,12 +166,22 @@ export default function NewVote(props) {
         // disabled:true
     };
 
+    const format =(dateTime) => {
+        var time = new Date(dateTime);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        var d = time.getDate();
+        var h = time.getHours();
+        var mm = time.getMinutes();
+        var s = time.getSeconds();
+        return y+'-'+(m<10?'0'+m:m)+'-'+(d<10?'0'+d:d)+' '+(h<10?'0'+h:h)+':'+(mm<10?'0'+mm:mm)+':'+(s<10?'0'+s:s);
+    }
 
     const handleChange = (value) => {
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
-
        setdate(dateTime-nowTime)
+       setresultDate(format(dateTime))
 
     }
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
@@ -184,6 +204,9 @@ export default function NewVote(props) {
     const handleActive = (e) =>{
         let values = JSON.parse(e.currentTarget.value)
         setoptchecked(!values)
+    };
+    const removeDate = () =>{
+        setdate('')
     };
 
     let {handleClose, showTips} = props;
@@ -218,13 +241,29 @@ export default function NewVote(props) {
                                             <InputGroup className="mb-3">
                                                 <FormLabel>{t('Votingtime')}</FormLabel>
                                                 <div className='inputBrdr'>
-                                                        <Datetime
+
+                                                    {
+                                                        !date &&<Datetime
                                                             renderInput={renderInput}
                                                             inputProps={inputProps}
                                                             isValidDate={valid}
                                                             ref={datetimeRef}
                                                             onChange={handleChange}
+                                                        />
+                                                    }
+                                                    {
+                                                        date &&<div>
+                                                            <FormControl
+                                                                name='date'
+                                                                value={resultDate}
+                                                                autoComplete="off"
+                                                                disabled
                                                             />
+                                                            <img src={remove} className='removeInput' onClick={removeDate}/>
+                                                        </div>
+
+                                                    }
+
                                                 </div>
                                             </InputGroup>
                                         </div>

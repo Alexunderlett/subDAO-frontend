@@ -276,7 +276,8 @@ position: relative;
 }
 .selectAccount{
   width: 710px;
-  margin: 138px auto 0;
+  //margin: 138px auto 0;
+  margin: 10vh auto 0;
   text-align: center;
   h3{
     font-size: 36px;
@@ -298,8 +299,8 @@ position: relative;
     background: #140B3680;
     border-radius: 15px;
     width: 350px;
-    margin: 200px auto 270px;
-
+    //margin: 200px auto 270px;
+    margin: 10vh auto 12vh;
     select {
 
       border: 0;
@@ -343,7 +344,8 @@ position: relative;
     }
   }
   .createMy{
-    margin: 80px 0 360px;
+    //margin: 80px 0 360px;
+    margin: 80px 0 20vh;
   }
 }
 .homebtm{

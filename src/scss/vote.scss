@@ -271,7 +271,8 @@
   }
   .inputBrdr textarea.form-control{
 
-      height: 250px!important;
+      //height: 250px!important;
+      height: 15vh!important;
 
   }
 .NextBrdr{
@@ -366,6 +367,7 @@
       }
     }
   }
+
   //li {
   //  box-sizing: border-box;
   //  display: inline-block;
