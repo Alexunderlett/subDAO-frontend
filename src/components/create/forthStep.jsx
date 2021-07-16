@@ -304,18 +304,18 @@ export default function ThirdStep(props){
         </Modal>
         <Translation>{t =>
                 <div  title={t('Token')} >
-                    <div className='steptitle'>
-                        <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check
-                                type="checkbox"
-                                label={t('Token')}
-                                value={token}
-                                checked={token}
-                                name='token'
-                                onChange={handleCheck}
-                            />
-                        </Form.Group>
-                    </div>
+                    {/*<div className='steptitle'>*/}
+                    {/*    <Form.Group controlId="formBasicCheckbox">*/}
+                    {/*        <Form.Check*/}
+                    {/*            type="checkbox"*/}
+                    {/*            label={t('Token')}*/}
+                    {/*            value={token}*/}
+                    {/*            checked={token}*/}
+                    {/*            name='token'*/}
+                    {/*            onChange={handleCheck}*/}
+                    {/*        />*/}
+                    {/*    </Form.Group>*/}
+                    {/*</div>*/}
                     <div>
                         <InputGroup className="mb-3">
                             <div className='inputBrdr'>
