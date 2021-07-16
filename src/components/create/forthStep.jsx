@@ -196,6 +196,9 @@ export default function ThirdStep(props){
                     seterrorTips(`instance By Template: ${error.message}`)
                     setLoading(false);
                     setstart(false);
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },2000)
 
                 });
             };
@@ -249,7 +252,6 @@ export default function ThirdStep(props){
                 admin,
                 adminlist
             };
-            console.log(obj)
             if (daoManagercontract == null) return;
             const stepfour = async () => {
                 setTips(t('Uploadinformation'));
@@ -261,6 +263,9 @@ export default function ThirdStep(props){
                     seterrorTips(`Upload information: ${error.message}`)
                     setLoading(false);
                     setstart(false);
+                    setTimeout(()=>{
+                      window.location.reload()
+                    },2000)
                 });
             };
             stepfour();

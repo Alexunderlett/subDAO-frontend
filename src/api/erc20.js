@@ -1,5 +1,6 @@
 import ConnectContract from './connectContract';
 import Accounts from "./Account";
+import publicJs from "../utils/publicJs";
 
 let erc20contract;
 const InitErc20 = async (state, dispatch, address) =>  {
@@ -33,7 +34,20 @@ const approveOp = async (erc20contract, spender, total,cb) => {
          }
        });
 }
+
+const queryInfo = async (erc20contract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (erc20contract === null || !erc20contract || !erc20contract.query || !AccountId) return;
+
+    let data = await erc20contract.query.queryInfo(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+
+    return data;
+
+};
 export default {
     InitErc20,
     approveOp,
+    queryInfo
 }

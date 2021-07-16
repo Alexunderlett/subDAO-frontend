@@ -17,7 +17,7 @@ import ExitOrg from "./components/exitOrg";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
-    const {basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState} = state;
+    const {basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState,erc20contract} = state;
 
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
@@ -155,18 +155,23 @@ export default function About(props) {
             let index = 0;
             for (let item of tokenlist) {
                 // eslint-disable-next-line no-loop-func
-                await api.vault.getBalanceOf(vaultcontract, item).then(data => {
-                    if (!data) return;
+                await api.vault.getBalanceOf(vaultcontract, item).then(async(data) => {
 
+                    if (!data) return;
                     arr[index] = {
                         address: item,
                         balance: data
                     };
-                    index++;
+                    let result = await api.erc20.queryInfo(erc20contract, item);
+                    let { symbol, name } = result;
+                    arr[index].symbol = symbol;
+                    arr[index].name = name;
                 });
+                index++;
+                setbalancelist(arr)
             }
-            setbalancelist(arr)
-        };
+
+        }
         setBalance();
     }, [tokenlist,id]);
     useEffect( () => {
@@ -457,8 +462,9 @@ export default function About(props) {
                                             {
                                                 balancelist.map((item, index) =>
                                                     <dl key={`balance_${index}`}>
-                                                        <dd>{item.balance}</dd>
-                                                        <dt>{item.address}</dt>
+                                                        <dd className='symbol'>{item.balance} {item.symbol}</dd>
+                                                        {/*<dt>{item.address}</dt>*/}
+                                                        <dt>{item.name}</dt>
                                                     </dl>
                                                 )
                                             }
