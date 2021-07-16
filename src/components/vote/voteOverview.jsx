@@ -19,6 +19,7 @@ export default function VoteOverview (props){
     const [toValue, settovalule] = useState('');
     const [endtime, setendtime] = useState('');
     const [executed, setexecuted] = useState('');
+    const [need, setneed] = useState('');
 
     let { t } = useTranslation();
 
@@ -29,9 +30,8 @@ export default function VoteOverview (props){
         const setOneVote = async() => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
-
                 const {
-                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed
+                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed,need_trigger
                 } = data;
 
                 let stime = start_date.replace(/,/g,'');
@@ -52,6 +52,7 @@ export default function VoteOverview (props){
                 s = s < 10 ? ('0' + s) : s;
                 setendtime(`${y}-${MM}-${d} ${h}:${m}:${s}`);
 
+                setneed(need_trigger)
                 settitle(title);
                 setexecuted(executed);
                 setvoteid(vote_id);
@@ -124,19 +125,26 @@ export default function VoteOverview (props){
                                             <div>{min}</div>
 
                                         </li>
-                                        <li>
-                                            <h6>{t('Amount')}</h6>
-                                            <div>{toValue}</div>
 
-                                        </li>
-                                        <li>
-                                            <h6>{t('ReceiverAddress')}</h6>
-                                            <div className='address'>{toaddress}</div>
-                                        </li>
-                                        <li>
-                                            <h6>Transaction Status</h6>
-                                            <div className='address'>{executed?'Successful':'Failed'}</div>
-                                        </li>
+                                        {
+                                            need &&
+                                            <div>
+                                                <li>
+                                                    <h6>{t('Amount')}</h6>
+                                                    <div>{toValue}</div>
+
+                                                </li>
+                                                <li>
+                                                    <h6>{t('ReceiverAddress')}</h6>
+                                                    <div className='address'>{toaddress}</div>
+                                                </li>
+                                                <li>
+                                                    <h6>Transaction Status</h6>
+                                                    <div className='address'>{executed?'Successful':'Failed'}</div>
+                                                </li>
+
+                                            </div>
+                                        }
 
                                     </ul>
                                 </div>
