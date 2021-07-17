@@ -122,7 +122,7 @@
   "AddToken": "Add Transfer Token",
   "InstanceByTemplate": "Creating DAO from Template",
   "ListDao": "List DAO Instances By Owner",
-  "InitDAO": "Init DAO",
+  "InitDAO": "Initialize DAO",
   "Uploadinformation": "Upload DAO's information",
   "TransferTokens": "Transfer Tokens",
   "AddDaoModerators": "Add DAO Moderators",
