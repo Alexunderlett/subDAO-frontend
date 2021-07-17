@@ -39,7 +39,7 @@
   "Members": "Members",
   "Add": "Add",
   "InitializeORG": "Initialize the ORG page",
-  "triggerStatus": "Confirm to join？",
+  "triggerStatus": "Allow to join publicly?",
   "setFreeAddMember": "Set the way to add members",
   "RemoveModerator": "Remove a DAO moderator",
   "RemoveMember": "Remove a DAO member",
