@@ -94,7 +94,7 @@ export default function ThirdStep(props){
                         </Form.Group>
                     </div>
                     <div>
-                        {adminlist.map((i, index) => (
+                        { admin && adminlist.map((i, index) => (
 
                             <div key={index} className='norow'>
                                 <div className="row">
