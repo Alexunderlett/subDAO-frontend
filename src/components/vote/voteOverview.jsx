@@ -106,7 +106,7 @@ export default function VoteOverview (props){
                                             <div>{desc}</div>
                                         </li>
                                         <li>
-                                            <h6>Voting ends at</h6>
+                                            <h6>Ends at</h6>
                                             <div className='endtime'>{endtime}</div>
                                         </li>
                                         <li>

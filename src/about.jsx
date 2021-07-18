@@ -342,25 +342,25 @@ export default function About(props) {
         let str='';
         switch (key) {
             case 'base_addr':
-                str='Base Address';
+                str='Base';
                 break;
             case 'erc20_addr':
-                str='ERC20 Address';
+                str='ERC20';
                 break;
             case 'org_addr':
-                str='Org Address';
+                str='ORG';
                 break;
             case 'vault_addr':
-                str='Vault Address';
+                str='Vault';
                 break;
             case 'vote_addr':
-                str='Vote Address';
+                str='Vote';
                 break;
             case 'auth_addr':
-                str='Auth Address';
+                str='Auth';
                 break;
             case 'github_addr':
-                str='Github Address';
+                str='Github';
                 break;
             default:
                 str = key;
