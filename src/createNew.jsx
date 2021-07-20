@@ -22,8 +22,8 @@ export default function  Createnew(props) {
                             <div className='createBrdr'>
                                 {type === 1 && <FirstStep handlerSet={setStep}/>}
                                 {type === 2 && <SecondStep handlerSet={setStep}  history={props.history}/>}
-                                {type === 3 && <ThirdStep handlerSet={setStep}  history={props.history}/>}
-                                {type === 4 && <ForthStep handlerSet={setStep}  history={props.history}/>}
+                                {type === 3 && <ForthStep handlerSet={setStep}  history={props.history}/>}
+                                {/*{type === 4 && <ForthStep handlerSet={setStep}  history={props.history}/>}*/}
                             </div>
                         </div>
                     </div>

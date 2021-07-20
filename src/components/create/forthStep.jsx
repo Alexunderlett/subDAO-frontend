@@ -15,7 +15,7 @@ export default function ThirdStep(props){
     const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
 
-    const [admin,setAdmin]= useState(true);
+    const [admin,setAdmin]= useState(false);
     const [token,setToken]= useState(true);
     const [name,setname]= useState('');
     const [symbol,setsymbol]= useState('');
@@ -69,7 +69,7 @@ export default function ThirdStep(props){
     }
 
     const toThirdStep = () => {
-        props.handlerSet(3);
+        props.handlerSet(2);
         let form = {
             admin,
             token,
@@ -165,13 +165,13 @@ export default function ThirdStep(props){
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
         setercUrl(secondStep[0].dao_manager_code_hash);
 
-        const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
-        const {admin,adminlist} = thirdStep;
+        // const thirdStep = JSON.parse(sessionStorage.getItem('thirdStep'));
+        // const {admin,adminlist} = thirdStep;
 
-        setadminstate(admin);
-        if(admin){
-            setadminlist(adminlist);
-        }
+        setadminstate(false);
+        // if(admin){
+        //     setadminlist(adminlist);
+        // }
 
         setstart(true)
     }

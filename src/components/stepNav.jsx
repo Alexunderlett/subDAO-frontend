@@ -15,13 +15,13 @@ class StepNav extends Component{
                             <div><Trans>TemplateSelection</Trans></div>
                             <span>2</span>
                         </li>
+                        {/*<li className={this.props.type === 3?'active step3':'step3'}>*/}
+                        {/*    <div><Trans>TemplateConfiguration</Trans></div>*/}
+                        {/*    <span>3</span>*/}
+                        {/*</li>*/}
                         <li className={this.props.type === 3?'active step3':'step3'}>
-                            <div><Trans>TemplateConfiguration</Trans></div>
-                            <span>3</span>
-                        </li>
-                        <li className={this.props.type === 4?'active step4':'step4'}>
                             <div>Token Configuration</div>
-                            <span>4</span>
+                            <span>3</span>
                         </li>
                     </ul>
 
