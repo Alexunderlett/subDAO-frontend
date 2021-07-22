@@ -4,6 +4,7 @@ import {Form} from "react-bootstrap";
 import Accounts from '../api/Account';
 import {useSubstrate} from "../api/contracts";
 import {Modal} from "react-bootstrap";
+import CopyStr from "./copy";
 
 import publicJs from "../utils/publicJs";
 
@@ -143,7 +144,7 @@ export default function Headertop(props) {
                         </Modal.Body>
                     </Modal>
                     {  !!selected.length && <div className='addressBrdr'>
-                        {AddresstoShow(selected[0].address)}
+                        {AddresstoShow(selected[0].address)}<CopyStr address={selected[0].address}/>
                         <span onClick={exitAccount}> <img src={close} alt=""/>{t('logout')}</span>
 
                     </div>}

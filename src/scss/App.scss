@@ -107,6 +107,12 @@ position: relative;
       vertical-align: middle;
 
       margin-right: 30px;
+      .iconlft{
+        margin-left:-20px;
+        svg{
+          margin-bottom: 3px;
+        }
+      }
       span{
         //border-bottom: 1px dashed #fff;
         margin-left: 20px;

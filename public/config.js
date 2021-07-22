@@ -1,6 +1,6 @@
 window.mainAddress = {
     // 3.0
-    main: "5HWSeWo5psXw72Huaq2vvw9XG1QoihgBFXGpDaDcpdboaBYg" ,
+    main: "5EEQrARgrT5hdQ3UdER6Qqm4xzARZbyTP3kVEDcy8TJj3jKa" ,
     rpc_server: "wss://alpha.subdao.org"
 
 };
