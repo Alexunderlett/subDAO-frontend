@@ -101,8 +101,9 @@ function Home(props) {
                  }
              }
              setimglist(arr);
-             dispatch({type: 'SET_HOME', payload: arr});
              setLoading(false)
+             dispatch({type: 'SET_HOME', payload: arr});
+
          };
          setInstances();
 

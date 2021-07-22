@@ -41,6 +41,7 @@ export default function Headertop(props) {
 
     useEffect(() => {
         i18n.changeLanguage('en')
+        dispatch({type: 'MYDAO'});
     }, []);
 
 
@@ -101,6 +102,10 @@ export default function Headertop(props) {
             setdaoExit(false)
         }
     }
+    const toFirst = ()=> {
+        dispatch({type: 'NOMAY'});
+        createHashHistory.push('/')
+    }
     const exitAccount = ()=> {
         sessionStorage.removeItem('account');
         dispatch({type: 'LOAD_ALLACCOUNTS'});
@@ -121,8 +126,7 @@ export default function Headertop(props) {
 
     return (<div className='header'>
         <div className="row">
-            <div className="col-4 lftTit"><a href="/"><img src={logoWhite} alt=""/></a></div>
-            {/*<div className="col-4 logoMid"><img src={logoWhite} alt=""/></div>*/}
+            <div className="col-4 lftTit"><span className="toFirst" onClick={toFirst}><img src={logoWhite} alt=""/></span></div>
             <div className="col-8 rhtBtn">
                 <div className="header-button">
                     <Modal

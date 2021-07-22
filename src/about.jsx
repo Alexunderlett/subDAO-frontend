@@ -11,9 +11,10 @@ import transferImg from "./images/transfer.png";
 import exitImg from "./images/drop.png";
 import {useTranslation} from "react-i18next";
 
-import {Dropdown, Modal} from "react-bootstrap";
+import { Modal, Spinner} from "react-bootstrap";
 import Transfer from "./components/transfer";
 import ExitOrg from "./components/exitOrg";
+import CopyStr from "./components/copy";
 
 export default function About(props) {
     const {state, dispatch} = useSubstrate();
@@ -28,8 +29,12 @@ export default function About(props) {
     const [description, setDescription] = useState('');
     const [owner, setOwner] = useState('');
     const [moderators, setModerators] = useState([]);
+    const [moderatorShow, setmoderatorShow] = useState(true);
     const [activelist, setActivelist] = useState([]);
     const [balancelist, setbalancelist] = useState([]);
+    const [balanceshow, setbalanceshow] = useState(true);
+    const [contractshow, setcontractshow] = useState(true);
+    const [info, setinfo] = useState(true);
     const [contractlist, setcontractlist] = useState([]);
     const [tokenlist, settokenlist] = useState([]);
 
@@ -63,22 +68,34 @@ export default function About(props) {
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data)
+                setLoading(false)
             });
 
         };
         setInitDAO();
     }, [apiState,id]);
     useEffect(() => {
+        setcontractlist([]);
+        setcontractshow(true);
+        setbalancelist([]);
+        setbalanceshow(true)
+        setName('');
+        setLogo('');
+        setDescription('');
+        setOwner('');
+        setinfo(true);
         setAId(props.match.params.id);
+
     }, [props.match.params.id]);
     useEffect( () => {
         if (daoManagercontract == null && daostate) return;
         const queryAddrs = async () => {
-            setTips(t('GetContractAddress'));
+            // setTips(t('GetContractAddress'));
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
                     console.log("==============setcontractlist============",data)
                     setcontractlist(data)
+                    setcontractshow(false)
                 }
             });
         };
@@ -92,7 +109,7 @@ export default function About(props) {
         if (base_addr != null) {
 
             const setInitBase = async () => {
-                setTips(t('InitializingContracts'));
+                // setTips(t('InitializingContracts'));
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
                     setbasestate(data);
                 });
@@ -101,7 +118,7 @@ export default function About(props) {
         }
         if (vault_addr != null) {
             const setInitVault = async () => {
-                setTips(t('InitializingContracts'));
+                // setTips(t('InitializingContracts'));
                 await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
                     setvaultstate(data)
                 });
@@ -120,7 +137,7 @@ export default function About(props) {
         }
         if (auth_addr != null) {
             const setInitAuth = async () => {
-                setTips(t('InitializingContracts'));
+                // setTips(t('InitializingContracts'));
                 await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
                     console.log("====",data)
                 });
@@ -129,7 +146,7 @@ export default function About(props) {
         }
         if (vote_addr != null) {
             const setInitVote = async () => {
-                setTips(t('InitializingContracts'));
+                // setTips(t('InitializingContracts'));
                 await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
                     setvotestate(data)
                 });
@@ -138,7 +155,7 @@ export default function About(props) {
         }
         if (erc20_addr != null) {
             const setInitErc20 = async () => {
-                setTips(t('InitializingContracts'));
+                // setTips(t('InitializingContracts'));
                 await api.erc20.InitErc20(state, dispatch, erc20_addr);
             };
             setInitErc20();
@@ -154,7 +171,7 @@ export default function About(props) {
     }, [logo,description,owner,name]);
     useEffect( () => {
         const setBalance = async () => {
-            setTips(t('Getbalance'));
+            // setTips(t('Getbalance'));
             let arr = [];
             let index = 0;
             for (let item of tokenlist) {
@@ -173,6 +190,8 @@ export default function About(props) {
                 });
                 index++;
                 setbalancelist(arr)
+                setbalanceshow(false)
+
             }
 
         }
@@ -182,7 +201,7 @@ export default function About(props) {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
 
         const setBase = async () => {
-            setTips(t('Getinformation'));
+            // setTips(t('Getinformation'));
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
 
@@ -192,10 +211,11 @@ export default function About(props) {
                 setLogo(logo);
                 setDescription(desc);
                 setOwner(owner);
+                setinfo(false);
 
-                setTimeout(()=>{
-                    setLoading(false)
-                },2000)
+                // setTimeout(()=>{
+                //     setLoading(false)
+                // },2000)
             });
         };
         setBase();
@@ -230,6 +250,7 @@ export default function About(props) {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
                 setModerators(data)
+                setmoderatorShow(false)
             });
         };
         setModeratorList();
@@ -368,6 +389,7 @@ export default function About(props) {
         }
         return str;
     }
+
     return (
         <div>
             <Loading showLoading={loading} tips={tips}/>     <Modal
@@ -386,16 +408,22 @@ export default function About(props) {
             <section className="section blog-single position-relative">
                 <div className="row">
                     <aside className="col-lg-3">
-                        <ul className='leftSide'>
-                            <li>
-                                <h2>SubDAO</h2>
-                                <div className='titleTips'>{t('DAOdescription')}</div>
-                            </li>
-                            <li><img src={logo} alt=""/></li>
-                            <li className='lftname'>{name}</li>
-                            <li>{owner}</li>
-                            <li>{description}</li>
-                        </ul>
+                        {
+                            info && <Spinner animation="border" variant="light" />
+                        }
+                        {
+                            !info &&  <ul className='leftSide'>
+                                <li>
+                                    <h2>SubDAO</h2>
+                                    <div className='titleTips'>{t('DAOdescription')}</div>
+                                </li>
+                                <li><img src={logo} alt=""/></li>
+                                <li className='lftname'>{name}</li>
+                                <li>{owner}<CopyStr address={owner}/></li>
+                                <li>{description}</li>
+                            </ul>
+                        }
+
                     </aside>
                     <Transfer
                         showTips={showTransfer}
@@ -492,8 +520,11 @@ export default function About(props) {
                                         <div className="listwrap">
                                             <div className='listbg'>
                                                 <div className="listbalance">
+                                                    {
+                                                        balanceshow && <Spinner animation="border" variant="light" />
+                                                    }
                                             {
-                                                balancelist.map((item, index) =>
+                                                !balanceshow && balancelist.map((item, index) =>
                                                     <dl key={`balance_${index}`}>
                                                         <dd className='symbol'>{item.balance} {item.symbol}</dd>
                                                         {/*<dt>{item.address}</dt>*/}
@@ -510,8 +541,11 @@ export default function About(props) {
                                         <div className="listwrap">
                                             <div className='listbg'>
                                                 <div className="listbalance">
+                                                    {
+                                                        moderatorShow && <Spinner animation="border" variant="light" />
+                                                    }
                                             {
-                                                moderators.map((i, index) => <dl key={moderators[index]}>
+                                                moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
                                                     <dd>{moderators[index][1]}</dd>
                                                     <dt>{moderators[index][0]}</dt>
                                                 </dl>)
@@ -526,15 +560,18 @@ export default function About(props) {
                                     <div className='contracts'>
                                         <h3>{t('Contracts')}</h3>
                                         {
-                                            contractlist != null && <ul className='list'>{
+                                            !contractshow && contractlist != null && <ul className='list'>{
                                                 Object.keys(contractlist).map((key) => (
                                                     (contractlist[key] != null && <li key={`contract_${key}`}>
                                                         <span>{switchKey(key)} </span>
-                                                        {contractlist[key]}
+                                                            {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]}/>
                                                         </li>
                                                     ) ))
                                             }
                                             </ul>
+                                        }
+                                        {
+                                            contractshow && <Spinner animation="border" variant="light" />
                                         }
                                     </div>
                                 </div>

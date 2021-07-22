@@ -140,7 +140,7 @@ export default function VoteOverview (props){
                                                 </li>
                                                 <li>
                                                     <h6>Transaction Status</h6>
-                                                    <div className='address'>{executed?'Successful':'Failed'}</div>
+                                                    <div className='address'>{executed?'Successful':'Not triggered'}</div>
                                                 </li>
 
                                             </div>
