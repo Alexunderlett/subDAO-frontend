@@ -249,7 +249,6 @@ export default function About(props) {
         const setModeratorList = async () => {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
-                console.error(data)
                 setModerators(data)
                 setmoderatorShow(false)
             });
