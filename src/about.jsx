@@ -249,6 +249,7 @@ export default function About(props) {
         const setModeratorList = async () => {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
+                console.error(data)
                 setModerators(data)
                 setmoderatorShow(false)
             });
@@ -545,7 +546,7 @@ export default function About(props) {
                                                         moderatorShow && <Spinner animation="border" variant="light" />
                                                     }
                                             {
-                                                moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
+                                                !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
                                                     <dd>{moderators[index][1]}</dd>
                                                     <dt>{moderators[index][0]}</dt>
                                                 </dl>)
