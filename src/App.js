@@ -4,7 +4,7 @@ import React from "react";
 import Headertop from "./components/header";
 import { SubstrateContextProvider} from './api/contracts';
 import mp4 from './images/wave.mp4';
-
+import GlobalStyle from './utils/GlobalStyle'
 
 
 function App(props) {
@@ -36,7 +36,7 @@ function App(props) {
 
                 <FootBtm />
             </div>
-
+            <GlobalStyle/>
       </SubstrateContextProvider>
     );
 }
