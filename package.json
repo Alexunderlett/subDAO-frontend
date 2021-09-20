@@ -8,6 +8,7 @@
     "@babel/helper-builder-react-jsx": "^7.12.13",
     "@babel/helper-builder-react-jsx-experimental": "^7.12.11",
     "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@geist-ui/react": "^2.2.0",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.2",
     "@polkadot/api": "^3.11.1",
     "@polkadot/api-contract": "^3.11.1",

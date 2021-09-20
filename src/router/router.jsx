@@ -12,30 +12,29 @@ import Withdraw from '../components/vault/withdraw';
 import Org from '../org';
 import OrgManage from '../components/org/orgManage';
 
-import {HashRouter as Router, Route, Switch,Redirect} from "react-router-dom";
+import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 function routerlink() {
     return (
-        <Router>
-            <Switch>
-                {/*<Route path="/" component={Home} exact/>*/}
+        <Switch>
+            {/*<Route path="/" component={Home} exact/>*/}
 
-                <Route path="/home" component={Home} />
-                    {/*<Route  path="/about/:id" component={About}/>*/}
-                {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
-                <Route path="/create" component={Createnew}/>
-                <Route path="/Vote/:id" component={Vote}/>
-                <Route path="/newVote" component={NewVote}/>
-                <Route path="/voteView/:id/:voteid" component={VoteView}/>
-                <Route path="/voteOverview/:id/:voteid" component={VoteOverview}/>
-                <Route path="/vault/:id" component={Vault}/>
-                <Route path="/deposit/:id" component={Deposit}/>
-                <Route path="/withdraw/:id" component={Withdraw}/>
-                <Route path="/org/:id" component={Org}/>
-                <Route path="/manage/:id/:isOwner/:isModerator" component={OrgManage}/>
-                <Redirect from="/" to="/home" exact/>
-            </Switch>
-        </Router>);
+            <Route path="/home" component={Home} />
+            {/*<Route  path="/about/:id" component={About}/>*/}
+            {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
+            <Route path="/create" component={Createnew} />
+            <Route path="/Vote/:id" component={Vote} />
+            <Route path="/newVote" component={NewVote} />
+            <Route path="/voteView/:id/:voteid" component={VoteView} />
+            <Route path="/voteOverview/:id/:voteid" component={VoteOverview} />
+            <Route path="/vault/:id" component={Vault} />
+            <Route path="/deposit/:id" component={Deposit} />
+            <Route path="/withdraw/:id" component={Withdraw} />
+            <Route path="/org/:id" component={Org} />
+            <Route path="/manage/:id/:isOwner/:isModerator" component={OrgManage} />
+            <Redirect from="/" to="/home" exact />
+        </Switch>
+    );
 }
 
 export default routerlink;
