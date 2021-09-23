@@ -3,14 +3,14 @@ import cpoy from '../images/copy.png';
 import styled from 'styled-components';
 import Overlay from 'react-bootstrap/Overlay'
 
-const Button = styled.button`
+const Button = styled.span`
+    cursor: pointer;
     padding-right: 0 !important;
     img{
         width: 22px !important;
-        display: inline-block;
-        margin-top: -3px;
-        margin-right: 0  !important;
-        margin-left: -5px !important;
+        height: 22px !important;
+        margin-left: 2px !important;
+        vertical-align: middle;
     }
 `
 

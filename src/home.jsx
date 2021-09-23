@@ -8,11 +8,11 @@ import { withRouter } from 'react-router-dom';
 import homeimg from './images/home.png'
 import Accounts from "./api/Account";
 import right from './images/right.png';
-import { Form } from 'react-bootstrap';
+import down from './images/down.png';
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
-import { Button, Modal, Select } from '@geist-ui/react'
-
+import { Modal, Select, Button, Row, Col } from 'antd';
+import DaosModal from "./components/DaosModal";
 
 
 const HomeBg = styled.div`
@@ -23,48 +23,71 @@ const HomeBg = styled.div`
         width: 75%;
         margin: 0 auto;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
 
-        .left{
-            flex-grow: 1;
-            max-width: 726px;
-            .hometitle{
-                font-size: 80px;
-                color: #10134E;
-                line-height: 94px;
-                span{
-                    color: #D52473;
+        .top{
+            display: flex;
+            justify-content: space-between;
+
+            .left{
+                flex-grow: 1;
+                max-width: 726px;
+                .hometitle{
+                    font-size: 80px;
+                    color: #10134E;
+                    line-height: 94px;
+                    span{
+                        color: #D52473;
+                    }
+                }
+                .homeDesc{
+                    text-transform: capitalize;
+                    font-size: 26px;
+                    font-family: Roboto-Light, Roboto;
+                    font-weight: 300;
+                    line-height: 40px;
+                    padding-bottom: 28px;
+                }
+                .connect{
+                    cursor: pointer;
+                    width: 270px;
+                    height: 60px;
                 }
             }
-            .homeDesc{
-                text-transform: capitalize;
-                font-size: 26px;
-                font-family: Roboto-Light, Roboto;
-                font-weight: 300;
-                line-height: 40px;
-                padding-bottom: 28px;
-            }
-            .connect{
-                cursor: pointer;
-                width: 270px;
-                height: 60px;
-            }
-        }
-        .right{
-            display: flex;
-            flex-direction: column;
-            img{
-                width: 400px;
-                height: 394px;
-                background: #D52473;
-            }
-            .more{
-                text-align: right;
-                cursor: pointer;
+            .right{
+                display: flex;
+                flex-direction: column;
+                img{
+                    width: 400px;
+                    height: 394px;
+                    background: #D52473;
+                }
             }
         }
     }
 `
+
+const MoreDaos = styled.div`
+    display: flex;
+    flex-direction: column;
+
+    .more{
+        text-align: right;
+        cursor: pointer;
+        height: 25px;
+        font-size: 18px;
+        font-family: PingFang-SC-Medium, PingFang-SC;
+        font-weight: 500;
+        color: #10164B;
+        line-height: 25px;
+        margin-bottom: 20px;
+    }
+    .daos{
+        display: flex;
+        justify-content: space-around;
+    }
+`
+
 
 function Home(props) {
     const { state, dispatch } = useSubstrate();
@@ -74,19 +97,19 @@ function Home(props) {
     const [loading, setLoading] = useState(false);
 
     const [showButton, setShowButton] = useState(false);
-    const [walletTips, setWalletTips] = useState(false);
+
     const [show, setshow] = useState(false);
     const [first, setfirst] = useState(true);
     const [imglist, setimglist] = useState([]);
+    const [walletTips, setWalletTips] = useState(false);
+    const [moreDaos, setMoreDaos] = useState(false);
 
-    const [allList, setallList] = useState([]);
     const [selected, setselected] = useState([]);
 
-    const [showlist, setshowlist] = useState(false);
+
 
     const account = JSON.parse(sessionStorage.getItem('account'));
 
-    const [visible, setVisible] = useState(false);
 
     const handleClick = () => {
         if (account === null || !account.length) {
@@ -94,26 +117,6 @@ function Home(props) {
         } else {
             props.history.push('/create')
         }
-    }
-
-    const selectAccounts = async (val) => {
-        let selected = allList.filter(i => i.address === val);
-        setselected(selected);
-        sessionStorage.setItem('account', JSON.stringify(selected));
-
-        dispatch({ type: 'SET_ALLACCOUNTS', payload: selected });
-    }
-    const connectWallet = async () => {
-        setVisible(true)
-        setshowlist(true);
-        const accoutlist = await Accounts.accountlist();
-        if (typeof (accoutlist) === "string") {
-            setWalletTips(true)
-        } else {
-            setallList(accoutlist);
-        }
-
-
     }
 
     useEffect(() => {
@@ -130,7 +133,6 @@ function Home(props) {
     }, []);
 
     useEffect(() => {
-
         if (maincontract == null || (selected && !selected.length)) return;
         const setInstances = async () => {
             setLoading(true);
@@ -164,6 +166,7 @@ function Home(props) {
         setInstances();
 
     }, [allAccounts, maincontract, myDao, first]);
+
     useEffect(() => {
         setimglist(homepage);
 
@@ -181,8 +184,6 @@ function Home(props) {
                 props.history.push(`/home`)
             }
         }
-
-
     }, [homepage, myDao]);
 
     return (
@@ -200,84 +201,68 @@ function Home(props) {
 
                         <h3> {t('noDao')}</h3>
                         <div className='accountTips'>{t('canCreateDao')}</div>
-                        <div className='createMy'><button onClick={handleClick}>{t('CreateDAO')}</button></div>
+                        <div className='createMy'><Button onClick={handleClick}>{t('CreateDAO')}</Button></div>
                     </div>
                 }
             </section>
             <Modal
-                show={walletTips}
+                visible={walletTips}
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
-                onHide={() => setWalletTips(false)}
+                onCancel={() => setWalletTips(false)}
                 className='newVoteBrdr homebtm'
             >
-                <Modal.Header closeButton />
-                <Modal.Body>
-                    <h4>{t('noWallet')}</h4>
-                </Modal.Body>
+                {/* <Modal.Title closeButton /> */}
+                {/* <Modal.Content> */}
+                <h4>{t('noWallet')}</h4>
+                {/* </Modal.Content> */}
             </Modal>
             {
                 !selected.length &&
                 <section className='homeTips'>
-                    <div className="left">
-                        <div className="hometitle">
-                            Access <span>DAO</span> Anytime, Anywhere
-                        </div>
-                        <div className='homeDesc'>
-                            {t('homeDescription')}
-                        </div>
-                        {/*<img src={homeimg} alt=""/>*/}
-                        <div className="header-button">
-                            {
-                                !showlist && !selected.length && !allList.length &&
-                                <Button type="success" onClick={connectWallet}>
+                    <div className="top">
+                        <div className="left">
+                            <div className="hometitle">
+                                Access <span>DAO</span> Anytime, Anywhere
+                            </div>
+                            <div className='homeDesc'>
+                                {t('homeDescription')}
+                            </div>
+                            {/*<img src={homeimg} alt=""/>*/}
+                            <div className="header-button">
+                                <Button type="primary">
                                     {t('ConnectWallet')}
-                                    <img src={right} alt="" />
+                                    <img src={right} alt="" style={{ width: '20px' }} />
                                 </Button>
-                            }
+                                {
+                                    // !showlist && !selected.length && !allList.length
+                                }
+                            </div>
+                        </div>
+                        <div className="right">
+                            <img src={right} alt="" />
                         </div>
                     </div>
-                    <div className="right">
-                        <img src={right} alt="" />
-                        <div className="more">
-                            More DAOs ···
+                    <MoreDaos>
+                        <div className="more" onClick={() => { setMoreDaos(true) }}>
+                            More DAOs<span>···</span>
                         </div>
-                    </div>
-                </section>
-            }
-            {
-                visible && !selected.length &&
-                <Modal visible={visible} onClose={() => { setVisible(false) }}>
-                    <Modal.Title>Select You Account</Modal.Title>
-                    <Modal.Content>
-                        <Select placeholder={t('SelectAccount')} width="100%" disableMatchWidth="true" onChange={selectAccounts}>
+                        <div className="daos">
                             {
-                                allList && allList.length && allList.map((opt) =>
-                                    <Select.Option value={opt.address} key={opt.address}>{opt.meta.name}</Select.Option>
+                                [1, 1, 1, 1, 1].map(() =>
+                                    <div className="daoItem">
+                                        <img src={right} alt="" />
+                                        <div className="title">Patract</div>
+                                        <div className="detail">
+                                            Litentry is built on Substrate, which inherits great features and the best technologies in
+                                        </div>
+                                    </div>
                                 )
                             }
-                        </Select>
-                        <Button type="success" style={{width: '100%', margin:'100px 0 30px 0'}} onClick={connectWallet}>
-                            Confirm
-                        </Button>
-                        <div style={{textAlign: 'center', cursor: 'pointer'}} onClick={() => { setVisible(false) }}>Cancel</div>
-                        {/* <div>
-                                <Modal
-                                    show={showButton}
-                                    aria-labelledby="contained-modal-title-vcenter"
-                                    centered
-                                    onHide={() => setShowButton(false)}
-                                    className='newVoteBrdr homebtm'
-                                >
-                                    <Modal.Header closeButton />
-                                    <Modal.Body>
-                                        <h4>{t('connect')}</h4>
-                                    </Modal.Body>
-                                </Modal>
-                                <button onClick={handleClick}>{t('CreateDAO')}</button>
-                            </div> */}
-                    </Modal.Content>
-                </Modal>
+                        </div>
+                        <DaosModal moreDaos={moreDaos} handleClose={() => { setMoreDaos(false) }}/>
+                    </MoreDaos>
+                </section>
             }
         </HomeBg>
     )

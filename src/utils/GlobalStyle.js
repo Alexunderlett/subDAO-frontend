@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components'
-import '../scss/fonts.scss'
+import { createGlobalStyle } from "styled-components";
+import "../scss/fonts.scss";
 
 const GlobalStyle = createGlobalStyle`
 body,html{
@@ -57,19 +57,94 @@ body,html{
     }
   }
 
-  #geist-ui-modal{
-    .layer{
+  /* modal */
+  .ant-modal-root{
+    .ant-modal-mask{
       background: #F9FAFF;
       opacity: 0.95;
     }
-    .content{
-      .wrapper.wrapper-enter.wrapper-enter-active{
+    .ant-modal-wrap{
+      .ant-modal-content{
         box-shadow: 0px 0px 20px 0px rgba(16, 22, 75, 0.1);
         border-radius: 32px;
+        .ant-modal-close{
+          top: 6px;
+          right: 6px;
+        }
       }
+    }
+  }
+
+  /* daoModal */
+  .daoModal{
+    width: 100vw !important;
+    margin: 0;
+    top: 106px;
+
+    .ant-modal-content{
+      background: #10164B;
+      width: 100vw;
+      height: calc(100vh - 182px);
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 0 !important;
+      
+      .ant-modal-close{
+        color: #CCCCD8;
+      }
+      .ant-modal-body{
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 55px 55px 0px 0px;
+        height: 100%;
+        background: white;
+        margin-top: 76px;
+      }
+    }
+  }
+
+  .daoItem{
+    width: 200px;
+    height: 268px;
+    padding: 28px;
+    background: rgba(16, 22, 75, 0.04);
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover{
+        background: #FFEFF7;
+        transform: scale(1.1);
+        .title{
+            color: #D52473;
+        }
+    }
+
+    img{
+        width: 90px;
+        height: 90px;
+    }
+    .title{
+        height: 24px;
+        font-size: 20px;
+        font-family: Roboto-Regular, Roboto;
+        font-weight: 400;
+        color: #10164B;
+        line-height: 24px;
+        margin: 16px 0 13px 0;
+    }
+    .detail{
+        font-size: 14px;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #10164B;
+        line-height: 17px;
+        text-align: center;
     }
   }
 }
 `;
 
-export default GlobalStyle
+export default GlobalStyle;

@@ -34,6 +34,7 @@ const Footer = styled.div`
                 margin-left: 40px;
                 color: #10164B;
                 display: flex;
+                align-items: center;
                 text-decoration: none;
                 img{
                     width: 40px;

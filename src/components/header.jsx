@@ -3,11 +3,8 @@ import * as history from 'history';
 import { Form } from "react-bootstrap";
 import Accounts from '../api/Account';
 import { useSubstrate } from "../api/contracts";
-import { Modal } from "react-bootstrap";
 import CopyStr from "./copy";
-
 import publicJs from "../utils/publicJs";
-
 import { useTranslation, Trans, Translation } from 'react-i18next'
 
 import logoWhite from '../images/logoWhite.png';
@@ -16,6 +13,7 @@ import balanceOfImg from '../images/balanceOf.png';
 import myDao from '../images/myDao.png';
 import close from '../images/shutdownW.png'
 import styled from 'styled-components';
+import { Modal, Button, Select } from 'antd';
 
 const createHashHistory = history.createHashHistory();
 
@@ -48,6 +46,14 @@ const HeaderBg = styled.div`
         }
 
         .rhtBtn{
+            flex-grow: 1;
+
+            .signin{
+                font-size: 16px;
+                font-family: Roboto-Light, Roboto;
+                font-weight: 300;
+                color: #10164B;
+            }
             .header-button{
                 text-align: right;
                 height: 19px;
@@ -55,13 +61,19 @@ const HeaderBg = styled.div`
                 font-family: Roboto-Light, Roboto;
                 font-weight: 300;
                 line-height: 19px;
+                display: flex;
+                /* align-items: center; */
+                justify-content: end;
             }
             img{
                 width: 18px;
                 height: 18px;
                 margin-left: 20px;
                 margin-right: 6px;
-                margin-top: -2px;
+                vertical-align: middle;
+            }
+            .createDAO{
+                margin-left: 20px;
             }
             .createDAO,.myDao,.logout{
                 cursor: pointer;
@@ -87,6 +99,8 @@ export default function Headertop(props) {
     const [daoExit, setdaoExit] = useState(false);
     const [first, setfirst] = useState(false);
     const [balanceOf, setbalanceOf] = useState(0);
+    const [showlist, setshowlist] = useState(false);
+    const [currentAccount, setcurrentAccount] = useState(null);
 
     useEffect(() => {
         setshowExit(createHashHistory.location.pathname === '/create');
@@ -182,6 +196,36 @@ export default function Headertop(props) {
 
     }
 
+    const [walletTips, setWalletTips] = useState(false);
+    const connectWallet = async () => {
+        setshowlist(true);
+        const accoutlist = await Accounts.accountlist();
+        if (typeof (accoutlist) === "string") {
+            setWalletTips(true)
+        } else {
+            setallList(accoutlist);
+        }
+    }
+
+    const [allList, setallList] = useState([]);
+
+    const selectAccounts = (val) => {
+        setcurrentAccount(val)
+    }
+
+    const changeAccounts = async (val) => {
+        let selected = allList.filter(i => i.address === currentAccount);
+        setselected(selected);
+        sessionStorage.setItem('account', JSON.stringify(selected));
+        dispatch({ type: 'SET_ALLACCOUNTS', payload: selected });
+        cancleShowlist()
+    }
+
+    const cancleShowlist = ()=>{
+        setshowlist(false);
+        setcurrentAccount(null)
+    }
+
     return (
         <HeaderBg className='header'>
             <div className="row">
@@ -193,19 +237,19 @@ export default function Headertop(props) {
                 <div className="rhtBtn">
                     <div className="header-button">
                         <Modal
-                            show={showButton}
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered
-                            onHide={() => setShowButton(false)}
+                            visible={showButton} onCancel={() => { setShowButton(false) }}
                         >
-                            <Modal.Header closeButton>
-                                <i className='fa fa-user-times homeTop' />
-                            </Modal.Header>
-                            <Modal.Body className='homebtm'>
-                                <h4>Please connect wallet</h4>
-                            </Modal.Body>
+                            {/* <Modal.Title closeButton> */}
+                            <i className='fa fa-user-times homeTop' />
+                            {/* </Modal.Title> */}
+                            {/* <Modal.Content className='homebtm'> */}
+                            <h4>Please connect wallet</h4>
+                            {/* </Modal.Content> */}
                         </Modal>
-                        {!!selected.length && 
+                        {!selected.length &&
+                            <Button type="text" className="signin" onClick={connectWallet}>Sign in</Button>
+                        }
+                        {!!selected.length &&
                             <div className='addressBrdr'>
                                 {AddresstoShow(selected[0].address)}
                                 <CopyStr address={selected[0].address} />
@@ -228,7 +272,7 @@ export default function Headertop(props) {
                         {
                             !first && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />{t('MyDAO')}</span>
                         }
-                        {!!selected.length && 
+                        {!!selected.length &&
                             <span className='logout' onClick={exitAccount}>
                                 {/* <img src={close} alt="" /> */}
                                 {t('logout')}
@@ -252,6 +296,41 @@ export default function Headertop(props) {
                     </div>
                 </div>
             </div>
+
+            {
+                showlist && !selected.length &&
+                <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
+                    <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Select You Account</h2>
+                    {/* <Modal.Content> */}
+                    <Select placeholder={t('SelectAccount')} style={{ width: '100%' }} onChange={selectAccounts}>
+                        {
+                            allList && allList.length && allList.map((opt) =>
+                                <Select.Option value={opt.address} key={opt.address}>{opt.meta.name}</Select.Option>
+                            )
+                        }
+                    </Select>
+                    <Button type="primary" style={{ width: '100%', margin: '100px 0 30px 0' }} onClick={changeAccounts}>
+                        Confirm
+                    </Button>
+                    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={cancleShowlist}>Cancel</div>
+                    {/* <div>
+                                <Modal
+                                    visible={showButton}
+                                    aria-labelledby="contained-modal-title-vcenter"
+                                    centered
+                                    onClose={() => setShowButton(false)}
+                                    className='newVoteBrdr homebtm'
+                                >
+                                    <Modal.Title closeButton />
+                                    <Modal.Content>
+                                        <h4>{t('connect')}</h4>
+                                    </Modal.Content>
+                                </Modal>
+                                <button onClick={handleClick}>{t('CreateDAO')}</button>
+                            </div> */}
+                    {/* </Modal.Content> */}
+                </Modal>
+            }
         </HeaderBg>
     );
 }
