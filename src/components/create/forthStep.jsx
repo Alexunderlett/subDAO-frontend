@@ -1,32 +1,80 @@
-import React, { useEffect, useState} from 'react';
-import {Button, Form, FormControl, InputGroup, Tabs, Tab, Modal} from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
 import remove from '../../images/shutdown.png';
 import add from '../../images/Add.png';
-import {useSubstrate} from "../../api/contracts";
+import { useSubstrate } from "../../api/contracts";
 import api from "../../api";
 import Loading from "../loading/Loading";
-import {Trans, Translation, useTranslation} from 'react-i18next';
+import { Trans, Translation, useTranslation } from 'react-i18next';
+import { Modal, Button, Input } from 'antd';
+import styled from 'styled-components';
+import right from '../../images/right.png';
 
-export default function ThirdStep(props){
+const Content = styled.div`
+    .line{
+        margin-top: 30px;
+        .title{
+            height: 21px;
+            font-size: 18px;
+            font-family: Roboto-Regular, Roboto;
+            font-weight: 400;
+            color: #10164B;
+            line-height: 21px;
+            margin-bottom: 10px;
+        }
+    }
+`
 
-    const {state, dispatch} = useSubstrate();
-    const {maincontract, daoManagercontract,orgcontract} = state;
+const Tip = styled.div`
+    text-align: center;
+    padding: 50px 20px;
+    font-size: 18px;
+    font-family: Roboto-Light, Roboto;
+    font-weight: 300;
+    color: #010643;
+    line-height: 21px;
+`
 
-    const [loading,setLoading]= useState(false);
-    const [tips,setTips]= useState('');
+const Info = styled.div`
+    margin-bottom: 60px;
 
-    const [admin,setAdmin]= useState(false);
-    const [token,setToken]= useState(true);
-    const [name,setname]= useState('');
-    const [symbol,setsymbol]= useState('');
-    const [supply,setsupply]= useState('');
-    const [adminlist,setadminlist]= useState([
+    .title{
+        height: 40px;
+        font-size: 34px;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #10134E;
+        line-height: 40px;
+    }
+    .detail{
+        width: 600px;
+        font-size: 18px;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #A6A6B7;
+        line-height: 22px;
+    }
+`
+
+export default function ThirdStep(props) {
+
+    const { state, dispatch } = useSubstrate();
+    const { maincontract, daoManagercontract, orgcontract } = state;
+
+    const [loading, setLoading] = useState(false);
+    const [tips, setTips] = useState('');
+
+    const [admin, setAdmin] = useState(false);
+    const [token, setToken] = useState(true);
+    const [name, setname] = useState('');
+    const [symbol, setsymbol] = useState('');
+    const [supply, setsupply] = useState('');
+    const [adminlist, setadminlist] = useState([
         {
             name: '',
             address: ''
         }
     ]);
-    const [tokenlist,settokenlist]= useState([
+    const [tokenlist, settokenlist] = useState([
         {
             address: '',
             token: ''
@@ -43,15 +91,15 @@ export default function ThirdStep(props){
 
     const [baseC, setbaseC] = useState(null);
 
-    const [contractlist,setcontractlist]= useState(null);
-    const [transfer,settransfer]= useState(false);
+    const [contractlist, setcontractlist] = useState(null);
+    const [transfer, settransfer] = useState(false);
 
-    const [queryAddrs,setqueryAddrs]= useState(false);
-    const [next,setnext]= useState(false);
-    const [daoinit,setDaoinit]= useState(false);
-    const [adminstate,setadminstate]= useState(false);
-    const [errorShow,seterrorShow]= useState(false);
-    const [errorTips,seterrorTips]= useState('');
+    const [queryAddrs, setqueryAddrs] = useState(false);
+    const [next, setnext] = useState(false);
+    const [daoinit, setDaoinit] = useState(false);
+    const [adminstate, setadminstate] = useState(false);
+    const [errorShow, seterrorShow] = useState(false);
+    const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
 
@@ -64,7 +112,7 @@ export default function ThirdStep(props){
             supply,
             tokenlist
         }
-        sessionStorage.setItem('forthStep',JSON.stringify(form))
+        sessionStorage.setItem('forthStep', JSON.stringify(form))
         toDataFormat()
     }
 
@@ -79,7 +127,7 @@ export default function ThirdStep(props){
             adminlist,
             tokenlist
         }
-        sessionStorage.setItem('forthStep',JSON.stringify(form))
+        sessionStorage.setItem('forthStep', JSON.stringify(form))
     }
 
     const addtoken = () => {
@@ -95,7 +143,7 @@ export default function ThirdStep(props){
 
     const setAddress = (e, index) => {
         let newArray = [...tokenlist];
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         newArray[index][name] = value;
         settokenlist(newArray)
     }
@@ -108,9 +156,9 @@ export default function ThirdStep(props){
     }
 
     const handleInput = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
 
-        switch(name){
+        switch (name) {
             case 'name':
                 setname(e.target.value);
                 break;
@@ -127,8 +175,8 @@ export default function ThirdStep(props){
     }
 
     const handleCheck = (e) => {
-        const {name, value} = e.target;
-        switch(name){
+        const { name, value } = e.target;
+        switch (name) {
             case 'admin':
                 setAdmin(!JSON.parse(value))
                 break;
@@ -140,9 +188,9 @@ export default function ThirdStep(props){
         }
     }
 
-    useEffect( () => {
+    useEffect(() => {
         let form = JSON.parse(sessionStorage.getItem('forthStep'));
-        if(form){
+        if (form) {
             // setAdmin(form.admin);
             setToken(form.token);
             setname(form.name);
@@ -154,7 +202,7 @@ export default function ThirdStep(props){
 
     }, []);
 
-    const toDataFormat = () =>{
+    const toDataFormat = () => {
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
         setdaoname(firstStep.name);
         setdesc(firstStep.description);
@@ -179,36 +227,36 @@ export default function ThirdStep(props){
 
 
 
-    useEffect( () => {
-        if(!start) return;
+    useEffect(() => {
+        if (!start) return;
 
         const secondStep = JSON.parse(sessionStorage.getItem('secondStep'));
 
-        if(secondStep && secondStep[0] && secondStep[0].id){
+        if (secondStep && secondStep[0] && secondStep[0].id) {
             const stepone = async () => {
                 setLoading(true);
                 setTips(t('InstanceByTemplate'));
-                await api.main.instanceByTemplate(maincontract, secondStep[0].id,(result) => {
+                await api.main.instanceByTemplate(maincontract, secondStep[0].id, (result) => {
                     setinstanceByTemplate(result);
-                    console.log("Step 1 =======instanceByTemplate",secondStep[0].id, parseInt(secondStep[0].id))
+                    console.log("Step 1 =======instanceByTemplate", secondStep[0].id, parseInt(secondStep[0].id))
                 }).catch((error) => {
                     seterrorShow(true)
                     seterrorTips(`instance By Template: ${error.message}`)
                     setLoading(false);
                     setstart(false);
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         window.location.reload()
-                    },2000)
+                    }, 2000)
 
                 });
             };
             stepone();
         }
-    }, [maincontract,start]);
+    }, [maincontract, start]);
 
 
-    useEffect( () => {
-        if (instanceByTemplate){
+    useEffect(() => {
+        if (instanceByTemplate) {
             console.log("Step 2 =======listDaoInstancesByOwner")
             const steptwo = async () => {
                 setTips(t('ListDao'));
@@ -224,7 +272,7 @@ export default function ThirdStep(props){
         }
     }, [instanceByTemplate]);
 
-    useEffect( () => {
+    useEffect(() => {
         if (baseC != null && instanceByTemplate) {
             console.log("Step 3 =======InitDAO")
             const stepthree = async () => {
@@ -236,9 +284,9 @@ export default function ThirdStep(props){
             stepthree();
         }
     }, [baseC]);
-    useEffect( () => {
-        if(daoinit && instanceByTemplate && baseC!=null){
-            console.log("Step 4 =======Upload information",baseC.dao_manager_addr);
+    useEffect(() => {
+        if (daoinit && instanceByTemplate && baseC != null) {
+            console.log("Step 4 =======Upload information", baseC.dao_manager_addr);
             let obj = {
                 base_name: daoname,
                 base_logo: logo,
@@ -249,7 +297,7 @@ export default function ThirdStep(props){
                 erc20_decimals: 0,
                 token,
                 tokenlist,
-                admin:adminstate,
+                admin: adminstate,
                 adminlist
             };
             if (daoManagercontract == null) return;
@@ -263,17 +311,17 @@ export default function ThirdStep(props){
                     seterrorTips(`Upload information: ${error.message}`)
                     setLoading(false);
                     setstart(false);
-                    setTimeout(()=>{
-                      window.location.reload()
-                    },2000)
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 2000)
                 });
             };
             stepfour();
         }
     }, [daoinit]);
 
-    useEffect( () => {
-        if(next){
+    useEffect(() => {
+        if (next) {
             sessionStorage.removeItem("step");
             sessionStorage.removeItem("secondStep");
             sessionStorage.removeItem("thirdStep");
@@ -281,138 +329,140 @@ export default function ThirdStep(props){
             sessionStorage.removeItem("firstStep");
             sessionStorage.removeItem("ImageUrl");
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 props.history.push(`home/about/${baseC.dao_manager_addr}`);
-            },2000)
+            }, 2000)
         }
     }, [next]);
 
 
-    return <div>
-        <Loading showLoading={loading} tips={tips}/>
+    return <Content className="content">
+        <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
         <Modal
-            show={errorShow}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => seterrorShow(false)}
-            className='newVoteBrdr homebtm'
+            visible={errorShow}
+            onCancel={() => seterrorShow(false)}
+            footer={null}
         >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4>{errorTips}</h4>
-            </Modal.Body>
+            <Tip>{errorTips}</Tip>
         </Modal>
+        <Info>
+            <div className="title">Template configuration</div>
+            <div className='detail'>Token Configuration</div>
+        </Info>
+
         <Translation>{t =>
-                <div  title={t('Token')} >
-                    {/*<div className='steptitle'>*/}
-                    {/*    <Form.Group controlId="formBasicCheckbox">*/}
-                    {/*        <Form.Check*/}
-                    {/*            type="checkbox"*/}
-                    {/*            label={t('Token')}*/}
-                    {/*            value={token}*/}
-                    {/*            checked={token}*/}
-                    {/*            name='token'*/}
-                    {/*            onChange={handleCheck}*/}
-                    {/*        />*/}
-                    {/*    </Form.Group>*/}
-                    {/*</div>*/}
-                    <div>
-                        <InputGroup className="mb-3">
-                            <div className='inputBrdr'>
-                                <FormControl
-                                    placeholder={t('FillToken')}
-                                    value={name}
-                                    checked={name}
-                                    name='name'
-                                    autoComplete="off"
-                                    onChange={handleInput}
-                                /></div>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <InputGroup className="mb-3">
-                            <div className='inputBrdr'>
-                                <FormControl
-                                    placeholder={t('FillSymbol')}
-                                    value={symbol}
-                                    checked={symbol}
-                                    name='symbol'
-                                    autoComplete="off"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <InputGroup className="mb-3">
-                            <div className='inputBrdr'>
-                                <FormControl
-                                    placeholder={t('FillSupply')}
-                                    value={supply}
-                                    checked={supply}
-                                    name='supply'
-                                    autoComplete="off"
-                                    onChange={handleInput}
-                                />
-                            </div>
-                        </InputGroup>
-                    </div>
-                    {tokenlist.map((i, index) => (
+            <div title={t('Token')} >
+                {/*<div className='steptitle'>*/}
+                {/*    <Form.Group controlId="formBasicCheckbox">*/}
+                {/*        <Form.Check*/}
+                {/*            type="checkbox"*/}
+                {/*            label={t('Token')}*/}
+                {/*            value={token}*/}
+                {/*            checked={token}*/}
+                {/*            name='token'*/}
+                {/*            onChange={handleCheck}*/}
+                {/*        />*/}
+                {/*    </Form.Group>*/}
+                {/*</div>*/}
 
-                        <div key={index} className='norow'>
-                            <div className="row">
-                                <div className="col-7">
-                                    <InputGroup className="mb-3">
-                                        <div className='inputBrdr'>
-                                            <FormControl
-                                                placeholder={t('FillAddress')}
-                                                value={tokenlist[index].address}
-                                                name='address'
-                                                autoComplete="off"
-                                                onChange={(event) => setAddress(event, index)}
-                                            />
-                                        </div>
-                                    </InputGroup>
-                                </div>
-                                <div className="col-5 flexBrdr">
-                                    <InputGroup className="mb-3">
-                                        <div className='inputBrdr'>
-                                            <FormControl
-                                                placeholder={t('FillTokenAmount')}
-                                                value={tokenlist[index].token}
-                                                name='token'
-                                                type='number'
-                                                autoComplete="off"
-                                                onChange={(event) => setAddress(event, index)}
-                                            />
-                                        </div>
-                                    </InputGroup>
-                                    {
-                                        !!index &&
-                                        <img src={remove} onClick={()=>removeToken(i, index)} className="removerht" alt=''/>
+                <div className="line">
+                    <div className="title"><Trans>Fill Token Name</Trans></div>
+                    <div className='inputBrdr'>
+                        <Input
+                            placeholder={t('FillToken')}
+                            value={name}
+                            checked={name}
+                            name='name'
+                            autoComplete="off"
+                            onChange={handleInput}
+                        /></div>
+                </div>
 
-                                    }
-                                </div>
-
-                            </div>
-                        </div>
-                    ))
-                    }
-
-                    <div>
-                        <button className="addToken" onClick={addtoken}><img src={add} className="addRht" alt=''/> {t('AddToken')}</button>
-
+                <div className="line">
+                    <div className="title"><Trans>Fill the symbol</Trans></div>
+                    <div className='inputBrdr'>
+                        <Input
+                            placeholder={t('FillSymbol')}
+                            value={symbol}
+                            checked={symbol}
+                            name='symbol'
+                            autoComplete="off"
+                            onChange={handleInput}
+                        />
                     </div>
                 </div>
 
+                <div className="line">
+                    <div className="title"><Trans>Fill the total supply</Trans></div>
+                    <div className='inputBrdr'>
+                        <Input
+                            placeholder={t('FillSupply')}
+                            value={supply}
+                            checked={supply}
+                            name='supply'
+                            autoComplete="off"
+                            onChange={handleInput}
+                        />
+                    </div>
+                </div>
+
+
+                {/* {tokenlist.map((i, index) => (
+                    <div key={index} className='norow'>
+                        <div className="row">
+                            <div className="col-7">
+                                <div className="mb-3">
+                                    <div className='inputBrdr'>
+                                        <Input
+                                            placeholder={t('FillAddress')}
+                                            value={tokenlist[index].address}
+                                            name='address'
+                                            autoComplete="off"
+                                            onChange={(event) => setAddress(event, index)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-5 flexBrdr">
+                                <div className="mb-3">
+                                    <div className='inputBrdr'>
+                                        <Input
+                                            placeholder={t('FillTokenAmount')}
+                                            value={tokenlist[index].token}
+                                            name='token'
+                                            type='number'
+                                            autoComplete="off"
+                                            onChange={(event) => setAddress(event, index)}
+                                        />
+                                    </div>
+                                </div>
+                                {
+                                    !!index &&
+                                    <img src={remove} onClick={() => removeToken(i, index)} className="removerht" alt='' />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                ))
+                }
+
+                <button className="addToken" onClick={addtoken}><img src={add} className="addRht" alt='' /> {t('AddToken')}</button> */}
+            </div>
+
         }
         </Translation>
-        <div className='step2brdr'>
-            <Button variant="outline-primary" className='leftBtn' onClick={toThirdStep}><Trans>think</Trans></Button>
-            <Button variant="primary" onClick={Submit}>Submit</Button>
+
+        <div className="line" style={{ textAlign: 'right', marginTop: '40px' }}>
+            <Button className='leftBtn' style={{ marginRight: '30px' }} onClick={toThirdStep}>
+                <img src={right} alt="" style={{ width: '20px' }} />
+                <Trans>think</Trans>
+            </Button>
+            <Button type="primary" onClick={Submit}>
+                Submit
+            </Button>
         </div>
 
-    </div>;
+    </Content>;
 
 }
 

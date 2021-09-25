@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Modal, Select, Button, Row, Col } from 'antd';
+import { Modal, Select, Button } from 'antd';
 import right from '../images/right.png';
 import { withRouter } from 'react-router-dom';
+import { useSubstrate } from "../api/contracts";
+import api from "../api";
 
 
 const DaoBody = styled.div`
@@ -23,23 +25,68 @@ const DaoBody = styled.div`
         }
     }
     .daos{
-        width: 100%;
+        width: calc(100% + 25px);
+        margin-left: -10px;
         height: 100%;
         display: flex;
         flex-wrap: wrap;
         overflow-y: auto;
         padding: 20px 0;
         .daoItem{
-            width: 90%;
-            margin-bottom: 20px;
+            width: 187px;
+            margin: 10px 20px;
         }
     }
 `
 
 
 const DaosModal = (props) => {
-    const {moreDaos, handleClose} = props
+    const { moreDaos, handleClose } = props
     const account = JSON.parse(sessionStorage.getItem('account'));
+
+    const { state, dispatch } = useSubstrate();
+    const { homepage, maincontract, allAccounts, myDao, apiState } = state;
+    const [selected, setselected] = useState([]);
+    const [imglist, setimglist] = useState([]);
+
+
+    useEffect(() => {
+        let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
+        if (selectedStorage) {
+            setselected(selectedStorage)
+        }
+        if (maincontract == null || (selected && !selected.length)) return;
+        const setInstances = async () => {
+            let addresslist = await api.main.listDaoInstances(maincontract);
+            console.log('===========addresslist============', addresslist)
+            let arr = [];
+
+            let mydaolist;
+            if (myDao === 'TRUE') {
+                mydaolist = addresslist.filter(i => i.owner === selected[0].address);
+            } else {
+                mydaolist = addresslist;
+            }
+            if (mydaolist && mydaolist.length) {
+
+                for (let item of mydaolist) {
+
+                    const data = await api.base.InitHome(state, item.dao_manager_addr);
+                    const logo = data && data.logo ? data.logo : '';
+                    arr.push({
+                        address: item.dao_manager_addr,
+                        logo
+                    });
+                }
+            }
+            console.info(222,arr)
+            setimglist(arr);
+            dispatch({ type: 'SET_HOME', payload: arr });
+        };
+        setInstances();
+
+    }, [allAccounts, maincontract, myDao]);
+
 
     const handleClick = () => {
         if (account != null && account.length) {
@@ -60,21 +107,19 @@ const DaosModal = (props) => {
                     <div className="left">There's always one for you</div>
                     <Button onClick={handleClick}>CreateDAO</Button>
                 </div>
-                <Row className="daos">
+                <div className="daos">
                     {
-                        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map(() =>
-                            <Col span={4}>
-                                <div className="daoItem">
-                                    <img src={right} alt="" />
-                                    <div className="title">Patract</div>
-                                    <div className="detail">
-                                        Litentry is built on Substrate, which inherits great features and the best technologies in
-                                    </div>
+                        imglist.map((item, index) =>
+                            <div key={item.address} className="daoItem">
+                                <img src={item.logo} alt="" />
+                                <div className="title">Patract</div>
+                                <div className="detail">
+                                    Litentry is built on Substrate, which inherits great features and the best technologies in
                                 </div>
-                            </Col>
+                            </div>
                         )
                     }
-                </Row>
+                </div>
             </DaoBody>
         </Modal>
     );

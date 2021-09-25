@@ -77,7 +77,7 @@ export default function ThirdStep(props){
     }, []);
 
         return <div>
-            <Loading showLoading={loading} tips={tips}/>
+            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Translation>{t =>
                 <div  title={t('Moderators')}>
                     <div className='steptitle'>

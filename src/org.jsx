@@ -123,7 +123,7 @@ export default function Org(props) {
         props.history.push(`/manage/${id}/${isOwner?1:0}/${isModerator?1:0}`)
     }
     const handleClicktoAbout = () => {
-        props.history.push(`/home/about/${id}`)
+        props.history.push(`/about/${id}`)
     }
     const handleClose = () => {
         setaddshow(false)
@@ -194,7 +194,7 @@ export default function Org(props) {
 
     return (
         <div>
-            <Loading showLoading={loading} tips={tips}/>
+            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Modal
                 show={errorShow}
                 aria-labelledby="contained-modal-title-vcenter"

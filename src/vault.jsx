@@ -172,12 +172,12 @@ export default function Vault(props){
         }
 
         const handleClicktoAbout = () => {
-            props.history.push(`/home/about/${props.match.params.id}`);
+            props.history.push(`/about/${props.match.params.id}`);
         }
 
         return (
             <div className='topTipsBrdr'>
-                <Loading showLoading={loading} tips={tips}/>
+                <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
                 {
                     showvaultTips && TipsNum && <div className="vaultTips">
 

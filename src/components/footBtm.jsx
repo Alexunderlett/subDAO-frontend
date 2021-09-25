@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import Twitter from '../images/Twitter.png';
 import LightPaper from '../images/LightPaper.png';
 import Medium from '../images/Medium.png';
+import { useLocation } from 'react-router-dom';
+
 
 const Footer = styled.div`
     width: 100%;
@@ -45,13 +47,24 @@ const Footer = styled.div`
     }
 `
 
-const FootBtm = () => {
+const FootBtm = (props) => {
+    const { pathname } = useLocation()
+    const [show, setshow] = useState(false)
+
+    useEffect(() => {
+        if (pathname !== '/home') {
+            setshow(false)
+        } else {
+            setshow(true)
+        }
+    }, [pathname])
+
     let { t } = useTranslation();
     return <section>
         <Footer>
-            <div className="row">
+            <div className="row" style={{ justifyContent: show ? 'space-between' : 'center' }}>
                 <div className="left">{t('right')}</div>
-                <div className='rht'>
+                {show && <div className='rht'>
                     <a href="https://www.subdao.network/" rel="noopener noreferrer" target="_blank">
                         {t('Website')}
                     </a>
@@ -70,9 +83,10 @@ const FootBtm = () => {
                         <img src={Twitter} alt="" />
                         Twitter
                     </a>
-                </div>
+                </div>}
             </div>
         </Footer>
     </section>;
 };
+
 export default FootBtm;

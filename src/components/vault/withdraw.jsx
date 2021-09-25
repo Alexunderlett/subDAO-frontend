@@ -71,7 +71,7 @@ import {useTranslation} from "react-i18next";
     let {handleClose, showTips} = props;
         return (
             <div>
-                <Loading showLoading={loading} tips={tips}/>
+                <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
                 <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
                     <Modal.Header closeButton>
                         <Modal.Title><img src={sender} alt=""/><span>{t('withdraw')}</span></Modal.Title>

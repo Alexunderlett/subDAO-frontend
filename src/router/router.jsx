@@ -20,7 +20,7 @@ function routerlink() {
             {/*<Route path="/" component={Home} exact/>*/}
 
             <Route path="/home" component={Home} />
-            {/*<Route  path="/about/:id" component={About}/>*/}
+            <Route  path="/about/:id" component={About}/>
             {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
             <Route path="/create" component={Createnew} />
             <Route path="/Vote/:id" component={Vote} />
