@@ -17,7 +17,7 @@ export default function Loading(props) {
     return <Modal
         visible={showLoading}
         className='loading'
-        onCancel={setLoading()}
+        onCancel={()=>setLoading()}
         footer={null}
     >
         <Tip className="waiting">{tips}</Tip>
