@@ -18,6 +18,16 @@ import styled from 'styled-components';
 
 
 import DemoImg from "./img/demo/t-1.png";
+import Owner from "./img/owner.png";
+import Admin from "./img/admin.png";
+import AUTH from "./img/AUTH.png";
+import Base from "./img/BASE.png";
+import Erc20 from "./img/ERC20.png";
+import ORG from "./img/ORG.png";
+import VAULT from "./img/VAULT.png";
+import VOTE from "./img/VOTE.png";
+import copy from "./img/copy.png";
+import MoreDaos from "./components/MoreDaos";
 
 
 const Tip = styled.div`
@@ -106,8 +116,6 @@ const BtnGroup = styled.div`
     font-weight: 400;
     color: #10164B;
     line-height: 3rem;
-     
-     
      &.active{
         border: 0.1rem solid #D51172;
          background: #FFEFF7;
@@ -118,16 +126,108 @@ const BtnGroup = styled.div`
 
 
 const Ul = styled.ul`
+    color: #10164B;
+    display: flex;
+
+    margin-left: -6.3rem;
   li{
     width: 31.3rem;
     height: 16rem;
     background: #FFFFFF;
     box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
     border-radius: 2.4rem;
-    padding: 2rem -2.8rem;
+    padding: 2rem 2.8rem;
     box-sizing: border-box;
+    word-break: break-all;    
+    margin-left: 6.3rem;
   }
 `;
+
+
+
+const BalanceNum = styled.div`
+    font-size: 3.2rem;
+    font-weight: 300;
+    line-height: 3.8rem;
+    margin-bottom: 0.1rem;
+`;
+
+const Symbol = styled.div`
+    font-size: 2.2rem;
+    font-weight: 300;
+    line-height: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+`;
+
+const Address = styled.div`
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 2.2rem;
+    opacity: 0.4;
+`;
+
+const UlMdrt = styled.ul`
+    color: #10164B;
+    display: flex;
+    margin-left: -6.3rem;
+  li{
+    width: 31.3rem;
+    height: 14rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+    border-radius: 2.4rem;
+    padding: 1rem 3.7rem 1rem 1rem ;
+    box-sizing: border-box;
+    word-break: break-all;    
+    margin-left: 6.3rem;
+    display: flex;
+    align-content: center;
+  }
+`;
+const Names = styled.div`
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 2.4rem;
+    margin-top: 1rem;
+`;
+
+const UlContr = styled.ul`
+  li{
+    width: 78rem;
+    height: 4.4rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 0.4rem 0 rgba(16, 22, 75, 0.1);
+    border-radius: 0.8rem;
+    padding: 1rem 3.7rem 1rem 1rem ;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    margin-bottom: 1.5rem;
+    img{
+ 
+    }
+  }
+`
+const ContractName = styled.div`
+    min-width: 6.3rem;
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin-right: 1rem;
+    line-height: 2.4rem;
+`;
+const Imglft = styled.img`
+   width: 3.2rem;
+    height: 3.2rem;
+    display: inline-block;
+    margin-top: -0.4rem;
+`;
+const CopyImg = styled.img`
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-left: 0.7rem;
+`
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
@@ -168,6 +268,8 @@ export default function About(props) {
 
     const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
+
+    const [moreDaos, setMoreDaos] = useState(true);
 
 
     // let { t } = useTranslation();
@@ -536,16 +638,113 @@ export default function About(props) {
                     <span>Org</span>
                 </BtnGroup>
 
-                <div>
+                <section>
                     <div className="titleTop">Balance</div>
                     <Ul>
                         <li>
-                            <div>5.8910</div>
-                            <div>DWT</div>
-                            <div>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</div>
+                            <BalanceNum>5.8910</BalanceNum>
+                            <Symbol>DWT</Symbol>
+                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
                         </li>
+                        <li>
+                            <BalanceNum>5.8910</BalanceNum>
+                            <Symbol>DWT</Symbol>
+                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                        </li>
+                        <li>
+                            <BalanceNum>5.8910</BalanceNum>
+                            <Symbol>DWT</Symbol>
+                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                        </li>
+                        <li>
+                            <BalanceNum>5.8910</BalanceNum>
+                            <Symbol>DWT</Symbol>
+                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                        </li>
+
                     </Ul>
-                </div>
+                </section>
+                <section>
+                    <div className="titleTop">Moderators</div>
+                    <UlMdrt>
+                        <li>
+                           <img src={Owner} alt=""/>
+                           <div>
+                               <Names>Dao Owner</Names>
+                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                           </div>
+                        </li>
+                        <li>
+                           <img src={Admin} alt=""/>
+                           <div>
+                               <Names>Dao Owner</Names>
+                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                           </div>
+                        </li>
+                        <li>
+                           <img src={Admin} alt=""/>
+                           <div>
+                               <Names>Dao Owner</Names>
+                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                           </div>
+                        </li>
+                        <li>
+                           <img src={Admin} alt=""/>
+                           <div>
+                               <Names>Dao Owner</Names>
+                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                           </div>
+                        </li>
+                    </UlMdrt>
+                </section>
+
+                <section>
+                    <div className="titleTop">Contracts</div>
+                    <UlContr>
+                        <li>
+                           <Imglft src={AUTH} alt=""/>
+                           <ContractName>AUTH</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+                        <li>
+                           <Imglft src={Base} alt=""/>
+                           <ContractName>BASE</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+                        <li>
+                           <Imglft src={Erc20} alt=""/>
+                           <ContractName>ERC20</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+                        <li>
+                           <Imglft src={ORG} alt=""/>
+                           <ContractName>ORG</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+                        <li>
+                           <Imglft src={VAULT} alt=""/>
+                           <ContractName>VAULT</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+                        <li>
+                           <Imglft src={VOTE} alt=""/>
+                           <ContractName>VOTE</ContractName>
+                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
+                            <CopyImg src={copy} alt=""/>
+                        </li>
+
+                    </UlContr>
+                </section>
+
+
+                <section>
+                    <MoreDaos showMoreDaos={moreDaos}/>
+                </section>
             </div>
 
 
