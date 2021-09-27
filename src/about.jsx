@@ -3,18 +3,22 @@ import { useSubstrate } from "./api/contracts";
 
 import api from './api/index';
 import Loading from "./components/loading/Loading";
-import votingimg from './images/voting.png';
-import orgimg from './images/org.png';
-import vaultimg from "./images/vault.png";
-import moreImg from "./images/menu.png";
-import transferImg from "./images/transfer.png";
-import exitImg from "./images/drop.png";
-import { useTranslation } from "react-i18next";
-import Transfer from "./components/transfer";
-import ExitOrg from "./components/exitOrg";
-import CopyStr from "./components/copy";
+// import votingimg from './images/voting.png';
+// import orgimg from './images/org.png';
+// import vaultimg from "./images/vault.png";
+// import moreImg from "./images/menu.png";
+// import transferImg from "./images/transfer.png";
+// import exitImg from "./images/drop.png";
+// import { useTranslation } from "react-i18next";
+// import Transfer from "./components/transfer";
+// import ExitOrg from "./components/exitOrg";
+// import CopyStr from "./components/copy";
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
+
+
+import DemoImg from "./img/demo/t-1.png";
+
 
 const Tip = styled.div`
     text-align: center;
@@ -28,19 +32,101 @@ const Tip = styled.div`
 
 const TopTitles = styled.div`
     width: 100%;
-    min-height: 170px;
+    min-height: 17rem;
     background: #FFFFFF;
-    box-shadow: 0px 0px 10px 0px rgba(16, 22, 75, 0.05);
-    border-radius: 24px;
+    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+    border-radius: 2.4rem;
     display: flex;
     justify-content: space-between;
     align-content: center;
+    padding: 3rem;
+    box-sizing: border-box;
+    margin-top: 4rem;
     img{
-    
+      width: 11rem;
+      height: 11rem;
+      border-radius: 2.4rem;
+      margin-right: 2rem;
     }
 `;
+const LftTop = styled.div`
+  display: flex;
+  justify-content: flex-start;
 
+`;
+const Tit = styled.div`
+    font-size: 2.8rem;
 
+    font-weight: 300;
+    color: #10164B;
+    line-height: 3.3rem;
+    margin: 1.3rem 0 1rem;
+`;
+const Contents = styled.div`
+     width: 73.6rem;
+     height: 5.4rem;
+     font-size: 1.6rem;
+     font-weight: 300;
+     color: #10164B;
+     line-height: 2.2rem;
+     .contentDesc{
+        font-size: 1.6rem;
+        font-weight: 300;
+        color: #10164B;
+        line-height: 2.16rem;
+     }
+`;
+
+const RhtTop = styled.div`
+  white-space: nowrap;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+  button{
+    font-size: 1.2rem!important;
+     border-radius: 0.4rem;
+     width: 9rem;
+     height: 3rem;
+  }
+`;
+
+const BtnGroup = styled.div`
+  margin-top: 6rem;
+  span{
+      border: 1px solid #B7B9C9;
+      width: 7rem;
+     height: 3rem;
+     border-radius: 0.4rem;
+     display: inline-block;
+     margin-right: 1rem;
+     text-align: center;
+    font-size: 1.2rem;
+    font-family: Roboto-Regular;
+    font-weight: 400;
+    color: #10164B;
+    line-height: 3rem;
+     
+     
+     &.active{
+        border: 0.1rem solid #D51172;
+         background: #FFEFF7;
+         color: #D51172;
+     }
+  }
+`;
+
+const Ul = styled.ul`
+  li{
+    width: 31.3rem;
+    height: 16rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+    border-radius: 2.4rem;
+    padding: 2rem -2.8rem;
+    box-sizing: border-box;
+  }
+`;
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
@@ -83,14 +169,14 @@ export default function About(props) {
     const [errorTips, seterrorTips] = useState('');
 
 
-    let { t } = useTranslation();
+    // let { t } = useTranslation();
     const myRef = useRef();
 
     useEffect(() => {
         if (apiState !== 'READY') return;
         const setInitDAO = async () => {
             setLoading(true)
-            setTips(t('InitializeDAO'));
+            setTips('InitializeDAO');
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data)
@@ -154,7 +240,7 @@ export default function About(props) {
 
         if (org_addr != null) {
             const setInitOrg = async () => {
-                setTips(t('InitializingContracts'));
+                setTips('InitializingContracts');
                 await api.org.InitOrg(state, dispatch, org_addr, (data) => {
                     setorgstate(data)
                 });
@@ -329,7 +415,7 @@ export default function About(props) {
     const handleExitConfirm = async () => {
         setShowModal(false);
         setLoading(true);
-        setTips(t('ExitDAO'));
+        setTips('ExitDAO');
         if (isMember) {
             await api.org.resignMember(orgcontract, function (result) {
                 if (!result) return;
@@ -427,8 +513,38 @@ export default function About(props) {
                 <Tip>{errorTips}</Tip>
             </Modal>
 
-            <div className="">
-                <TopTitles></TopTitles>
+            <div className='container'>
+                <TopTitles>
+                    <LftTop>
+                        <img src={DemoImg} alt=""/>
+                        <Contents>
+                            <Tit>Patract</Tit>
+                            <div className="contentDesc">Plasm Network is built on Parity Substrate and designedto be a Polkadot Parachain.ParitySubstrate and designedto be a Polkadot Parachain.</div>
+                        </Contents>
+                    </LftTop>
+
+                    <RhtTop>
+                        <Button type="primary">Join</Button>
+                    </RhtTop>
+                </TopTitles>
+
+                <BtnGroup>
+                    <span className="active">Home</span>
+                    <span>Voting</span>
+                    <span>Vault</span>
+                    <span>Org</span>
+                </BtnGroup>
+
+                <div>
+                    <div>Balance</div>
+                    <Ul>
+                        <li>
+                            <div>5.8910</div>
+                            <div>DWT</div>
+                            <div>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</div>
+                        </li>
+                    </Ul>
+                </div>
             </div>
 
 

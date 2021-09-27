@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
 body,html{
   color: #10164B !important;
   background: #F9FAFF !important;
-  font-family: Roboto-Light, Roboto !important;
+  font-family: Roboto-Light!important;
   height: 100% !important;
 
   .maincontainer{
@@ -24,14 +24,18 @@ body,html{
         }
     }
   }
-
+  ul,li{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
   .btn{
     cursor: pointer;
     margin-right: 20px;
     // border: 1px solid #EE42D1;
     padding: 13px 28px;
     font-size: 24px;
-    font-family: PingFangSC-Regular, PingFang SC;
+    font-family: PingFangSC-Regular;
     background: #D52473;
     color: #FFFFFF;
     outline: none;
