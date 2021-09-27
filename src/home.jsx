@@ -20,8 +20,6 @@ const HomeBg = styled.div`
     height: 100%;
 
     .homeTips{
-        width: 75%;
-        margin: 0 auto;
         display: flex;
         flex-direction: column;
 
@@ -33,7 +31,7 @@ const HomeBg = styled.div`
                 flex-grow: 1;
                 max-width: 726px;
                 .hometitle{
-                    font-size: 80px;
+                    font-size: 8rem;
                     color: #10134E;
                     line-height: 94px;
                     span{
@@ -58,8 +56,8 @@ const HomeBg = styled.div`
                 display: flex;
                 flex-direction: column;
                 img{
-                    width: 400px;
-                    height: 394px;
+                    width: 32rem;
+                    height: 32rem;
                     background: #D52473;
                 }
             }
@@ -218,7 +216,7 @@ function Home(props) {
                 <h4>{t('noWallet')}</h4>
             </Modal>
 
-            <section className='homeTips'>
+            <section className='homeTips container'>
                 <div className="top">
                     <div className="left">
                         <div className="hometitle">

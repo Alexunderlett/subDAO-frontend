@@ -17,6 +17,11 @@ body,html{
 
     .bodycontainer {
         flex-grow: 1;
+
+        .container{
+          width: 144rem;
+          margin: 0 auto;
+        }
     }
   }
 

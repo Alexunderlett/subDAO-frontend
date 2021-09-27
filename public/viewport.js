@@ -5,7 +5,7 @@
     recalc = function() {
       var clientWidth = docEl.clientWidth
       if (!clientWidth) return
-      docEl.style.fontSize = 40 * (clientWidth / 1920) + 'px'
+      docEl.style.fontSize = 10 * (clientWidth / 1920) + 'px'
       // 设置data-dpr属性，留作的css hack之用
       docEl.setAttribute('data-dpr', dpr)
       var delObj = document.getElementById('loading')
