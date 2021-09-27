@@ -29,6 +29,14 @@ body,html{
     padding: 0;
     margin: 0;
   }
+  .titleTop{
+    font-size: 1.8rem;
+    font-family: Roboto-Regular;
+    font-weight: 400;
+    color: #10164B;
+    line-height: 2.1rem;
+    margin:3rem 0 2rem;
+  }
   .btn{
     cursor: pointer;
     margin-right: 20px;

@@ -116,6 +116,7 @@ const BtnGroup = styled.div`
   }
 `;
 
+
 const Ul = styled.ul`
   li{
     width: 31.3rem;
@@ -536,7 +537,7 @@ export default function About(props) {
                 </BtnGroup>
 
                 <div>
-                    <div>Balance</div>
+                    <div className="titleTop">Balance</div>
                     <Ul>
                         <li>
                             <div>5.8910</div>
