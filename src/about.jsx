@@ -24,7 +24,20 @@ const Tip = styled.div`
     font-weight: 300;
     color: #010643;
     line-height: 21px;
-`
+`;
+
+const TopTitles = styled.div`
+    width: 100%;
+    min-height: 170px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px 0px rgba(16, 22, 75, 0.05);
+    border-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    img
+`;
+
 
 
 export default function About(props) {
@@ -412,179 +425,190 @@ export default function About(props) {
                 <Tip>{errorTips}</Tip>
             </Modal>
 
-            <section className="section blog-single position-relative">
-                <div className="row">
-                    <aside className="col-lg-3">
-                        {
-                            info && <div animation="border" variant="light" />
-                        }
-                        {
-                            !info && <ul className='leftSide'>
-                                <li>
-                                    <h2>SubDAO</h2>
-                                    <div className='titleTips'>{t('DAOdescription')}</div>
-                                </li>
-                                <li><img src={logo} alt="" /></li>
-                                <li className='lftname'>{name}</li>
-                                <li>{owner}<CopyStr address={owner} /></li>
-                                <li>{description}</li>
-                            </ul>
-                        }
-
-                    </aside>
-                    <Transfer
-                        showTips={showTransfer}
-                        handleClose={handleClose}
-                    />
-                    <ExitOrg
-                        handleClose={handleExitClose}
-                        handleConfirm={() => handleExitConfirm()}
-                        showTips={showModal} />
-                    <div className="col-lg-9 ">
-                        <div>
-                            <ul className="service-docs">
-                                {
-                                    contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>
-                                        <span>
-                                            <img src={votingimg} alt='' />
-                                            {t('Voting')}
-                                        </span>
-                                    </li>
-                                }
-                                {/*{*/}
-                                {/*    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>*/}
-                                {/*        <span>*/}
-                                {/*            <img src={vaultimg}/>*/}
-                                {/*            {t('Vault')}*/}
-                                {/*        </span>*/}
-                                {/*    </li>*/}
-                                {/*} */}
-                                {
-                                    <li onClick={() => handleClicktoType('vault')}>
-                                        <span>
-                                            <img src={vaultimg} alt='' />
-                                            {t('Vault')}
-                                        </span>
-                                    </li>
-                                }
-
-                                {/*{*/}
-                                {/*    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>*/}
-                                {/*        <span>*/}
-                                {/*            <img src={orgimg}/>*/}
-                                {/*            {t('Org')}*/}
-                                {/*        </span>*/}
-                                {/*    </li>*/}
-                                {/*}*/}
-                                {
-                                    <li onClick={() => handleClicktoType('org')}>
-                                        <span>
-                                            <img src={orgimg} alt='' />
-                                            {t('Org')}
-                                        </span>
-                                    </li>
-                                }
-                                {(isOwner || isMember || isModerator) &&
-                                    <li>
-                                        <div className='moreBtn'>
-                                            <div
-                                                className={`moreBg ${showMore ? 'hasBg' : 'noBg'}`}
-                                            >
-                                                <button className="btn">
-                                                    <span onClick={handleMore} className='clickBtn' ref={myRef}>
-                                                        <img src={moreImg} alt='' />
-                                                        {t('More')}
-                                                    </span>
-                                                </button>
-                                                {
-                                                    showMore && (isOwner || isMember || isModerator) && <ul className='morelist'>
-                                                        {
-                                                            isOwner && <li onClick={handleTransfer}>
-                                                                <span><img src={transferImg} alt="" /></span>{t('transferBtn')}
-                                                            </li>
-                                                        }
-                                                        {(isMember || isModerator) &&
-                                                            <li onClick={handleExit}><span><img src={exitImg} alt="" /></span>{t('Exit')}</li>
-                                                        }
+            <div className="">
+                <TopTitles></TopTitles>
+            </div>
 
 
-                                                    </ul>
-                                                }
-                                            </div>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                        <div className="norow">
-                            <div className="row">
-                                <div className="col-lg-5">
-                                    <div className='balance'>
-                                        <h3>{t('Balance')}</h3>
-                                        <div className="listwrap">
-                                            <div className='listbg'>
-                                                <div className="listbalance">
-                                                    {
-                                                        balanceshow && <div animation="border" variant="light" />
-                                                    }
-                                                    {
-                                                        !balanceshow && balancelist.map((item, index) =>
-                                                            <dl key={`balance_${index}`}>
-                                                                <dd className='symbol'>{item.balance} {item.symbol}</dd>
-                                                                {/*<dt>{item.address}</dt>*/}
-                                                                <dt>{item.name}</dt>
-                                                            </dl>
-                                                        )
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='balance'>
-                                        <h3>{t('Moderators')}</h3>
-                                        <div className="listwrap">
-                                            <div className='listbg'>
-                                                <div className="listbalance">
-                                                    {
-                                                        moderatorShow && <div animation="border" variant="light" />
-                                                    }
-                                                    {
-                                                        !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
-                                                            <dd>{moderators[index][1]}</dd>
-                                                            <dt>{moderators[index][0]}</dt>
-                                                        </dl>)
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-7">
 
-                                    <div className='contracts'>
-                                        <h3>{t('Contracts')}</h3>
-                                        {
-                                            !contractshow && contractlist != null && <ul className='list'>{
-                                                Object.keys(contractlist).map((key) => (
-                                                    (contractlist[key] != null && <li key={`contract_${key}`}>
-                                                        <span>{switchKey(key)} </span>
-                                                        {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]} />
-                                                    </li>
-                                                    )))
-                                            }
-                                            </ul>
-                                        }
-                                        {
-                                            contractshow && <div animation="border" variant="light" />
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-            </section>
+
+
+
+
+            {/*<section className="section blog-single position-relative">*/}
+            {/*    <div className="row">*/}
+            {/*        <aside className="col-lg-3">*/}
+            {/*            {*/}
+            {/*                info && <div animation="border" variant="light" />*/}
+            {/*            }*/}
+            {/*            {*/}
+            {/*                !info && <ul className='leftSide'>*/}
+            {/*                    <li>*/}
+            {/*                        <h2>SubDAO</h2>*/}
+            {/*                        <div className='titleTips'>{t('DAOdescription')}</div>*/}
+            {/*                    </li>*/}
+            {/*                    <li><img src={logo} alt="" /></li>*/}
+            {/*                    <li className='lftname'>{name}</li>*/}
+            {/*                    <li>{owner}<CopyStr address={owner} /></li>*/}
+            {/*                    <li>{description}</li>*/}
+            {/*                </ul>*/}
+            {/*            }*/}
+
+            {/*        </aside>*/}
+            {/*        <Transfer*/}
+            {/*            showTips={showTransfer}*/}
+            {/*            handleClose={handleClose}*/}
+            {/*        />*/}
+            {/*        <ExitOrg*/}
+            {/*            handleClose={handleExitClose}*/}
+            {/*            handleConfirm={() => handleExitConfirm()}*/}
+            {/*            showTips={showModal} />*/}
+            {/*        <div className="col-lg-9 ">*/}
+            {/*            <div>*/}
+            {/*                <ul className="service-docs">*/}
+            {/*                    {*/}
+            {/*                        contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>*/}
+            {/*                            <span>*/}
+            {/*                                <img src={votingimg} alt='' />*/}
+            {/*                                {t('Voting')}*/}
+            {/*                            </span>*/}
+            {/*                        </li>*/}
+            {/*                    }*/}
+            {/*                    /!*{*!/*/}
+            {/*                    /!*    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>*!/*/}
+            {/*                    /!*        <span>*!/*/}
+            {/*                    /!*            <img src={vaultimg}/>*!/*/}
+            {/*                    /!*            {t('Vault')}*!/*/}
+            {/*                    /!*        </span>*!/*/}
+            {/*                    /!*    </li>*!/*/}
+            {/*                    /!*} *!/*/}
+            {/*                    {*/}
+            {/*                        <li onClick={() => handleClicktoType('vault')}>*/}
+            {/*                            <span>*/}
+            {/*                                <img src={vaultimg} alt='' />*/}
+            {/*                                {t('Vault')}*/}
+            {/*                            </span>*/}
+            {/*                        </li>*/}
+            {/*                    }*/}
+
+            {/*                    /!*{*!/*/}
+            {/*                    /!*    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>*!/*/}
+            {/*                    /!*        <span>*!/*/}
+            {/*                    /!*            <img src={orgimg}/>*!/*/}
+            {/*                    /!*            {t('Org')}*!/*/}
+            {/*                    /!*        </span>*!/*/}
+            {/*                    /!*    </li>*!/*/}
+            {/*                    /!*}*!/*/}
+            {/*                    {*/}
+            {/*                        <li onClick={() => handleClicktoType('org')}>*/}
+            {/*                            <span>*/}
+            {/*                                <img src={orgimg} alt='' />*/}
+            {/*                                {t('Org')}*/}
+            {/*                            </span>*/}
+            {/*                        </li>*/}
+            {/*                    }*/}
+            {/*                    {(isOwner || isMember || isModerator) &&*/}
+            {/*                        <li>*/}
+            {/*                            <div className='moreBtn'>*/}
+            {/*                                <div*/}
+            {/*                                    className={`moreBg ${showMore ? 'hasBg' : 'noBg'}`}*/}
+            {/*                                >*/}
+            {/*                                    <button className="btn">*/}
+            {/*                                        <span onClick={handleMore} className='clickBtn' ref={myRef}>*/}
+            {/*                                            <img src={moreImg} alt='' />*/}
+            {/*                                            {t('More')}*/}
+            {/*                                        </span>*/}
+            {/*                                    </button>*/}
+            {/*                                    {*/}
+            {/*                                        showMore && (isOwner || isMember || isModerator) && <ul className='morelist'>*/}
+            {/*                                            {*/}
+            {/*                                                isOwner && <li onClick={handleTransfer}>*/}
+            {/*                                                    <span><img src={transferImg} alt="" /></span>{t('transferBtn')}*/}
+            {/*                                                </li>*/}
+            {/*                                            }*/}
+            {/*                                            {(isMember || isModerator) &&*/}
+            {/*                                                <li onClick={handleExit}><span><img src={exitImg} alt="" /></span>{t('Exit')}</li>*/}
+            {/*                                            }*/}
+
+
+            {/*                                        </ul>*/}
+            {/*                                    }*/}
+            {/*                                </div>*/}
+            {/*                            </div>*/}
+            {/*                        </li>*/}
+            {/*                    }*/}
+            {/*                </ul>*/}
+            {/*            </div>*/}
+            {/*            <div className="norow">*/}
+            {/*                <div className="row">*/}
+            {/*                    <div className="col-lg-5">*/}
+            {/*                        <div className='balance'>*/}
+            {/*                            <h3>{t('Balance')}</h3>*/}
+            {/*                            <div className="listwrap">*/}
+            {/*                                <div className='listbg'>*/}
+            {/*                                    <div className="listbalance">*/}
+            {/*                                        {*/}
+            {/*                                            balanceshow && <div animation="border" variant="light" />*/}
+            {/*                                        }*/}
+            {/*                                        {*/}
+            {/*                                            !balanceshow && balancelist.map((item, index) =>*/}
+            {/*                                                <dl key={`balance_${index}`}>*/}
+            {/*                                                    <dd className='symbol'>{item.balance} {item.symbol}</dd>*/}
+            {/*                                                    /!*<dt>{item.address}</dt>*!/*/}
+            {/*                                                    <dt>{item.name}</dt>*/}
+            {/*                                                </dl>*/}
+            {/*                                            )*/}
+            {/*                                        }*/}
+            {/*                                    </div>*/}
+            {/*                                </div>*/}
+            {/*                            </div>*/}
+            {/*                        </div>*/}
+            {/*                        <div className='balance'>*/}
+            {/*                            <h3>{t('Moderators')}</h3>*/}
+            {/*                            <div className="listwrap">*/}
+            {/*                                <div className='listbg'>*/}
+            {/*                                    <div className="listbalance">*/}
+            {/*                                        {*/}
+            {/*                                            moderatorShow && <div animation="border" variant="light" />*/}
+            {/*                                        }*/}
+            {/*                                        {*/}
+            {/*                                            !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>*/}
+            {/*                                                <dd>{moderators[index][1]}</dd>*/}
+            {/*                                                <dt>{moderators[index][0]}</dt>*/}
+            {/*                                            </dl>)*/}
+            {/*                                        }*/}
+            {/*                                    </div>*/}
+            {/*                                </div>*/}
+            {/*                            </div>*/}
+            {/*                        </div>*/}
+            {/*                    </div>*/}
+            {/*                    <div className="col-lg-7">*/}
+
+            {/*                        <div className='contracts'>*/}
+            {/*                            <h3>{t('Contracts')}</h3>*/}
+            {/*                            {*/}
+            {/*                                !contractshow && contractlist != null && <ul className='list'>{*/}
+            {/*                                    Object.keys(contractlist).map((key) => (*/}
+            {/*                                        (contractlist[key] != null && <li key={`contract_${key}`}>*/}
+            {/*                                            <span>{switchKey(key)} </span>*/}
+            {/*                                            {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]} />*/}
+            {/*                                        </li>*/}
+            {/*                                        )))*/}
+            {/*                                }*/}
+            {/*                                </ul>*/}
+            {/*                            }*/}
+            {/*                            {*/}
+            {/*                                contractshow && <div animation="border" variant="light" />*/}
+            {/*                            }*/}
+            {/*                        </div>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+
+            {/*</section>*/}
         </div>
     )
 
