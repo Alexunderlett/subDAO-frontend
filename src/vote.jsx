@@ -42,7 +42,7 @@ export default function Vote(props){
         setnewshow(false)
     }
     const  handleClicktoAbout = () => {
-        props.history.push(`/home/about/${props.match.params.id}`);
+        props.history.push(`/about/${props.match.params.id}`);
     }
     useEffect(async () => {
         setAId(props.match.params.id);
@@ -106,7 +106,7 @@ export default function Vote(props){
 
         return (
             <div>
-                <Loading showLoading={loading} tips={tips}/>
+                <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
                 <section>
                         <div className=" row">
 

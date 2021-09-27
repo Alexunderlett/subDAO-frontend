@@ -3,7 +3,7 @@ import Slick from "./components/slick";
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
 import Loading from "./components/loading/Loading";
-import Subrouterlink from './router/subRouter';
+// import Subrouterlink from './router/subRouter';
 import { withRouter } from 'react-router-dom';
 import homeimg from './images/home.png'
 import Accounts from "./api/Account";
@@ -12,7 +12,7 @@ import down from './images/down.png';
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import { Modal, Select, Button, Row, Col } from 'antd';
-import DaosModal from "./components/DaosModal";
+import MoreDaos from './components/MoreDaos';
 
 
 const HomeBg = styled.div`
@@ -67,27 +67,23 @@ const HomeBg = styled.div`
     }
 `
 
-const MoreDaos = styled.div`
-    display: flex;
-    flex-direction: column;
-
-    .more{
-        text-align: right;
-        cursor: pointer;
-        height: 25px;
-        font-size: 18px;
-        font-family: PingFang-SC-Medium, PingFang-SC;
-        font-weight: 500;
-        color: #10164B;
-        line-height: 25px;
-        margin-bottom: 20px;
+const SelectAccount = styled.div`
+    .title{
+        font-size: 34px;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #010643;
+        line-height: 40px;
     }
-    .daos{
-        display: flex;
-        justify-content: space-around;
+    .detail{
+        font-size: 24px;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #A6A6B7;
+        line-height: 28px;
+        margin-top: 18px;
     }
 `
-
 
 function Home(props) {
     const { state, dispatch } = useSubstrate();
@@ -102,10 +98,10 @@ function Home(props) {
     const [first, setfirst] = useState(true);
     const [imglist, setimglist] = useState([]);
     const [walletTips, setWalletTips] = useState(false);
-    const [moreDaos, setMoreDaos] = useState(false);
 
     const [selected, setselected] = useState([]);
-
+    const [createDAOModal, setcreateDAOModal] = useState(false);
+    const [moreDaos, setMoreDaos] = useState(false);
 
 
     const account = JSON.parse(sessionStorage.getItem('account'));
@@ -161,25 +157,28 @@ function Home(props) {
             setimglist(arr);
             setLoading(false)
             dispatch({ type: 'SET_HOME', payload: arr });
-
         };
         setInstances();
 
     }, [allAccounts, maincontract, myDao, first]);
 
     useEffect(() => {
+        setcreateDAOModal(!!selected && !!selected.length && (!imglist || !imglist.length))
+    }, [selected, imglist])
+
+    useEffect(() => {
         setimglist(homepage);
 
         if (myDao === 'TRUE') {
             if (homepage && homepage[0]) {
-                props.history.push(`/home/about/${homepage[0].address}`)
+                props.history.push(`/about/${homepage[0].address}`)
             } else {
                 props.history.push(`/home`)
             }
 
         } else {
             if (props.history.location.pathname === '/home' && homepage && homepage[0]) {
-                props.history.push(`/home/about/${homepage[0].address}`)
+                props.history.push(`/about/${homepage[0].address}`)
             } else if (props.history.location.pathname.indexOf('/home') > -1 && homepage && !homepage.length) {
                 props.history.push(`/home`)
             }
@@ -188,82 +187,64 @@ function Home(props) {
 
     return (
         <HomeBg>
-            <Loading showLoading={loading} tips={t('InitializeHome')} />
-            <div>
-                <Subrouterlink />
-            </div>
-            <section className="padding">
-                {
-                    !!imglist && !!imglist.length && !!selected && !!selected.length && <Slick list={imglist} history={props.history} />
-                }
-                {
-                    !!selected && !!selected.length && (!imglist || !imglist.length) && <div className='selectAccount'>
+            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={t('InitializeHome')} />
+            {/* <Subrouterlink /> */}
 
-                        <h3> {t('noDao')}</h3>
-                        <div className='accountTips'>{t('canCreateDao')}</div>
-                        <div className='createMy'><Button onClick={handleClick}>{t('CreateDAO')}</Button></div>
-                    </div>
-                }
+            <section className="padding">
+                {/* {
+                    !!imglist && !!imglist.length && !!selected && !!selected.length && <Slick list={imglist} history={props.history} />
+                } */}
+                <Modal
+                    visible={createDAOModal}
+                    onCancel={() => setcreateDAOModal(false)}
+                    footer={null}
+                >
+                    <SelectAccount>
+                        <div className="title"> {t('noDao')}</div>
+                        <div className="detail">
+                            You can join other DAOs or create your own DAO!
+                        </div>
+                        <Button type="primary" style={{ width: '100%', margin: '80px 0 30px 0' }} onClick={() => { setcreateDAOModal(false); setMoreDaos(true) }}>Browse other DAOs</Button>
+                        <Button style={{ width: '100%' }} onClick={handleClick}>{t('CreateDAO')}</Button>
+                    </SelectAccount>
+                </Modal>
             </section>
+
             <Modal
                 visible={walletTips}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
                 onCancel={() => setWalletTips(false)}
-                className='newVoteBrdr homebtm'
+                footer={null}
             >
-                {/* <Modal.Title closeButton /> */}
-                {/* <Modal.Content> */}
                 <h4>{t('noWallet')}</h4>
-                {/* </Modal.Content> */}
             </Modal>
-            {
-                !selected.length &&
-                <section className='homeTips'>
-                    <div className="top">
-                        <div className="left">
-                            <div className="hometitle">
-                                Access <span>DAO</span> Anytime, Anywhere
-                            </div>
-                            <div className='homeDesc'>
-                                {t('homeDescription')}
-                            </div>
-                            {/*<img src={homeimg} alt=""/>*/}
-                            <div className="header-button">
-                                <Button type="primary">
-                                    {t('ConnectWallet')}
-                                    <img src={right} alt="" style={{ width: '20px' }} />
-                                </Button>
-                                {
-                                    // !showlist && !selected.length && !allList.length
-                                }
-                            </div>
+
+            <section className='homeTips'>
+                <div className="top">
+                    <div className="left">
+                        <div className="hometitle">
+                            Access <span>DAO</span> Anytime, Anywhere
                         </div>
-                        <div className="right">
-                            <img src={right} alt="" />
+                        <div className='homeDesc'>
+                            {t('homeDescription')}
                         </div>
-                    </div>
-                    <MoreDaos>
-                        <div className="more" onClick={() => { setMoreDaos(true) }}>
-                            More DAOs<span>···</span>
-                        </div>
-                        <div className="daos">
+                        {/*<img src={homeimg} alt=""/>*/}
+                        <div className="header-button">
+                            <Button type="primary">
+                                {t('ConnectWallet')}
+                                <img src={right} alt="" style={{ width: '20px' }} />
+                            </Button>
                             {
-                                [1, 1, 1, 1, 1].map(() =>
-                                    <div className="daoItem">
-                                        <img src={right} alt="" />
-                                        <div className="title">Patract</div>
-                                        <div className="detail">
-                                            Litentry is built on Substrate, which inherits great features and the best technologies in
-                                        </div>
-                                    </div>
-                                )
+                                // !showlist && !selected.length && !allList.length
                             }
                         </div>
-                        <DaosModal moreDaos={moreDaos} handleClose={() => { setMoreDaos(false) }}/>
-                    </MoreDaos>
-                </section>
-            }
+                    </div>
+                    <div className="right">
+                        <img src={right} alt="" />
+                    </div>
+                </div>
+
+                <MoreDaos showMoreDaos={moreDaos}/>
+            </section>
         </HomeBg>
     )
 }

@@ -71,6 +71,9 @@ body,html{
           top: 6px;
           right: 6px;
         }
+        .ant-modal-body{
+          padding-top: 50px;
+        }
       }
     }
   }
@@ -103,6 +106,11 @@ body,html{
     }
   }
 
+  .content{
+    padding: 40px 0;
+  }
+
+
   .daoItem{
     width: 200px;
     height: 268px;
@@ -116,7 +124,7 @@ body,html{
 
     &:hover{
         background: #FFEFF7;
-        transform: scale(1.1);
+        transform: scale(1.05);
         .title{
             color: #D52473;
         }

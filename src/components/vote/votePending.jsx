@@ -68,7 +68,7 @@ export default function VotePending(props) {
         props.history.push(`/voteOverview/${id}/${voteid}`)
     }
     return (<div className='votePending'>
-        <Loading showLoading={loading} tips={tips}/>
+        <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
         <Modal
             show={errorShow}
             aria-labelledby="contained-modal-title-vcenter"

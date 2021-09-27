@@ -1,27 +1,38 @@
-import React, {useEffect, useState,useRef} from 'react';
-import {useSubstrate} from "./api/contracts";
+import React, { useEffect, useState, useRef } from 'react';
+import { useSubstrate } from "./api/contracts";
 
 import api from './api/index';
 import Loading from "./components/loading/Loading";
 import votingimg from './images/voting.png';
-import orgimg from  './images/org.png';
+import orgimg from './images/org.png';
 import vaultimg from "./images/vault.png";
 import moreImg from "./images/menu.png";
 import transferImg from "./images/transfer.png";
 import exitImg from "./images/drop.png";
-import {useTranslation} from "react-i18next";
-
-import { Modal, Spinner} from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import Transfer from "./components/transfer";
 import ExitOrg from "./components/exitOrg";
 import CopyStr from "./components/copy";
+import { Modal, Button, Input } from 'antd';
+import styled from 'styled-components';
+
+const Tip = styled.div`
+    text-align: center;
+    padding: 50px 20px;
+    font-size: 18px;
+    font-family: Roboto-Light, Roboto;
+    font-weight: 300;
+    color: #010643;
+    line-height: 21px;
+`
+
 
 export default function About(props) {
-    const {state, dispatch} = useSubstrate();
-    const {basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState,erc20contract} = state;
+    const { state, dispatch } = useSubstrate();
+    const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract } = state;
 
-    const [loading,setLoading]= useState(false);
-    const [tips,setTips]= useState('');
+    const [loading, setLoading] = useState(false);
+    const [tips, setTips] = useState('');
 
     const [id, setAId] = useState(null);
     const [name, setName] = useState('');
@@ -53,8 +64,8 @@ export default function About(props) {
     const [delMem, setdelMem] = useState(false);
     const [delAdmin, setdelAdmin] = useState(false);
 
-    const [errorShow,seterrorShow]= useState(false);
-    const [errorTips,seterrorTips]= useState('');
+    const [errorShow, seterrorShow] = useState(false);
+    const [errorTips, seterrorTips] = useState('');
 
 
     let { t } = useTranslation();
@@ -73,7 +84,7 @@ export default function About(props) {
 
         };
         setInitDAO();
-    }, [apiState,id]);
+    }, [apiState, id]);
     useEffect(() => {
         setcontractlist([]);
         setcontractshow(true);
@@ -87,25 +98,25 @@ export default function About(props) {
         setAId(props.match.params.id);
 
     }, [props.match.params.id]);
-    useEffect( () => {
+    useEffect(() => {
         if (daoManagercontract == null && daostate) return;
         const queryAddrs = async () => {
             // setTips(t('GetContractAddress'));
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
-                    console.log("==============setcontractlist============",data)
+                    console.log("==============setcontractlist============", data)
                     setcontractlist(data)
                     setcontractshow(false)
                 }
             });
         };
         queryAddrs();
-    }, [daoManagercontract, daostate,id]);
+    }, [daoManagercontract, daostate, id]);
 
     useEffect(() => {
 
-        const {vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
-        sessionStorage.setItem('contractlist',JSON.stringify(contractlist));
+        const { vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
+        sessionStorage.setItem('contractlist', JSON.stringify(contractlist));
         if (base_addr != null) {
 
             const setInitBase = async () => {
@@ -139,7 +150,7 @@ export default function About(props) {
             const setInitAuth = async () => {
                 // setTips(t('InitializingContracts'));
                 await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
-                    console.log("====",data)
+                    console.log("====", data)
                 });
             };
             setInitAuth();
@@ -161,22 +172,22 @@ export default function About(props) {
             setInitErc20();
         }
 
-    }, [daoManagercontract, contractlist,id]);
+    }, [daoManagercontract, contractlist, id]);
 
     useEffect(() => {
         sessionStorage.setItem('logo', logo);
         sessionStorage.setItem('description', description);
         sessionStorage.setItem('owner', owner);
         sessionStorage.setItem('DaoName', name)
-    }, [logo,description,owner,name]);
-    useEffect( () => {
+    }, [logo, description, owner, name]);
+    useEffect(() => {
         const setBalance = async () => {
             // setTips(t('Getbalance'));
             let arr = [];
             let index = 0;
             for (let item of tokenlist) {
                 // eslint-disable-next-line no-loop-func
-                await api.vault.getBalanceOf(vaultcontract, item).then(async(data) => {
+                await api.vault.getBalanceOf(vaultcontract, item).then(async (data) => {
 
                     if (!data) return;
                     arr[index] = {
@@ -196,8 +207,8 @@ export default function About(props) {
 
         }
         setBalance();
-    }, [tokenlist,id]);
-    useEffect( () => {
+    }, [tokenlist, id]);
+    useEffect(() => {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
 
         const setBase = async () => {
@@ -205,7 +216,7 @@ export default function About(props) {
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
 
-                let {owner, name, logo, desc} = data;
+                let { owner, name, logo, desc } = data;
 
                 setName(name);
                 setLogo(logo);
@@ -219,9 +230,9 @@ export default function About(props) {
             });
         };
         setBase();
-    }, [basecontract, basestate,id]);
+    }, [basecontract, basestate, id]);
 
-    useEffect( () => {
+    useEffect(() => {
         if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;
         const setToken = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
@@ -230,9 +241,9 @@ export default function About(props) {
             });
         };
         setToken();
-    }, [vaultcontract, vaultstate,id]);
+    }, [vaultcontract, vaultstate, id]);
 
-    useEffect( () => {
+    useEffect(() => {
         if (!votestate || contractlist.vote_addr == null || !contractlist.vote_addr) return;
         const setActiveVote = async () => {
             await api.vote.queryOpenVote(votecontract).then(data => {
@@ -242,9 +253,9 @@ export default function About(props) {
             });
         };
         setActiveVote();
-    }, [votecontract, votestate,id]);
+    }, [votecontract, votestate, id]);
 
-    useEffect( () => {
+    useEffect(() => {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
         const setModeratorList = async () => {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
@@ -255,9 +266,9 @@ export default function About(props) {
         };
         setModeratorList();
 
-    }, [orgcontract, orgstate,id]);
+    }, [orgcontract, orgstate, id]);
 
-    useEffect( () => {
+    useEffect(() => {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
         const whoAmI = async () => {
             await api.org.whoAmI(orgcontract).then(data => {
@@ -268,7 +279,7 @@ export default function About(props) {
             });
         };
         whoAmI();
-    }, [orgcontract, orgstate,id]);
+    }, [orgcontract, orgstate, id]);
 
     const handleClicktoType = (type) => {
         props.history.push(`/${type}/${id}`)
@@ -300,12 +311,12 @@ export default function About(props) {
         setShowModal(false)
     };
 
-    const handleExitConfirm = async() => {
+    const handleExitConfirm = async () => {
         setShowModal(false);
         setLoading(true);
         setTips(t('ExitDAO'));
-        if(isMember){
-            await api.org.resignMember(orgcontract,function (result) {
+        if (isMember) {
+            await api.org.resignMember(orgcontract, function (result) {
                 if (!result) return;
                 setdelMem(true)
             }).catch((error) => {
@@ -314,16 +325,16 @@ export default function About(props) {
                 setLoading(false);
 
             });
-        }else{
+        } else {
             setdelMem(true)
         }
     };
 
-    useEffect( () => {
+    useEffect(() => {
         if (orgcontract == null || !delMem) return;
         const setAdmin = async () => {
-            if(isModerator){
-                await api.org.resignModerator(orgcontract,function (result) {
+            if (isModerator) {
+                await api.org.resignModerator(orgcontract, function (result) {
                     if (!result) return;
                     setdelAdmin(true)
                 }).catch((error) => {
@@ -332,56 +343,56 @@ export default function About(props) {
                     setLoading(false);
 
                 });
-             }else{
+            } else {
                 setdelAdmin(true)
             }
         };
         setAdmin();
 
     }, [delMem]);
-    useEffect( () => {
+    useEffect(() => {
         if (orgcontract == null || !delAdmin || !delMem) return;
 
-        setTimeout(async()=>{
+        setTimeout(async () => {
             window.location.reload()
-        },5000)
+        }, 5000)
     }, [delAdmin]);
     const handleOutsideClick = e => {
-        if(myRef.current==null) return;
+        if (myRef.current == null) return;
         if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
     };
-    const AddresstoShow = (address)=> {
+    const AddresstoShow = (address) => {
 
-        let frontStr = address.substring(0,4);
+        let frontStr = address.substring(0, 4);
 
-        let afterStr = address.substring(address.length-4,address.length);
+        let afterStr = address.substring(address.length - 4, address.length);
 
         return `${frontStr}...${afterStr}`
 
     }
-    const switchKey = (key) =>{
-        let str='';
+    const switchKey = (key) => {
+        let str = '';
         switch (key) {
             case 'base_addr':
-                str='Base';
+                str = 'Base';
                 break;
             case 'erc20_addr':
-                str='ERC20';
+                str = 'ERC20';
                 break;
             case 'org_addr':
-                str='ORG';
+                str = 'ORG';
                 break;
             case 'vault_addr':
-                str='Vault';
+                str = 'Vault';
                 break;
             case 'vote_addr':
-                str='Vote';
+                str = 'Vote';
                 break;
             case 'auth_addr':
-                str='Auth';
+                str = 'Auth';
                 break;
             case 'github_addr':
-                str='Github';
+                str = 'Github';
                 break;
             default:
                 str = key;
@@ -392,34 +403,30 @@ export default function About(props) {
 
     return (
         <div>
-            <Loading showLoading={loading} tips={tips}/>     <Modal
-            show={errorShow}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => seterrorShow(false)}
-            className='newVoteBrdr homebtm'
-        >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4>{errorTips}</h4>
-            </Modal.Body>
-        </Modal>
+            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
+            <Modal
+                visible={errorShow}
+                onCancel={() => seterrorShow(false)}
+                footer={null}
+            >
+                <Tip>{errorTips}</Tip>
+            </Modal>
 
             <section className="section blog-single position-relative">
                 <div className="row">
                     <aside className="col-lg-3">
                         {
-                            info && <Spinner animation="border" variant="light" />
+                            info && <div animation="border" variant="light" />
                         }
                         {
-                            !info &&  <ul className='leftSide'>
+                            !info && <ul className='leftSide'>
                                 <li>
                                     <h2>SubDAO</h2>
                                     <div className='titleTips'>{t('DAOdescription')}</div>
                                 </li>
-                                <li><img src={logo} alt=""/></li>
+                                <li><img src={logo} alt="" /></li>
                                 <li className='lftname'>{name}</li>
-                                <li>{owner}<CopyStr address={owner}/></li>
+                                <li>{owner}<CopyStr address={owner} /></li>
                                 <li>{description}</li>
                             </ul>
                         }
@@ -431,17 +438,17 @@ export default function About(props) {
                     />
                     <ExitOrg
                         handleClose={handleExitClose}
-                        handleConfirm={()=>handleExitConfirm()}
-                        showTips={showModal}/>
+                        handleConfirm={() => handleExitConfirm()}
+                        showTips={showModal} />
                     <div className="col-lg-9 ">
                         <div>
                             <ul className="service-docs">
                                 {
                                     contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>
-                                            <span>
-                                                <img src={votingimg} alt=''/>
-                                                {t('Voting')}
-                                            </span>
+                                        <span>
+                                            <img src={votingimg} alt='' />
+                                            {t('Voting')}
+                                        </span>
                                     </li>
                                 }
                                 {/*{*/}
@@ -455,7 +462,7 @@ export default function About(props) {
                                 {
                                     <li onClick={() => handleClicktoType('vault')}>
                                         <span>
-                                            <img src={vaultimg} alt=''/>
+                                            <img src={vaultimg} alt='' />
                                             {t('Vault')}
                                         </span>
                                     </li>
@@ -472,42 +479,39 @@ export default function About(props) {
                                 {
                                     <li onClick={() => handleClicktoType('org')}>
                                         <span>
-                                            <img src={orgimg} alt=''/>
+                                            <img src={orgimg} alt='' />
                                             {t('Org')}
                                         </span>
                                     </li>
                                 }
-                                { (isOwner || isMember|| isModerator) &&
+                                {(isOwner || isMember || isModerator) &&
                                     <li>
                                         <div className='moreBtn'>
                                             <div
-                                                 className={`moreBg ${showMore ? 'hasBg' :'noBg' }`}
-                                                >
+                                                className={`moreBg ${showMore ? 'hasBg' : 'noBg'}`}
+                                            >
                                                 <button className="btn">
-                                                <span onClick={handleMore} className='clickBtn' ref={myRef}>
-                                                    <img src={moreImg} alt=''/>
-                                                    {t('More')}
-                                                </span>
+                                                    <span onClick={handleMore} className='clickBtn' ref={myRef}>
+                                                        <img src={moreImg} alt='' />
+                                                        {t('More')}
+                                                    </span>
                                                 </button>
                                                 {
-                                                    showMore &&(isOwner || isMember|| isModerator) && <ul className='morelist'>
+                                                    showMore && (isOwner || isMember || isModerator) && <ul className='morelist'>
                                                         {
-                                                            isOwner &&  <li onClick={handleTransfer}>
-                                                                <span><img src={transferImg} alt=""/></span>{t('transferBtn')}
+                                                            isOwner && <li onClick={handleTransfer}>
+                                                                <span><img src={transferImg} alt="" /></span>{t('transferBtn')}
                                                             </li>
                                                         }
-                                                        { (isMember || isModerator)&&
-                                                            <li onClick={handleExit}><span><img src={exitImg} alt=""/></span>{t('Exit')}</li>
+                                                        {(isMember || isModerator) &&
+                                                            <li onClick={handleExit}><span><img src={exitImg} alt="" /></span>{t('Exit')}</li>
                                                         }
 
 
                                                     </ul>
                                                 }
-
                                             </div>
                                         </div>
-
-
                                     </li>
                                 }
                             </ul>
@@ -521,18 +525,18 @@ export default function About(props) {
                                             <div className='listbg'>
                                                 <div className="listbalance">
                                                     {
-                                                        balanceshow && <Spinner animation="border" variant="light" />
+                                                        balanceshow && <div animation="border" variant="light" />
                                                     }
-                                            {
-                                                !balanceshow && balancelist.map((item, index) =>
-                                                    <dl key={`balance_${index}`}>
-                                                        <dd className='symbol'>{item.balance} {item.symbol}</dd>
-                                                        {/*<dt>{item.address}</dt>*/}
-                                                        <dt>{item.name}</dt>
-                                                    </dl>
-                                                )
-                                            }
-                                            </div>
+                                                    {
+                                                        !balanceshow && balancelist.map((item, index) =>
+                                                            <dl key={`balance_${index}`}>
+                                                                <dd className='symbol'>{item.balance} {item.symbol}</dd>
+                                                                {/*<dt>{item.address}</dt>*/}
+                                                                <dt>{item.name}</dt>
+                                                            </dl>
+                                                        )
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -542,14 +546,14 @@ export default function About(props) {
                                             <div className='listbg'>
                                                 <div className="listbalance">
                                                     {
-                                                        moderatorShow && <Spinner animation="border" variant="light" />
+                                                        moderatorShow && <div animation="border" variant="light" />
                                                     }
-                                            {
-                                                !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
-                                                    <dd>{moderators[index][1]}</dd>
-                                                    <dt>{moderators[index][0]}</dt>
-                                                </dl>)
-                                            }
+                                                    {
+                                                        !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>
+                                                            <dd>{moderators[index][1]}</dd>
+                                                            <dt>{moderators[index][0]}</dt>
+                                                        </dl>)
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -564,14 +568,14 @@ export default function About(props) {
                                                 Object.keys(contractlist).map((key) => (
                                                     (contractlist[key] != null && <li key={`contract_${key}`}>
                                                         <span>{switchKey(key)} </span>
-                                                            {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]}/>
-                                                        </li>
-                                                    ) ))
+                                                        {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]} />
+                                                    </li>
+                                                    )))
                                             }
                                             </ul>
                                         }
                                         {
-                                            contractshow && <Spinner animation="border" variant="light" />
+                                            contractshow && <div animation="border" variant="light" />
                                         }
                                     </div>
                                 </div>

@@ -1,23 +1,26 @@
 import React from 'react';
-import {Spinner, Modal} from "react-bootstrap";
+import { Modal } from 'antd';
+import styled from 'styled-components';
 
-export default function Loading(props){
 
-    const {showLoading,tips} = props;
+const Tip = styled.div`
+    text-align: center;
+    padding: 50px 20px;
+    font-size: 18px;
+    font-family: Roboto-Light, Roboto;
+    font-weight: 300;
+    color: #010643;
+    line-height: 21px;
+`
+export default function Loading(props) {
+    const { showLoading, tips, setLoading } = props;
     return <Modal
-        show={showLoading}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
+        visible={showLoading}
         className='loading'
-        onHide={() => {}}
+        onCancel={setLoading()}
+        footer={null}
     >
-        <Modal.Body>
-            <div className="spinner">
-                <Spinner animation="border" variant="light" />
-            </div>
-             <h4 className="waiting">{tips}</h4>
-        </Modal.Body>
+        <Tip className="waiting">{tips}</Tip>
     </Modal>;
-
 }
 

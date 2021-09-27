@@ -182,11 +182,11 @@ export default function OrgManage(props){
         props.history.push(`/org/${id}`)
     }
     const handleClicktoAbout = () => {
-        props.history.push(`/home/about/${id}`)
+        props.history.push(`/about/${id}`)
     }
 
         return <div>
-            <Loading showLoading={loading} tips={tips}/>
+            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Modal
                 show={errorShow}
                 aria-labelledby="contained-modal-title-vcenter"

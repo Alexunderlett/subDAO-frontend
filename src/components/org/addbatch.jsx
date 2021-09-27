@@ -84,7 +84,7 @@ export default function AddBatch(props){
 
     let {handleClose, showTips} = props;
     return <div>
-        <Loading showLoading={loading} tips={tips}/>
+        <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
         <Modal
             show={errorShow}
             aria-labelledby="contained-modal-title-vcenter"
