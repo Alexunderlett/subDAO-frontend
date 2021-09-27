@@ -35,7 +35,9 @@ const TopTitles = styled.div`
     display: flex;
     justify-content: space-between;
     align-content: center;
-    img
+    img{
+    
+    }
 `;
 
 
