@@ -39,10 +39,10 @@ body,html{
   }
   .btn{
     cursor: pointer;
-    margin-right: 20px;
+    margin-right: 2rem;
     // border: 1px solid #EE42D1;
-    padding: 13px 28px;
-    font-size: 24px;
+    padding: 1.3rem 2.8rem;
+    font-size: 2.4rem;
     font-family: PingFangSC-Regular;
     background: #D52473;
     color: #FFFFFF;
@@ -54,7 +54,7 @@ body,html{
       // background: linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
       border:0;
       margin: 1px;
-      margin-right: 21px;
+      margin-right: 2.1rem;
       color: #FFFFFF;
       outline: none;
       //background-image: linear-gradient(#4B69F2,#EE42D1),linear-gradient(90deg, #4B69F2 0%, #EE42D1 100%);
@@ -63,14 +63,14 @@ body,html{
       // background: linear-gradient(90deg, rgba(75, 105, 242, 0.6) 0%, rgba(238, 66, 209, 0.6) 100%), linear-gradient(0deg, #000000, #000000);
       border:0;
       margin: 1px;
-      margin-right: 21px;
+      margin-right: 2.1rem;
       color: #FFFFFF;
       outline: none;
     }
     img{
-      width: 24px;
-      height: 16px;
-      margin-left: 15px;
+      width: 2.4rem;
+      height: 1.6rem;
+      margin-left: 1.5rem;
     }
   }
 
@@ -82,14 +82,14 @@ body,html{
     }
     .ant-modal-wrap{
       .ant-modal-content{
-        box-shadow: 0px 0px 20px 0px rgba(16, 22, 75, 0.1);
-        border-radius: 32px;
+        box-shadow: 0rem 0rem 2rem 0rem rgba(16, 22, 75, 0.1);
+        border-radius: 3.2rem;
         .ant-modal-close{
-          top: 6px;
-          right: 6px;
+          top: 0.6rem;
+          right: 0.6rem;
         }
         .ant-modal-body{
-          padding-top: 50px;
+          padding-top: 5rem;
         }
       }
     }
@@ -99,12 +99,12 @@ body,html{
   .daoModal{
     width: 100vw !important;
     margin: 0;
-    top: 106px;
+    top: 10.6rem;
 
     .ant-modal-content{
       background: #10164B;
       width: 100vw;
-      height: calc(100vh - 182px);
+      height: calc(100vh - 18.2rem);
       position: absolute;
       top: 0;
       left: 0;
@@ -114,31 +114,34 @@ body,html{
         color: #CCCCD8;
       }
       .ant-modal-body{
-        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
-        border-radius: 55px 55px 0px 0px;
+        box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.1);
+        border-radius: 5.5rem 5.5rem 0rem 0rem;
         height: 100%;
         background: white;
-        margin-top: 76px;
+        margin-top: 7.6rem;
       }
     }
   }
 
   .content{
-    padding: 40px 0;
+    padding: 4rem 0;
   }
 
 
   .daoItem{
-    width: 200px;
-    height: 268px;
-    padding: 28px;
+    width: 23rem;
+    height: 26.8rem;
+    padding: 2.8rem;
+    
     background: rgba(16, 22, 75, 0.04);
-    border-radius: 40px;
+    border-radius: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-
+    &:not(:last-child){
+      margin-right: 7.3rem;
+    }
     &:hover{
         background: #FFEFF7;
         transform: scale(1.05);
@@ -148,25 +151,30 @@ body,html{
     }
 
     img{
-        width: 90px;
-        height: 90px;
+        width: 9rem;
+        height: 9rem;
     }
     .title{
-        height: 24px;
-        font-size: 20px;
+        height: 2.4rem;
+        font-size: 2rem;
         font-family: Roboto-Regular, Roboto;
         font-weight: 400;
         color: #10164B;
-        line-height: 24px;
-        margin: 16px 0 13px 0;
+        line-height: 2.4rem;
+        margin: 1.3rem 0;
     }
     .detail{
-        font-size: 14px;
+        width: 16.7rem;
+        font-size: 1.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #10164B;
-        line-height: 17px;
+        line-height: 1.68rem;
         text-align: center;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
     }
   }
 }

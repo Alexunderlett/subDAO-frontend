@@ -7,10 +7,10 @@ import CopyStr from "./copy";
 import publicJs from "../utils/publicJs";
 import { useTranslation, Trans, Translation } from 'react-i18next'
 
-import logoWhite from '../images/logoWhite.png';
-import arrow from '../images/Polygon.png';
-import balanceOfImg from '../images/balanceOf.png';
-import myDao from '../images/myDao.png';
+import logo from '../img/logo.png';
+import arrow from '../img/Polygon.png';
+import balanceOfImg from '../img/balanceOf.png';
+import myDao from '../img/myDao.png';
 import close from '../images/shutdownW.png'
 import styled from 'styled-components';
 import { Modal, Button, Select } from 'antd';
@@ -19,29 +19,42 @@ const createHashHistory = history.createHashHistory();
 
 const HeaderBg = styled.div`
     width: 100%;
-    height: 106px;
+    height: 10.6rem;
     background: #FFFFFF;
-    box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0rem 0rem 3rem 0rem rgba(0, 0, 0, 0.1);
     
     .row{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 85%;
+        width: 159.2rem;
         margin: 0 auto !important;
 
         .lftTit{
+            display: flex;
+            align-items: center;
             .toFirst{
-                width: 60px;
-                height: 60px;
+                width: 6rem;
+                height: 6rem;
                 background: #D51172;
-                border-radius: 19px;
+                border-radius: 1.9rem;
                 cursor: pointer;
-                margin: 23px 0;
+                margin: 2.3rem 0;
+
                 img{
-                    width: 60px;
-                    height: 60px;
+                    width: 6rem;
+                    height: 6rem;
                 }
+            }
+            .title{
+                width: 8.9rem;
+                height: 2.8rem;
+                font-size: 2.4rem;
+                font-family: Roboto-Light, Roboto;
+                font-weight: 300;
+                color: #10164B;
+                line-height: 2.8rem;
+                margin-left: 1.6rem;
             }
         }
 
@@ -49,37 +62,38 @@ const HeaderBg = styled.div`
             flex-grow: 1;
 
             .signin{
-                font-size: 16px;
+                font-size: 1.6rem;
                 font-family: Roboto-Light, Roboto;
                 font-weight: 300;
                 color: #10164B;
+                line-height: 1.9rem;
             }
             .header-button{
                 text-align: right;
-                height: 19px;
-                font-size: 16px;
+                height: 1.9rem;
+                font-size: 1.6rem;
                 font-family: Roboto-Light, Roboto;
                 font-weight: 300;
-                line-height: 19px;
+                line-height: 1.9rem;
                 display: flex;
                 /* align-items: center; */
                 justify-content: end;
             }
             img{
-                width: 18px;
-                height: 18px;
-                margin-left: 20px;
-                margin-right: 6px;
+                width: 1.8rem;
+                height: 1.8rem;
+                margin-left: 2rem;
+                margin-right: 0.6rem;
                 vertical-align: middle;
             }
             .createDAO{
-                margin-left: 20px;
+                margin-left: 2rem;
             }
             .createDAO,.myDao,.logout{
                 cursor: pointer;
             }
             .logout{
-                margin-left: 57px;
+                margin-left: 5.7rem;
                 opacity: 0.5;
             }
         }
@@ -221,7 +235,7 @@ export default function Headertop(props) {
         cancleShowlist()
     }
 
-    const cancleShowlist = ()=>{
+    const cancleShowlist = () => {
         setshowlist(false);
         setcurrentAccount(null)
     }
@@ -231,8 +245,9 @@ export default function Headertop(props) {
             <div className="row">
                 <div className="lftTit">
                     <div className="toFirst" onClick={toFirst}>
-                        <img src={logoWhite} alt="" />
+                        <img src={logo} alt="" />
                     </div>
+                    <div className="title">SubDAO</div>
                 </div>
                 <div className="rhtBtn">
                     <div className="header-button">
@@ -300,7 +315,7 @@ export default function Headertop(props) {
             {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
-                    <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Select You Account</h2>
+                    <h2 style={{ textAlign: 'center', marginTop: '2rem' }}>Select You Account</h2>
                     {/* <Modal.Content> */}
                     <Select placeholder={t('SelectAccount')} style={{ width: '100%' }} onChange={selectAccounts}>
                         {
@@ -309,7 +324,7 @@ export default function Headertop(props) {
                             )
                         }
                     </Select>
-                    <Button type="primary" style={{ width: '100%', margin: '100px 0 30px 0' }} onClick={changeAccounts}>
+                    <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={changeAccounts}>
                         Confirm
                     </Button>
                     <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={cancleShowlist}>Cancel</div>

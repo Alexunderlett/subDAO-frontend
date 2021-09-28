@@ -12,7 +12,7 @@ const Container = styled.div`
     width: 60%;
     margin: 0 auto;
     .createSingle{
-        margin-top: 60px;
+        margin-top: 6rem;
     }
 `
 

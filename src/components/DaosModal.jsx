@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal, Select, Button } from 'antd';
-import right from '../images/right.png';
+import right from '../img/right.png';
 import { withRouter } from 'react-router-dom';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
@@ -17,24 +17,24 @@ const DaoBody = styled.div`
         display: flex;
         justify-content: space-between;
         .left{
-            font-size: 56px;
+            font-size: 5.6rem;
             font-family: Roboto-Light, Roboto;
             font-weight: 300;
             color: #10134E;
-            line-height: 66px;
+            line-height: 6.6rem;
         }
     }
     .daos{
-        width: calc(100% + 25px);
-        margin-left: -10px;
+        width: calc(100% + 2.5rem);
+        margin-left: -1rem;
         height: 100%;
         display: flex;
         flex-wrap: wrap;
         overflow-y: auto;
-        padding: 20px 0;
+        padding: 2rem 0;
         .daoItem{
-            width: 187px;
-            margin: 10px 20px;
+            width: 18.7rem;
+            margin: 1rem 2rem;
         }
     }
 `

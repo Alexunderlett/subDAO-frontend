@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DaosModal from "./DaosModal";
-import right from '../images/right.png'
+import right from '../img/right.png'
 
 
 const topDaos = window.mainAddress.topDaos;
@@ -13,13 +13,13 @@ const AllDaos = styled.div`
     .more{
         text-align: right;
         cursor: pointer;
-        height: 25px;
-        font-size: 18px;
+        height: 2.5rem;
+        font-size: 1.8rem;
         font-family: PingFang-SC-Medium, PingFang-SC;
         font-weight: 500;
         color: #10164B;
-        line-height: 25px;
-        margin-bottom: 20px;
+        line-height: 2.5rem;
+        margin-bottom: 2rem;
     }
     .daos{
         display: flex;

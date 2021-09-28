@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
-import Twitter from '../images/Twitter.png';
-import LightPaper from '../images/LightPaper.png';
-import Medium from '../images/Medium.png';
+import Twitter from '../img/Twitter.png';
+import github from '../img/github.png';
+import subdaoicon from '../img/subdaoicon.png';
+import LightPaper from '../img/LightPaper.png';
+import Medium from '../img/Medium.png';
 import { useLocation } from 'react-router-dom';
 
 
@@ -15,16 +17,16 @@ const Footer = styled.div`
     align-items: center;
 
     .row{
-        width: 75%;
+        width: 144rem;
         margin: 0 auto !important;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
         .left{
-            height: 40px;
-            line-height: 40px;
-            font-size: 18px;
+            height: 4rem;
+            line-height: 4rem;
+            font-size: 1.8rem;
             font-family: PingFangSC-Light, PingFang SC !important;
             opacity: 0.5;
         }
@@ -33,14 +35,15 @@ const Footer = styled.div`
             display: flex;
             
             a{
-                margin-left: 40px;
+                margin-left: 4rem;
                 color: #10164B;
                 display: flex;
                 align-items: center;
                 text-decoration: none;
                 img{
-                    width: 40px;
-                    height: 40px;
+                    width: 4rem;
+                    height: 4rem;
+                    margin-right: 1rem;
                 }
             }
         }
@@ -66,6 +69,7 @@ const FootBtm = (props) => {
                 <div className="left">{t('right')}</div>
                 {show && <div className='rht'>
                     <a href="https://www.subdao.network/" rel="noopener noreferrer" target="_blank">
+                        <img src={subdaoicon} alt="" />
                         {t('Website')}
                     </a>
                     <a href="https://medium.com/@subdao" target="_blank" rel="noopener noreferrer">
@@ -73,6 +77,7 @@ const FootBtm = (props) => {
                         Medium
                     </a>
                     <a href="https://github.com/SubDAO-Network" target="_blank" rel="noopener noreferrer">
+                        <img src={github} alt="" />
                         Github
                     </a>
                     <a href="https://drive.google.com/file/d/1L76e16DtK16Edjex7m_PRcTdaEzrLxBs/view" rel="noopener noreferrer" target="_blank">

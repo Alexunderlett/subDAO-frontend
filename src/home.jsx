@@ -7,8 +7,9 @@ import Loading from "./components/loading/Loading";
 import { withRouter } from 'react-router-dom';
 import homeimg from './images/home.png'
 import Accounts from "./api/Account";
-import right from './images/right.png';
-import down from './images/down.png';
+import right from './img/right.png';
+import homeImg from './img/homeImg.png';
+import down from './img/down.png';
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import { Modal, Select, Button, Row, Col } from 'antd';
@@ -26,39 +27,46 @@ const HomeBg = styled.div`
         .top{
             display: flex;
             justify-content: space-between;
+            margin-bottom: 2rem;
 
             .left{
                 flex-grow: 1;
-                max-width: 726px;
+                max-width: 72.6rem;
                 .hometitle{
+                    width: 72.6rem;
+                    height: 18.8rem;
                     font-size: 8rem;
+                    font-family: Roboto-Light, Roboto;
+                    font-weight: 300;
                     color: #10134E;
-                    line-height: 94px;
+                    line-height: 9.4rem;
                     span{
                         color: #D52473;
                     }
                 }
                 .homeDesc{
                     text-transform: capitalize;
-                    font-size: 26px;
+                    width: 66.7rem;
+                    font-size: 2.6rem;
                     font-family: Roboto-Light, Roboto;
                     font-weight: 300;
-                    line-height: 40px;
-                    padding-bottom: 28px;
+                    color: #10164B;
+                    line-height: 3.96rem;
+                    padding-bottom: 2.8rem;
                 }
                 .connect{
                     cursor: pointer;
-                    width: 270px;
-                    height: 60px;
+                    width: 27rem;
+                    height: 6rem;
                 }
             }
             .right{
                 display: flex;
                 flex-direction: column;
                 img{
-                    width: 32rem;
-                    height: 32rem;
-                    background: #D52473;
+                    width: 40rem;
+                    height: 40rem;
+                    margin-right: 7rem;
                 }
             }
         }
@@ -67,19 +75,19 @@ const HomeBg = styled.div`
 
 const SelectAccount = styled.div`
     .title{
-        font-size: 34px;
+        font-size: 3.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #010643;
-        line-height: 40px;
+        line-height: 4rem;
     }
     .detail{
-        font-size: 24px;
+        font-size: 2.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #A6A6B7;
-        line-height: 28px;
-        margin-top: 18px;
+        line-height: 2.8rem;
+        margin-top: 1.8rem;
     }
 `
 
@@ -202,7 +210,7 @@ function Home(props) {
                         <div className="detail">
                             You can join other DAOs or create your own DAO!
                         </div>
-                        <Button type="primary" style={{ width: '100%', margin: '80px 0 30px 0' }} onClick={() => { setcreateDAOModal(false); setMoreDaos(true) }}>Browse other DAOs</Button>
+                        <Button type="primary" style={{ width: '100%', margin: '8rem 0 3rem 0' }} onClick={() => { setcreateDAOModal(false); setMoreDaos(true) }}>Browse other DAOs</Button>
                         <Button style={{ width: '100%' }} onClick={handleClick}>{t('CreateDAO')}</Button>
                     </SelectAccount>
                 </Modal>
@@ -229,7 +237,7 @@ function Home(props) {
                         <div className="header-button">
                             <Button type="primary">
                                 {t('ConnectWallet')}
-                                <img src={right} alt="" style={{ width: '20px' }} />
+                                <img src={right} alt="" style={{ width: '2rem' }} />
                             </Button>
                             {
                                 // !showlist && !selected.length && !allList.length
@@ -237,11 +245,11 @@ function Home(props) {
                         </div>
                     </div>
                     <div className="right">
-                        <img src={right} alt="" />
+                        <img src={homeImg} alt="" />
                     </div>
                 </div>
 
-                <MoreDaos showMoreDaos={moreDaos}/>
+                <MoreDaos showMoreDaos={moreDaos} />
             </section>
         </HomeBg>
     )

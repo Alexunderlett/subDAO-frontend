@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import mainConnect from '../../api/mainContract';
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
-import right from '../../images/right.png';
+import right from '../../img/right.png';
 
 const Content = styled.div`
     .listBrdr{

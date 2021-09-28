@@ -3,7 +3,7 @@ import closeBtn from '../../images/shutdownW.png'
 import { Trans, Translation } from 'react-i18next';
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
-import right from '../../images/right.png';
+import right from '../../img/right.png';
 
 
 const Info = styled.div`

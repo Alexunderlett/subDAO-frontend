@@ -273,7 +273,7 @@ export default function About(props) {
     const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
 
-    const [moreDaos, setMoreDaos] = useState(true);
+    const [moreDaos, setMoreDaos] = useState(false);
 
     // const myRef = useRef();
 

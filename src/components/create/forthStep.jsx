@@ -7,7 +7,7 @@ import Loading from "../loading/Loading";
 import { Trans, Translation, useTranslation } from 'react-i18next';
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
-import right from '../../images/right.png';
+import right from '../../img/right.png';
 
 const Content = styled.div`
     .line{
