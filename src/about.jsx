@@ -1,40 +1,33 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSubstrate } from "./api/contracts";
+import { Spin } from 'antd';
 
 import api from './api/index';
 import Loading from "./components/loading/Loading";
-// import votingimg from './images/voting.png';
-// import orgimg from './images/org.png';
-// import vaultimg from "./images/vault.png";
-// import moreImg from "./images/menu.png";
-// import transferImg from "./images/transfer.png";
-// import exitImg from "./images/drop.png";
-// import { useTranslation } from "react-i18next";
-// import Transfer from "./components/transfer";
-// import ExitOrg from "./components/exitOrg";
-// import CopyStr from "./components/copy";
-import { Modal, Button, Input } from 'antd';
+import Left from './components/left';
+
+import CopyStr from "./components/copy";
+import { Modal, Button } from 'antd';
 import styled from 'styled-components';
 
 
-import DemoImg from "./img/demo/t-1.png";
 import Owner from "./img/owner.png";
 import Admin from "./img/admin.png";
 import AUTH from "./img/AUTH.png";
-import Base from "./img/BASE.png";
-import Erc20 from "./img/ERC20.png";
+import BASE from "./img/BASE.png";
+import ERC20 from "./img/ERC20.png";
 import ORG from "./img/ORG.png";
 import VAULT from "./img/VAULT.png";
 import VOTE from "./img/VOTE.png";
-import copy from "./img/copy.png";
 import MoreDaos from "./components/MoreDaos";
+import VoteActive from "./components/vote/voteActive";
 
 
 const Tip = styled.div`
     text-align: center;
     padding: 50px 20px;
     font-size: 18px;
-    font-family: Roboto-Light, Roboto;
+    font-family: Roboto-Light;
     font-weight: 300;
     color: #010643;
     line-height: 21px;
@@ -98,6 +91,7 @@ const RhtTop = styled.div`
      border-radius: 0.4rem;
      width: 9rem;
      height: 3rem;
+      margin-left: 1rem;
   }
 `;
 
@@ -116,7 +110,8 @@ const BtnGroup = styled.div`
     font-weight: 400;
     color: #10164B;
     line-height: 3rem;
-     &.active{
+    cursor: pointer;
+     &.active,&:hover{
         border: 0.1rem solid #D51172;
          background: #FFEFF7;
          color: #D51172;
@@ -143,8 +138,6 @@ const Ul = styled.ul`
   }
 `;
 
-
-
 const BalanceNum = styled.div`
     font-size: 3.2rem;
     font-weight: 300;
@@ -170,7 +163,8 @@ const Address = styled.div`
 const UlMdrt = styled.ul`
     color: #10164B;
     display: flex;
-    margin-left: -6.3rem;
+    margin-left: -6rem;
+    flex-wrap: wrap;
   li{
     width: 31.3rem;
     height: 14rem;
@@ -180,7 +174,7 @@ const UlMdrt = styled.ul`
     padding: 1rem 3.7rem 1rem 1rem ;
     box-sizing: border-box;
     word-break: break-all;    
-    margin-left: 6.3rem;
+    margin:0 0 3rem 6rem;
     display: flex;
     align-content: center;
   }
@@ -223,11 +217,14 @@ const Imglft = styled.img`
     display: inline-block;
     margin-top: -0.4rem;
 `;
-const CopyImg = styled.img`
-  width: 2.2rem;
-  height: 2.2rem;
-  margin-left: 0.7rem;
-`
+const CopyImg = styled.span`
+  margin:-5px 0 0  0.7rem;
+`;
+
+const LoadingSpin = styled.div`
+ width: 100%;
+ text-align: center;
+`;
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
@@ -248,7 +245,15 @@ export default function About(props) {
     const [balanceshow, setbalanceshow] = useState(true);
     const [contractshow, setcontractshow] = useState(true);
     const [info, setinfo] = useState(true);
-    const [contractlist, setcontractlist] = useState([]);
+    const [contractlist, setcontractlist] = useState({
+        base_addr:null,
+        erc20_addr:null,
+        org_addr:null,
+        vault_addr:null,
+        vote_addr:null,
+        auth_addr:null,
+    });
+    const [contractArr, setcontractArr] = useState([]);
     const [tokenlist, settokenlist] = useState([]);
 
     const [daostate, setdaostate] = useState(false);
@@ -257,7 +262,6 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
-    const [showMore, setShowMore] = useState(false);
     const [showTransfer, setShowTransfer] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [isMember, setisMember] = useState(false);
@@ -271,29 +275,34 @@ export default function About(props) {
 
     const [moreDaos, setMoreDaos] = useState(true);
 
-
-    // let { t } = useTranslation();
-    const myRef = useRef();
+    // const myRef = useRef();
 
     useEffect(() => {
         if (apiState !== 'READY') return;
         const setInitDAO = async () => {
-            setLoading(true)
+            setLoading(true);
             setTips('InitializeDAO');
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
-                setdaostate(data)
+                setdaostate(data);
                 setLoading(false)
             });
-
         };
         setInitDAO();
     }, [apiState, id]);
     useEffect(() => {
-        setcontractlist([]);
+        setcontractlist({
+            base_addr:null,
+            erc20_addr:null,
+            org_addr:null,
+            vault_addr:null,
+            vote_addr:null,
+            auth_addr:null,
+        });
+        setcontractArr([]);
         setcontractshow(true);
         setbalancelist([]);
-        setbalanceshow(true)
+        setbalanceshow(true);
         setName('');
         setLogo('');
         setDescription('');
@@ -309,7 +318,17 @@ export default function About(props) {
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
                     console.log("==============setcontractlist============", data)
-                    setcontractlist(data)
+                    let arr=[];
+                    Object.keys(data).map((item) => {
+                            arr.push({
+                                name: item,
+                                address: data[item]
+                            })
+                        return item;
+                    });
+
+                    setcontractArr(arr);
+                    setcontractlist(data);
                     setcontractshow(false)
                 }
             });
@@ -375,7 +394,6 @@ export default function About(props) {
             };
             setInitErc20();
         }
-
     }, [daoManagercontract, contractlist, id]);
 
     useEffect(() => {
@@ -404,7 +422,7 @@ export default function About(props) {
                     arr[index].name = name;
                 });
                 index++;
-                setbalancelist(arr)
+                setbalancelist(arr);
                 setbalanceshow(false)
 
             }
@@ -464,7 +482,7 @@ export default function About(props) {
         const setModeratorList = async () => {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
-                setModerators(data)
+                setModerators(data);
                 setmoderatorShow(false)
             });
         };
@@ -476,9 +494,11 @@ export default function About(props) {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
         const whoAmI = async () => {
             await api.org.whoAmI(orgcontract).then(data => {
+
+                console.log("======whoAmI",data)
                 if (!data) return;
-                setisMember(data[0])
-                setisModerator(data[1])
+                setisMember(data[0]);
+                setisModerator(data[1]);
                 setisOwner(data[2])
             });
         };
@@ -486,54 +506,34 @@ export default function About(props) {
     }, [orgcontract, orgstate, id]);
 
     const handleClicktoType = (type) => {
-        props.history.push(`/${type}/${id}`)
+        if(type === 'org'){
+            props.history.push(`/${type}/${id}/${props.match.params.owner}`)
+        }else{
+            props.history.push(`/${type}/${id}`)
+        }
+
     }
 
-    const handleMore = (val) => {
-        if (!showMore) {
-            document.addEventListener("click", handleOutsideClick, false);
-        } else {
-            document.removeEventListener("click", handleOutsideClick, false);
-        }
 
-        setShowMore(val)
-    };
 
-    const handleExit = () => {
-        setShowModal(true)
-    };
-    const handleTransfer = () => {
-        setShowTransfer(true)
-
-    };
-
-    const handleClose = () => {
-        setShowTransfer(false)
-    };
-
-    const handleExitClose = () => {
-        setShowModal(false)
-    };
-
-    const handleExitConfirm = async () => {
-        setShowModal(false);
-        setLoading(true);
-        setTips('ExitDAO');
-        if (isMember) {
-            await api.org.resignMember(orgcontract, function (result) {
-                if (!result) return;
-                setdelMem(true)
-            }).catch((error) => {
-                seterrorShow(true)
-                seterrorTips(`Resign Member: ${error.message}`)
-                setLoading(false);
-
-            });
-        } else {
-            setdelMem(true)
-        }
-    };
-
+    // const handleExitConfirm = async () => {
+    //     setShowModal(false);
+    //     setLoading(true);
+    //     setTips('ExitDAO');
+    //     if (isMember) {
+    //         await api.org.resignMember(orgcontract, function (result) {
+    //             if (!result) return;
+    //             setdelMem(true)
+    //         }).catch((error) => {
+    //             seterrorShow(true);
+    //             seterrorTips(`Resign Member: ${error.message}`);
+    //             setLoading(false);
+    //
+    //         });
+    //     } else {
+    //         setdelMem(true)
+    //     }
+    // };
     useEffect(() => {
         if (orgcontract == null || !delMem) return;
         const setAdmin = async () => {
@@ -542,8 +542,8 @@ export default function About(props) {
                     if (!result) return;
                     setdelAdmin(true)
                 }).catch((error) => {
-                    seterrorShow(true)
-                    seterrorTips(`Resign Moderator: ${error.message}`)
+                    seterrorShow(true);
+                    seterrorTips(`Resign Moderator: ${error.message}`);
                     setLoading(false);
 
                 });
@@ -556,55 +556,48 @@ export default function About(props) {
     }, [delMem]);
     useEffect(() => {
         if (orgcontract == null || !delAdmin || !delMem) return;
-
         setTimeout(async () => {
             window.location.reload()
         }, 5000)
     }, [delAdmin]);
-    const handleOutsideClick = e => {
-        if (myRef.current == null) return;
-        if (!myRef.current.contains(e.target)) handleMore(myRef.current.contains(e.target));
-    };
-    const AddresstoShow = (address) => {
-
-        let frontStr = address.substring(0, 4);
-
-        let afterStr = address.substring(address.length - 4, address.length);
-
-        return `${frontStr}...${afterStr}`
-
-    }
     const switchKey = (key) => {
         let str = '';
+        let img = '';
         switch (key) {
             case 'base_addr':
                 str = 'Base';
+                img = BASE;
                 break;
             case 'erc20_addr':
                 str = 'ERC20';
+                img = ERC20;
                 break;
             case 'org_addr':
                 str = 'ORG';
+                img = ORG;
                 break;
             case 'vault_addr':
                 str = 'Vault';
+                img = VAULT;
                 break;
             case 'vote_addr':
                 str = 'Vote';
+                img =  VOTE;
                 break;
             case 'auth_addr':
                 str = 'Auth';
-                break;
-            case 'github_addr':
-                str = 'Github';
+                img = AUTH;
                 break;
             default:
                 str = key;
+                img ='';
                 break;
         }
-        return str;
+        return {
+            addr:str.toUpperCase(),
+            img
+        };
     }
-
     return (
         <div>
             <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
@@ -617,317 +610,107 @@ export default function About(props) {
             </Modal>
 
             <div className='container'>
-                <TopTitles>
-                    <LftTop>
-                        <img src={DemoImg} alt=""/>
-                        <Contents>
-                            <Tit>Patract</Tit>
-                            <div className="contentDesc">Plasm Network is built on Parity Substrate and designedto be a Polkadot Parachain.ParitySubstrate and designedto be a Polkadot Parachain.</div>
-                        </Contents>
-                    </LftTop>
+                <Left history={props.history} id={id} owner={props.match.params.owner}/>
+                {/*<section>*/}
+                {/*    <Transfer*/}
+                {/*        showTips={showTransfer}*/}
+                {/*        handleClose={handleClose}*/}
+                {/*    />*/}
+                {/*    <ExitOrg*/}
+                {/*        handleClose={handleExitClose}*/}
+                {/*        handleConfirm={() => handleExitConfirm()}*/}
+                {/*        showTips={showModal} />*/}
 
-                    <RhtTop>
-                        <Button type="primary">Join</Button>
-                    </RhtTop>
-                </TopTitles>
-
-                <BtnGroup>
-                    <span className="active">Home</span>
-                    <span>Voting</span>
-                    <span>Vault</span>
-                    <span>Org</span>
-                </BtnGroup>
+                {/*    {*/}
+                {/*        info &&  <TopTitles><LoadingSpin><Spin /></LoadingSpin></TopTitles>*/}
+                {/*    }*/}
+                {/*    {*/}
+                {/*        !info && <TopTitles>*/}
+                {/*            <LftTop>*/}
+                {/*                <img src={logo} alt=""/>*/}
+                {/*                <Contents>*/}
+                {/*                    <Tit>{name}</Tit>*/}
+                {/*                    <div className="contentDesc">{description}</div>*/}
+                {/*                </Contents>*/}
+                {/*            </LftTop>*/}
+                {/*            <RhtTop>*/}
+                {/*                {(isOwner || isMember || isModerator) && <ul className='morelist'>*/}
+                {/*                    {*/}
+                {/*                        isOwner && <Button onClick={handleTransfer}>*/}
+                {/*                            Transfer*/}
+                {/*                        </Button>*/}
+                {/*                    }*/}
+                {/*                    {(isMember || isModerator) &&*/}
+                {/*                    <Button onClick={handleExit}>Quit</Button>*/}
+                {/*                    }*/}
+                {/*                </ul>*/}
+                {/*                }*/}
+                {/*                {*/}
+                {/*                    ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>*/}
+                {/*                }*/}
+                {/*            </RhtTop>*/}
+                {/*        </TopTitles>*/}
+                {/*    }*/}
+                {/*</section>*/}
 
                 <section>
                     <div className="titleTop">Balance</div>
                     <Ul>
-                        <li>
-                            <BalanceNum>5.8910</BalanceNum>
-                            <Symbol>DWT</Symbol>
-                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                        </li>
-                        <li>
-                            <BalanceNum>5.8910</BalanceNum>
-                            <Symbol>DWT</Symbol>
-                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                        </li>
-                        <li>
-                            <BalanceNum>5.8910</BalanceNum>
-                            <Symbol>DWT</Symbol>
-                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                        </li>
-                        <li>
-                            <BalanceNum>5.8910</BalanceNum>
-                            <Symbol>DWT</Symbol>
-                            <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                        </li>
+                        {
+                            balanceshow && <LoadingSpin><Spin /></LoadingSpin>
+                        }
+                        {
+                            !balanceshow && balancelist.map((item, index) =>
+                                <li key={`balance_${index}`}>
+                                    <BalanceNum>{item.balance}</BalanceNum>
+                                    <Symbol>{item.symbol}</Symbol>
+                                    <Address>{item.name}</Address>
+                                </li>
+                            )
+                        }
 
                     </Ul>
                 </section>
                 <section>
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
-                        <li>
-                           <img src={Owner} alt=""/>
-                           <div>
-                               <Names>Dao Owner</Names>
-                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                           </div>
-                        </li>
-                        <li>
-                           <img src={Admin} alt=""/>
-                           <div>
-                               <Names>Dao Owner</Names>
-                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                           </div>
-                        </li>
-                        <li>
-                           <img src={Admin} alt=""/>
-                           <div>
-                               <Names>Dao Owner</Names>
-                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                           </div>
-                        </li>
-                        <li>
-                           <img src={Admin} alt=""/>
-                           <div>
-                               <Names>Dao Owner</Names>
-                               <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                           </div>
-                        </li>
+                        {
+                            moderatorShow && <LoadingSpin><Spin /></LoadingSpin>
+                        }
+                        {
+                            !moderatorShow && moderators.map((i, index) => <li key={moderators[index]}>
+                                <img src={ props.match.params.owner === moderators[index][0] ? Owner :Admin} alt=""/>
+                                <div>
+                                    <Names>{moderators[index][1]}</Names>
+                                    <Address>{moderators[index][0]}</Address>
+                                </div>
+                            </li>)
+                        }
                     </UlMdrt>
                 </section>
-
                 <section>
                     <div className="titleTop">Contracts</div>
-                    <UlContr>
-                        <li>
-                           <Imglft src={AUTH} alt=""/>
-                           <ContractName>AUTH</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-                        <li>
-                           <Imglft src={Base} alt=""/>
-                           <ContractName>BASE</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-                        <li>
-                           <Imglft src={Erc20} alt=""/>
-                           <ContractName>ERC20</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-                        <li>
-                           <Imglft src={ORG} alt=""/>
-                           <ContractName>ORG</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-                        <li>
-                           <Imglft src={VAULT} alt=""/>
-                           <ContractName>VAULT</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-                        <li>
-                           <Imglft src={VOTE} alt=""/>
-                           <ContractName>VOTE</ContractName>
-                           <Address>5CtUz67MBtme5SF7caHaWJ75wKP6hnx122MTy863CxTMuu2J</Address>
-                            <CopyImg src={copy} alt=""/>
-                        </li>
-
-                    </UlContr>
+                        {
+                            !contractshow && contractlist != null && <UlContr>{
+                                contractArr.map((item) => (<li key={`contract_${item.address}`}>
+                                            <Imglft src={switchKey(item.name).img} alt=""/>
+                                            <ContractName>{switchKey(item.name).addr} </ContractName>
+                                            <Address>{item.address}</Address>
+                                             <CopyImg><CopyStr address={item.address} alt=""/></CopyImg>
+                                        </li>
+                                    ))
+                            }
+                            </UlContr>
+                        }
+                        {
+                            contractshow && <LoadingSpin><Spin /></LoadingSpin>
+                        }
                 </section>
-
-
-                <section>
-                    <MoreDaos showMoreDaos={moreDaos}/>
-                </section>
+                {/*<section>*/}
+                {/*    <MoreDaos showMoreDaos={moreDaos}/>*/}
+                {/*</section>*/}
             </div>
 
-
-
-
-
-
-
-
-            {/*<section className="section blog-single position-relative">*/}
-            {/*    <div className="row">*/}
-            {/*        <aside className="col-lg-3">*/}
-            {/*            {*/}
-            {/*                info && <div animation="border" variant="light" />*/}
-            {/*            }*/}
-            {/*            {*/}
-            {/*                !info && <ul className='leftSide'>*/}
-            {/*                    <li>*/}
-            {/*                        <h2>SubDAO</h2>*/}
-            {/*                        <div className='titleTips'>{t('DAOdescription')}</div>*/}
-            {/*                    </li>*/}
-            {/*                    <li><img src={logo} alt="" /></li>*/}
-            {/*                    <li className='lftname'>{name}</li>*/}
-            {/*                    <li>{owner}<CopyStr address={owner} /></li>*/}
-            {/*                    <li>{description}</li>*/}
-            {/*                </ul>*/}
-            {/*            }*/}
-
-            {/*        </aside>*/}
-            {/*        <Transfer*/}
-            {/*            showTips={showTransfer}*/}
-            {/*            handleClose={handleClose}*/}
-            {/*        />*/}
-            {/*        <ExitOrg*/}
-            {/*            handleClose={handleExitClose}*/}
-            {/*            handleConfirm={() => handleExitConfirm()}*/}
-            {/*            showTips={showModal} />*/}
-            {/*        <div className="col-lg-9 ">*/}
-            {/*            <div>*/}
-            {/*                <ul className="service-docs">*/}
-            {/*                    {*/}
-            {/*                        contractlist.vote_addr != null && <li onClick={() => handleClicktoType('vote')}>*/}
-            {/*                            <span>*/}
-            {/*                                <img src={votingimg} alt='' />*/}
-            {/*                                {t('Voting')}*/}
-            {/*                            </span>*/}
-            {/*                        </li>*/}
-            {/*                    }*/}
-            {/*                    /!*{*!/*/}
-            {/*                    /!*    contractlist.vault_addr != null && <li onClick={() => handleClicktoType('vault')}>*!/*/}
-            {/*                    /!*        <span>*!/*/}
-            {/*                    /!*            <img src={vaultimg}/>*!/*/}
-            {/*                    /!*            {t('Vault')}*!/*/}
-            {/*                    /!*        </span>*!/*/}
-            {/*                    /!*    </li>*!/*/}
-            {/*                    /!*} *!/*/}
-            {/*                    {*/}
-            {/*                        <li onClick={() => handleClicktoType('vault')}>*/}
-            {/*                            <span>*/}
-            {/*                                <img src={vaultimg} alt='' />*/}
-            {/*                                {t('Vault')}*/}
-            {/*                            </span>*/}
-            {/*                        </li>*/}
-            {/*                    }*/}
-
-            {/*                    /!*{*!/*/}
-            {/*                    /!*    contractlist.org_addr != null && <li onClick={() => handleClicktoType('org')}>*!/*/}
-            {/*                    /!*        <span>*!/*/}
-            {/*                    /!*            <img src={orgimg}/>*!/*/}
-            {/*                    /!*            {t('Org')}*!/*/}
-            {/*                    /!*        </span>*!/*/}
-            {/*                    /!*    </li>*!/*/}
-            {/*                    /!*}*!/*/}
-            {/*                    {*/}
-            {/*                        <li onClick={() => handleClicktoType('org')}>*/}
-            {/*                            <span>*/}
-            {/*                                <img src={orgimg} alt='' />*/}
-            {/*                                {t('Org')}*/}
-            {/*                            </span>*/}
-            {/*                        </li>*/}
-            {/*                    }*/}
-            {/*                    {(isOwner || isMember || isModerator) &&*/}
-            {/*                        <li>*/}
-            {/*                            <div className='moreBtn'>*/}
-            {/*                                <div*/}
-            {/*                                    className={`moreBg ${showMore ? 'hasBg' : 'noBg'}`}*/}
-            {/*                                >*/}
-            {/*                                    <button className="btn">*/}
-            {/*                                        <span onClick={handleMore} className='clickBtn' ref={myRef}>*/}
-            {/*                                            <img src={moreImg} alt='' />*/}
-            {/*                                            {t('More')}*/}
-            {/*                                        </span>*/}
-            {/*                                    </button>*/}
-            {/*                                    {*/}
-            {/*                                        showMore && (isOwner || isMember || isModerator) && <ul className='morelist'>*/}
-            {/*                                            {*/}
-            {/*                                                isOwner && <li onClick={handleTransfer}>*/}
-            {/*                                                    <span><img src={transferImg} alt="" /></span>{t('transferBtn')}*/}
-            {/*                                                </li>*/}
-            {/*                                            }*/}
-            {/*                                            {(isMember || isModerator) &&*/}
-            {/*                                                <li onClick={handleExit}><span><img src={exitImg} alt="" /></span>{t('Exit')}</li>*/}
-            {/*                                            }*/}
-
-
-            {/*                                        </ul>*/}
-            {/*                                    }*/}
-            {/*                                </div>*/}
-            {/*                            </div>*/}
-            {/*                        </li>*/}
-            {/*                    }*/}
-            {/*                </ul>*/}
-            {/*            </div>*/}
-            {/*            <div className="norow">*/}
-            {/*                <div className="row">*/}
-            {/*                    <div className="col-lg-5">*/}
-            {/*                        <div className='balance'>*/}
-            {/*                            <h3>{t('Balance')}</h3>*/}
-            {/*                            <div className="listwrap">*/}
-            {/*                                <div className='listbg'>*/}
-            {/*                                    <div className="listbalance">*/}
-            {/*                                        {*/}
-            {/*                                            balanceshow && <div animation="border" variant="light" />*/}
-            {/*                                        }*/}
-            {/*                                        {*/}
-            {/*                                            !balanceshow && balancelist.map((item, index) =>*/}
-            {/*                                                <dl key={`balance_${index}`}>*/}
-            {/*                                                    <dd className='symbol'>{item.balance} {item.symbol}</dd>*/}
-            {/*                                                    /!*<dt>{item.address}</dt>*!/*/}
-            {/*                                                    <dt>{item.name}</dt>*/}
-            {/*                                                </dl>*/}
-            {/*                                            )*/}
-            {/*                                        }*/}
-            {/*                                    </div>*/}
-            {/*                                </div>*/}
-            {/*                            </div>*/}
-            {/*                        </div>*/}
-            {/*                        <div className='balance'>*/}
-            {/*                            <h3>{t('Moderators')}</h3>*/}
-            {/*                            <div className="listwrap">*/}
-            {/*                                <div className='listbg'>*/}
-            {/*                                    <div className="listbalance">*/}
-            {/*                                        {*/}
-            {/*                                            moderatorShow && <div animation="border" variant="light" />*/}
-            {/*                                        }*/}
-            {/*                                        {*/}
-            {/*                                            !moderatorShow && moderators.map((i, index) => <dl key={moderators[index]}>*/}
-            {/*                                                <dd>{moderators[index][1]}</dd>*/}
-            {/*                                                <dt>{moderators[index][0]}</dt>*/}
-            {/*                                            </dl>)*/}
-            {/*                                        }*/}
-            {/*                                    </div>*/}
-            {/*                                </div>*/}
-            {/*                            </div>*/}
-            {/*                        </div>*/}
-            {/*                    </div>*/}
-            {/*                    <div className="col-lg-7">*/}
-
-            {/*                        <div className='contracts'>*/}
-            {/*                            <h3>{t('Contracts')}</h3>*/}
-            {/*                            {*/}
-            {/*                                !contractshow && contractlist != null && <ul className='list'>{*/}
-            {/*                                    Object.keys(contractlist).map((key) => (*/}
-            {/*                                        (contractlist[key] != null && <li key={`contract_${key}`}>*/}
-            {/*                                            <span>{switchKey(key)} </span>*/}
-            {/*                                            {AddresstoShow(contractlist[key])} <CopyStr address={contractlist[key]} />*/}
-            {/*                                        </li>*/}
-            {/*                                        )))*/}
-            {/*                                }*/}
-            {/*                                </ul>*/}
-            {/*                            }*/}
-            {/*                            {*/}
-            {/*                                contractshow && <div animation="border" variant="light" />*/}
-            {/*                            }*/}
-            {/*                        </div>*/}
-            {/*                    </div>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-
-            {/*</section>*/}
         </div>
     )
-
 }

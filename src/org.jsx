@@ -19,6 +19,45 @@ import {useTranslation} from "react-i18next";
 import TriggerBtn from "./images/triggerBtn.png";
 import TriggerBtnActive from "./images/triggerBtnActive.png";
 import {Modal} from "react-bootstrap";
+import {Spin} from "antd";
+import Owner from "./img/owner.png";
+import Admin from "./img/admin.png";
+import styled from "styled-components";
+
+
+const UlMdrt = styled.ul`
+    color: #10164B;
+    display: flex;
+    margin-left: -6rem;
+    flex-wrap: wrap;
+  li{
+    width: 31.3rem;
+    height: 14rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+    border-radius: 2.4rem;
+    padding: 1rem 3.7rem 1rem 1rem ;
+    box-sizing: border-box;
+    word-break: break-all;    
+    margin:0 0 3rem 6rem;
+    display: flex;
+    align-content: center;
+  }
+`;
+
+const Names = styled.div`
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 2.4rem;
+    margin-top: 1rem;
+`;
+
+const Address = styled.div`
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 2.2rem;
+    opacity: 0.4;
+`;
 
 export default function Org(props) {
 
@@ -207,124 +246,176 @@ export default function Org(props) {
                     <h4>{errorTips}</h4>
                 </Modal.Body>
             </Modal>
-            <section>
-                <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
-                <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />
-                <div className=" row">
-                    <div className='col-lg-3'>
-                        <Left />
-                    </div>
-                    <div className='col-lg-9'>
-                        <div className='voteTop'>
-                            <div className='voteLft' onClick={handleClicktoAbout}>
-                                <img src={Back} alt=""/> {t('Back')}
-                            </div>
+            <div className='container'>
+                <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                <section>
+                    <div className="titleTop">Moderators</div>
+                    <UlMdrt>
+                        {
+                            list.map((i,index) => <li key={`moderators_${index}_${i[0]}`}>
+                                <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
+                                <div>
+                                    <Names>{i[1]}</Names>
+                                    <Address>{i[0]}</Address>
+                                </div>
+                            {/*    {*/}
+                            {/*    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
+                            {/*}*/}
+                            </li>)
+                        }
+                    </UlMdrt>
+                </section>
+
+                <section>
+                    <div className="titleTop">Moderators</div>
+                    <UlMdrt>
+
+                        {
+                            memberlist.map((i,index) => <li key={`members_${index}_${i[0]}`}>
+                                <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
+                                <div>
+                                    <Names>{i[1]}</Names>
+                                    <Address>{i[0]}</Address>
+                                </div>
+                            {/*    {*/}
+                            {/*    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
+                            {/*}*/}
+                            </li>)
+                        }
+                    </UlMdrt>
+                </section>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <section>
+                    <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
+                    <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />
+                    <div className=" row">
+                        <div className='col-lg-3'>
+
+                        </div>
+                        <div className='col-lg-9'>
+                            <div className='voteTop'>
+                                <div className='voteLft' onClick={handleClicktoAbout}>
+                                    <img src={Back} alt=""/> {t('Back')}
+                                </div>
                                 <div>
                                     {
-                                    isOwner &&
-                                    <div className='btnRht10'>
-                                        {
-                                            triggerTips && <div className='triggerTips'>
-                                                <div className="trigger3" />
-                                                {t('triggerStatus')}
-                                            </div>
-                                        }
-
-                                        {
-                                            !triggerStatus &&<img src={TriggerBtn} alt=""  onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
-                                        }
-                                        {
-                                            triggerStatus &&<img src={TriggerBtnActive} alt="" onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
-                                        }
-                                    </div>
-                                }
+                                        isOwner &&
+                                        <div className='btnRht10'>
+                                            {
+                                                triggerTips && <div className='triggerTips'>
+                                                    <div className="trigger3" />
+                                                    {t('triggerStatus')}
+                                                </div>
+                                            }
+                                            {
+                                                !triggerStatus &&<img src={TriggerBtn} alt=""  onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
+                                            }
+                                            {
+                                                triggerStatus &&<img src={TriggerBtnActive} alt="" onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
+                                            }
+                                        </div>
+                                    }
                                     {
                                         isOwner &&
                                         <button className='topRhtBtn' onClick={handleApplistShow}><img src={applyList}
                                                                                                        alt=""/>{t('applyList')}
                                         </button>
                                     }
-                                    { (isOwner ||isModerator )&&
-                                        <button className='btnR' onClick={handleClicktoManage}><img src={mana}
-                                                                                                    alt=""/>{t('Manage')}
-                                        </button>
+                                    { (isOwner ||isModerator )&& <button className='btnR' onClick={handleClicktoManage}>
+                                        <img src={mana} alt=""/>{t('Manage')}
+                                    </button>
                                     }
 
 
                                 </div>
 
+                            </div>
+                            <Addnew
+                                handleClose={handleClose}
+
+                                showTips={addshow}
+                                typeName={typeName}
+                                refresh={setall}
+                                handleBatch={handleBatch}
+                                applyAuth={applyAuth}
+                            />
+                            <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
+                            <AddBatch
+                                handleClose={handleBatchClose}
+                                showTips={batchshow}
+                                refresh={setall}
+                                handleBatch={handleBatch}
+                                handleBatchAdd={handleBatchAdd}
+                            />
+                            <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
+                            <div className='orgBrdr'>
+                                <ul className="org">
+                                    <li>
+                                        <div className="titleOrg">
+                                            <h6>{t('Moderators')}</h6>
+                                            {
+                                                isOwner &&  <button className='btnAdd' onClick={()=>handleAdd('Moderators')}><img src={add} alt=""/>{t('Add')}</button>
+                                            }
+                                        </div>
+                                        {/*<div  className={isOwner?'orgbg auth':'orgbg'}>*/}
+                                        {/*    {*/}
+                                        {/*        list.map((i,index) => <div key={`moderators_${index}_${i[0]}`}>*/}
+                                        {/*            <dl>*/}
+                                        {/*                <dt>{i[1]}</dt>*/}
+                                        {/*                <dd>{i[0]}</dd>*/}
+                                        {/*                {*/}
+                                        {/*                    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
+                                        {/*                }*/}
+
+                                        {/*            </dl>*/}
+                                        {/*        </div>)*/}
+                                        {/*    }*/}
+                                        {/*</div>*/}
+                                    </li>
+                                    <li>
+                                        <div className="titleOrg">
+                                            <h6>{t('Members')}</h6>
+                                            {
+                                                applyAuth && <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
+                                            }
+                                            {
+                                                !applyAuth && <button className='btnAdd' onClick={()=>handleaddApply()}><img src={add} alt=""/>{t('apply')}</button>
+                                            }
+
+                                        </div>
+                                        {/*<div className='orgbg'>*/}
+                                        {/*    {*/}
+                                        {/*        memberlist.map((i,index) => <div key={`members_${index}_${i[0]}`}>*/}
+                                        {/*            <dl>*/}
+                                        {/*                <dt>{i[1]}</dt>*/}
+                                        {/*                <dd>{i[0]}</dd>*/}
+                                        {/*            </dl></div>)*/}
+                                        {/*    }*/}
+                                        {/*</div>*/}
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
-                        <Addnew
-                            handleClose={handleClose}
-
-                            showTips={addshow}
-                            typeName={typeName}
-                            refresh={setall}
-                            handleBatch={handleBatch}
-                            applyAuth={applyAuth}
-                        />
-                        <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
-                        <AddBatch
-                            handleClose={handleBatchClose}
-                            showTips={batchshow}
-                            refresh={setall}
-                            handleBatch={handleBatch}
-                            handleBatchAdd={handleBatchAdd}
-                        />
-                        <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
-                        <div className='orgBrdr'>
-                            <ul className="org">
-                                <li>
-                                    <div className="titleOrg">
-                                        <h6>{t('Moderators')}</h6>
-                                        {
-                                            isOwner &&  <button className='btnAdd' onClick={()=>handleAdd('Moderators')}><img src={add} alt=""/>{t('Add')}</button>
-                                        }
-                                    </div>
-                                    <div  className={isOwner?'orgbg auth':'orgbg'}>
-                                        {
-                                            list.map((i,index) => <div key={`moderators_${index}_${i[0]}`}>
-                                                <dl>
-                                                    <dt>{i[1]}</dt>
-                                                    <dd>{i[0]}</dd>
-                                                    {
-                                                        isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>
-                                                    }
-
-                                                </dl>
-                                            </div>)
-                                        }
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="titleOrg">
-                                        <h6>{t('Members')}</h6>
-                                        {
-                                            applyAuth && <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
-                                        }
-                                        {
-                                            !applyAuth && <button className='btnAdd' onClick={()=>handleaddApply()}><img src={add} alt=""/>{t('apply')}</button>
-                                        }
-
-                                    </div>
-                                    <div className='orgbg'>
-                                        {
-                                            memberlist.map((i,index) => <div key={`members_${index}_${i[0]}`}>
-                                                <dl>
-                                                    <dt>{i[1]}</dt>
-                                                    <dd>{i[0]}</dd>
-                                                </dl></div>)
-                                        }
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
+
 
         </div>
     )

@@ -6,16 +6,16 @@ import Overlay from 'react-bootstrap/Overlay'
 const Button = styled.span`
     cursor: pointer;
     padding-right: 0 !important;
+    display: inline-block;
     img{
-        width: 22px !important;
-        height: 22px !important;
-        margin-left: 2px !important;
+        width: 2.2rem !important;
+        height: 2.2rem !important;
         vertical-align: middle;
     }
 `
 
 export default function CopyStr(props)  {
-   
+
     const [show, setShow] = useState(false);
     const target = useRef(null);
 

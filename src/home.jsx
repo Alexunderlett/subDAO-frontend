@@ -169,14 +169,14 @@ function Home(props) {
 
         if (myDao === 'TRUE') {
             if (homepage && homepage[0]) {
-                props.history.push(`/about/${homepage[0].address}`)
+                props.history.push(`/about/${homepage[0].address}/${homepage[0].owner}`)
             } else {
                 props.history.push(`/home`)
             }
 
         } else {
             if (props.history.location.pathname === '/home' && homepage && homepage[0]) {
-                props.history.push(`/about/${homepage[0].address}`)
+                props.history.push(`/about/${homepage[0].address}/${homepage[0].owner}`)
             } else if (props.history.location.pathname.indexOf('/home') > -1 && homepage && !homepage.length) {
                 props.history.push(`/home`)
             }

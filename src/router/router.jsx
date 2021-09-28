@@ -20,7 +20,7 @@ function routerlink() {
             {/*<Route path="/" component={Home} exact/>*/}
 
             <Route path="/home" component={Home} />
-            <Route  path="/about/:id" component={About}/>
+            <Route  path="/about/:id/:owner" component={About}/>
             {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
             <Route path="/create" component={Createnew} />
             <Route path="/Vote/:id" component={Vote} />
@@ -30,8 +30,8 @@ function routerlink() {
             <Route path="/vault/:id" component={Vault} />
             <Route path="/deposit/:id" component={Deposit} />
             <Route path="/withdraw/:id" component={Withdraw} />
-            <Route path="/org/:id" component={Org} />
-            <Route path="/manage/:id/:isOwner/:isModerator" component={OrgManage} />
+            <Route path="/org/:id/:owner" component={Org} />
+            <Route path="/manage/:id/:owner/:isOwner/:isModerator" component={OrgManage} />
             <Redirect from="/" to="/home" exact />
         </Switch>
     );
