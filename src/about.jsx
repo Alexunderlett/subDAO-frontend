@@ -217,10 +217,8 @@ const Imglft = styled.img`
     margin-top: -0.4rem;
 `;
 const CopyImg = styled.span`
-  margin:-5px 0 0  0.7rem;
+  margin:-0.1rem 0 0  0.7rem;
 `;
-
-
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
@@ -308,7 +306,6 @@ export default function About(props) {
                         });
                         return item;
                     });
-
                     setcontractArr(arr);
                     setcontractlist(data);
                     setcontractshow(false)
@@ -408,9 +405,7 @@ export default function About(props) {
         const setBase = async () => {
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
-
                 let { owner, name, logo, desc } = data;
-
                 setName(name);
                 setLogo(logo);
                 setDescription(desc);

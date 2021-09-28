@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
 
+import Loading from './components/loading/Loading';
+
 import Left from './components/left';
 
 import Addnew from './components/org/addNew';
@@ -18,9 +20,11 @@ import {Modal} from "react-bootstrap";
 import {Button} from "antd";
 import Owner from "./img/owner.png";
 import Admin from "./img/admin.png";
+import AddP from "./img/addPeople.png";
+import Remove from './img/remove.png';
 import styled from "styled-components";
 
-import TriggerBtn from "./images/triggerBtn.png";
+import TriggerBtn from "./img/switchClose.png";
 import TriggerBtnActive from "./img/switchOpen.png";
 import AuthImg from "./img/authHover.png";
 
@@ -50,6 +54,13 @@ const UlMdrt = styled.ul`
       width: 3.2rem;
       cursor: pointer;
       display: none;
+    }
+    .imgRemove{
+     position: absolute;
+      right: -1.6rem;
+      top: -1.6rem;
+      width: 3.6rem;
+      cursor: pointer;
     }
     .names{
         font-size: 2rem;
@@ -102,6 +113,15 @@ position: absolute;
     border-radius: 0.4rem;
     font-size: 1.2rem;
     margin-left: 2rem;
+    padding: 0;
+    line-height: 3rem;
+    &.active{
+      width: 9rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    border: 0.1rem solid #D52473;
+    color: #d52473;
+    }
   }
 `;
 
@@ -110,6 +130,9 @@ const SwitchBrdr = styled.div`
   justify-content: flex-start;
   align-content: center;
   line-height: 3rem;
+  img{
+  cursor: pointer;
+  }
   span{
     font-size: 1.6rem;
   }
@@ -127,6 +150,7 @@ export default function Org(props) {
     const {state,dispatch} = useSubstrate();
     const {orgcontract,allAccounts,apiState,authcontract,erc20contract} = state;
 
+    const [loading,setLoading]= useState(false);
     const [addshow,setaddshow]= useState(false);
     const [authshow,setauthshow]= useState(false);
     const [applyshow,setapplyshow]= useState(false);
@@ -135,6 +159,7 @@ export default function Org(props) {
     const [typeName,settypeName]= useState('');
     const [tips,setTips]= useState('');
     const [showTips,setshowTips]= useState(false);
+    const [manage,setManage]= useState(false);
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
@@ -163,65 +188,73 @@ export default function Org(props) {
         const whoAmI = async () => {
             await api.org.whoAmI(orgcontract).then(data => {
                 if (!data) return;
-                setisMember(data[0])
-                setisModerator(data[1])
+                setisMember(data[0]);
+                setisModerator(data[1]);
                 setisOwner(data[2])
             });
         };
         whoAmI();
         const getFree = async () =>{
             await api.org.getFreeAddMember(orgcontract).then(data => {
-                settriggerStatus(data)
+                settriggerStatus(data);
                 setapplyAuth(data)
             });
         }
         getFree()
     }, [orgcontract,id,applyAuth]);
 
-    const setall = async () => {
+    const setall = () => {
+        setModeratorFunc()
+        setMemberFunc()
+
+    }
+    const setModeratorFunc = async () =>{
         setlistStatus(true);
         await api.org.getDaoModeratorList(orgcontract).then(data => {
             if (!data) return;
-            setlist(data)
+            setlist(data);
             setlistStatus(false)
         });
+    }
+    const setMemberFunc = async () =>{
         setmemberlistStatus(true);
         await api.org.getDaoMembersList(orgcontract).then(data => {
             if (!data) return;
-            setmemberlist(data)
+            setmemberlist(data);
             setmemberlistStatus(false);
         });
-
-    };
-
-    useEffect(async () => {
-        const initVoteContract = async () =>{
-            let org = JSON.parse(sessionStorage.getItem('contractlist'));
-            if(orgcontract == null && org!= null){
-                await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
-                    console.log('orgcontract====',data);
-                });
-            }
-
-            if(erc20contract == null && org!= null){
-                await api.erc20.InitErc20(state, dispatch, org.erc20_addr,(data) => {
-                    console.log('erc20contract====',data);
-                });
-            }
-            if(authcontract == null ){
-                await api.auth.InitAuth(state, dispatch, org.auth_addr,(data) => {
-                    console.log('authcontract====',data);
-                });
-
-            }
-            setall();
+    }
+    const initVoteContract = async () =>{
+        let org = JSON.parse(sessionStorage.getItem('contractlist'));
+        if(orgcontract == null && org!= null){
+            await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
+                console.log('orgcontract====',data);
+            });
         }
-    initVoteContract()
+
+        if(erc20contract == null && org!= null){
+            await api.erc20.InitErc20(state, dispatch, org.erc20_addr,(data) => {
+                console.log('erc20contract====',data);
+            });
+        }
+        if(authcontract == null ){
+            await api.auth.InitAuth(state, dispatch, org.auth_addr,(data) => {
+                console.log('authcontract====',data);
+            });
+
+        }
+        setall();
+    }
+    useEffect(async () => {
+
+    initVoteContract();
     }, [orgcontract,allAccounts,apiState,authcontract,erc20contract]);
 
 
-    const handleClicktoManage = () => {
-        props.history.push(`/manage/${id}/${props.match.params.owner}/${isOwner?1:0}/${isModerator?1:0}`)
+    const handleClicktoManage = (type) => {
+        // props.history.push(`/manage/${id}/${props.match.params.owner}/${isOwner?1:0}/${isModerator?1:0}`)
+        setManage(type)
+
     }
     const handleClose = () => {
         setaddshow(false)
@@ -272,22 +305,61 @@ export default function Org(props) {
         setshowTips(false)
     }
     const handleSetApply = async() => {
-
-
+        setLoading(true);
+        setTips('Set the way to add members');
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
             setapplyAuth(!applyAuth);
             settriggerStatus(!triggerStatus);
-
+            setLoading(false);
         }).catch((error) => {
             seterrorShow(true);
             seterrorTips(`Org: ${error.message}`);
-
+            setLoading(false);
 
         });
     }
 
+    const handleClicktoview = async (item,type) =>{
+        let obj={
+            name:item[1],
+            address:item[0]
+        }
+        if(type==='moderators'){
+            setLoading(true);
+            setTips('Remove a DAO moderator');
+            await api.org.removeDaoModerator(orgcontract,obj, (result)=> {
+                setLoading(false);
+                setModeratorFunc();
+            }).then(data => {
+                if (!data) return;
+
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Remove Moderator: ${error.message}`)
+                setLoading(false);
+
+            });
+        }else if(type==='members'){
+            setLoading(true);
+            setTips('Remove a DAO member');
+            await api.org.removeDaoMember(orgcontract,obj, (result)=> {
+                setLoading(false);
+                setMemberFunc();
+            }).then(data => {
+                if (!data) return;
+
+            }).catch((error) => {
+                seterrorShow(true)
+                seterrorTips(`Remove Member: ${error.message}`)
+                setLoading(false);
+
+            });
+        }
+    }
+
     return (
         <div>
+            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Modal
                 show={errorShow}
                 aria-labelledby="contained-modal-title-vcenter"
@@ -327,17 +399,20 @@ export default function Org(props) {
                     <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
                     <BtnRht>
                         {
-                            isOwner &&
+                            isOwner && !manage &&
                             <SwitchBrdr>
                                <span>Join the org directly？</span>
-                                <SwitchBtn src={!triggerStatus?TriggerBtn:TriggerBtnActive} alt=""  onClick={handleSetApply} />
+                                <SwitchBtn src={!triggerStatus?TriggerBtn:TriggerBtnActive} alt=""  onClick={()=>handleSetApply()} />
                             </SwitchBrdr>
                         }
                         {
-                            isOwner &&
+                            isOwner && !manage &&
                             <Button onClick={handleApplistShow}>Apply List</Button>
                         }
-                        { (isOwner ||isModerator )&&  <Button type="primary" onClick={handleClicktoManage}>Manage</Button>}
+                        { (isOwner ||isModerator )&& !manage&& <Button type="primary" onClick={()=>handleClicktoManage(true)}>Manage</Button>}
+                        {
+                            (isOwner ||isModerator )&& manage&& <Button className="active" onClick={()=>handleClicktoManage(false)}>Complete</Button>
+                        }
                     </BtnRht>
                 </FirstLine>
 
@@ -347,7 +422,6 @@ export default function Org(props) {
                         {
                             listStatus &&  <LoadingNew  />
                         }
-
                         {
                             !listStatus && list.map((i,index) => <li key={`moderators_${index}_${i[0]}`}>
                                 <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
@@ -356,13 +430,17 @@ export default function Org(props) {
                                     <Address>{i[0]}</Address>
                                 </div>
                                 {
-                                isOwner && <img src={AuthImg} alt="" onClick={()=>handleAuth(i[0])} className="imgAuth"/>
-                            }
+                                    isOwner && !manage && <img src={AuthImg} alt="" onClick={()=>handleAuth(i[0])} className="imgAuth"/>
+                                }
+                                {
+                                    manage && <img src={Remove} alt="" className="imgRemove" onClick={()=>handleClicktoview(i,'moderators')}/>
+                                }
+
                             </li>)
                         }
                         {
                             isOwner &&   <li  onClick={()=>handleAdd('Moderators')}>
-                                <img src={ Owner} alt=""/>
+                                <img src={ AddP} alt=""/>
                                 <NamesAdd>Add Moderator</NamesAdd>
                             </li>
                         }
@@ -376,22 +454,25 @@ export default function Org(props) {
                         }
                         {
                             !memberlistStatus &&memberlist.map((i,index) => <li key={`members_${index}_${i[0]}`}>
-                                <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
+                                <img src={Admin} alt=""/>
                                 <div>
                                     <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>
                                 </div>
+                                {
+                                    manage && <img src={Remove} alt="" className="imgRemove"  onClick={()=>handleClicktoview(i,'members')}/>
+                                }
                             </li>)
                         }
                         {
                             applyAuth &&<li  onClick={()=>handleAdd('Members')}>
-                                <img src={ Owner} alt=""/>
+                                <img src={ AddP} alt=""/>
                                 <NamesAdd>Add Member</NamesAdd>
                             </li>
                         }
                         {
                             !applyAuth  &&  <li  onClick={()=>handleaddApply()}>
-                                <img src={ Owner} alt=""/>
+                                <img src={ AddP} alt=""/>
                                 <NamesAdd>Apply Member</NamesAdd>
                             </li>
                         }

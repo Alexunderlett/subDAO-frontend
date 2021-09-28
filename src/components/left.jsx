@@ -151,7 +151,12 @@ export default function Left(props){
     }, [delAdmin]);
 
     useEffect(() => {
-
+       init();
+    }, [props.id]);
+    useEffect(() => {
+       init();
+    }, []);
+    const init = () =>{
         let logo = sessionStorage.getItem('logo');
         setLogo(logo);
 
@@ -169,13 +174,14 @@ export default function Left(props){
         setisOwner(JSON.parse(sessionStorage.getItem('isOwner')));
 
         let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
+        console.log("======contractlistBg",contractlistBg)
         if(contractlistBg!=null){
             setcontractlist(contractlistBg);
         }
 
         let pageType = props.history.location.pathname.split('/')[1];
         setType(pageType);
-    }, []);
+    }
 
     const handleTransfer = () => {
         setShowTransfer(true)

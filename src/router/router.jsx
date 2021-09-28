@@ -10,7 +10,6 @@ import Vault from '../vault';
 import Deposit from '../components/vault/deposit';
 import Withdraw from '../components/vault/withdraw';
 import Org from '../org';
-import OrgManage from '../components/org/orgManage';
 
 import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
@@ -31,7 +30,6 @@ function routerlink() {
             <Route path="/deposit/:id" component={Deposit} />
             <Route path="/withdraw/:id" component={Withdraw} />
             <Route path="/org/:id/:owner" component={Org} />
-            <Route path="/manage/:id/:owner/:isOwner/:isModerator" component={OrgManage} />
             <Redirect from="/" to="/home" exact />
         </Switch>
     );
