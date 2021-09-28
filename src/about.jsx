@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSubstrate } from "./api/contracts";
-import { Spin } from 'antd';
 
 import api from './api/index';
-import Loading from "./components/loading/Loading";
+import LoadingNew from "./components/loadingNEW";
 import Left from './components/left';
 
 import CopyStr from "./components/copy";
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import styled from 'styled-components';
 
 
@@ -19,8 +18,8 @@ import ERC20 from "./img/ERC20.png";
 import ORG from "./img/ORG.png";
 import VAULT from "./img/VAULT.png";
 import VOTE from "./img/VOTE.png";
+
 import MoreDaos from "./components/MoreDaos";
-import VoteActive from "./components/vote/voteActive";
 
 
 const Tip = styled.div`
@@ -221,17 +220,11 @@ const CopyImg = styled.span`
   margin:-5px 0 0  0.7rem;
 `;
 
-const LoadingSpin = styled.div`
- width: 100%;
- text-align: center;
-`;
+
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
     const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract } = state;
-
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     const [id, setAId] = useState(null);
     const [name, setName] = useState('');
@@ -262,30 +255,21 @@ export default function About(props) {
     const [votestate, setvotestate] = useState(false);
     const [orgstate, setorgstate] = useState(false);
 
-    const [showTransfer, setShowTransfer] = useState(false);
-    const [showModal, setShowModal] = useState(false);
     const [isMember, setisMember] = useState(false);
     const [isModerator, setisModerator] = useState(false);
     const [isOwner, setisOwner] = useState(false);
-    const [delMem, setdelMem] = useState(false);
-    const [delAdmin, setdelAdmin] = useState(false);
-
     const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
 
     const [moreDaos, setMoreDaos] = useState(false);
 
-    // const myRef = useRef();
 
     useEffect(() => {
         if (apiState !== 'READY') return;
         const setInitDAO = async () => {
-            setLoading(true);
-            setTips('InitializeDAO');
 
             await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
                 setdaostate(data);
-                setLoading(false)
             });
         };
         setInitDAO();
@@ -314,16 +298,14 @@ export default function About(props) {
     useEffect(() => {
         if (daoManagercontract == null && daostate) return;
         const queryAddrs = async () => {
-            // setTips(t('GetContractAddress'));
             await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
                 if (data) {
-                    console.log("==============setcontractlist============", data)
                     let arr=[];
                     Object.keys(data).map((item) => {
-                            arr.push({
-                                name: item,
-                                address: data[item]
-                            })
+                        arr.push({
+                            name: item,
+                            address: data[item]
+                        });
                         return item;
                     });
 
@@ -343,7 +325,6 @@ export default function About(props) {
         if (base_addr != null) {
 
             const setInitBase = async () => {
-                // setTips(t('InitializingContracts'));
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
                     setbasestate(data);
                 });
@@ -352,7 +333,6 @@ export default function About(props) {
         }
         if (vault_addr != null) {
             const setInitVault = async () => {
-                // setTips(t('InitializingContracts'));
                 await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
                     setvaultstate(data)
                 });
@@ -362,7 +342,6 @@ export default function About(props) {
 
         if (org_addr != null) {
             const setInitOrg = async () => {
-                setTips('InitializingContracts');
                 await api.org.InitOrg(state, dispatch, org_addr, (data) => {
                     setorgstate(data)
                 });
@@ -371,7 +350,6 @@ export default function About(props) {
         }
         if (auth_addr != null) {
             const setInitAuth = async () => {
-                // setTips(t('InitializingContracts'));
                 await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
                     console.log("====", data)
                 });
@@ -380,7 +358,6 @@ export default function About(props) {
         }
         if (vote_addr != null) {
             const setInitVote = async () => {
-                // setTips(t('InitializingContracts'));
                 await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
                     setvotestate(data)
                 });
@@ -389,7 +366,6 @@ export default function About(props) {
         }
         if (erc20_addr != null) {
             const setInitErc20 = async () => {
-                // setTips(t('InitializingContracts'));
                 await api.erc20.InitErc20(state, dispatch, erc20_addr);
             };
             setInitErc20();
@@ -404,7 +380,6 @@ export default function About(props) {
     }, [logo, description, owner, name]);
     useEffect(() => {
         const setBalance = async () => {
-            // setTips(t('Getbalance'));
             let arr = [];
             let index = 0;
             for (let item of tokenlist) {
@@ -423,18 +398,14 @@ export default function About(props) {
                 });
                 index++;
                 setbalancelist(arr);
-                setbalanceshow(false)
-
+                setbalanceshow(false);
             }
-
         }
         setBalance();
     }, [tokenlist, id]);
     useEffect(() => {
         if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
-
         const setBase = async () => {
-            // setTips(t('Getinformation'));
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
 
@@ -445,10 +416,6 @@ export default function About(props) {
                 setDescription(desc);
                 setOwner(owner);
                 setinfo(false);
-
-                // setTimeout(()=>{
-                //     setLoading(false)
-                // },2000)
             });
         };
         setBase();
@@ -464,18 +431,6 @@ export default function About(props) {
         };
         setToken();
     }, [vaultcontract, vaultstate, id]);
-
-    useEffect(() => {
-        if (!votestate || contractlist.vote_addr == null || !contractlist.vote_addr) return;
-        const setActiveVote = async () => {
-            await api.vote.queryOpenVote(votecontract).then(data => {
-                if (!data) return;
-                let arr = data.slice(0, 3);
-                setActivelist(arr)
-            });
-        };
-        setActiveVote();
-    }, [votecontract, votestate, id]);
 
     useEffect(() => {
         if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
@@ -495,71 +450,18 @@ export default function About(props) {
         const whoAmI = async () => {
             await api.org.whoAmI(orgcontract).then(data => {
 
-                console.log("======whoAmI",data)
                 if (!data) return;
                 setisMember(data[0]);
+                sessionStorage.setItem('isMember',data[0]);
                 setisModerator(data[1]);
-                setisOwner(data[2])
+                sessionStorage.setItem('isModerator',data[1]);
+                setisOwner(data[2]);
+                sessionStorage.setItem('isOwner',data[2]);
             });
         };
         whoAmI();
     }, [orgcontract, orgstate, id]);
 
-    const handleClicktoType = (type) => {
-        if(type === 'org'){
-            props.history.push(`/${type}/${id}/${props.match.params.owner}`)
-        }else{
-            props.history.push(`/${type}/${id}`)
-        }
-
-    }
-
-
-
-    // const handleExitConfirm = async () => {
-    //     setShowModal(false);
-    //     setLoading(true);
-    //     setTips('ExitDAO');
-    //     if (isMember) {
-    //         await api.org.resignMember(orgcontract, function (result) {
-    //             if (!result) return;
-    //             setdelMem(true)
-    //         }).catch((error) => {
-    //             seterrorShow(true);
-    //             seterrorTips(`Resign Member: ${error.message}`);
-    //             setLoading(false);
-    //
-    //         });
-    //     } else {
-    //         setdelMem(true)
-    //     }
-    // };
-    useEffect(() => {
-        if (orgcontract == null || !delMem) return;
-        const setAdmin = async () => {
-            if (isModerator) {
-                await api.org.resignModerator(orgcontract, function (result) {
-                    if (!result) return;
-                    setdelAdmin(true)
-                }).catch((error) => {
-                    seterrorShow(true);
-                    seterrorTips(`Resign Moderator: ${error.message}`);
-                    setLoading(false);
-
-                });
-            } else {
-                setdelAdmin(true)
-            }
-        };
-        setAdmin();
-
-    }, [delMem]);
-    useEffect(() => {
-        if (orgcontract == null || !delAdmin || !delMem) return;
-        setTimeout(async () => {
-            window.location.reload()
-        }, 5000)
-    }, [delAdmin]);
     const switchKey = (key) => {
         let str = '';
         let img = '';
@@ -600,7 +502,6 @@ export default function About(props) {
     }
     return (
         <div>
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
             <Modal
                 visible={errorShow}
                 onCancel={() => seterrorShow(false)}
@@ -611,54 +512,13 @@ export default function About(props) {
 
             <div className='container'>
                 <Left history={props.history} id={id} owner={props.match.params.owner}/>
-                {/*<section>*/}
-                {/*    <Transfer*/}
-                {/*        showTips={showTransfer}*/}
-                {/*        handleClose={handleClose}*/}
-                {/*    />*/}
-                {/*    <ExitOrg*/}
-                {/*        handleClose={handleExitClose}*/}
-                {/*        handleConfirm={() => handleExitConfirm()}*/}
-                {/*        showTips={showModal} />*/}
-
-                {/*    {*/}
-                {/*        info &&  <TopTitles><LoadingSpin><Spin /></LoadingSpin></TopTitles>*/}
-                {/*    }*/}
-                {/*    {*/}
-                {/*        !info && <TopTitles>*/}
-                {/*            <LftTop>*/}
-                {/*                <img src={logo} alt=""/>*/}
-                {/*                <Contents>*/}
-                {/*                    <Tit>{name}</Tit>*/}
-                {/*                    <div className="contentDesc">{description}</div>*/}
-                {/*                </Contents>*/}
-                {/*            </LftTop>*/}
-                {/*            <RhtTop>*/}
-                {/*                {(isOwner || isMember || isModerator) && <ul className='morelist'>*/}
-                {/*                    {*/}
-                {/*                        isOwner && <Button onClick={handleTransfer}>*/}
-                {/*                            Transfer*/}
-                {/*                        </Button>*/}
-                {/*                    }*/}
-                {/*                    {(isMember || isModerator) &&*/}
-                {/*                    <Button onClick={handleExit}>Quit</Button>*/}
-                {/*                    }*/}
-                {/*                </ul>*/}
-                {/*                }*/}
-                {/*                {*/}
-                {/*                    ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>*/}
-                {/*                }*/}
-                {/*            </RhtTop>*/}
-                {/*        </TopTitles>*/}
-                {/*    }*/}
-                {/*</section>*/}
-
                 <section>
                     <div className="titleTop">Balance</div>
                     <Ul>
                         {
-                            balanceshow && <LoadingSpin><Spin /></LoadingSpin>
+                            balanceshow && <LoadingNew  />
                         }
+
                         {
                             !balanceshow && balancelist.map((item, index) =>
                                 <li key={`balance_${index}`}>
@@ -668,14 +528,14 @@ export default function About(props) {
                                 </li>
                             )
                         }
-
                     </Ul>
                 </section>
                 <section>
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
+
                         {
-                            moderatorShow && <LoadingSpin><Spin /></LoadingSpin>
+                            moderatorShow &&  <LoadingNew />
                         }
                         {
                             !moderatorShow && moderators.map((i, index) => <li key={moderators[index]}>
@@ -691,6 +551,9 @@ export default function About(props) {
                 <section>
                     <div className="titleTop">Contracts</div>
                         {
+                            contractshow &&<LoadingNew  />
+                        }
+                        {
                             !contractshow && contractlist != null && <UlContr>{
                                 contractArr.map((item) => (<li key={`contract_${item.address}`}>
                                             <Imglft src={switchKey(item.name).img} alt=""/>
@@ -702,9 +565,7 @@ export default function About(props) {
                             }
                             </UlContr>
                         }
-                        {
-                            contractshow && <LoadingSpin><Spin /></LoadingSpin>
-                        }
+
                 </section>
                 {/*<section>*/}
                 {/*    <MoreDaos showMoreDaos={moreDaos}/>*/}

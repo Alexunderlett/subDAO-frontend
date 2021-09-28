@@ -2,27 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {useSubstrate} from "./api/contracts";
 import api from "./api";
 
-import Loading from './components/loading/Loading';
 import Left from './components/left';
-import Back from './images/prev.png';
-import mana from './images/mana.png';
-import add from './images/Add.png';
-import auth from './images/Vector.png';
-import applyList from './images/apply.png';
-import Addnew from './components/org/addNew'
-import AddAuth from './components/org/addAuth'
-import AddApply from './components/org/addApply'
-import ApplyList from './components/org/ApplyList'
-import ApplyTips from './components/org/ApplyTips'
-import AddBatch from './components/org/addbatch'
-import {useTranslation} from "react-i18next";
-import TriggerBtn from "./images/triggerBtn.png";
-import TriggerBtnActive from "./images/triggerBtnActive.png";
+
+import Addnew from './components/org/addNew';
+import AddAuth from './components/org/addAuth';
+import AddApply from './components/org/addApply';
+import ApplyList from './components/org/ApplyList';
+import ApplyTips from './components/org/ApplyTips';
+import AddBatch from './components/org/addbatch';
+import LoadingNew from "./components/loadingNEW";
+
+
 import {Modal} from "react-bootstrap";
-import {Spin} from "antd";
+
+import {Button} from "antd";
 import Owner from "./img/owner.png";
 import Admin from "./img/admin.png";
 import styled from "styled-components";
+
+import TriggerBtn from "./images/triggerBtn.png";
+import TriggerBtnActive from "./img/switchOpen.png";
+import AuthImg from "./img/authHover.png";
 
 
 const UlMdrt = styled.ul`
@@ -42,14 +42,41 @@ const UlMdrt = styled.ul`
     margin:0 0 3rem 6rem;
     display: flex;
     align-content: center;
+    position: relative;
+    .imgAuth{
+      position: absolute;
+      right: 2rem;
+      top: 1rem;
+      width: 3.2rem;
+      cursor: pointer;
+      display: none;
+    }
+    .names{
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 2.4rem;
+        margin-top: 1rem;
+        font-family: Roboto-Regular;
+    }
+    &:hover{
+      background: #FFEFF7;
+      .names{
+         color: #D51172;
+      }
+      .imgAuth{
+      display: block;
+    }
+    }
   }
 `;
 
-const Names = styled.div`
+
+const NamesAdd = styled.div`
     font-size: 2rem;
-    font-weight: 300;
-    line-height: 2.4rem;
-    margin-top: 1rem;
+    font-weight: 400;
+    font-family: Roboto-Regular;
+    margin-top: 4.6rem;
+    cursor: pointer;
 `;
 
 const Address = styled.div`
@@ -59,12 +86,47 @@ const Address = styled.div`
     opacity: 0.4;
 `;
 
+const FirstLine = styled.div`
+  position: relative;
+`;
+const BtnRht = styled.div`
+position: absolute;
+  right: 2rem;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  button{
+    width: 9rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    margin-left: 2rem;
+  }
+`;
+
+const SwitchBrdr = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  line-height: 3rem;
+  span{
+    font-size: 1.6rem;
+  }
+`;
+
+const SwitchBtn = styled.img`
+  width: 4.2rem;
+  height: 2.2rem;
+  margin: 0.4rem 1rem 0 0 ;
+ 
+`
+
 export default function Org(props) {
 
     const {state,dispatch} = useSubstrate();
     const {orgcontract,allAccounts,apiState,authcontract,erc20contract} = state;
 
-    const [loading,setLoading]= useState(false);
     const [addshow,setaddshow]= useState(false);
     const [authshow,setauthshow]= useState(false);
     const [applyshow,setapplyshow]= useState(false);
@@ -76,7 +138,9 @@ export default function Org(props) {
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
+    const [listStatus, setlistStatus] = useState(false);
     const [memberlist, setmemberlist] = useState([]);
+    const [memberlistStatus, setmemberlistStatus] = useState(false);
     const [authlist, setauthlist] = useState([]);
 
     const [isMember, setisMember] = useState(false);
@@ -84,13 +148,11 @@ export default function Org(props) {
     const [isOwner, setisOwner] = useState(false);
     const [applyAuth, setapplyAuth] = useState(false);
     const [triggerStatus, settriggerStatus] = useState(false);
-    const [triggerTips, settriggerTips] = useState(false);
     const [address, setaddress] = useState('');
 
     const [errorShow,seterrorShow]= useState(false);
     const [errorTips,seterrorTips]= useState('');
 
-    let { t } = useTranslation();
 
     useEffect(() => {
         setId(props.match.params.id);
@@ -117,18 +179,18 @@ export default function Org(props) {
     }, [orgcontract,id,applyAuth]);
 
     const setall = async () => {
-        setLoading(true);
-        setTips(t('InitializeORG'));
-
+        setlistStatus(true);
         await api.org.getDaoModeratorList(orgcontract).then(data => {
             if (!data) return;
             setlist(data)
+            setlistStatus(false)
         });
+        setmemberlistStatus(true);
         await api.org.getDaoMembersList(orgcontract).then(data => {
             if (!data) return;
             setmemberlist(data)
+            setmemberlistStatus(false);
         });
-        setLoading(false);
 
     };
 
@@ -146,7 +208,7 @@ export default function Org(props) {
                     console.log('erc20contract====',data);
                 });
             }
-            if(authcontract == null && auth!= null){
+            if(authcontract == null ){
                 await api.auth.InitAuth(state, dispatch, org.auth_addr,(data) => {
                     console.log('authcontract====',data);
                 });
@@ -159,38 +221,35 @@ export default function Org(props) {
 
 
     const handleClicktoManage = () => {
-        props.history.push(`/manage/${id}/${isOwner?1:0}/${isModerator?1:0}`)
-    }
-    const handleClicktoAbout = () => {
-        props.history.push(`/about/${id}`)
+        props.history.push(`/manage/${id}/${props.match.params.owner}/${isOwner?1:0}/${isModerator?1:0}`)
     }
     const handleClose = () => {
         setaddshow(false)
     }
     const handleBatch = () => {
         setaddshow(false);
-        setbatchshow(true)
+        setbatchshow(true);
     }
     const handleBatchAdd = () => {
         setaddshow(true);
-        setbatchshow(false)
+        setbatchshow(false);
     }
     const handleBatchClose = () => {
-        setbatchshow(false)
+        setbatchshow(false);
     }
     const handleAdd = (type) => {
         settypeName(type);
         setaddshow(true)
     }
     const handleAuth = async (item) => {
-        setauthshow(true)
+        setauthshow(true);
         let list = await api.auth.showActions(authcontract);
-        setauthlist(list)
+        setauthlist(list);
         setaddress(item)
     }
     const handleAuthClose = () => {
-        setauthshow(false)
-        setaddress('')
+        setauthshow(false);
+        setaddress('');
         setauthlist([])
 
     }
@@ -212,28 +271,23 @@ export default function Org(props) {
     const handleAppTipsClose = () => {
         setshowTips(false)
     }
-    const handleTriggerTips = () => {
-        settriggerTips(!triggerTips)
-    }
     const handleSetApply = async() => {
-        settriggerTips(!triggerTips)
-        setLoading(true);
-        setTips(t('setFreeAddMember'));
+
+
         await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
             setapplyAuth(!applyAuth);
             settriggerStatus(!triggerStatus);
-            setLoading(false);
+
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Org: ${error.message}`)
-            setLoading(false);
+            seterrorShow(true);
+            seterrorTips(`Org: ${error.message}`);
+
 
         });
     }
 
     return (
         <div>
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Modal
                 show={errorShow}
                 aria-labelledby="contained-modal-title-vcenter"
@@ -246,179 +300,105 @@ export default function Org(props) {
                     <h4>{errorTips}</h4>
                 </Modal.Body>
             </Modal>
+
+            <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
+            <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />
+            <Addnew
+                handleClose={handleClose}
+
+                showTips={addshow}
+                typeName={typeName}
+                refresh={setall}
+                handleBatch={handleBatch}
+                applyAuth={applyAuth}
+            />
+            <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
+            <AddBatch
+                handleClose={handleBatchClose}
+                showTips={batchshow}
+                refresh={setall}
+                handleBatch={handleBatch}
+                handleBatchAdd={handleBatchAdd}
+            />
+            <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
+
             <div className='container'>
-                <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                <FirstLine>
+                    <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                    <BtnRht>
+                        {
+                            isOwner &&
+                            <SwitchBrdr>
+                               <span>Join the org directly？</span>
+                                <SwitchBtn src={!triggerStatus?TriggerBtn:TriggerBtnActive} alt=""  onClick={handleSetApply} />
+                            </SwitchBrdr>
+                        }
+                        {
+                            isOwner &&
+                            <Button onClick={handleApplistShow}>Apply List</Button>
+                        }
+                        { (isOwner ||isModerator )&&  <Button type="primary" onClick={handleClicktoManage}>Manage</Button>}
+                    </BtnRht>
+                </FirstLine>
+
                 <section>
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
                         {
-                            list.map((i,index) => <li key={`moderators_${index}_${i[0]}`}>
+                            listStatus &&  <LoadingNew  />
+                        }
+
+                        {
+                            !listStatus && list.map((i,index) => <li key={`moderators_${index}_${i[0]}`}>
                                 <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
                                 <div>
-                                    <Names>{i[1]}</Names>
+                                    <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>
                                 </div>
-                            {/*    {*/}
-                            {/*    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
-                            {/*}*/}
+                                {
+                                isOwner && <img src={AuthImg} alt="" onClick={()=>handleAuth(i[0])} className="imgAuth"/>
+                            }
                             </li>)
+                        }
+                        {
+                            isOwner &&   <li  onClick={()=>handleAdd('Moderators')}>
+                                <img src={ Owner} alt=""/>
+                                <NamesAdd>Add Moderator</NamesAdd>
+                            </li>
                         }
                     </UlMdrt>
                 </section>
-
                 <section>
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
-
                         {
-                            memberlist.map((i,index) => <li key={`members_${index}_${i[0]}`}>
+                            memberlistStatus &&  <LoadingNew  />
+                        }
+                        {
+                            !memberlistStatus &&memberlist.map((i,index) => <li key={`members_${index}_${i[0]}`}>
                                 <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
                                 <div>
-                                    <Names>{i[1]}</Names>
+                                    <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>
                                 </div>
-                            {/*    {*/}
-                            {/*    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
-                            {/*}*/}
                             </li>)
                         }
+                        {
+                            applyAuth &&<li  onClick={()=>handleAdd('Members')}>
+                                <img src={ Owner} alt=""/>
+                                <NamesAdd>Add Member</NamesAdd>
+                            </li>
+                        }
+                        {
+                            !applyAuth  &&  <li  onClick={()=>handleaddApply()}>
+                                <img src={ Owner} alt=""/>
+                                <NamesAdd>Apply Member</NamesAdd>
+                            </li>
+                        }
                     </UlMdrt>
-                </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <section>
-                    <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
-                    <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />
-                    <div className=" row">
-                        <div className='col-lg-3'>
-
-                        </div>
-                        <div className='col-lg-9'>
-                            <div className='voteTop'>
-                                <div className='voteLft' onClick={handleClicktoAbout}>
-                                    <img src={Back} alt=""/> {t('Back')}
-                                </div>
-                                <div>
-                                    {
-                                        isOwner &&
-                                        <div className='btnRht10'>
-                                            {
-                                                triggerTips && <div className='triggerTips'>
-                                                    <div className="trigger3" />
-                                                    {t('triggerStatus')}
-                                                </div>
-                                            }
-                                            {
-                                                !triggerStatus &&<img src={TriggerBtn} alt=""  onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
-                                            }
-                                            {
-                                                triggerStatus &&<img src={TriggerBtnActive} alt="" onClick={handleSetApply} onMouseOver={handleTriggerTips} onMouseOut={handleTriggerTips}/>
-                                            }
-                                        </div>
-                                    }
-                                    {
-                                        isOwner &&
-                                        <button className='topRhtBtn' onClick={handleApplistShow}><img src={applyList}
-                                                                                                       alt=""/>{t('applyList')}
-                                        </button>
-                                    }
-                                    { (isOwner ||isModerator )&& <button className='btnR' onClick={handleClicktoManage}>
-                                        <img src={mana} alt=""/>{t('Manage')}
-                                    </button>
-                                    }
-
-
-                                </div>
-
-                            </div>
-                            <Addnew
-                                handleClose={handleClose}
-
-                                showTips={addshow}
-                                typeName={typeName}
-                                refresh={setall}
-                                handleBatch={handleBatch}
-                                applyAuth={applyAuth}
-                            />
-                            <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
-                            <AddBatch
-                                handleClose={handleBatchClose}
-                                showTips={batchshow}
-                                refresh={setall}
-                                handleBatch={handleBatch}
-                                handleBatchAdd={handleBatchAdd}
-                            />
-                            <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
-                            <div className='orgBrdr'>
-                                <ul className="org">
-                                    <li>
-                                        <div className="titleOrg">
-                                            <h6>{t('Moderators')}</h6>
-                                            {
-                                                isOwner &&  <button className='btnAdd' onClick={()=>handleAdd('Moderators')}><img src={add} alt=""/>{t('Add')}</button>
-                                            }
-                                        </div>
-                                        {/*<div  className={isOwner?'orgbg auth':'orgbg'}>*/}
-                                        {/*    {*/}
-                                        {/*        list.map((i,index) => <div key={`moderators_${index}_${i[0]}`}>*/}
-                                        {/*            <dl>*/}
-                                        {/*                <dt>{i[1]}</dt>*/}
-                                        {/*                <dd>{i[0]}</dd>*/}
-                                        {/*                {*/}
-                                        {/*                    isOwner && <dd><img src={auth} alt="" onClick={()=>handleAuth(i[0])}/></dd>*/}
-                                        {/*                }*/}
-
-                                        {/*            </dl>*/}
-                                        {/*        </div>)*/}
-                                        {/*    }*/}
-                                        {/*</div>*/}
-                                    </li>
-                                    <li>
-                                        <div className="titleOrg">
-                                            <h6>{t('Members')}</h6>
-                                            {
-                                                applyAuth && <button className='btnAdd' onClick={()=>handleAdd('Members')}><img src={add} alt=""/>{t('Add')}</button>
-                                            }
-                                            {
-                                                !applyAuth && <button className='btnAdd' onClick={()=>handleaddApply()}><img src={add} alt=""/>{t('apply')}</button>
-                                            }
-
-                                        </div>
-                                        {/*<div className='orgbg'>*/}
-                                        {/*    {*/}
-                                        {/*        memberlist.map((i,index) => <div key={`members_${index}_${i[0]}`}>*/}
-                                        {/*            <dl>*/}
-                                        {/*                <dt>{i[1]}</dt>*/}
-                                        {/*                <dd>{i[0]}</dd>*/}
-                                        {/*            </dl></div>)*/}
-                                        {/*    }*/}
-                                        {/*</div>*/}
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                    </div>
                 </section>
             </div>
-
-
         </div>
     )
-
 }
 

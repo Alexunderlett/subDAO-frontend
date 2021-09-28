@@ -5,6 +5,8 @@ import styled from "styled-components";
 import Transfer from "./transfer";
 import ExitOrg from "./exitOrg";
 
+import {useSubstrate} from "../api/contracts";
+import api from '../api/index';
 
 const TopTitles = styled.div`
     width: 100%;
@@ -93,6 +95,10 @@ const BtnGroup = styled.div`
 `;
 
 export default function Left(props){
+    const { state } = useSubstrate();
+    const {  orgcontract} = state;
+    const [delMem, setdelMem] = useState(false);
+    const [delAdmin, setdelAdmin] = useState(false);
 
     const [owner, setOwner] = useState('');
     const [description, setDescription] = useState('');
@@ -116,6 +122,33 @@ export default function Left(props){
     });
 
     const [showTransfer, setShowTransfer] = useState(false);
+    useEffect(() => {
+        if (orgcontract == null || !delMem) return;
+        const setAdmin = async () => {
+            if (isModerator) {
+                await api.org.resignModerator(orgcontract, function (result) {
+                    if (!result) return;
+                    setdelAdmin(true)
+                }).catch((error) => {
+                    // seterrorShow(true);
+                    // seterrorTips(`Resign Moderator: ${error.message}`);
+                    // setLoading(false);
+
+                });
+            } else {
+                setdelAdmin(true)
+            }
+        };
+        setAdmin();
+
+    }, [delMem]);
+
+    useEffect(() => {
+        if (orgcontract == null || !delAdmin || !delMem) return;
+        setTimeout(async () => {
+            window.location.reload()
+        }, 5000)
+    }, [delAdmin]);
 
     useEffect(() => {
 
@@ -131,7 +164,9 @@ export default function Left(props){
         let name = sessionStorage.getItem('DaoName');
         setName(name);
 
-
+        setisMember(JSON.parse(sessionStorage.getItem('isMember')));
+        setisModerator(JSON.parse(sessionStorage.getItem('isModerator')));
+        setisOwner(JSON.parse(sessionStorage.getItem('isOwner')));
 
         let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
         if(contractlistBg!=null){
@@ -157,7 +192,6 @@ export default function Left(props){
     const handleClicktoType = (typeNow) => {
         if(typeNow === type) return;
         let str;
-        sessionStorage.setItem('pageType',typeNow);
         switch(typeNow) {
             case 'org':
             case 'about':
@@ -172,17 +206,36 @@ export default function Left(props){
 
     const handleExit = () => {
         setShowModal(true)
-    };
+    }
+
+    const handleExitConfirm = async () => {
+        setShowModal(false);
+
+        if (isMember) {
+            await api.org.resignMember(orgcontract, function (result) {
+                if (!result) return;
+                setdelMem(true)
+            }).catch((error) => {
+                // seterrorShow(true);
+                // seterrorTips(`Resign Member: ${error.message}`);
+                // setLoading(false);
+
+            });
+        } else {
+            setdelMem(true)
+        }
+    }
     return (
         <div>
-            {/*<Transfer*/}
-            {/*    showTips={showTransfer}*/}
-            {/*    handleClose={handleClose}*/}
-            {/*/>*/}
-            {/*<ExitOrg*/}
-            {/*    handleClose={handleExitClose}*/}
-            {/*    handleConfirm={() => handleExitConfirm()}*/}
-            {/*    showTips={showModal} />*/}
+            <Transfer
+                showTips={showTransfer}
+                handleClose={handleClose}
+            />
+            <ExitOrg
+                handleClose={handleExitClose}
+                handleConfirm={() => handleExitConfirm()}
+                showTips={showModal} />
+
             <TopTitles>
                 <LftTop>
                     <img src={logo} alt=""/>
@@ -192,7 +245,7 @@ export default function Left(props){
                     </Contents>
                 </LftTop>
                 <RhtTop>
-                    {(isOwner || isMember || isModerator) && <ul className='morelist'>
+                    {(isOwner || isMember || isModerator) && <div>
                         {
                             isOwner && <Button onClick={()=>handleTransfer()}>
                                 Transfer
@@ -201,7 +254,7 @@ export default function Left(props){
                         {(isMember || isModerator) &&
                         <Button onClick={()=>handleExit()}>Quit</Button>
                         }
-                    </ul>
+                    </div>
                     }
                     {
                         ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>
@@ -210,7 +263,7 @@ export default function Left(props){
             </TopTitles>
 
             <BtnGroup>
-                <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('home')}>Home</span>
+                <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('about')}>Home</span>
                 {
                     contractlist.vote_addr != null &&<span className={type === 'vote' ? 'active' : ''} onClick={() => handleClicktoType('vote')}>Voting</span>
                 }
