@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { Table} from "react-bootstrap";
 import view from '../../images/view.png';
 import {useTranslation} from "react-i18next";
 
@@ -19,7 +18,7 @@ export default function VotePagination(props){
     }
         return (
             <div className='votePending'>
-                <Table hover>
+                <table>
                     <thead>
                     <tr>
                         <th>{t('Number')}</th>
@@ -36,12 +35,9 @@ export default function VotePagination(props){
                         </tr>)
                     }
                     </tbody>
-                </Table>
-
+                </table>
             </div>
         )
-
-
 }
 
 

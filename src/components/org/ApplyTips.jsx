@@ -1,20 +1,16 @@
-import React, {Component} from 'react';
-import {Modal} from "react-bootstrap";
-import { Trans,Translation } from 'react-i18next';
+import React, { Component } from 'react';
+import { Modal } from 'antd';
+import { Trans, Translation } from 'react-i18next';
 
 class ApplyTips extends Component {
     render() {
-        let {handleClose, showTips} = this.props;
+        let { handleClose, showTips } = this.props;
         return <Modal
-            show={showTips}
-            onHide={handleClose}
-            centered={true}
-            className='applytipsBrdr'
+            visible={showTips}
+            onCancel={handleClose}
+            footer={null}
         >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4><Trans>ApplicationSent</Trans></h4>
-            </Modal.Body>
+            <Trans>ApplicationSent</Trans>
         </Modal>;
     }
 }

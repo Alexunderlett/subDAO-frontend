@@ -1,18 +1,19 @@
-import React, { useEffect, useState,forwardRef,useImperativeHandle} from 'react';
-import {Button, Form, FormControl, FormLabel, InputGroup, Modal} from "react-bootstrap";
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import { Button, Modal, Input, Select} from 'antd';
+
 import api from "../../api";
-import {useSubstrate} from "../../api/contracts";
+import { useSubstrate } from "../../api/contracts";
 
 import Loading from "../loading/Loading";
 import sender from "../../images/send.png";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
- const Withdraw = forwardRef((props,ref) =>{
-    const {state} = useSubstrate();
-    const {vaultcontract} = state;
+const Withdraw = forwardRef((props, ref) => {
+    const { state } = useSubstrate();
+    const { vaultcontract } = state;
 
-    const [loading,setLoading]= useState(false);
-    const [tips,setTips]= useState('');
+    const [loading, setLoading] = useState(false);
+    const [tips, setTips] = useState('');
 
 
     const [selected, setSelected] = useState(null);
@@ -21,9 +22,9 @@ import {useTranslation} from "react-i18next";
 
     const [list, setList] = useState([]);
 
-     let { t } = useTranslation();
+    let { t } = useTranslation();
 
-    useEffect( () => {
+    useEffect(() => {
         const settokenlist = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
@@ -35,18 +36,18 @@ import {useTranslation} from "react-i18next";
 
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         let str = `set${name}`
         eval(str)(value)
     }
-    const handleConfirm= async()=>{
+    const handleConfirm = async () => {
 
         let obj = {
-            address,amount,selected
+            address, amount, selected
         }
         setLoading(true);
         setTips(t('Createwithdraw'));
-        await api.vault.withdraw(vaultcontract,obj,(result)=> {
+        await api.vault.withdraw(vaultcontract, obj, (result) => {
             setLoading(false);
             props.handleClose()
             props.setShow()
@@ -55,79 +56,75 @@ import {useTranslation} from "react-i18next";
     const handleSelect = (e) => {
         setSelected(e.target.value)
     }
-     useImperativeHandle(ref, () => ({
-         resultToVault: (newVal) => {
-             return {
-                 address,
-                 amount
-             }
-         },
-         amountToNull:()=>{
-             setamount('')
-             setaddress('')
-         }
-     }));
+    useImperativeHandle(ref, () => ({
+        resultToVault: (newVal) => {
+            return {
+                address,
+                amount
+            }
+        },
+        amountToNull: () => {
+            setamount('')
+            setaddress('')
+        }
+    }));
 
-    let {handleClose, showTips} = props;
-        return (
-            <div>
-                <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
-                <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
-                    <Modal.Header closeButton>
-                        <Modal.Title><img src={sender} alt=""/><span>{t('withdraw')}</span></Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <section>
-                            <ul className="withdraw">
-                                <li>
-                                    <FormLabel>{t('SelectOption')}</FormLabel>
-                                    <div className="inputBrdr">
-                                    <Form.Control as="select" name='selected' onChange={handleSelect}>
-                                        <option key='noselect'>{t('SelectOption')}</option>
-                                        {
-                                            list.map(i => (
-                                                <option value={i} key={i}>{i}</option>
-                                            ))
-                                        }
-                                    </Form.Control>
-                                    </div>
-                                </li>
-                                <li>
-                                    <InputGroup className="mb-3">
-                                        <FormLabel>{t('fillAddress')}</FormLabel>
-                                        <div className="inputBrdr">
-                                        <FormControl
-                                            placeholder={t('fillAddress')}
-                                            value={address}
-                                            name='address'
-                                            onChange={handleChange}
-                                        />
-                                        </div>
-                                    </InputGroup>
+    let { handleClose, showTips } = props;
+    return (
+        <div>
+            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
+            <Modal visible={showTips} onCancel={handleClose} footer={null}>
 
-                                    <InputGroup className="mb-3">
-                                        <FormLabel>{t('fillAmount')}</FormLabel>
-                                        <div className="inputBrdr">
-                                        <FormControl
-                                            placeholder={t('fillAmount')}
-                                            value={amount}
-                                            name='amount'
-                                            onChange={handleChange}
-                                        />
-                                        </div>
-                                    </InputGroup>
-                                </li>
-                                <li className='NextBrdr'>
+                <div className="title"><img src={sender} alt="" /><span>{t('withdraw')}</span></div>
 
-                                    <Button variant="outline-primary" onClick={()=>handleConfirm()}>{t('Request')}</Button>
-                                </li>
-                            </ul>
+                <section>
+                    <ul className="withdraw">
+                        <li>
+                            <div>{t('SelectOption')}</div>
+                            <div className="inputBrdr">
+                                <Select style={{ width: '100%' }} onChange={handleSelect}>
+                                    <Select.Option key='noselect'>{t('SelectOption')}</Select.Option>
+                                    {
+                                        list.map((i) =>
+                                            <Select.Option  value={i} key={i}>{i}</Select.Option>
+                                        )
+                                    }
+                                </Select>
+                            </div>
+                        </li>
+                        <li>
+                            <div className="mb-3">
+                                <div>{t('fillAddress')}</div>
+                                <div className="inputBrdr">
+                                    <Input
+                                        placeholder={t('fillAddress')}
+                                        value={address}
+                                        name='address'
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-            </section>
-                    </Modal.Body>
-                </Modal>
-            </div>
-        )
+                            <div className="mb-3">
+                                <div>{t('fillAmount')}</div>
+                                <div className="inputBrdr">
+                                    <Input
+                                        placeholder={t('fillAmount')}
+                                        value={amount}
+                                        name='amount'
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+                        </li>
+                        <li className='NextBrdr'>
+                            <Button onClick={() => handleConfirm()}>{t('Request')}</Button>
+                        </li>
+                    </ul>
+                </section>
+            </Modal>
+        </div>
+    )
 
 })
 export default Withdraw;

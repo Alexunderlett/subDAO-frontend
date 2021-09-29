@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Modal} from "react-bootstrap";
+import { Button, Modal } from 'antd';
+
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
@@ -62,22 +63,14 @@ export default function ApplyList(props){
     return <div>
         <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
         <Modal
-            show={errorShow}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => seterrorShow(false)}
-            className='newVoteBrdr homebtm'
+            visible={errorShow}
+            onCancel={() => seterrorShow(false)}
+            footer={null}
         >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4>{errorTips}</h4>
-            </Modal.Body>
+            <div>{errorTips}</div>
         </Modal>
-        <Modal  show={showTips} onHide={handleClose} centered={true} className='applyBrdr'>
-            <Modal.Header closeButton>
-                <Modal.Title><img src={applyList} alt=""/><span >{t('applyList')}</span></Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+        <Modal visible={showTips} onCancel={handleClose} footer={null}>
+            <div className="title"><img src={applyList} alt=""/><span >{t('applyList')}</span></div>
                 <section>
                     <ul className='applylist'>
                         {
@@ -94,10 +87,6 @@ export default function ApplyList(props){
 
                     </ul>
                 </section>
-            </Modal.Body>
         </Modal>
-
-
     </div>;
-
 }

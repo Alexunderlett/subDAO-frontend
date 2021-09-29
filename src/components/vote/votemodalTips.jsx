@@ -1,4 +1,4 @@
-import {Button, Modal} from "react-bootstrap";
+import { Modal, Button } from 'antd';
 import {useTranslation} from "react-i18next";
 
 export default function VoteModalTips(props)  {
@@ -7,13 +7,13 @@ export default function VoteModalTips(props)  {
 
     let {handleClose, showTips,handleConfirm} = props;
 
-    return <Modal show={showTips} onHide={handleClose} centered={true}  className='newVoteBrdr'>
-        <Modal.Body>{t('sureTrigger')}</Modal.Body>
+    return <Modal visible={showTips} onCancel={handleClose} footer={null} centered={true}  className='newVoteBrdr'>
+        <div className="title">{t('sureTrigger')}</div>
         <div className='NextBrdr button2'>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button onClick={handleClose}>
                 {t('Close')}
             </Button>
-            <Button variant="primary" onClick={handleConfirm}>
+            <Button type="primary" onClick={handleConfirm}>
                  {t('Confirm')}
             </Button>
         </div>

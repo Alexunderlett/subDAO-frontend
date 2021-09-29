@@ -1,5 +1,6 @@
 import React, { useEffect, useState} from 'react';
-import {Button, Form, FormControl, InputGroup,Tabs,Tab} from "react-bootstrap";
+import { Button, Checkbox, Input} from 'antd';
+
 import remove from '../../images/shutdown.png';
 import add from '../../images/Add.png';
 import Loading from "../loading/Loading";
@@ -81,17 +82,17 @@ export default function ThirdStep(props){
             <Translation>{t =>
                 <div  title={t('Moderators')}>
                     <div className='steptitle'>
-                        <Form.Group controlId="formBasicCheckbox">
+                        <div controlId="formBasicCheckbox">
 
-                            <Form.Check
-                                type="checkbox"
-                                label={t('DAOAdmin')}
+                            <Checkbox
                                 value={admin}
                                 checked={admin}
                                 name='admin'
                                 onChange={handleCheck}
-                            />
-                        </Form.Group>
+                            >
+                                {t('DAOAdmin')}
+                            </Checkbox>
+                        </div>
                     </div>
                     <div>
                         { admin && adminlist.map((i, index) => (
@@ -99,9 +100,9 @@ export default function ThirdStep(props){
                             <div key={index} className='norow'>
                                 <div className="row">
                                     <div className="col-4">
-                                        <InputGroup className="mb-3">
+                                        <div className="mb-3">
                                             <div className='inputBrdr'>
-                                            <FormControl
+                                            <Input
                                                 placeholder={t('FilltheName')}
                                                 value={adminlist[index].name}
                                                 name='name'
@@ -109,12 +110,12 @@ export default function ThirdStep(props){
                                                 onChange={(event) => setAdminInput(event, index)}
                                             />
                                             </div>
-                                        </InputGroup>
+                                        </div>
                                     </div>
                                     <div className="col-8 flexBrdr">
-                                        <InputGroup className="mb-3">
+                                        <div className="mb-3">
                                             <div className='inputBrdr'>
-                                            <FormControl
+                                            <Input
                                                 placeholder={t('FillAddress')}
                                                 value={adminlist[index].address}
                                                 name='address'
@@ -122,7 +123,7 @@ export default function ThirdStep(props){
                                                 onChange={(event) => setAdminInput(event, index)}
                                             />
                                             </div>
-                                        </InputGroup>
+                                        </div>
                                         {
                                             !!index &&
                                             <img src={remove} onClick={()=>removeAdmin( i, index)} className="removerht" alt=''/>
@@ -140,8 +141,8 @@ export default function ThirdStep(props){
                 }
             </Translation>
                 <div className='step2brdr'>
-                    <Button variant="outline-primary" className='leftBtn' onClick={toSecondStep}><Trans>think</Trans></Button>
-                    <Button variant="primary" onClick={toForthStep}><Trans>Next</Trans></Button>
+                    <Button className='leftBtn' onClick={toSecondStep}><Trans>think</Trans></Button>
+                    <Button type="primary" onClick={toForthStep}><Trans>Next</Trans></Button>
                 </div>
 
             </div>;

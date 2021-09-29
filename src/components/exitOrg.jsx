@@ -1,4 +1,5 @@
-import {Button, Modal} from "react-bootstrap";
+import { Button, Modal } from 'antd';
+
 import {useTranslation} from "react-i18next";
 
 export default function ExitOrg(props)  {
@@ -7,13 +8,13 @@ export default function ExitOrg(props)  {
 
     let {handleClose, showTips,handleConfirm} = props;
 
-    return <Modal show={showTips} onHide={handleClose} centered={true}  className='newVoteBrdr'>
-        <Modal.Body>{t('exitOrg')}</Modal.Body>
+    return <Modal visible={showTips} onCancel={handleClose} footer={null}>
+        <div className="title">{t('exitOrg')}</div>
         <div className='NextBrdr button2'>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button onClick={handleClose}>
                 {t('Close')}
             </Button>
-            <Button variant="primary" onClick={handleConfirm}>
+            <Button type="primary" onClick={handleConfirm}>
                  {t('Confirm')}
             </Button>
         </div>

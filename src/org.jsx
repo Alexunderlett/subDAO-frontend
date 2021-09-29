@@ -15,9 +15,7 @@ import AddBatch from './components/org/addbatch';
 import LoadingNew from "./components/loadingNEW";
 
 
-import {Modal} from "react-bootstrap";
-
-import {Button} from "antd";
+import { Modal, Button } from 'antd';
 import Owner from "./img/owner.png";
 import Admin from "./img/admin.png";
 import AddP from "./img/addPeople.png";
@@ -361,16 +359,11 @@ export default function Org(props) {
         <div>
             <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Modal
-                show={errorShow}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                onHide={() => seterrorShow(false)}
-                className='newVoteBrdr homebtm'
+                visible={errorShow}
+                onCancel={() => seterrorShow(false)}
+                footer={null}
             >
-                <Modal.Header closeButton />
-                <Modal.Body>
-                    <h4>{errorTips}</h4>
-                </Modal.Body>
+                <h4>{errorTips}</h4>
             </Modal>
 
             <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>

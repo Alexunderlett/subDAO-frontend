@@ -222,6 +222,7 @@ export default function Headertop(props) {
                         <Modal
                             visible={showButton}
                             onCancel={() => { setShowButton(false) }}
+                            footer={null}
                         >
                             <i className='fa fa-user-times homeTop' />
                             <h4>Please connect wallet</h4>

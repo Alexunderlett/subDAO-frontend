@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 
-import {Modal, Table} from "react-bootstrap";
+import { Modal } from 'antd';
 import VoteModalTips from "./votemodalTips";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
@@ -70,22 +70,17 @@ export default function VotePending(props) {
     return (<div className='votePending'>
         <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
         <Modal
-            show={errorShow}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => seterrorShow(false)}
-            className='newVoteBrdr homebtm'
+            visible={errorShow}
+            onCancel={() => seterrorShow(false)}
+            footer={null}
         >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4>{errorTips}</h4>
-            </Modal.Body>
+            <div className="title">{errorTips}</div>
         </Modal>
             <VoteModalTips
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}
                 showTips={showModal}/>
-            <Table   hover>
+            <table>
                 <thead>
                 <tr>
                     <th>{t('Number')}</th>
@@ -105,9 +100,7 @@ export default function VotePending(props) {
                     </tr>)
                 }
                 </tbody>
-            </Table>
+            </table>
         </div>)
-
-
 }
 

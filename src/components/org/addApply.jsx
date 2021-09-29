@@ -1,49 +1,50 @@
-import React, {useEffect, useState} from 'react';
-import {Button, FormControl, FormLabel, InputGroup, Modal, Tab} from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, Input } from 'antd';
+
 import api from "../../api";
-import {useSubstrate} from "../../api/contracts";
+import { useSubstrate } from "../../api/contracts";
 import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import remove from "../../images/shutdown.png";
 import add from "../../images/Add.png";
 import applyList from "../../images/apply.png";
 
-export default function AddApply(props){
+export default function AddApply(props) {
 
-    const {state} = useSubstrate();
-    const {orgcontract} = state;
+    const { state } = useSubstrate();
+    const { orgcontract } = state;
 
-    const [loading,setLoading]= useState(false);
-    const [tips,setTips]= useState('');
-    const [name,setname]= useState('');
+    const [loading, setLoading] = useState(false);
+    const [tips, setTips] = useState('');
+    const [name, setname] = useState('');
 
     const [addMember, setaddMember] = useState(false);
-    const [errorShow,seterrorShow]= useState(false);
-    const [errorTips,seterrorTips]= useState('');
+    const [errorShow, seterrorShow] = useState(false);
+    const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
 
 
     useEffect(() => {
-        if(addMember){
+        if (addMember) {
             setLoading(false);
             props.handleTips()
         }
     }, [addMember])
 
     const handleInputChange = (e) => {
-        const { value} = e.target;
+        const { value } = e.target;
         setname(value)
     }
-    const handleSubmit = async() => {
-        const obj= {
+    const handleSubmit = async () => {
+        const obj = {
             name
         };
 
         setLoading(true);
         setTips(t('ApplyMember'));
-        await api.org.applyMember(orgcontract,name,function (result) {
+        await api.org.applyMember(orgcontract, name, function (result) {
             setaddMember(result)
             props.handleClose()
             props.refresh()
@@ -55,54 +56,41 @@ export default function AddApply(props){
         });
     }
 
-    let {handleClose, showTips} = props;
+    let { handleClose, showTips } = props;
     return <div>
-        <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
+        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
         <Modal
-            show={errorShow}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => seterrorShow(false)}
-            className='newVoteBrdr homebtm'
+            visible={errorShow}
+            onCancel={() => seterrorShow(false)}
+            footer={null}
         >
-            <Modal.Header closeButton />
-            <Modal.Body>
-                <h4>{errorTips}</h4>
-            </Modal.Body>
+            <div className="title">{errorTips}</div>
         </Modal>
-        <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
-            <Modal.Header closeButton>
-                <Modal.Title><img src={applyList} alt=""/><span >Apply</span></Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <section>
-                    <ul className='addnew'>
-                        <li>
-                            <FormLabel>{t('FilltheName')}</FormLabel>
-                            <div className="inputBrdr">
-                                <FormControl
-                                    placeholder={t('FilltheName')}
-                                    name='name'
-                                    value={name}
-                                    autoComplete="off"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </li>
-                        <li>
-                            <div className='NextBrdr'>
-                                <Button variant="primary"  onClick={()=>handleSubmit()}>
-                                    Add
-                                </Button>
-                            </div>
-                        </li>
-                    </ul>
-
-                </section>
-            </Modal.Body>
+        <Modal visible={showTips} onCancel={handleClose} footer={null}>
+            <div className="title"><img src={applyList} alt="" /><span >Apply</span></div>
+            <section>
+                <ul className='addnew'>
+                    <li>
+                        <div>{t('FilltheName')}</div>
+                        <div className="inputBrdr">
+                            <Input
+                                placeholder={t('FilltheName')}
+                                name='name'
+                                value={name}
+                                autoComplete="off"
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                    </li>
+                    <li>
+                        <div className='NextBrdr'>
+                            <Button type="primary" onClick={() => handleSubmit()}>
+                                Add
+                            </Button>
+                        </div>
+                    </li>
+                </ul>
+            </section>
         </Modal>
-
-
     </div>;
-
 }

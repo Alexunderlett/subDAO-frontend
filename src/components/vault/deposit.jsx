@@ -1,33 +1,34 @@
-import React, {useEffect, useState,forwardRef,useImperativeHandle} from 'react';
-import {Button, Form, InputGroup, FormControl, Modal, FormLabel} from "react-bootstrap";
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import { Button, Modal, Input, Select } from 'antd';
+
 import api from "../../api";
-import {useSubstrate} from "../../api/contracts";
+import { useSubstrate } from "../../api/contracts";
 
 import Loading from "../loading/Loading";
 import sender from "../../images/send.png";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
- const Deposit = forwardRef((props,ref) =>{
-    const {state,dispatch} = useSubstrate();
-    const {vaultcontract,erc20contract,allAccounts,apiState} = state;
+const Deposit = forwardRef((props, ref) => {
+    const { state, dispatch } = useSubstrate();
+    const { vaultcontract, erc20contract, allAccounts, apiState } = state;
 
-    const [loading,setLoading]= useState(false);
-    const [tips,setTips]= useState('');
+    const [loading, setLoading] = useState(false);
+    const [tips, setTips] = useState('');
 
     const [selected, setSelected] = useState(null);
     const [amount, setAmount] = useState('');
     const [deposit, setdeposit] = useState(false);
 
     const [list, setList] = useState([]);
-     const [errorShow,seterrorShow]= useState(false);
-     const [errorTips,seterrorTips]= useState('');
+    const [errorShow, seterrorShow] = useState(false);
+    const [errorTips, seterrorTips] = useState('');
 
 
-     let { t } = useTranslation();
+    let { t } = useTranslation();
 
-    useEffect( () => {
-        if(vaultcontract == null)return;
-        const setTokenlist=async () => {
+    useEffect(() => {
+        if (vaultcontract == null) return;
+        const setTokenlist = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
                 setList(data)
@@ -36,14 +37,14 @@ import {useTranslation} from "react-i18next";
         setTokenlist();
     }, [vaultcontract]);
 
-     useEffect( () => {
+    useEffect(() => {
 
-        if(!deposit)return;
+        if (!deposit) return;
         let obj = {
-            amount,selected
+            amount, selected
         }
 
-        const setdeposittrs =async () => {
+        const setdeposittrs = async () => {
             await api.vault.deposit(vaultcontract, obj, (result) => {
                 if (result) {
                     setLoading(false);
@@ -64,13 +65,13 @@ import {useTranslation} from "react-i18next";
     }, [deposit]);
 
     const handleChange = (e) => {
-        const {value} = e.target;
+        const { value } = e.target;
         setAmount(value)
     }
-    const handleConfirm= async()=>{
+    const handleConfirm = async () => {
         setLoading(true);
         setTips(t('Createdeposit'));
-        await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount,(result)=> {
+        await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount, (result) => {
             setdeposit(true)
         }).catch((error) => {
             seterrorShow(true)
@@ -85,77 +86,65 @@ import {useTranslation} from "react-i18next";
     }
 
 
-     useImperativeHandle(ref, () => ({
-         resultToVault: () => {
+    useImperativeHandle(ref, () => ({
+        resultToVault: () => {
             return {
                 selected,
                 amount
             }
-         },
-         amountToNull:()=>{
-             setAmount('')
-         }
-     }));
+        },
+        amountToNull: () => {
+            setAmount('')
+        }
+    }));
 
-    let {handleClose, showTips} = props;
+    let { handleClose, showTips } = props;
     return (
         <div>
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
+            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Modal
-                show={errorShow}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                onHide={() => seterrorShow(false)}
-                className='newVoteBrdr homebtm'
+                visible={errorShow}
+                onCancel={() => seterrorShow(false)}
+                footer={null}
             >
-                <Modal.Header closeButton />
-                <Modal.Body>
-                    <h4>{errorTips}</h4>
-                </Modal.Body>
+                <div className="title">{errorTips}</div>
             </Modal>
-            <Modal  show={showTips} onHide={handleClose} className='newVoteBrdr'>
-                <Modal.Header closeButton>
-                    <Modal.Title><img src={sender} alt=""/><span>{t('send')}</span></Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <section>
-                        <ul className="withdraw">
-                            <li>
-                                <FormLabel>{t('SelectOption')}</FormLabel>
-                                <div className="inputBrdr">
-                                <Form.Control as="select" name='selected' onChange={handleSelect}>
-                                    <option key='noselect'>{t('SelectOption')}</option>
+            <Modal visible={showTips} onCancel={handleClose} footer={null}>
+                <div className="title"><img src={sender} alt="" /><span>{t('send')}</span></div>
+                <section>
+                    <ul className="withdraw">
+                        <li>
+                            <div>{t('SelectOption')}</div>
+                            <div className="inputBrdr">
+                                <Select style={{ width: '100%' }} onChange={handleSelect}>
+                                    <Select.Option key='noselect'>{t('SelectOption')}</Select.Option>
                                     {
-                                        list.map(i => (
-                                            <option value={i} key={i}>{i}</option>
-                                        ))
+                                        list.map((i) =>
+                                            <Select.Option value={i} key={i}>{i}</Select.Option>
+                                        )
                                     }
-                                </Form.Control>
-                                </div>
-                            </li>
-                            <li>
-
-                                <InputGroup className="mb-3">
-                                    <FormLabel>{t('fillAmount')}</FormLabel>
-                                    <div className="inputBrdr">
-                                    <FormControl
+                                </Select>
+                            </div>
+                        </li>
+                        <li>
+                            <div className="mb-3">
+                                <div>{t('fillAmount')}</div>
+                                <div className="inputBrdr">
+                                    <Input
                                         placeholder={t('fillAmount')}
                                         value={amount}
                                         name='amount'
                                         onChange={handleChange}
                                     />
-                                    </div>
-                                </InputGroup>
-                            </li>
-                            <li className='NextBrdr'>
-                                <Button variant="outline-primary" onClick={()=>handleConfirm()}>{t('Request')}</Button>
-                            </li>
-                        </ul>
-                    </section>
-                </Modal.Body>
+                                </div>
+                            </div>
+                        </li>
+                        <li className='NextBrdr'>
+                            <Button onClick={() => handleConfirm()}>{t('Request')}</Button>
+                        </li>
+                    </ul>
+                </section>
             </Modal>
-
-
         </div>
     )
 })

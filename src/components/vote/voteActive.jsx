@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-
-import {Table} from 'react-bootstrap';
 import voteActive from '../../images/votingactive.png';
 import view from '../../images/view.png';
 import VoteView from '../vote/voteView';
@@ -51,7 +49,7 @@ export default function VoteActive(props){
                     newshow &&   <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
                 }
 
-                <Table hover>
+                <table>
                     <thead>
                     <tr>
                         <th>{t('Number')}</th>
@@ -75,7 +73,7 @@ export default function VoteActive(props){
                         </tr>)
                     }
                     </tbody>
-                </Table>
+                </table>
             </div>
         )
 
