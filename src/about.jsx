@@ -20,6 +20,7 @@ import VAULT from "./img/VAULT.png";
 import VOTE from "./img/VOTE.png";
 
 import MoreDaos from "./components/MoreDaos";
+import mainContract from "./api/mainContract";
 
 
 const Tip = styled.div`
@@ -51,79 +52,11 @@ const TopTitles = styled.div`
       margin-right: 2rem;
     }
 `;
-const LftTop = styled.div`
-  display: flex;
-  justify-content: flex-start;
-
-`;
-const Tit = styled.div`
-    font-size: 2.8rem;
-
-    font-weight: 300;
-    color: #10164B;
-    line-height: 3.3rem;
-    margin: 1.3rem 0 1rem;
-`;
-const Contents = styled.div`
-     width: 73.6rem;
-     height: 5.4rem;
-     font-size: 1.6rem;
-     font-weight: 300;
-     color: #10164B;
-     line-height: 2.2rem;
-     .contentDesc{
-        font-size: 1.6rem;
-        font-weight: 300;
-        color: #10164B;
-        line-height: 2.16rem;
-     }
-`;
-
-const RhtTop = styled.div`
-  white-space: nowrap;
-    display: flex;
-    align-content: center;
-    flex-direction: column;
-    justify-content: center;
-  button{
-    font-size: 1.2rem!important;
-     border-radius: 0.4rem;
-     width: 9rem;
-     height: 3rem;
-      margin-left: 1rem;
-  }
-`;
-
-const BtnGroup = styled.div`
-  margin-top: 6rem;
-  span{
-      border: 1px solid #B7B9C9;
-      width: 7rem;
-     height: 3rem;
-     border-radius: 0.4rem;
-     display: inline-block;
-     margin-right: 1rem;
-     text-align: center;
-    font-size: 1.2rem;
-    font-family: Roboto-Regular;
-    font-weight: 400;
-    color: #10164B;
-    line-height: 3rem;
-    cursor: pointer;
-     &.active,&:hover{
-        border: 0.1rem solid #D51172;
-         background: #FFEFF7;
-         color: #D51172;
-     }
-  }
-`;
-
-
 const Ul = styled.ul`
     color: #10164B;
     display: flex;
-
-    margin-left: -6.3rem;
+    flex-wrap: wrap;
+    margin-left: -6rem;
   li{
     width: 31.3rem;
     height: 16rem;
@@ -133,7 +66,7 @@ const Ul = styled.ul`
     padding: 2rem 2.8rem;
     box-sizing: border-box;
     word-break: break-all;    
-    margin-left: 6.3rem;
+    margin-left: 6rem;
   }
 `;
 
@@ -235,7 +168,7 @@ export default function About(props) {
     const [balancelist, setbalancelist] = useState([]);
     const [balanceshow, setbalanceshow] = useState(true);
     const [contractshow, setcontractshow] = useState(true);
-    const [info, setinfo] = useState(true);
+
     const [contractlist, setcontractlist] = useState({
         base_addr:null,
         erc20_addr:null,
@@ -289,31 +222,34 @@ export default function About(props) {
         setLogo('');
         setDescription('');
         setOwner('');
-        setinfo(true);
+
         setAId(props.match.params.id);
 
     }, [props.match.params.id]);
+    const queryAddrs = async () => {
+        await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+            if (data) {
+                let arr=[];
+                Object.keys(data).map((item) => {
+                    arr.push({
+                        name: item,
+                        address: data[item]
+                    });
+                    return item;
+                });
+                setcontractArr(arr);
+                setcontractlist(data);
+                setcontractshow(false)
+            }
+        });
+    };
     useEffect(() => {
         if (daoManagercontract == null && daostate) return;
-        const queryAddrs = async () => {
-            await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-                if (data) {
-                    let arr=[];
-                    Object.keys(data).map((item) => {
-                        arr.push({
-                            name: item,
-                            address: data[item]
-                        });
-                        return item;
-                    });
-                    setcontractArr(arr);
-                    setcontractlist(data);
-                    setcontractshow(false)
-                }
-            });
-        };
         queryAddrs();
     }, [daoManagercontract, daostate, id]);
+    useEffect(() => {
+        queryAddrs();
+    }, []);
 
     useEffect(() => {
 
@@ -370,12 +306,6 @@ export default function About(props) {
     }, [daoManagercontract, contractlist, id]);
 
     useEffect(() => {
-        sessionStorage.setItem('logo', logo);
-        sessionStorage.setItem('description', description);
-        sessionStorage.setItem('owner', owner);
-        sessionStorage.setItem('DaoName', name)
-    }, [logo, description, owner, name]);
-    useEffect(() => {
         const setBalance = async () => {
             let arr = [];
             let index = 0;
@@ -400,21 +330,26 @@ export default function About(props) {
         }
         setBalance();
     }, [tokenlist, id]);
-    useEffect(() => {
-        if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
-        const setBase = async () => {
-            await api.base.getBaseData(basecontract).then(data => {
-                if (!data) return;
-                let { owner, name, logo, desc } = data;
-                setName(name);
-                setLogo(logo);
-                setDescription(desc);
-                setOwner(owner);
-                setinfo(false);
-            });
-        };
-        setBase();
-    }, [basecontract, basestate, id]);
+    // useEffect(() => {
+    //     if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
+    //     const setBase = async () => {
+    //         await api.base.getBaseData(basecontract).then(data => {
+    //             if (!data) return;
+    //             let { owner, name, logo, desc } = data;
+    //             setName(name);
+    //             setLogo(logo);
+    //             setDescription(desc);
+    //             setOwner(owner);
+    //         console.error("======getBaseData",name,logo,desc,owner)
+    //             sessionStorage.setItem('logo', logo);
+    //             sessionStorage.setItem('description', description);
+    //             sessionStorage.setItem('owner', owner);
+    //             sessionStorage.setItem('DaoName', name);
+    //             setinfo(false);
+    //         });
+    //     };
+    //     setBase();
+    // }, [basecontract, basestate, id]);
 
     useEffect(() => {
         if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;

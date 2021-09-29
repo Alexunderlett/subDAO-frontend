@@ -7,6 +7,7 @@ import ExitOrg from "./exitOrg";
 
 import {useSubstrate} from "../api/contracts";
 import api from '../api/index';
+import LoadingNew from "./loadingNEW";
 
 const TopTitles = styled.div`
     width: 100%;
@@ -65,8 +66,9 @@ const RhtTop = styled.div`
     font-size: 1.2rem!important;
      border-radius: 0.4rem;
      width: 9rem;
-     height: 3rem;
-      margin-left: 1rem;
+    height: 3rem;
+    margin-left: 1rem;
+    padding: 0!important;
   }
 `;
 
@@ -85,6 +87,7 @@ const BtnGroup = styled.div`
     font-weight: 400;
     color: #10164B;
     line-height: 3rem;
+
     cursor: pointer;
      &.active,&:hover{
         border: 0.1rem solid #D51172;
@@ -96,9 +99,10 @@ const BtnGroup = styled.div`
 
 export default function Left(props){
     const { state } = useSubstrate();
-    const {  orgcontract} = state;
+    const {  basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract} = state;
     const [delMem, setdelMem] = useState(false);
     const [delAdmin, setdelAdmin] = useState(false);
+    const [info, setinfo] = useState(true);
 
     const [owner, setOwner] = useState('');
     const [description, setDescription] = useState('');
@@ -106,7 +110,6 @@ export default function Left(props){
     const [name, setName] = useState('');
     const [type, setType] = useState('');
     const [showModal, setShowModal] = useState(false);
-
 
     const [isMember, setisMember] = useState(false);
     const [isModerator, setisModerator] = useState(false);
@@ -151,30 +154,32 @@ export default function Left(props){
     }, [delAdmin]);
 
     useEffect(() => {
+        if (basecontract == null || orgcontract == null || daoManagercontract == null || apiState == null) return;
        init();
-    }, [props.id]);
+    }, [props.id,basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract]);
     useEffect(() => {
        init();
     }, []);
     const init = () =>{
-        let logo = sessionStorage.getItem('logo');
-        setLogo(logo);
-
-        let description = sessionStorage.getItem('description');
-        setDescription(description);
-
-        let owner = sessionStorage.getItem('owner');
-        setOwner(owner);
-
-        let name = sessionStorage.getItem('DaoName');
-        setName(name);
+        const setBase = async () => {
+            await api.base.getBaseData(basecontract).then(data => {
+                if (!data) return;
+                let { owner, name, logo, desc } = data;
+                setName(name);
+                setLogo(logo);
+                setDescription(desc);
+                setOwner(owner);
+                setinfo(false);
+            });
+        };
+        setBase();
 
         setisMember(JSON.parse(sessionStorage.getItem('isMember')));
         setisModerator(JSON.parse(sessionStorage.getItem('isModerator')));
         setisOwner(JSON.parse(sessionStorage.getItem('isOwner')));
 
         let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
-        console.log("======contractlistBg",contractlistBg)
+
         if(contractlistBg!=null){
             setcontractlist(contractlistBg);
         }
@@ -241,32 +246,36 @@ export default function Left(props){
                 handleClose={handleExitClose}
                 handleConfirm={() => handleExitConfirm()}
                 showTips={showModal} />
-
-            <TopTitles>
-                <LftTop>
-                    <img src={logo} alt=""/>
-                    <Contents>
-                        <Tit>{name}</Tit>
-                        <div className="contentDesc">{description}</div>
-                    </Contents>
-                </LftTop>
-                <RhtTop>
-                    {(isOwner || isMember || isModerator) && <div>
+            {
+                !info && <TopTitles>
+                    <LftTop>
+                        <img src={logo} alt=""/>
+                        <Contents>
+                            <Tit>{name}</Tit>
+                            <div className="contentDesc">{description}</div>
+                        </Contents>
+                    </LftTop>
+                    <RhtTop>
+                        {(isOwner || isMember || isModerator) && <div>
+                            {
+                                isOwner && <Button onClick={()=>handleTransfer()}>
+                                    Transfer
+                                </Button>
+                            }
+                            {(isMember || isModerator) &&
+                            <Button onClick={()=>handleExit()}>Quit</Button>
+                            }
+                        </div>
+                        }
                         {
-                            isOwner && <Button onClick={()=>handleTransfer()}>
-                                Transfer
-                            </Button>
+                            ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>
                         }
-                        {(isMember || isModerator) &&
-                        <Button onClick={()=>handleExit()}>Quit</Button>
-                        }
-                    </div>
-                    }
-                    {
-                        ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>
-                    }
-                </RhtTop>
-            </TopTitles>
+                    </RhtTop>
+                </TopTitles>
+            }
+            {
+                info && <TopTitles><LoadingNew  /></TopTitles>
+            }
 
             <BtnGroup>
                 <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('about')}>Home</span>
