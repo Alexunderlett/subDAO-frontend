@@ -97,7 +97,7 @@ function Home(props) {
 
     const [show, setshow] = useState(false);
     const [first, setfirst] = useState(true);
-    const [imglist, setimglist] = useState([]);
+    const [imglist, setimglist] = useState(null);
     const [walletTips, setWalletTips] = useState(false);
 
     const [selected, setselected] = useState([]);
@@ -106,7 +106,6 @@ function Home(props) {
 
 
     const account = JSON.parse(sessionStorage.getItem('account'));
-
 
     const handleClick = () => {
         if (account === null || !account.length) {
@@ -129,8 +128,55 @@ function Home(props) {
         setfirst(false)
     }, []);
     useEffect(() => {
-        setcreateDAOModal(!!selected && !!selected.length && (!imglist || !imglist.length))
-    }, [selected, imglist])
+        if(maincontract == null || imglist == null ) return;
+        setcreateDAOModal(!!selected && !!selected.length &&  !imglist.length);
+    }, [selected, imglist,maincontract]);
+
+
+    useEffect(() => {
+        if (maincontract == null || (selected && !selected.length)) return;
+        const setInstances = async () => {
+            setLoading(true);
+            let addresslist = await api.main.listDaoInstances(maincontract);
+            console.log('===========addresslist============', addresslist);
+            let mydaolist= addresslist.filter(i => i.owner === selected[0].address);
+            setimglist(mydaolist);
+            setLoading(false);
+            setListAll(addresslist,'all');
+            setListAll(mydaolist,'my');
+
+
+
+        };
+        const setListAll = async (mydaolist,typeStr) => {
+            let arr=[];
+            if (mydaolist && mydaolist.length) {
+                for (let item of mydaolist) {
+                    const data = await api.base.InitHome(state, item.dao_manager_addr);
+                    if(!data) continue;
+                    const logo = data.logo ? data.logo : '';
+                    const name = data.name ? data.name : '';
+                    const desc = data.desc ? data.desc : '';
+                    arr.push({
+                        address: item.dao_manager_addr,
+                        logo,
+                        name,
+                        owner:item.owner,
+                        desc,
+                    });
+                }
+            }
+            if( typeStr  === 'all'){
+                sessionStorage.setItem('daoList',JSON.stringify(arr));
+
+            }else{
+                sessionStorage.setItem('mydaoList',JSON.stringify(arr))
+            }
+        }
+        setInstances();
+
+
+    }, [allAccounts, maincontract, first]);
 
     return (
         <HomeBg>
@@ -185,7 +231,7 @@ function Home(props) {
                     </div>
                 </div>
 
-                <MoreDaos showMoreDaos={moreDaos} history={props.history} />
+                <MoreDaos history={props.history} />
             </section>
         </HomeBg>
     )

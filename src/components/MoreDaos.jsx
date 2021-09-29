@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DaosModal from "./DaosModal";
 import right from '../img/right.png'
+import {useSubstrate} from "../api/contracts";
 
 
 const topDaos = window.mainAddress.topDaos;
@@ -27,18 +28,17 @@ const AllDaos = styled.div`
     }
 `
 
-const MoreDaos = (props) => {
-    const { showMoreDaos } = props
-    const [moreDaos, setMoreDaos] = useState(showMoreDaos);
+const MoreDaos = () => {
 
-    useEffect(() => {
-        setMoreDaos(showMoreDaos)
-    }, [showMoreDaos])
+    const { dispatch } = useSubstrate();
+
+    const showDAOModal = () =>{
+        dispatch({ type: 'DAOTYPE',payload:'all' });
+    }
 
     return (
         <AllDaos>
-            {/* {topDaos} */}
-            <div className="more" onClick={() => { setMoreDaos(true) }}>
+            <div className="more" onClick={() => showDAOModal()}>
                 More DAOs<span>···</span>
             </div>
             <div className="daos">
@@ -54,7 +54,7 @@ const MoreDaos = (props) => {
                     )
                 }
             </div>
-            <DaosModal moreDaos={moreDaos} handleClose={() => { setMoreDaos(false) }}  history={props.history}/>
+
         </AllDaos>
     );
 }

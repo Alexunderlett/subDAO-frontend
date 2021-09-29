@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import * as history from 'history';
-import { Form } from "react-bootstrap";
 import Accounts from '../api/Account';
 import { useSubstrate } from "../api/contracts";
 import CopyStr from "./copy";
-import publicJs from "../utils/publicJs";
-import { useTranslation, Trans, Translation } from 'react-i18next'
 
 import logo from '../img/logo.png';
-import arrow from '../img/Polygon.png';
 import balanceOfImg from '../img/balanceOf.png';
 import myDao from '../img/myDao.png';
-import close from '../images/shutdownW.png'
 import styled from 'styled-components';
 import { Modal, Button, Select } from 'antd';
+import DaosModal from "./DaosModal";
 
 const createHashHistory = history.createHashHistory();
 
@@ -103,11 +99,13 @@ const HeaderBg = styled.div`
 
 export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
-    const { allAccounts, api, maincontract, daoManagercontract } = state;
+    const { allAccounts, api, maincontract, daoManagercontract,daoType } = state;
 
-    let {  i18n } = useTranslation();
 
     const [selected, setselected] = useState([]);
+
+    const [moreDaos, setMoreDaos] = useState(false);
+
 
     const [showButton, setShowButton] = useState(false);
     const [daoExit, setdaoExit] = useState(false);
@@ -115,12 +113,6 @@ export default function Headertop(props) {
     const [balanceOf, setbalanceOf] = useState(0);
     const [showlist, setshowlist] = useState(false);
     const [currentAccount, setcurrentAccount] = useState(null);
-
-
-    useEffect(() => {
-        i18n.changeLanguage('en')
-    }, []);
-
 
     const queryBalance = async (account) => {
 
@@ -134,9 +126,8 @@ export default function Headertop(props) {
         if (allAccounts == null) return;
         queryBalance(allAccounts)
     }, [allAccounts, maincontract, daoManagercontract]);
+
     useEffect(() => {
-
-
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
@@ -144,28 +135,17 @@ export default function Headertop(props) {
 
     }, [allAccounts]);
 
-    const backNav = () => {
-        createHashHistory.goBack()
-    }
 
-    const backHome = () => {
-        createHashHistory.push(`/`)
-    }
     const account = JSON.parse(sessionStorage.getItem('account'));
     const handleClick = () => {
         if (account === null || !account.length) {
             setShowButton(true);
         } else {
-            createHashHistory.push('/create')
+            createHashHistory.push('/create');
         }
     }
     const handleMyClick = () => {
-        if (account === null || !account.length) {
-            setShowButton(true);
-        } else {
-            createHashHistory.push('/')
-            setdaoExit(true)
-        }
+        dispatch({ type: 'DAOTYPE',payload:'my' });
     }
     const toFirst = () => {
         createHashHistory.push('/')
@@ -173,8 +153,8 @@ export default function Headertop(props) {
     const exitAccount = () => {
         sessionStorage.removeItem('account');
         dispatch({ type: 'LOAD_ALLACCOUNTS' });
-        setselected([])
-        createHashHistory.push('/home')
+        setselected([]);
+        createHashHistory.push('/home');
         window.location.reload()
 
     }
@@ -218,11 +198,21 @@ export default function Headertop(props) {
         setcurrentAccount(null)
     }
 
+    useEffect(()=>{
+        setMoreDaos(daoType != null);
+    },[daoType])
+
+    const closeDAOModal = () =>{
+        dispatch({ type: 'DAOTYPE',payload: null });
+        setMoreDaos(false);
+
+    }
+
     return (
         <HeaderBg className='header'>
             <div className="row">
                 <div className="lftTit">
-                    <div className="toFirst" onClick={toFirst}>
+                    <div className="toFirst" onClick={()=>toFirst()}>
                         <img src={logo} alt="" />
                     </div>
                     <div className="title">SubDAO</div>
@@ -237,7 +227,7 @@ export default function Headertop(props) {
                             <h4>Please connect wallet</h4>
                         </Modal>
                         {!selected.length &&
-                            <div className="signin" onClick={connectWallet}>Sign in</div>
+                            <div className="signin" onClick={()=>connectWallet()}>Sign in</div>
                         }
                         {!!selected.length &&
                             <div className='addressBrdr'>
@@ -251,14 +241,14 @@ export default function Headertop(props) {
 
 
                         {
-                            allAccounts != null && <span className='createDAO' onClick={handleClick}>Create My DAO</span>
+                            allAccounts != null && <span className='createDAO' onClick={()=>handleClick()}>Create My DAO</span>
                         }
 
                         {
-                            allAccounts != null && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />My DAO</span>
+                            allAccounts != null && <span className='myDao' onClick={()=>handleMyClick()}><img src={myDao} alt="" />My DAO</span>
                         }
                         {!!selected.length &&
-                            <span className='logout' onClick={exitAccount}>
+                            <span className='logout' onClick={()=>exitAccount()}>
                                Logout
                             </span>
                         }
@@ -266,7 +256,7 @@ export default function Headertop(props) {
                     </div>
                 </div>
             </div>
-
+            <DaosModal moreDaos={moreDaos} handleClose={() =>closeDAOModal() }  history={props.history}/>
             {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
@@ -278,10 +268,10 @@ export default function Headertop(props) {
                             )
                         }
                     </Select>
-                    <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={changeAccounts}>
+                    <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={()=>changeAccounts()}>
                         Confirm
                     </Button>
-                    <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={cancleShowlist}>Cancel</div>
+                    <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={()=>cancleShowlist()}>Cancel</div>
                 </Modal>
             }
         </HeaderBg>

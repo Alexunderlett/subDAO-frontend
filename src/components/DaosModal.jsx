@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Modal, Select, Button } from 'antd';
+import { Modal, Button } from 'antd';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
@@ -42,51 +42,33 @@ const DaosModal = (props) => {
     const { moreDaos, handleClose } = props;
 
     const { state, dispatch } = useSubstrate();
-    const { homepage, maincontract, allAccounts, myDao, apiState } = state;
+    const {  maincontract, allAccounts, apiState,daoType } = state;
     const [alls, setAlls] = useState(false);
     const [imglist, setimglist] = useState([]);
 
-
     const setInstances = async () => {
-        let addresslist = await api.main.listDaoInstances(maincontract);
-        console.log('===========addresslist============', addresslist)
-        let arr = [];
 
         setAlls(true);
-        let mydaolist;
-        if (myDao === 'TRUE') {
-            mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
+        let mydaolist=[];
+
+        if (daoType === 'my') {
+            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
+        } else if(daoType === 'all'){
+            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
         } else {
-            mydaolist = addresslist;
+            return
         }
-        if (mydaolist && mydaolist.length) {
-            for (let item of mydaolist) {
-                const data = await api.base.InitHome(state, item.dao_manager_addr);
-                if(!data) continue;
-                const logo = data.logo ? data.logo : '';
-                const name = data.name ? data.name : '';
-                const owner = data.owner ? data.owner : '';
-                const desc = data.desc ? data.desc : '';
-                arr.push({
-                    address: item.dao_manager_addr,
-                    logo,
-                    name,
-                    owner,
-                    desc,
-                });
-            }
-        }
-        setimglist(arr);
+        setimglist(mydaolist);
         setAlls(false);
-        dispatch({ type: 'SET_HOME', payload: arr });
+
     };
     useEffect(() => {
-
-        if (maincontract == null || allAccounts == null) return;
+        setimglist([]);
+        if (maincontract == null || allAccounts == null || daoType == null) return;
 
         setInstances();
 
-    }, [allAccounts, maincontract, myDao]);
+    }, [allAccounts, maincontract,daoType]);
 
 
     const handleClick = () => {
@@ -108,8 +90,8 @@ const DaosModal = (props) => {
         >
             <DaoBody>
                 <div className="top">
-                    <div className="left">There's always one for you</div>
-                    <Button onClick={handleClick}>CreateDAO</Button>
+                    <div className="left">{daoType ==='all' ? 'There\'s always one for you' :'My Daos'}</div>
+                    <Button onClick={()=>handleClick()}>CreateDAO</Button>
                 </div>
                 <div className="daos">
                     {

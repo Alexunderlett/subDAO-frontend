@@ -108,8 +108,10 @@ const reducer = (state, action) => {
         case 'DAO_ERROR':
             return { ...state, daoManagercontract: null, daoManagercontractState: 'ERROR' };
 
-        case 'SET_HOME':
-            return { ...state, homepage: action.payload,homepageState:'READY'};
+
+        case 'DAOTYPE':
+            return { ...state, daoType: action.payload};
+
 
         default:
             throw new Error(`Unknown type: ${action.type}`);
