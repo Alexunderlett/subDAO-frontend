@@ -13,6 +13,40 @@ import Left from './components/left';
 import voting from './images/voting.png';
 import Back from  './images/prev.png';
 import {useTranslation} from "react-i18next";
+import TriggerBtn from "./img/switchClose.png";
+import TriggerBtnActive from "./img/switchOpen.png";
+import {Button} from "antd";
+import styled from "styled-components";
+
+
+const FirstLine = styled.div`
+  position: relative;
+`;
+const BtnRht = styled.div`
+position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  padding-right: 3rem;
+  button{
+    width: 9rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    margin-left: 2rem;
+    padding: 0;
+    line-height: 3rem;
+    &.active{
+      width: 9rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    border: 0.1rem solid #D52473;
+    color: #d52473;
+    }
+  }
+`;
 
 export default function Vote(props){
 
@@ -41,24 +75,14 @@ export default function Vote(props){
     const  handleClose = () => {
         setnewshow(false)
     }
-    const  handleClicktoAbout = () => {
-        props.history.push(`/about/${props.match.params.id}`);
-    }
     useEffect(async () => {
         setAId(props.match.params.id);
     }, []);
 
     useEffect( () => {
-        if (orgcontract == null) return;
-        const whoAmI = async () => {
-            await api.org.whoAmI(orgcontract).then(data => {
-                if (!data) return;
-                setisMember(data[0])
-                setisModerator(data[1])
-                setisOwner(data[2])
-            });
-        };
-        whoAmI();
+        setisMember(JSON.parse(sessionStorage.getItem('isMember')));
+        setisModerator(JSON.parse(sessionStorage.getItem('isModerator')));
+        setisOwner(JSON.parse(sessionStorage.getItem('isOwner')));
     }, [orgcontract,id]);
 
     useEffect(async () => {
@@ -107,60 +131,45 @@ export default function Vote(props){
         return (
             <div>
                 <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
-                <section>
-                        <div className=" row">
-
-                            <div className='col-lg-3'>
-                                <Left />
-                            </div>
-                            <div className='col-lg-9'>
-                                <div className='voteTop'>
-                                    <div className='voteLft' onClick={handleClicktoAbout}>
-                                        <img src={Back} alt=""/> {t('Back')}
-                                    </div>
-                                    {
-                                        isModerator &&  <button className='btnR' onClick={handleClicktonewVote}><img src={voting} alt=""/>{t('Newvoting')}</button>
-                                    }
-
-                                </div>
-                                <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/>
-                                <div className='VotewidthAuto'>
-                                    <div className="wrapper">
-                                        <ul className="vote displayFlex">
-                                            <li>
-                                                <h6>{t('ActiveVoting')}</h6>
-                                                <VoteActive
-                                                    id={id}
-                                                    list={activelist}
-                                                    history={props.history}
-                                                />
-                                            </li>
-                                            <li>
-                                                <h6>{t('PendingVoting')}</h6>
-                                                <VotePending
-                                                    id={id}
-                                                    list={pendinglist}
-                                                    history={props.history}
-                                                    refresh={setAll}
-                                                />
-                                            </li>
 
 
-                                            <li>
-                                                <h6>{t('History')}</h6>
-                                                <VotePagination
-                                                    id={id}
-                                                    list={historylist}
-                                                    history={props.history}  />
-                                            </li>
-                                        </ul>
-                                    </div>
+                <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/>
 
-                                </div>
+                <div className="container">
+                    <FirstLine>
+                        <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                        <BtnRht>
+                            {
+                                isModerator &&  <Button type="primary" onClick={()=>handleClicktonewVote()}>New voting</Button>
+                            }
 
-                            </div>
-                        </div>
-                </section>
+                        </BtnRht>
+                    </FirstLine>
+                    <section>
+                        <div className="titleTop">Pendinng Voting List</div>
+                        <VotePending
+                            id={id}
+                            list={pendinglist}
+                            history={props.history}
+                            refresh={setAll}
+                        />
+                    </section>
+                    <section>
+                        <div className="titleTop">Active Votinng List</div>
+                        <VoteActive
+                            id={id}
+                            list={activelist}
+                            history={props.history}
+                        />
+                    </section>
+                    <section>
+                        <div className="titleTop">History</div>
+                        <VotePagination
+                            id={id}
+                            list={historylist}
+                            history={props.history}  />
+                    </section>
+                </div>
 
             </div>
         )

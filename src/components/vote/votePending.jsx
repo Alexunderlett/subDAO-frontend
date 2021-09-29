@@ -25,7 +25,6 @@ export default function VotePending(props) {
     const [errorShow,seterrorShow]= useState(false);
     const [errorTips,seterrorTips]= useState('');
 
-    let { t } = useTranslation();
 
     useEffect(() => {
         if(props.list.length){
@@ -49,7 +48,7 @@ export default function VotePending(props) {
         let { id } = props;
 
         setLoading(true);
-        setTips(t('triggering'));
+        setTips('Trigger transfer token');
 
         await api.vote.executeVote(votecontract,selectid,(data)=>{
 
@@ -83,22 +82,30 @@ export default function VotePending(props) {
             <table>
                 <thead>
                 <tr>
-                    <th>{t('Number')}</th>
-                    <th>{t('Title')}</th>
-                    <th>{t('Trigger')}</th>
+                    <th>Number</th>
+                    {/*<th>Time</th>*/}
+                    <th>Title</th>
+                    <th>Trigger</th>
                 </tr>
                 </thead>
                 <tbody>
-                {
-                    list.map((item)=><tr key={`Pending_${item.vote_id}`}>
-                        <td>{item.vote_id}</td>
-                        <td>{item.title}</td>
-                        <td className='voteViewTD'>
-                            <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>
-                            <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
-                        </td>
-                    </tr>)
-                }
+                {/*{*/}
+                {/*    list.map((item)=><tr key={`Pending_${item.vote_id}`}>*/}
+                {/*        <td>{item.vote_id}</td>*/}
+                {/*        <td>{item.title}</td>*/}
+                {/*        <td className='voteViewTD'>*/}
+                {/*            <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>*/}
+                {/*            <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>*/}
+                {/*        </td>*/}
+                {/*    </tr>)*/}
+                {/*}*/}
+                <tr>
+                    <td>01</td>
+                    <td>12:28:00  8/11/2021</td>
+                    <td>This confirm the statement ack packet</td>
+                    <td>d</td>
+                </tr>
+
                 </tbody>
             </table>
         </div>)

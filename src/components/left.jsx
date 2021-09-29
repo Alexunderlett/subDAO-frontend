@@ -99,7 +99,7 @@ const BtnGroup = styled.div`
 
 export default function Left(props){
     const { state } = useSubstrate();
-    const {  basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract} = state;
+    const {  basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract,votecontract} = state;
     const [delMem, setdelMem] = useState(false);
     const [delAdmin, setdelAdmin] = useState(false);
     const [info, setinfo] = useState(true);
@@ -154,13 +154,15 @@ export default function Left(props){
     }, [delAdmin]);
 
     useEffect(() => {
-        if (basecontract == null || orgcontract == null || daoManagercontract == null || apiState == null) return;
+        console.log("======",basecontract == null , orgcontract == null , daoManagercontract == null , apiState == null)
+        if (basecontract == null || orgcontract == null || daoManagercontract == null || apiState == null ) return;
        init();
-    }, [props.id,basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract]);
+    }, [props.id,basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract,votecontract]);
     useEffect(() => {
        init();
     }, []);
     const init = () =>{
+        console.error("basecontract",basecontract)
         const setBase = async () => {
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
@@ -202,17 +204,8 @@ export default function Left(props){
     };
     const handleClicktoType = (typeNow) => {
         if(typeNow === type) return;
-        let str;
-        switch(typeNow) {
-            case 'org':
-            case 'about':
-                str = `/${typeNow}/${props.id}/${props.owner}`;
-                break;
-            default:
-                str = `/${typeNow}/${props.id}`;
-                break;
-        }
-        props.history.push(str);
+
+        props.history.push(`/${typeNow}/${props.id}/${props.owner}`);
     }
 
     const handleExit = () => {

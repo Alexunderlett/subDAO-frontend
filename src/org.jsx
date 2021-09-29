@@ -100,11 +100,12 @@ const FirstLine = styled.div`
 `;
 const BtnRht = styled.div`
 position: absolute;
-  right: 2rem;
+  right: 0;
   bottom: 0;
   display: flex;
   justify-content: flex-end;
   align-content: center;
+  padding-right: 3rem;
   button{
     width: 9rem;
     height: 3rem;
@@ -250,7 +251,6 @@ export default function Org(props) {
 
 
     const handleClicktoManage = (type) => {
-        // props.history.push(`/manage/${id}/${props.match.params.owner}/${isOwner?1:0}/${isModerator?1:0}`)
         setManage(type)
 
     }
