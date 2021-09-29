@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Slick from "./components/slick";
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
 import Loading from "./components/loading/Loading";
 
-import { withRouter } from 'react-router-dom';
 import right from './img/right.png';
 import homeImg from './img/homeImg.png';
 import { useTranslation } from "react-i18next";
@@ -130,41 +128,6 @@ function Home(props) {
         }
         setfirst(false)
     }, []);
-
-    // useEffect(() => {
-    //     if (maincontract == null || (selected && !selected.length)) return;
-    //     const setInstances = async () => {
-    //         setLoading(true);
-    //         let addresslist = await api.main.listDaoInstances(maincontract);
-    //         console.log('===========addresslist============', addresslist)
-    //         let arr = [];
-    //
-    //         let mydaolist;
-    //         if (myDao === 'TRUE') {
-    //             mydaolist = addresslist.filter(i => i.owner === selected[0].address);
-    //         } else {
-    //             mydaolist = addresslist;
-    //         }
-    //         if (mydaolist && mydaolist.length) {
-    //
-    //             for (let item of mydaolist) {
-    //
-    //                 const data = await api.base.InitHome(state, item.dao_manager_addr);
-    //                 const logo = data && data.logo ? data.logo : '';
-    //                 arr.push({
-    //                     address: item.dao_manager_addr,
-    //                     logo
-    //                 });
-    //             }
-    //         }
-    //         setimglist(arr);
-    //         setLoading(false)
-    //         dispatch({ type: 'SET_HOME', payload: arr });
-    //     };
-    //     setInstances();
-    //
-    // }, [allAccounts, maincontract, myDao, first]);
-
     useEffect(() => {
         setcreateDAOModal(!!selected && !!selected.length && (!imglist || !imglist.length))
     }, [selected, imglist])
@@ -227,5 +190,5 @@ function Home(props) {
         </HomeBg>
     )
 }
-export default withRouter(Home)
+export default Home
 

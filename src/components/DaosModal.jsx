@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal, Select, Button } from 'antd';
-import { withRouter } from 'react-router-dom';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
@@ -131,4 +130,4 @@ const DaosModal = (props) => {
     );
 }
 
-export default withRouter(DaosModal);
+export default DaosModal;

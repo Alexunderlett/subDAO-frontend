@@ -105,7 +105,7 @@ export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
     const { allAccounts, api, maincontract, daoManagercontract } = state;
 
-    let { t, i18n } = useTranslation()
+    let {  i18n } = useTranslation();
 
     const [selected, setselected] = useState([]);
 
@@ -131,7 +131,7 @@ export default function Headertop(props) {
     }
 
     useEffect(() => {
-        if (allAccounts == null) return
+        if (allAccounts == null) return;
         queryBalance(allAccounts)
     }, [allAccounts, maincontract, daoManagercontract]);
     useEffect(() => {
@@ -251,15 +251,15 @@ export default function Headertop(props) {
 
 
                         {
-                            allAccounts != null && <span className='createDAO' onClick={handleClick}>{t('CreateDAO')}</span>
+                            allAccounts != null && <span className='createDAO' onClick={handleClick}>Create My DAO</span>
                         }
 
                         {
-                            allAccounts != null && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />{t('MyDAO')}</span>
+                            allAccounts != null && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />My DAO</span>
                         }
                         {!!selected.length &&
                             <span className='logout' onClick={exitAccount}>
-                                {t('logout')}
+                               Logout
                             </span>
                         }
 
@@ -271,7 +271,7 @@ export default function Headertop(props) {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
                     <div className="title">Select You Account</div>
-                    <Select placeholder={t('SelectAccount')} style={{ width: '100%' }} onChange={selectAccounts}>
+                    <Select placeholder="Please Select Your Account" style={{ width: '100%' }} onChange={selectAccounts}>
                         {
                             allList && allList.length && allList.map((opt) =>
                                 <Select.Option value={opt.address} key={opt.address}>{opt.meta.name}</Select.Option>

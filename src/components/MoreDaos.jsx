@@ -54,7 +54,7 @@ const MoreDaos = (props) => {
                     )
                 }
             </div>
-            <DaosModal moreDaos={moreDaos} handleClose={() => { setMoreDaos(false) }} />
+            <DaosModal moreDaos={moreDaos} handleClose={() => { setMoreDaos(false) }}  history={props.history}/>
         </AllDaos>
     );
 }
