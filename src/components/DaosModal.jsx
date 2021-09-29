@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal, Select, Button } from 'antd';
-import right from '../img/right.png';
 import { withRouter } from 'react-router-dom';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
-
+import LoadingNew from "./loadingNEW";
 
 const DaoBody = styled.div`
     width: 80%;
@@ -18,7 +17,7 @@ const DaoBody = styled.div`
         justify-content: space-between;
         .left{
             font-size: 5.6rem;
-            font-family: Roboto-Light, Roboto;
+            font-family: Roboto-Light;
             font-weight: 300;
             color: #10134E;
             line-height: 6.6rem;
@@ -41,59 +40,65 @@ const DaoBody = styled.div`
 
 
 const DaosModal = (props) => {
-    const { moreDaos, handleClose } = props
-    const account = JSON.parse(sessionStorage.getItem('account'));
+    const { moreDaos, handleClose } = props;
 
     const { state, dispatch } = useSubstrate();
     const { homepage, maincontract, allAccounts, myDao, apiState } = state;
-    const [selected, setselected] = useState([]);
+    const [alls, setAlls] = useState(false);
     const [imglist, setimglist] = useState([]);
 
 
-    useEffect(() => {
-        let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
-        if (selectedStorage) {
-            setselected(selectedStorage)
+    const setInstances = async () => {
+        let addresslist = await api.main.listDaoInstances(maincontract);
+        console.log('===========addresslist============', addresslist)
+        let arr = [];
+
+        setAlls(true);
+        let mydaolist;
+        if (myDao === 'TRUE') {
+            mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
+        } else {
+            mydaolist = addresslist;
         }
-        if (maincontract == null || (selected && !selected.length)) return;
-        const setInstances = async () => {
-            let addresslist = await api.main.listDaoInstances(maincontract);
-            console.log('===========addresslist============', addresslist)
-            let arr = [];
-
-            let mydaolist;
-            if (myDao === 'TRUE') {
-                mydaolist = addresslist.filter(i => i.owner === selected[0].address);
-            } else {
-                mydaolist = addresslist;
+        if (mydaolist && mydaolist.length) {
+            for (let item of mydaolist) {
+                const data = await api.base.InitHome(state, item.dao_manager_addr);
+                if(!data) continue;
+                const logo = data.logo ? data.logo : '';
+                const name = data.name ? data.name : '';
+                const owner = data.owner ? data.owner : '';
+                const desc = data.desc ? data.desc : '';
+                arr.push({
+                    address: item.dao_manager_addr,
+                    logo,
+                    name,
+                    owner,
+                    desc,
+                });
             }
-            if (mydaolist && mydaolist.length) {
+        }
+        setimglist(arr);
+        setAlls(false);
+        dispatch({ type: 'SET_HOME', payload: arr });
+    };
+    useEffect(() => {
 
-                for (let item of mydaolist) {
+        if (maincontract == null || allAccounts == null) return;
 
-                    const data = await api.base.InitHome(state, item.dao_manager_addr);
-                    const logo = data && data.logo ? data.logo : '';
-                    arr.push({
-                        address: item.dao_manager_addr,
-                        logo
-                    });
-                }
-            }
-            console.info(222,arr)
-            setimglist(arr);
-            dispatch({ type: 'SET_HOME', payload: arr });
-        };
         setInstances();
 
     }, [allAccounts, maincontract, myDao]);
 
 
     const handleClick = () => {
-        if (account != null && account.length) {
+        if (allAccounts != null && allAccounts.length) {
             props.history.push('/create')
         }
     }
 
+    const handleClicktoAbout = (id,owner) => {
+        props.history.push(`/about/${id}/${owner}`)
+    }
     return (
         <Modal
             visible={moreDaos}
@@ -109,13 +114,14 @@ const DaosModal = (props) => {
                 </div>
                 <div className="daos">
                     {
-                        imglist.map((item, index) =>
-                            <div key={item.address} className="daoItem">
+                        alls && <LoadingNew  />
+                    }
+                    {
+                        !alls && imglist.map((item) =>
+                            <div key={item.address} className="daoItem" onClick={() => handleClicktoAbout(item.address, item.owner)}>
                                 <img src={item.logo} alt="" />
-                                <div className="title">Patract</div>
-                                <div className="detail">
-                                    Litentry is built on Substrate, which inherits great features and the best technologies in
-                                </div>
+                                <div className="title">{item.name}</div>
+                                <div className="detail">{item.desc}</div>
                             </div>
                         )
                     }

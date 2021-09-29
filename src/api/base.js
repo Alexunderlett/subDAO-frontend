@@ -40,9 +40,9 @@ const InitHome = async (state,address) => {
     if( !data || !data.base_addr)return;
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
 
-    let logo = await basecontract.query.getBase(AccountId, {value, gasLimit});
-    logo = publicJs.formatResult(logo);
-    return logo;
+    let res = await basecontract.query.getBase(AccountId, {value, gasLimit});
+    res = publicJs.formatResult(res);
+    return res;
 };
 
 const getBaseData = async (basecontract) => {

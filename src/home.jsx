@@ -3,16 +3,13 @@ import Slick from "./components/slick";
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
 import Loading from "./components/loading/Loading";
-// import Subrouterlink from './router/subRouter';
+
 import { withRouter } from 'react-router-dom';
-import homeimg from './images/home.png'
-import Accounts from "./api/Account";
 import right from './img/right.png';
 import homeImg from './img/homeImg.png';
-import down from './img/down.png';
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
-import { Modal, Select, Button, Row, Col } from 'antd';
+import { Modal, Button } from 'antd';
 import MoreDaos from './components/MoreDaos';
 
 
@@ -95,7 +92,7 @@ function Home(props) {
     const { state, dispatch } = useSubstrate();
     let { t } = useTranslation();
 
-    const { homepage, maincontract, allAccounts, myDao, apiState } = state;
+    const {  maincontract, allAccounts, apiState } = state;
     const [loading, setLoading] = useState(false);
 
     const [showButton, setShowButton] = useState(false);
@@ -134,79 +131,56 @@ function Home(props) {
         setfirst(false)
     }, []);
 
-    useEffect(() => {
-        if (maincontract == null || (selected && !selected.length)) return;
-        const setInstances = async () => {
-            setLoading(true);
-            let addresslist = await api.main.listDaoInstances(maincontract);
-            console.log('===========addresslist============', addresslist)
-            let arr = [];
-
-            let mydaolist;
-            if (myDao === 'TRUE') {
-                mydaolist = addresslist.filter(i => i.owner === selected[0].address);
-            } else {
-                mydaolist = addresslist;
-            }
-            if (mydaolist && mydaolist.length) {
-
-                for (let item of mydaolist) {
-
-                    const data = await api.base.InitHome(state, item.dao_manager_addr);
-                    const logo = data && data.logo ? data.logo : '';
-                    arr.push({
-                        address: item.dao_manager_addr,
-                        logo
-                    });
-                }
-            }
-            setimglist(arr);
-            setLoading(false)
-            dispatch({ type: 'SET_HOME', payload: arr });
-        };
-        setInstances();
-
-    }, [allAccounts, maincontract, myDao, first]);
+    // useEffect(() => {
+    //     if (maincontract == null || (selected && !selected.length)) return;
+    //     const setInstances = async () => {
+    //         setLoading(true);
+    //         let addresslist = await api.main.listDaoInstances(maincontract);
+    //         console.log('===========addresslist============', addresslist)
+    //         let arr = [];
+    //
+    //         let mydaolist;
+    //         if (myDao === 'TRUE') {
+    //             mydaolist = addresslist.filter(i => i.owner === selected[0].address);
+    //         } else {
+    //             mydaolist = addresslist;
+    //         }
+    //         if (mydaolist && mydaolist.length) {
+    //
+    //             for (let item of mydaolist) {
+    //
+    //                 const data = await api.base.InitHome(state, item.dao_manager_addr);
+    //                 const logo = data && data.logo ? data.logo : '';
+    //                 arr.push({
+    //                     address: item.dao_manager_addr,
+    //                     logo
+    //                 });
+    //             }
+    //         }
+    //         setimglist(arr);
+    //         setLoading(false)
+    //         dispatch({ type: 'SET_HOME', payload: arr });
+    //     };
+    //     setInstances();
+    //
+    // }, [allAccounts, maincontract, myDao, first]);
 
     useEffect(() => {
         setcreateDAOModal(!!selected && !!selected.length && (!imglist || !imglist.length))
     }, [selected, imglist])
 
-    useEffect(() => {
-        setimglist(homepage);
-
-        if (myDao === 'TRUE') {
-            if (homepage && homepage[0]) {
-                props.history.push(`/about/${homepage[0].address}/${homepage[0].owner}`)
-            } else {
-                props.history.push(`/home`)
-            }
-
-        } else {
-            if (props.history.location.pathname === '/home' && homepage && homepage[0]) {
-                props.history.push(`/about/${homepage[0].address}/${homepage[0].owner}`)
-            } else if (props.history.location.pathname.indexOf('/home') > -1 && homepage && !homepage.length) {
-                props.history.push(`/home`)
-            }
-        }
-    }, [homepage, myDao]);
-
     return (
         <HomeBg>
             <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={t('InitializeHome')} />
-            {/* <Subrouterlink /> */}
 
             <section className="padding">
-                {/* {
-                    !!imglist && !!imglist.length && !!selected && !!selected.length && <Slick list={imglist} history={props.history} />
-                } */}
                 <Modal
                     visible={createDAOModal}
                     onCancel={() => setcreateDAOModal(false)}
                     footer={null}
                 >
                     <SelectAccount>
-                        <div className="title"> {t('noDao')}</div>
+                        <div className="title">You are not a member of any DAO</div>
                         <div className="detail">
                             You can join other DAOs or create your own DAO!
                         </div>
@@ -233,7 +207,6 @@ function Home(props) {
                         <div className='homeDesc'>
                             {t('homeDescription')}
                         </div>
-                        {/*<img src={homeimg} alt=""/>*/}
                         <div className="header-button">
                             <Button type="primary">
                                 {t('ConnectWallet')}
@@ -249,7 +222,7 @@ function Home(props) {
                     </div>
                 </div>
 
-                <MoreDaos showMoreDaos={moreDaos} />
+                <MoreDaos showMoreDaos={moreDaos} history={props.history} />
             </section>
         </HomeBg>
     )

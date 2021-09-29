@@ -110,25 +110,15 @@ export default function Headertop(props) {
     const [selected, setselected] = useState([]);
 
     const [showButton, setShowButton] = useState(false);
-    const [showExit, setshowExit] = useState(false);
     const [daoExit, setdaoExit] = useState(false);
     const [first, setfirst] = useState(false);
     const [balanceOf, setbalanceOf] = useState(0);
     const [showlist, setshowlist] = useState(false);
     const [currentAccount, setcurrentAccount] = useState(null);
 
-    useEffect(() => {
-        setshowExit(createHashHistory.location.pathname === '/create');
-        setfirst(createHashHistory.location.pathname === '/home');
-        createHashHistory.listen((obj) => {
-            setshowExit(createHashHistory.location.pathname === '/create')
-            setfirst(createHashHistory.location.pathname === '/home')
-        });
-    }, [showExit, first]);
 
     useEffect(() => {
         i18n.changeLanguage('en')
-        dispatch({ type: 'MYDAO' });
     }, []);
 
 
@@ -169,28 +159,15 @@ export default function Headertop(props) {
             createHashHistory.push('/create')
         }
     }
-    const handleExit = () => {
-        createHashHistory.push('/')
-    }
     const handleMyClick = () => {
         if (account === null || !account.length) {
             setShowButton(true);
         } else {
-            dispatch({ type: 'MYDAO' });
             createHashHistory.push('/')
             setdaoExit(true)
         }
     }
-    const exitMyClick = () => {
-        if (account === null || !account.length) {
-            setShowButton(true);
-        } else {
-            dispatch({ type: 'NOMAY' });
-            setdaoExit(false)
-        }
-    }
     const toFirst = () => {
-        dispatch({ type: 'NOMAY' });
         createHashHistory.push('/')
     }
     const exitAccount = () => {
@@ -273,38 +250,18 @@ export default function Headertop(props) {
                         }
 
 
-                        {/*{*/}
-                        {/*    !showExit && !first &&<button onClick={handleClick} className="btn">{t('CreateDAO')}</button>*/}
-                        {/*}*/}
-                        {/*{*/}
-                        {/*    showExit && !first &&<button onClick={handleExit} className="btn exit"><img src={close} alt=""/>{t('ExitCreate')}</button>*/}
-                        {/*}*/}
                         {
-                            !first && <span className='createDAO' onClick={handleClick}>{t('CreateDAO')}</span>
+                            allAccounts != null && <span className='createDAO' onClick={handleClick}>{t('CreateDAO')}</span>
                         }
+
                         {
-                            !first && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />{t('MyDAO')}</span>
+                            allAccounts != null && <span className='myDao' onClick={handleMyClick}><img src={myDao} alt="" />{t('MyDAO')}</span>
                         }
                         {!!selected.length &&
                             <span className='logout' onClick={exitAccount}>
-                                {/* <img src={close} alt="" /> */}
                                 {t('logout')}
                             </span>
                         }
-                        {/*{*/}
-                        {/*    !daoExit && !first && <button onClick={handleMyClick} className="btn">{t('MyDAO')}</button>*/}
-                        {/*}*/}
-                        {/*{*/}
-                        {/*    daoExit && !first && <button onClick={exitMyClick} className="btn">{t('ExitMy')}</button>*/}
-
-                        {/*{*/}
-                        {/*    <button  className="btn">{t('Exit')}</button>*/}
-                        {/*}*/}
-
-                        {/*<div className='switchLang'>*/}
-                        {/*    /!*<span onClick={()=>i18n.changeLanguage(i18n.language==='en'?'zh':'en')}>{i18n.language==='en'?'zh':'en'}</span>*!/*/}
-                        {/*    /!*<img src={arrow} alt=""/>*!/*/}
-                        {/*</div>*/}
 
                     </div>
                 </div>
@@ -325,22 +282,6 @@ export default function Headertop(props) {
                         Confirm
                     </Button>
                     <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={cancleShowlist}>Cancel</div>
-                    {/* <div>
-                                <Modal
-                                    visible={showButton}
-                                    aria-labelledby="contained-modal-title-vcenter"
-                                    centered
-                                    onClose={() => setShowButton(false)}
-                                    className='newVoteBrdr homebtm'
-                                >
-                                    <Modal.Title closeButton />
-                                    <Modal.Content>
-                                        <h4>{t('connect')}</h4>
-                                    </Modal.Content>
-                                </Modal>
-                                <button onClick={handleClick}>{t('CreateDAO')}</button>
-                            </div> */}
-                    {/* </Modal.Content> */}
                 </Modal>
             }
         </HeaderBg>
