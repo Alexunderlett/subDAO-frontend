@@ -44,7 +44,7 @@ const TopTitles = styled.div`
     align-content: center;
     padding: 3rem;
     box-sizing: border-box;
-    margin-top: 4rem;
+
     img{
       width: 11rem;
       height: 11rem;

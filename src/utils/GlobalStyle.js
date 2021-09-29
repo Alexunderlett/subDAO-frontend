@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import "../scss/fonts.scss";
+import down from "../img/down.png";
 
 const GlobalStyle = createGlobalStyle`
 body,html{
@@ -21,6 +22,7 @@ body,html{
         .container{
           width: 144rem;
           margin: 0 auto;
+          padding: 4rem 0;
         }
     }
   }
@@ -87,9 +89,58 @@ body,html{
         .ant-modal-close{
           top: 0.6rem;
           right: 0.6rem;
+          color: #CCCCD8;
         }
         .ant-modal-body{
-          padding-top: 5rem;
+          padding: 6rem;
+          &>.title{
+            margin: 2rem 0;
+            height: 4rem;
+            font-size: 3.4rem;
+            font-family: Roboto-Light, Roboto;
+            font-weight: 300;
+            color: #010643;
+            line-height: 4rem;
+            text-align: center;
+          }
+
+          /* button */
+          .ant-btn.ant-btn-primary{
+            height: 7.6rem;
+            border-radius: 1.2rem;
+          }
+          /* button */
+
+          /* select */
+          .ant-select.ant-select-single.ant-select-show-arrow{
+            .ant-select-selector{
+              height: 7.6rem;
+              background: #F4F4FA;
+              border-radius: 1.2rem;
+              .ant-select-selection-placeholder, .ant-select-selection-item{
+                line-height: 7.6rem;
+                font-size: 1.8rem;
+                font-family: Roboto-Light, Roboto;
+                font-weight: 300;
+                color: #A6A6B7;
+              }
+              .ant-select-selection-item{
+                color: #010643;
+              }
+            }
+            .ant-select-arrow{
+              background: url(${down});
+              background-size: 100%;
+              width: 3.2rem;
+              height: 3.2rem;
+              margin-top: -1.4rem;
+              svg{
+                display: none;
+              }
+            }
+          }
+          /* select */
+
         }
       }
     }

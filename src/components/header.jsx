@@ -67,6 +67,7 @@ const HeaderBg = styled.div`
                 font-weight: 300;
                 color: #10164B;
                 line-height: 1.9rem;
+                cursor: pointer;
             }
             .header-button{
                 text-align: right;
@@ -252,17 +253,14 @@ export default function Headertop(props) {
                 <div className="rhtBtn">
                     <div className="header-button">
                         <Modal
-                            visible={showButton} onCancel={() => { setShowButton(false) }}
+                            visible={showButton}
+                            onCancel={() => { setShowButton(false) }}
                         >
-                            {/* <Modal.Title closeButton> */}
                             <i className='fa fa-user-times homeTop' />
-                            {/* </Modal.Title> */}
-                            {/* <Modal.Content className='homebtm'> */}
                             <h4>Please connect wallet</h4>
-                            {/* </Modal.Content> */}
                         </Modal>
                         {!selected.length &&
-                            <Button type="text" className="signin" onClick={connectWallet}>Sign in</Button>
+                            <div className="signin" onClick={connectWallet}>Sign in</div>
                         }
                         {!!selected.length &&
                             <div className='addressBrdr'>
@@ -315,8 +313,7 @@ export default function Headertop(props) {
             {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
-                    <h2 style={{ textAlign: 'center', marginTop: '2rem' }}>Select You Account</h2>
-                    {/* <Modal.Content> */}
+                    <div className="title">Select You Account</div>
                     <Select placeholder={t('SelectAccount')} style={{ width: '100%' }} onChange={selectAccounts}>
                         {
                             allList && allList.length && allList.map((opt) =>
@@ -327,7 +324,7 @@ export default function Headertop(props) {
                     <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={changeAccounts}>
                         Confirm
                     </Button>
-                    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={cancleShowlist}>Cancel</div>
+                    <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={cancleShowlist}>Cancel</div>
                     {/* <div>
                                 <Modal
                                     visible={showButton}
