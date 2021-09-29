@@ -212,7 +212,7 @@ export default function Vault(props) {
             <section>
                 <div className="row">
                     <div className='col-lg-3'>
-                        <Left />
+                        <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
                     </div>
                     <div className='col-lg-9'>
                         <div className='voteTop'>
