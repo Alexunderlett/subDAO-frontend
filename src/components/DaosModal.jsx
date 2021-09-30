@@ -4,6 +4,7 @@ import { Modal, Button } from 'antd';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
+import { useHistory, useLocation } from 'react-router-dom'
 
 const DaoBody = styled.div`
     width: 80%;
@@ -23,16 +24,17 @@ const DaoBody = styled.div`
         }
     }
     .daos{
-        width: calc(100% + 2.5rem);
-        margin-left: -1rem;
+        width: calc(100% + 7rem);
+        margin-left: -3.5rem;
         height: 100%;
         display: flex;
         flex-wrap: wrap;
         overflow-y: auto;
         padding: 2rem 0;
         .daoItem{
-            width: 18.7rem;
-            margin: 1rem 2rem;
+            width: 23rem;
+            height: 26.8rem;
+            margin: 1rem 3.6rem;
         }
     }
 `
@@ -45,6 +47,16 @@ const DaosModal = (props) => {
     const {  maincontract, allAccounts, apiState,daoType } = state;
     const [alls, setAlls] = useState(false);
     const [imglist, setimglist] = useState([]);
+    const [showCreatDaoBtn, setshowCreatDaoBtn] = useState(true);
+    const { pathname } = useLocation()
+
+    useEffect(()=>{
+        if(pathname === '/create') {
+            setshowCreatDaoBtn(false)
+        }else{
+            setshowCreatDaoBtn(true)
+        }
+    },[pathname])
 
     const setInstances = async () => {
 
@@ -92,7 +104,10 @@ const DaosModal = (props) => {
             <DaoBody>
                 <div className="top">
                     <div className="left">{daoType ==='all' ? 'There\'s always one for you' :'My Daos'}</div>
-                    <Button onClick={()=>handleClick()}>CreateDAO</Button>
+                    {showCreatDaoBtn &&
+                    <Button type="primary" onClick={()=>handleClick()} style={{width:'20rem', height: '6rem'}}>
+                        Create DAO
+                    </Button>}
                 </div>
                 <div className="daos">
                     {

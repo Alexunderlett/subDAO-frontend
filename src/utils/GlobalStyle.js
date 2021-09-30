@@ -204,15 +204,21 @@ body,html{
     img{
         width: 9rem;
         height: 9rem;
+        border-radius: 4.5rem;
     }
     .title{
+        width: 100%;
         height: 2.4rem;
+        text-align: center;
         font-size: 2rem;
         font-family: Roboto-Regular, Roboto;
         font-weight: 400;
         color: #10164B;
         line-height: 2.4rem;
         margin: 1.3rem 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     .detail{
         width: 16.7rem;
