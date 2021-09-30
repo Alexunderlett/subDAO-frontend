@@ -20,8 +20,6 @@ import VAULT from "./img/VAULT.png";
 import VOTE from "./img/VOTE.png";
 
 import MoreDaos from "./components/MoreDaos";
-import mainContract from "./api/mainContract";
-
 
 const Tip = styled.div`
     text-align: center;
@@ -155,13 +153,9 @@ const CopyImg = styled.span`
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
-    const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract } = state;
+    const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract,maincontract } = state;
 
     const [id, setAId] = useState(null);
-    const [name, setName] = useState('');
-    const [logo, setLogo] = useState('');
-    const [description, setDescription] = useState('');
-    const [owner, setOwner] = useState('');
     const [moderators, setModerators] = useState([]);
     const [moderatorShow, setmoderatorShow] = useState(true);
     const [activelist, setActivelist] = useState([]);
@@ -180,31 +174,12 @@ export default function About(props) {
     const [contractArr, setcontractArr] = useState([]);
     const [tokenlist, settokenlist] = useState([]);
 
-    const [daostate, setdaostate] = useState(false);
-    const [basestate, setbasestate] = useState(false);
-    const [vaultstate, setvaultstate] = useState(false);
-    const [votestate, setvotestate] = useState(false);
-    const [orgstate, setorgstate] = useState(false);
-
-    const [isMember, setisMember] = useState(false);
-    const [isModerator, setisModerator] = useState(false);
-    const [isOwner, setisOwner] = useState(false);
     const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
 
     const [moreDaos, setMoreDaos] = useState(false);
 
 
-    useEffect(() => {
-        if (apiState !== 'READY') return;
-        const setInitDAO = async () => {
-
-            await api.dao.InitDAO(state, dispatch, props.match.params.id, (data) => {
-                setdaostate(data);
-            });
-        };
-        setInitDAO();
-    }, [apiState, id]);
     useEffect(() => {
         setcontractlist({
             base_addr:null,
@@ -218,92 +193,31 @@ export default function About(props) {
         setcontractshow(true);
         setbalancelist([]);
         setbalanceshow(true);
-        setName('');
-        setLogo('');
-        setDescription('');
-        setOwner('');
 
         setAId(props.match.params.id);
 
     }, [props.match.params.id]);
-    const queryAddrs = async () => {
-        await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
-            if (data) {
-                let arr=[];
-                Object.keys(data).map((item) => {
-                    arr.push({
-                        name: item,
-                        address: data[item]
-                    });
-                    return item;
-                });
-                setcontractArr(arr);
-                setcontractlist(data);
-                setcontractshow(false)
-            }
-        });
+    const queryAddrs = () => {
+
+        let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
+
+        if(contractlistBg!=null){
+            setcontractlist(contractlistBg);
+        }
+        let contractArrA = JSON.parse(sessionStorage.getItem('contractArr'));
+        if(contractArrA!=null){
+            setcontractArr(contractArrA);
+        }
+        setcontractshow(false);
+
     };
     useEffect(() => {
-        if (daoManagercontract == null && daostate) return;
+        if (daoManagercontract == null ) return;
         queryAddrs();
-    }, [daoManagercontract, daostate, id]);
+    }, [daoManagercontract, id,maincontract,basecontract]);
     useEffect(() => {
         queryAddrs();
     }, []);
-
-    useEffect(() => {
-
-        const { vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
-        sessionStorage.setItem('contractlist', JSON.stringify(contractlist));
-        if (base_addr != null) {
-
-            const setInitBase = async () => {
-                await api.base.InitBase(state, dispatch, base_addr, (data) => {
-                    setbasestate(data);
-                });
-            };
-            setInitBase();
-        }
-        if (vault_addr != null) {
-            const setInitVault = async () => {
-                await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
-                    setvaultstate(data)
-                });
-            };
-            setInitVault();
-        }
-
-        if (org_addr != null) {
-            const setInitOrg = async () => {
-                await api.org.InitOrg(state, dispatch, org_addr, (data) => {
-                    setorgstate(data)
-                });
-            };
-            setInitOrg();
-        }
-        if (auth_addr != null) {
-            const setInitAuth = async () => {
-                await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
-                    console.log("====", data)
-                });
-            };
-            setInitAuth();
-        }
-        if (vote_addr != null) {
-            const setInitVote = async () => {
-                await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
-                    setvotestate(data)
-                });
-            };
-            setInitVote();
-        }
-        if (erc20_addr != null) {
-            const setInitErc20 = async () => {
-                await api.erc20.InitErc20(state, dispatch, erc20_addr);
-            };
-            setInitErc20();
-        }
-    }, [daoManagercontract, contractlist, id]);
 
     useEffect(() => {
         const setBalance = async () => {
@@ -330,29 +244,9 @@ export default function About(props) {
         }
         setBalance();
     }, [tokenlist, id]);
-    // useEffect(() => {
-    //     if (!basestate || contractlist.base_addr == null || !contractlist.base_addr) return;
-    //     const setBase = async () => {
-    //         await api.base.getBaseData(basecontract).then(data => {
-    //             if (!data) return;
-    //             let { owner, name, logo, desc } = data;
-    //             setName(name);
-    //             setLogo(logo);
-    //             setDescription(desc);
-    //             setOwner(owner);
-    //         console.error("======getBaseData",name,logo,desc,owner)
-    //             sessionStorage.setItem('logo', logo);
-    //             sessionStorage.setItem('description', description);
-    //             sessionStorage.setItem('owner', owner);
-    //             sessionStorage.setItem('DaoName', name);
-    //             setinfo(false);
-    //         });
-    //     };
-    //     setBase();
-    // }, [basecontract, basestate, id]);
 
     useEffect(() => {
-        if (!vaultstate || contractlist.vault_addr == null || !contractlist.vault_addr) return;
+        if (vaultcontract ==null || contractlist.vault_addr == null || !contractlist.vault_addr) return;
         const setToken = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
@@ -360,10 +254,10 @@ export default function About(props) {
             });
         };
         setToken();
-    }, [vaultcontract, vaultstate, id]);
+    }, [vaultcontract, id]);
 
     useEffect(() => {
-        if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
+        if (orgcontract == null || contractlist.org_addr == null || !contractlist.org_addr) return;
         const setModeratorList = async () => {
             await api.org.getDaoModeratorList(orgcontract).then(data => {
                 if (!data) return;
@@ -373,24 +267,8 @@ export default function About(props) {
         };
         setModeratorList();
 
-    }, [orgcontract, orgstate, id]);
+    }, [orgcontract, id]);
 
-    useEffect(() => {
-        if (!orgstate || contractlist.org_addr == null || !contractlist.org_addr) return;
-        const whoAmI = async () => {
-            await api.org.whoAmI(orgcontract).then(data => {
-
-                if (!data) return;
-                setisMember(data[0]);
-                sessionStorage.setItem('isMember',data[0]);
-                setisModerator(data[1]);
-                sessionStorage.setItem('isModerator',data[1]);
-                setisOwner(data[2]);
-                sessionStorage.setItem('isOwner',data[2]);
-            });
-        };
-        whoAmI();
-    }, [orgcontract, orgstate, id]);
 
     const switchKey = (key) => {
         let str = '';
@@ -441,7 +319,7 @@ export default function About(props) {
             </Modal>
 
             <div className='container'>
-                <Left history={props.history} id={id} owner={props.match.params.owner}/>
+                <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
                 <section>
                     <div className="titleTop">Balance</div>
                     <Ul>

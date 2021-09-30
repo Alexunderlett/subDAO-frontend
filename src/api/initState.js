@@ -32,9 +32,6 @@ module.exports = {
     authcontractState: null,
     authcontract:null,
 
-    homepage:null,
-    homepageState: null,
-
     daoType:null,
 
 

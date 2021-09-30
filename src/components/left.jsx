@@ -98,8 +98,8 @@ const BtnGroup = styled.div`
 `;
 
 export default function Left(props){
-    const { state } = useSubstrate();
-    const {  basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract,votecontract} = state;
+    const { state,dispatch } = useSubstrate();
+    const {  basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract,votecontract,maincontract} = state;
     const [delMem, setdelMem] = useState(false);
     const [delAdmin, setdelAdmin] = useState(false);
     const [info, setinfo] = useState(true);
@@ -114,6 +114,7 @@ export default function Left(props){
     const [isMember, setisMember] = useState(false);
     const [isModerator, setisModerator] = useState(false);
     const [isOwner, setisOwner] = useState(false);
+
 
     const [contractlist, setcontractlist] = useState({
         base_addr:null,
@@ -147,6 +148,95 @@ export default function Left(props){
     }, [delMem]);
 
     useEffect(() => {
+        if (apiState !== 'READY') return;
+        const setInitDAO = async () => {
+            await api.dao.InitDAO(state, dispatch, props.id, (data) => {
+                console.log(data)
+            });
+        };
+        setInitDAO();
+    }, [apiState, props.id]);
+
+
+    const queryAddrs = async () => {
+
+        await api.dao.queryComponentAddrs(daoManagercontract).then(data => {
+            if (data) {
+                let arr=[];
+                Object.keys(data).map((item) => {
+                    arr.push({
+                        name: item,
+                        address: data[item]
+                    });
+                    return item;
+                });
+                sessionStorage.setItem('contractArr', JSON.stringify(arr));
+                setcontractlist(data);
+            }
+        });
+    };
+    useEffect(() => {
+        if (daoManagercontract == null ) return;
+        queryAddrs();
+    }, [daoManagercontract, props.id,maincontract]);
+    useEffect(() => {
+        queryAddrs();
+        init();
+    }, []);
+
+    useEffect(() => {
+        const { vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
+        sessionStorage.setItem('contractlist', JSON.stringify(contractlist));
+        if (base_addr != null) {
+            const setInitBase = async () => {
+                await api.base.InitBase(state, dispatch, base_addr, (data) => {
+                    console.log("====setInitBase", data)
+                });
+            };
+            setInitBase();
+        }
+        if (vault_addr != null) {
+            const setInitVault = async () => {
+                await api.vault.InitVault(state, dispatch, vault_addr, (data) => {
+                    console.log("====setInitVault", data)
+                });
+            };
+            setInitVault();
+        }
+
+        if (org_addr != null) {
+            const setInitOrg = async () => {
+                await api.org.InitOrg(state, dispatch, org_addr, (data) => {
+                    console.log("====setInitOrg", data)
+                });
+            };
+            setInitOrg();
+        }
+        if (auth_addr != null) {
+            const setInitAuth = async () => {
+                await api.auth.InitAuth(state, dispatch, auth_addr, (data) => {
+                    console.log("====setInitAuth", data)
+                });
+            };
+            setInitAuth();
+        }
+        if (vote_addr != null) {
+            const setInitVote = async () => {
+                await api.vote.InitVote(state, dispatch, vote_addr, (data) => {
+                    console.log("====setInitVote", data)
+                });
+            };
+            setInitVote();
+        }
+        if (erc20_addr != null) {
+            const setInitErc20 = async () => {
+                await api.erc20.InitErc20(state, dispatch, erc20_addr);
+            };
+            setInitErc20();
+        }
+    }, [daoManagercontract, props.id,contractlist]);
+
+    useEffect(() => {
         if (orgcontract == null || !delAdmin || !delMem) return;
         setTimeout(async () => {
             window.location.reload()
@@ -154,19 +244,30 @@ export default function Left(props){
     }, [delAdmin]);
 
     useEffect(() => {
-        console.log("======",basecontract == null , orgcontract == null , daoManagercontract == null , apiState == null)
-        if (basecontract == null || orgcontract == null || daoManagercontract == null || apiState == null ) return;
+        if (basecontract == null  || daoManagercontract == null || apiState == null ) return;
        init();
-    }, [props.id,basecontract, vaultcontract, orgcontract,  daoManagercontract, apiState, erc20contract,votecontract]);
+
+    }, [props.id,basecontract, daoManagercontract, apiState]);
+
     useEffect(() => {
-       init();
-    }, []);
+        if (orgcontract == null || contractlist.org_addr == null || !contractlist.org_addr) return;
+        const whoAmI = async () => {
+            await api.org.whoAmI(orgcontract).then(data => {
+                if (!data) return;
+                setisMember(data[0]);
+                setisModerator(data[1]);
+                setisOwner(data[2]);
+            });
+        };
+        whoAmI();
+    }, [orgcontract, props.id]);
+
     const init = () =>{
-        console.error("basecontract",basecontract)
         const setBase = async () => {
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
                 let { owner, name, logo, desc } = data;
+                console.error("====getBaseData",name)
                 setName(name);
                 setLogo(logo);
                 setDescription(desc);
@@ -175,16 +276,6 @@ export default function Left(props){
             });
         };
         setBase();
-
-        setisMember(JSON.parse(sessionStorage.getItem('isMember')));
-        setisModerator(JSON.parse(sessionStorage.getItem('isModerator')));
-        setisOwner(JSON.parse(sessionStorage.getItem('isOwner')));
-
-        let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
-
-        if(contractlistBg!=null){
-            setcontractlist(contractlistBg);
-        }
 
         let pageType = props.history.location.pathname.split('/')[1];
         setType(pageType);
@@ -207,7 +298,6 @@ export default function Left(props){
 
         props.history.push(`/${typeNow}/${props.id}/${props.owner}`);
     }
-
     const handleExit = () => {
         setShowModal(true)
     }
