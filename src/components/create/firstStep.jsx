@@ -48,6 +48,10 @@ const Content = styled.div`
         width: 140px;
         height: 140px;
         position: relative;
+        img{
+            width: 100%;
+            height: 100%;
+        }
         .removeBrdr{
             position: absolute;
             top: -10px;
@@ -187,7 +191,7 @@ class FirstStep extends Component {
                             <div className="inputBrdr">
                                 <Translation>{t => <Input type="text"
                                     placeholder='Url'
-                                    onChange={this.handleImageChange} 
+                                    onChange={this.handleImageChange}
                                     allowClear={true}
                                     />}
                                 </Translation>

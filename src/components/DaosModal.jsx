@@ -64,9 +64,9 @@ const DaosModal = (props) => {
         let mydaolist=[];
 
         if (daoType === 'my') {
-            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
+            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) || [] ;
         } else if(daoType === 'all'){
-            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
+            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) || [] ;
         } else {
             return
         }
