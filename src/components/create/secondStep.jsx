@@ -3,7 +3,6 @@ import { useSubstrate } from '../../api/contracts';
 import api from "../../api";
 import Loading from "../loading/Loading";
 import { useTranslation } from "react-i18next";
-import mainConnect from '../../api/mainContract';
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
 import right from '../../img/right.png';

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import remove from '../../images/shutdown.png';
-import add from '../../images/Add.png';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api";
 import Loading from "../loading/Loading";

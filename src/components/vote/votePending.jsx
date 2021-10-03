@@ -4,10 +4,6 @@ import { Modal } from 'antd';
 import VoteModalTips from "./votemodalTips";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
-import trigger from '../../images/trigger.png';
-import {useTranslation} from "react-i18next";
-import NewVote from "./newVote";
-import view from "../../images/view.png";
 import Loading from "../loading/Loading";
 
 export default function VotePending(props) {
