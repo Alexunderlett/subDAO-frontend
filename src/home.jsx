@@ -95,7 +95,6 @@ function Home(props) {
 
     const [showButton, setShowButton] = useState(false);
 
-    const [show, setshow] = useState(false);
     const [first, setfirst] = useState(true);
     const [imglist, setimglist] = useState(null);
     const [walletTips, setWalletTips] = useState(false);
@@ -103,10 +102,8 @@ function Home(props) {
     const [selected, setselected] = useState([]);
     const [createDAOModal, setcreateDAOModal] = useState(false);
     const [moreDaos, setMoreDaos] = useState(false);
-    const [showMsg, setshowMsg] = useState(false);
 
     const account = JSON.parse(sessionStorage.getItem('account'));
-
 
     const handleClick = () => {
         if (account === null || !account.length) {
@@ -166,7 +163,6 @@ function Home(props) {
                     });
                 }
             }
-
             console.log("======arr============",arr)
             if( typeStr  === 'all'){
                 sessionStorage.setItem('daoList',JSON.stringify(arr));
@@ -180,6 +176,9 @@ function Home(props) {
 
     }, [allAccounts, maincontract, first]);
 
+    const ConnectWallet = () =>{
+        dispatch({ type: 'WALLET',payload: true });
+    }
     return (
         <HomeBg>
             <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={t('InitializeHome')} />
@@ -221,22 +220,18 @@ function Home(props) {
                         <div className="header-button">
 
                             {
-                                !account && <Button type="primary">
+                                !account && <Button type="primary" onClick={()=>ConnectWallet()}>
                                     Connect Wallet
                                     <img src={right} alt="" style={{ width: '2rem' }} />
                                 </Button>
                             }
                             {
-                                account && <Button type="primary">
+                                account && <Button type="primary" onClick={()=>handleClick()}>
                                     Get Started
                                     <img src={right} alt="" style={{ width: '2rem' }} />
                                 </Button>
                             }
 
-
-                            {
-                                // !showlist && !selected.length && !allList.length
-                            }
                         </div>
                     </div>
                     <div className="right">
@@ -245,10 +240,6 @@ function Home(props) {
                 </div>
 
                 <MoreDaos history={props.history} />
-
-                {/* <Button onClick={()=>{setshowMsg(true)}}>123</Button> */}
-                {/* <LoadingModal showMsg={showMsg} handleClose={()=>{setshowMsg(false)}} msg="Creating DAO from Template"/> */}
-                {/* <MsgModal showMsg={showMsg} handleClose={()=>{setshowMsg(false)}} msg="12312"/> */}
 
             </section>
         </HomeBg>

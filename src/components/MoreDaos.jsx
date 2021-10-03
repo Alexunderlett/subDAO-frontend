@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {useSubstrate} from "../api/contracts";
 import api from "../api";
+import LoadingNew from "./loadingNEW";
 
 
 const favoriteDAOs = window.mainAddress.favoriteDAOs;
@@ -32,6 +33,7 @@ const MoreDaos = (props) => {
     const { dispatch,state } = useSubstrate();
 
     const [list, setList] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
@@ -39,6 +41,7 @@ const MoreDaos = (props) => {
     }
 
     useEffect(()=>{
+        setLoading(true)
         const setALLlist = async () =>{
             let arr=[];
             for( let item of favoriteDAOs){
@@ -57,6 +60,7 @@ const MoreDaos = (props) => {
                 })
             }
             setList(arr);
+            setLoading(false)
             console.error("====arr=======",arr)
         }
         setALLlist()
@@ -83,7 +87,10 @@ const MoreDaos = (props) => {
 
             <div className="daos">
                 {
-                    !!list.length && list.map((item, index) =>
+                    loading && <LoadingNew  />
+                }
+                {
+                    !loading && !!list.length && list.map((item, index) =>
                         <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
                             <img src={item.logo} alt="" />
                             <div className="title">{item.name}</div>

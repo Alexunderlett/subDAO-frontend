@@ -112,6 +112,9 @@ const reducer = (state, action) => {
         case 'DAOTYPE':
             return { ...state, daoType: action.payload};
 
+        case 'WALLET':
+            return { ...state, wallet: action.payload};
+
 
         default:
             throw new Error(`Unknown type: ${action.type}`);

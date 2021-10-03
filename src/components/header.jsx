@@ -101,7 +101,7 @@ const HeaderBg = styled.div`
 
 export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
-    const { allAccounts, api, maincontract, daoManagercontract,daoType } = state;
+    const { allAccounts, api, maincontract, daoManagercontract,daoType, wallet } = state;
     let { i18n} = useTranslation()
 
     const [selected, setselected] = useState([]);
@@ -173,16 +173,10 @@ export default function Headertop(props) {
         return `${frontStr}...${afterStr}`
 
     }
-
     const [walletTips, setWalletTips] = useState(false);
     const connectWallet = async () => {
-        setshowlist(true);
-        const accoutlist = await Accounts.accountlist();
-        if (typeof (accoutlist) === "string") {
-            setWalletTips(true)
-        } else {
-            setallList(accoutlist);
-        }
+        dispatch({ type: 'WALLET', payload: true });
+
     }
 
     const [allList, setallList] = useState([]);
@@ -200,13 +194,31 @@ export default function Headertop(props) {
     }
 
     const cancleShowlist = () => {
-        setshowlist(false);
-        setcurrentAccount(null)
+        dispatch({ type: 'WALLET', payload: null });
     }
 
     useEffect(()=>{
         setMoreDaos(daoType != null);
-    },[daoType])
+    },[daoType]);
+
+
+  useEffect(()=>{
+      setshowlist(wallet != null);
+      const loadUser = async () =>{
+          const accoutlist = await Accounts.accountlist();
+          if (typeof (accoutlist) === "string") {
+              setWalletTips(true)
+          } else {
+              setallList(accoutlist);
+          }
+      };
+
+      if(wallet != null){
+          loadUser()
+      }else{
+          setcurrentAccount(null)
+      }
+    },[wallet]);
 
     const closeDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload: null });
