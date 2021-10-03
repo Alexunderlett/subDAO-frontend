@@ -6,10 +6,9 @@ import {
     initReactI18next
 } from 'react-i18next';
 
-i18n.use(LanguageDetector) //嗅探当前浏览器语言
-    .use(initReactI18next) //init i18next
+i18n.use(LanguageDetector)
+    .use(initReactI18next)
     .init({
-        //引入资源文件
         resources: {
             en: {
                 translation: enUsTrans,

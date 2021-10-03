@@ -10,11 +10,7 @@ import api from './api/index';
 
 import Loading from './components/loading/Loading';
 import Left from './components/left';
-import voting from './images/voting.png';
-import Back from  './images/prev.png';
 import {useTranslation} from "react-i18next";
-import TriggerBtn from "./img/switchClose.png";
-import TriggerBtnActive from "./img/switchOpen.png";
 import {Button} from "antd";
 import styled from "styled-components";
 
@@ -114,7 +110,7 @@ export default function Vote(props){
 
     const setAll = async() => {
         setLoading(true);
-        setTips( t('InitializeVote'));
+        setTips('Initialize the vote page');
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
             setActivelist(data)
@@ -131,7 +127,6 @@ export default function Vote(props){
         });
         setLoading(false);
     };
-
         return (
             <div>
                 <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>

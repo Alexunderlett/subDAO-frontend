@@ -263,6 +263,7 @@ body,html{
     font-weight: 300;
     color: #10164B;
     line-height: 1.6rem;
+    cursor: pointer;
   }
   }
 }

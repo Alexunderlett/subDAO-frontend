@@ -257,6 +257,9 @@ export default function Left(props){
                 setisMember(data[0]);
                 setisModerator(data[1]);
                 setisOwner(data[2]);
+                sessionStorage.setItem('isMember',data[0])
+                sessionStorage.setItem('isModerator',data[1])
+                sessionStorage.setItem('isOwner',data[2])
             });
         };
         whoAmI();

@@ -32,16 +32,25 @@ const InitHome = async (state,address) => {
     const {api} = state;
     const AccountId = await Accounts.accountAddress();
 
+
+
     const  daoManagercontract = await ConnectContract(api, 'daoManager',address);
 
+    if(!daoManagercontract) return;
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
-    if( !data || !data.base_addr)return;
+    console.error("========InitHome",data,data.base_addr,!data.base_addr,"address",address)
+
+    if( !data || data.base_addr==null)return;
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
 
     let res = await basecontract.query.getBase(AccountId, {value, gasLimit});
     res = publicJs.formatResult(res);
+
+
+
+    console.log("======res",res)
     return res;
 };
 

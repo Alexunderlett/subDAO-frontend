@@ -125,6 +125,7 @@ function Home(props) {
         if (!allAccounts && account) {
             dispatch({ type: 'SET_ALLACCOUNTS', payload: account });
         }
+        dispatch({ type: 'DAOTYPE',payload: null });
         setfirst(false)
     }, []);
     useEffect(() => {
@@ -140,6 +141,7 @@ function Home(props) {
             let addresslist = await api.main.listDaoInstances(maincontract) ||[];
             console.log('===========addresslist============', addresslist);
             let mydaolist= addresslist.filter(i => i.owner === selected[0].address);
+
             setimglist(mydaolist);
             setLoading(false);
             setListAll(addresslist,'all');

@@ -6,6 +6,7 @@ import Left from "../left";
 import Back from "../../img/back.png";
 import {useTranslation} from "react-i18next";
 import styled from 'styled-components';
+import PublicJS from "../../utils/publicJs";
 
 const BackBrdr = styled.div`
     //width: 12rem;
@@ -112,7 +113,7 @@ export default function VoteOverview (props){
     let { t } = useTranslation();
 
     const handleClicktoVote = () => {
-       props.history.push(`/vote/${props.match.params.id}`)
+       props.history.push(`/vote/${props.match.params.id}/${props.match.params.owner}`)
     }
     useEffect(() => {
         const setOneVote = async() => {
@@ -122,25 +123,10 @@ export default function VoteOverview (props){
                     vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed,need_trigger
                 } = data;
 
-                let stime = start_date.replace(/,/g,'');
-                let vtime = vote_time.replace(/,/g,'');
+                setendtime(PublicJS.formatvoteDateTime(start_date,vote_time));
 
-                let etime = parseInt(stime) + parseInt(vtime);
-                let date = new Date(etime);
-                let y = date.getFullYear();
-                let MM = date.getMonth() + 1;
-                MM = MM < 10 ? ('0' + MM) : MM;
-                let d = date.getDate();
-                d = d < 10 ? ('0' + d) : d;
-                let h = date.getHours();
-                h = h < 10 ? ('0' + h) : h;
-                let m = date.getMinutes();
-                m = m < 10 ? ('0' + m) : m;
-                let s = date.getSeconds();
-                s = s < 10 ? ('0' + s) : s;
-                setendtime(`${y}-${MM}-${d} ${h}:${m}:${s}`);
+                setneed(need_trigger);
 
-                setneed(need_trigger)
                 settitle(title);
                 setexecuted(executed);
                 setvoteid(vote_id);
@@ -169,6 +155,7 @@ export default function VoteOverview (props){
         setOneVote();
     }, []);
 
+    console.error("props.match.params.owner",props.match.params.owner)
     return (
         <div>
             <div className="container">

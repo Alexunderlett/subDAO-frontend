@@ -101,7 +101,8 @@ export default function VotePending(props) {
                     <td>12:28:00  8/11/2021</td>
                     <td>This confirm the statement ack packet</td>
                     <td><img src={TriggerBtn} alt=""/></td>
-                </tr><tr>
+                </tr>
+                <tr>
                     <td>01</td>
                     <td>12:28:00  8/11/2021</td>
                     <td>This confirm the statement ack packet</td>

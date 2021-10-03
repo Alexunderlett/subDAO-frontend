@@ -11,6 +11,8 @@ import styled from 'styled-components';
 import { Modal, Button, Select } from 'antd';
 import DaosModal from "./DaosModal";
 
+import { useTranslation, Trans, Translation } from 'react-i18next'
+
 const createHashHistory = history.createHashHistory();
 
 const HeaderBg = styled.div`
@@ -100,7 +102,7 @@ const HeaderBg = styled.div`
 export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
     const { allAccounts, api, maincontract, daoManagercontract,daoType } = state;
-
+    let { i18n} = useTranslation()
 
     const [selected, setselected] = useState([]);
 
@@ -121,6 +123,10 @@ export default function Headertop(props) {
             setbalanceOf(balance.toHuman().free)
         });
     }
+
+    useEffect(()=>{
+        i18n.changeLanguage('en')
+    },[])
 
     useEffect(() => {
         if (allAccounts == null) return;

@@ -44,7 +44,7 @@ const DaosModal = (props) => {
     const { moreDaos, handleClose } = props;
 
     const { state, dispatch } = useSubstrate();
-    const {  maincontract, allAccounts, apiState,daoType } = state;
+    const {  maincontract, allAccounts, daoManagercontract,daoType } = state;
     const [alls, setAlls] = useState(false);
     const [imglist, setimglist] = useState([]);
     const [showCreatDaoBtn, setshowCreatDaoBtn] = useState(true);
@@ -64,18 +64,20 @@ const DaosModal = (props) => {
         let mydaolist=[];
 
         if (daoType === 'my') {
-            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) || [] ;
+            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
         } else if(daoType === 'all'){
-            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) || [] ;
+            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
         } else {
             return
         }
+
+        console.error(sessionStorage.getItem('mydaoList'),sessionStorage.getItem('daoList'))
         setimglist(mydaolist);
         setAlls(false);
 
     };
     useEffect(() => {
-        setimglist([]);
+
         if (maincontract == null || allAccounts == null || daoType == null) return;
 
         setInstances();
@@ -85,7 +87,8 @@ const DaosModal = (props) => {
 
     const handleClick = () => {
         if (allAccounts != null && allAccounts.length) {
-            props.history.push('/create')
+            props.history.push('/create');
+            dispatch({ type: 'DAOTYPE',payload: null });
         }
     }
 
