@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, Input } from 'antd';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api/index";
-import Loading from "../loading/Loading";
+// import Loading from "../loading/Loading";
 import newVote from "../../images/newvoting.png";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +12,7 @@ export default function VoteView(props) {
     const { state } = useSubstrate();
     const { votecontract } = state;
 
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
     const [optionlist, setoptionlist] = useState([]);
@@ -28,7 +28,7 @@ export default function VoteView(props) {
     const [toaddress, settoaddress] = useState('');
     const [toValue, settovalule] = useState('');
 
-    const [errorShow, seterrorShow] = useState(false);
+    // const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
@@ -40,7 +40,7 @@ export default function VoteView(props) {
     useEffect(() => {
         if (afterchoice) {
             // props.history.push(`/voteOverview/${props.id}/${voteid}`);
-            setLoading(false);
+            // setLoading(false);
             props.handleClose()
         }
 
@@ -86,15 +86,15 @@ export default function VoteView(props) {
         props.history.push(`/vote/${props.id}`)
     }
     const handleClicktoOverview = async () => {
-        setLoading(true);
+        // setLoading(true);
         setTips(t('Voting'));
 
         await api.vote.VoteChoice(votecontract, voteid, selected, (data) => {
             setafterchoice(data)
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Vote: ${error.message}`)
-            setLoading(false);
+            // seterrorShow(true)
+            // seterrorTips(`Vote: ${error.message}`)
+            // setLoading(false);
 
         });
 
@@ -109,14 +109,14 @@ export default function VoteView(props) {
     let { handleClose, showTips } = props;
     return (
         <div>
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-            <Modal
-                visible={errorShow}
-                onCancel={() => seterrorShow(false)}
-                footer={null}
-            >
-                <div className="title">{errorTips}</div>
-            </Modal>
+            {/*<Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />*/}
+            {/*<Modal*/}
+            {/*    visible={errorShow}*/}
+            {/*    onCancel={() => seterrorShow(false)}*/}
+            {/*    footer={null}*/}
+            {/*>*/}
+            {/*    <div className="title">{errorTips}</div>*/}
+            {/*</Modal>*/}
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
                 <div className="title"><img src={newVote} alt="" /><span> {t('Voting')}</span></div>
                 <section>

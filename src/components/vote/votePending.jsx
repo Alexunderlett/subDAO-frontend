@@ -7,7 +7,7 @@ import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
 
 import TriggerBtn from "../../img/switchClose.png";
-import TriggerBtnActive from "../../img/switchOpen.png";
+import PublicJS from "../../utils/publicJs";
 
 export default function VotePending(props) {
     const {state} = useSubstrate();
@@ -42,7 +42,7 @@ export default function VotePending(props) {
     }
     const handleConfirm = async (e) => {
         setShowModal(false);
-        let { id } = props;
+        let { id,owner } = props;
 
         setLoading(true);
         setTips('Trigger transfer token');
@@ -50,18 +50,18 @@ export default function VotePending(props) {
         await api.vote.executeVote(votecontract,selectid,(data)=>{
 
             setLoading(false);
-            settoTop(data)
-            props.history.push(`/voteOverview/${id}/${selectid}`)
+            settoTop(data);
+            props.history.push(`/voteOverview/${id}/${selectid}/${owner}`)
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Voting: ${error.message}`)
+            seterrorShow(true);
+            seterrorTips(`Voting: ${error.message}`);
             setLoading(false);
 
         });
     }
     const handleClicktoVoteview = (voteid) => {
-        let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}/${props.owner}`)
+        let { id,owner } = props;
+        props.history.push(`/voteOverview/${id}/${voteid}/${owner}`)
     }
     return (<div className='votePending'>
         <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
@@ -86,28 +86,14 @@ export default function VotePending(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {/*{*/}
-                {/*    list.map((item)=><tr key={`Pending_${item.vote_id}`}>*/}
-                {/*        <td>{item.vote_id}</td>*/}
-                {/*        <td>{item.title}</td>*/}
-                {/*        <td className='voteViewTD'>*/}
-                {/*            <span onClick={()=>triggerConfirm(item.vote_id)}>trigger</span>*/}
-                {/*            <span onClick={()=>handleClicktoVoteview(item.vote_id)}>view</span>*/}
-                {/*        </td>*/}
-                {/*    </tr>)*/}
-                {/*}*/}
-                <tr>
-                    <td>01</td>
-                    <td>12:28:00  8/11/2021</td>
-                    <td>This confirm the statement ack packet</td>
-                    <td><img src={TriggerBtn} alt=""/></td>
-                </tr>
-                <tr>
-                    <td>01</td>
-                    <td>12:28:00  8/11/2021</td>
-                    <td>This confirm the statement ack packet</td>
-                    <td><img src={TriggerBtnActive} alt=""/></td>
-                </tr>
+                {
+                    list.map((item)=><tr key={`Pending_${item.vote_id}`}>
+                        <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.vote_id}</td>
+                        <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
+                        <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.title}</td>
+                            <td onClick={()=>triggerConfirm(item.vote_id)}> <img src={TriggerBtn} alt=""/></td>
+                    </tr>)
+                }
 
                 </tbody>
             </table>

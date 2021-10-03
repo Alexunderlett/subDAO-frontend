@@ -25,9 +25,9 @@ export default function VoteActive(props){
     const handleView = (voteid) => {
 
         setnewshow(true)
-            // const{id} = props;
+            // const{id,owner} = props;
         setvoteid(voteid)
-            // props.history.push(`/voteView/${id}/${voteid}`)
+            // props.history.push(`/voteView/${id}/${voteid}/${owner}`)
     }
 
     const handleClicktoVoteview = (voteid) => {
@@ -52,12 +52,12 @@ export default function VoteActive(props){
                     </thead>
                     <tbody>
                     {
-                        indexList.map((item)=><tr key={`active_${item.vote_id}`} onClick={()=>handleClicktoVoteview(item.vote_id)}>
-                            <td>{item.vote_id}</td>
-                            <td>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
-                            <td>{item.title}</td>
+                        indexList.map((item)=><tr key={`active_${item.vote_id}`}>
+                            <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.vote_id}</td>
+                            <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
+                            <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.title}</td>
                             <td>
-                                <span onClick={()=>handleView(item.vote_id)}>voteActive</span>
+                                <span onClick={()=>handleView(item.vote_id)}>Voting</span>
                             </td>
 
                         </tr>)

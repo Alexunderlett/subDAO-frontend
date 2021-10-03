@@ -107,6 +107,7 @@ function Home(props) {
 
     const account = JSON.parse(sessionStorage.getItem('account'));
 
+
     const handleClick = () => {
         if (account === null || !account.length) {
             setShowButton(true);
@@ -165,8 +166,10 @@ function Home(props) {
                     });
                 }
             }
-            if (typeStr === 'all') {
-                sessionStorage.setItem('daoList', JSON.stringify(arr));
+
+            console.log("======arr============",arr)
+            if( typeStr  === 'all'){
+                sessionStorage.setItem('daoList',JSON.stringify(arr));
 
             } else {
                 sessionStorage.setItem('mydaoList', JSON.stringify(arr))
@@ -216,10 +219,21 @@ function Home(props) {
                             {t('homeDescription')}
                         </div>
                         <div className="header-button">
-                            <Button type="primary">
-                                {t('ConnectWallet')}
-                                <img src={right} alt="" />
-                            </Button>
+
+                            {
+                                !account && <Button type="primary">
+                                    Connect Wallet
+                                    <img src={right} alt="" style={{ width: '2rem' }} />
+                                </Button>
+                            }
+                            {
+                                account && <Button type="primary">
+                                    Get Started
+                                    <img src={right} alt="" style={{ width: '2rem' }} />
+                                </Button>
+                            }
+
+
                             {
                                 // !showlist && !selected.length && !allList.length
                             }

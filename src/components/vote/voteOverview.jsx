@@ -20,6 +20,7 @@ const BackBrdr = styled.div`
     font-weight: 400;
     color: #3F446E;
     padding: .7rem .6rem;
+    cursor: pointer;
 `;
 
 const SectionLayout = styled.div`
@@ -94,6 +95,24 @@ const  Desc = styled.div`
     line-height: 2.4rem;
 `;
 
+const AddBrdr = styled.div`
+  display: flex;
+  white-space: nowrap;
+`;
+
+const TokenBrdr = styled.div`
+  margin-right: 2.5rem;
+  span{
+        font-size: 2rem;
+        color: #FF672F;
+        line-height: 2.4rem;
+        padding-left: 0.8rem;
+        display: inline-block;
+        border-left: 0.4rem solid rgba(255, 217, 207, 1);
+        border-radius: 0.2rem ;
+  }
+`
+
 
 export default function VoteOverview (props){
     const {state} = useSubstrate();
@@ -155,7 +174,6 @@ export default function VoteOverview (props){
         setOneVote();
     }, []);
 
-    console.error("props.match.params.owner",props.match.params.owner)
     return (
         <div>
             <div className="container">
@@ -183,10 +201,24 @@ export default function VoteOverview (props){
                             </CardBrdr>
                         </Li>
                         <Li>
-                            <Titles>Recipient Address</Titles>
-                            <Address>
-                                {toaddress}
-                            </Address>
+                            <AddBrdr>
+                                {
+                                    need &&
+                                    <TokenBrdr>
+                                        <Titles>Transfer </Titles>
+                                        <span>{toValue}</span>
+                                    </TokenBrdr>
+                                }
+
+                                <div>
+                                    <Titles>Recipient Address</Titles>
+                                    <Address>
+                                        {toaddress}
+                                    </Address>
+                                </div>
+                            </AddBrdr>
+
+
                         </Li>
                         <Li>
                             <Titles>Voting Description</Titles>
@@ -202,44 +234,30 @@ export default function VoteOverview (props){
                 </SectionLayout>
 
             </div>
-            <section>
-                <div className="row">
 
-                        <div className="col-lg-9">
-                            <div className="row">
-                                <div className='col-lg-4 bg overView'>
-                                    <ul>
+                                    {/*<ul>*/}
 
-                                        <li>
-                                            <h6>Ends at</h6>
-                                            <div className='endtime'>{endtime}</div>
-                                        </li>
-                                        <li>
-                                            <h6>{t('VotingNumber')}</h6>
-                                            <div>{voteid}</div>
-                                        </li>
+                                    {/*    <li>*/}
+                                    {/*        <h6>Ends at</h6>*/}
+                                    {/*        <div className='endtime'>{endtime}</div>*/}
+                                    {/*    </li>*/}
+                                    {/*    <li>*/}
+                                    {/*        <h6>{t('VotingNumber')}</h6>*/}
+                                    {/*        <div>{voteid}</div>*/}
+                                    {/*    </li>*/}
 
-                                        {
-                                            need &&
-                                            <div>
-                                                <li>
-                                                    <h6>{t('Amount')}</h6>
-                                                    <div>{toValue}</div>
+                                    {/*    {*/}
+                                    {/*        need &&*/}
+                                    {/*        <div>*/}
+                                    {/*            <li>*/}
+                                    {/*                <h6>Transaction Status</h6>*/}
+                                    {/*                <div className='address'>{executed?'Successful':'Not triggered'}</div>*/}
+                                    {/*            </li>*/}
 
-                                                </li>
-                                                <li>
-                                                    <h6>Transaction Status</h6>
-                                                    <div className='address'>{executed?'Successful':'Not triggered'}</div>
-                                                </li>
+                                    {/*        </div>*/}
+                                    {/*    }*/}
+                                    {/*</ul>*/}
 
-                                            </div>
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </section>
 
         </div>
     )

@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xdbc81e081e9f7bb19b9a9e145445dd52ac03cee2e75916434042c95b8fc2c61b",
-    "language": "ink! 3.0.0-rc3",
-    "compiler": "rustc 1.53.0-nightly"
+    "hash": "0xaeb7c1150effb759549d99925ce6ea72be9a6d6527227c42b5e0cf76bebcc403",
+    "language": "ink! 3.0.0-rc4",
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "org",
@@ -646,6 +646,30 @@
           "type": 18
         },
         "selector": "0x8fb9cb05"
+      },
+      {
+        "args": [
+          {
+            "name": "user",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "check_role_by_account"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [],
+          "type": 18
+        },
+        "selector": "0xaa050e71"
       },
       {
         "args": [

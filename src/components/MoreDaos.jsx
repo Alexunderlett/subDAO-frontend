@@ -28,7 +28,7 @@ const AllDaos = styled.div`
     }
 `
 
-const MoreDaos = () => {
+const MoreDaos = (props) => {
 
     const { dispatch,state } = useSubstrate();
 
@@ -36,6 +36,7 @@ const MoreDaos = () => {
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
+        window.scrollTo(0,0);
     }
 
     useEffect(()=>{
@@ -47,18 +48,26 @@ const MoreDaos = () => {
                 const logo = data.logo ? data.logo : '';
                 const name = data.name ? data.name : '';
                 const desc = data.desc ? data.desc : '';
+                const owner = data.owner ? data.owner : '';
                 arr.push({
                     address: item,
                     logo,
                     name,
                     desc,
+                    owner,
                 })
             }
             setList(arr);
+            console.error("====arr=======",arr)
         }
         setALLlist()
 
     },[]);
+
+    const toAbout = (obj) =>{
+        const { address, owner } = obj
+        props.history.push(`/about/${address}/${owner}`)
+    }
 
     return (
         <AllDaos>
@@ -68,12 +77,10 @@ const MoreDaos = () => {
             <div className="daos">
                 {
                     list.map((item, index) =>
-                        <div key={index} className="daoItem">
-                            <img src={right} alt="" />
-                            <div className="title">Patract</div>
-                            <div className="detail">
-                                Litentry is built on Substrate, which inherits great features and the best technologies in
-                            </div>
+                        <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
+                            <img src={item.logo} alt="" />
+                            <div className="title">{item.name}</div>
+                            <div className="detail">{item.desc}</div>
                         </div>
                     )
                 }
