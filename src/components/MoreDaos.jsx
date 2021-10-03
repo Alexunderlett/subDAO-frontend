@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import DaosModal from "./DaosModal";
 import right from '../img/right.png'
 import {useSubstrate} from "../api/contracts";
+import api from "../api";
 
 
-const topDaos = window.mainAddress.topDaos;
+const favoriteDAOs = window.mainAddress.favoriteDAOs;
 
 const AllDaos = styled.div`
     display: flex;
@@ -30,11 +30,35 @@ const AllDaos = styled.div`
 
 const MoreDaos = () => {
 
-    const { dispatch } = useSubstrate();
+    const { dispatch,state } = useSubstrate();
+
+    const [list, setList] = useState([]);
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
     }
+
+    useEffect(()=>{
+        const setALLlist = async () =>{
+            let arr=[];
+            for( let item of favoriteDAOs){
+                const data = await api.base.InitHome(state,item);
+                if(!data) continue;
+                const logo = data.logo ? data.logo : '';
+                const name = data.name ? data.name : '';
+                const desc = data.desc ? data.desc : '';
+                arr.push({
+                    address: item,
+                    logo,
+                    name,
+                    desc,
+                })
+            }
+            setList(arr);
+        }
+        setALLlist()
+
+    },[]);
 
     return (
         <AllDaos>
@@ -43,7 +67,7 @@ const MoreDaos = () => {
             </div>
             <div className="daos">
                 {
-                    [1, 1, 1, 1, 1].map((item, index) =>
+                    list.map((item, index) =>
                         <div key={index} className="daoItem">
                             <img src={right} alt="" />
                             <div className="title">Patract</div>

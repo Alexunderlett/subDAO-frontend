@@ -234,6 +234,37 @@ body,html{
         overflow: hidden;
     }
   }
+  table{
+    width: 100%;
+      border: 1px solid #E8E8EA;
+
+  th{
+    height: 4rem;
+    background: #F5F5F7;
+    padding:0 2.3rem;
+    font-size: 1.4rem;
+    font-family: PingFang-Medium;
+    font-weight: bolder;
+    color: #10164B;
+    line-height: 2rem;
+    text-align: left;
+    border-bottom: 1px solid #E8E8EA;
+    &:first-child{
+
+    }
+  }
+  td{
+      height: 4rem;
+    background: #ffffff;
+    padding-left: 2.3rem;
+      border-bottom: 1px solid #E8E8EA;
+    font-size: 1.4rem;
+    font-family: Roboto-Light;
+    font-weight: 300;
+    color: #10164B;
+    line-height: 1.6rem;
+  }
+  }
 }
 `;
 

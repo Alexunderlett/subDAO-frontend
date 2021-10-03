@@ -48,6 +48,10 @@ position: absolute;
   }
 `;
 
+const Tablesec = styled.section`
+  width: 78rem;
+`;
+
 export default function Vote(props){
 
     const {state,dispatch} = useSubstrate();
@@ -145,7 +149,7 @@ export default function Vote(props){
 
                         </BtnRht>
                     </FirstLine>
-                    <section>
+                    <Tablesec>
                         <div className="titleTop">Pendinng Voting List</div>
                         <VotePending
                             id={id}
@@ -153,22 +157,22 @@ export default function Vote(props){
                             history={props.history}
                             refresh={setAll}
                         />
-                    </section>
-                    <section>
+                    </Tablesec>
+                    <Tablesec>
                         <div className="titleTop">Active Votinng List</div>
                         <VoteActive
                             id={id}
                             list={activelist}
                             history={props.history}
                         />
-                    </section>
-                    <section>
+                    </Tablesec>
+                    <Tablesec>
                         <div className="titleTop">History</div>
                         <VotePagination
                             id={id}
                             list={historylist}
                             history={props.history}  />
-                    </section>
+                    </Tablesec>
                 </div>
 
             </div>

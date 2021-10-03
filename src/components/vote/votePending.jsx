@@ -6,6 +6,9 @@ import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Loading from "../loading/Loading";
 
+import TriggerBtn from "../../img/switchClose.png";
+import TriggerBtnActive from "../../img/switchOpen.png";
+
 export default function VotePending(props) {
     const {state} = useSubstrate();
     const {votecontract} = state;
@@ -28,8 +31,6 @@ export default function VotePending(props) {
         }
 
     }, [props]);
-
-
 
     const triggerConfirm = (id)=>{
         setselectid(id);
@@ -75,11 +76,11 @@ export default function VotePending(props) {
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}
                 showTips={showModal}/>
-            <table>
+            <table className="">
                 <thead>
                 <tr>
                     <th>Number</th>
-                    {/*<th>Time</th>*/}
+                    <th>Time</th>
                     <th>Title</th>
                     <th>Trigger</th>
                 </tr>
@@ -90,8 +91,8 @@ export default function VotePending(props) {
                 {/*        <td>{item.vote_id}</td>*/}
                 {/*        <td>{item.title}</td>*/}
                 {/*        <td className='voteViewTD'>*/}
-                {/*            <span onClick={()=>triggerConfirm(item.vote_id)}><img src={trigger} alt=""/></span>*/}
-                {/*            <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>*/}
+                {/*            <span onClick={()=>triggerConfirm(item.vote_id)}>trigger</span>*/}
+                {/*            <span onClick={()=>handleClicktoVoteview(item.vote_id)}>view</span>*/}
                 {/*        </td>*/}
                 {/*    </tr>)*/}
                 {/*}*/}
@@ -99,7 +100,12 @@ export default function VotePending(props) {
                     <td>01</td>
                     <td>12:28:00  8/11/2021</td>
                     <td>This confirm the statement ack packet</td>
-                    <td>d</td>
+                    <td><img src={TriggerBtn} alt=""/></td>
+                </tr><tr>
+                    <td>01</td>
+                    <td>12:28:00  8/11/2021</td>
+                    <td>This confirm the statement ack packet</td>
+                    <td><img src={TriggerBtnActive} alt=""/></td>
                 </tr>
 
                 </tbody>

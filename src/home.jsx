@@ -144,9 +144,6 @@ function Home(props) {
             setLoading(false);
             setListAll(addresslist,'all');
             setListAll(mydaolist,'my');
-
-
-
         };
         const setListAll = async (mydaolist,typeStr) => {
             let arr=[];

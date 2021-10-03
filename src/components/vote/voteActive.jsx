@@ -6,6 +6,8 @@ import {useTranslation} from "react-i18next";
 
 import {useSubstrate} from "../../api/contracts";
 import api from "../../api";
+import TriggerBtn from "../../img/switchClose.png";
+import TriggerBtnActive from "../../img/switchOpen.png";
 
 
 export default function VoteActive(props){
@@ -52,26 +54,43 @@ export default function VoteActive(props){
                 <table>
                     <thead>
                     <tr>
-                        <th>{t('Number')}</th>
-                        <th>{t('Title')}</th>
-                        <th>{t('View')}</th>
+                        {/*<th>{t('Number')}</th>*/}
+                        {/*<th>{t('Number')}</th>*/}
+                        {/*<th>{t('Title')}</th>*/}
+                        {/*<th>{t('View')}</th>*/}
+                        <th>Number</th>
+                        <th>Time</th>
+                        <th>Title</th>
+                        <th>Trigger</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {
-                        indexList.map((item)=><tr key={`active_${item.vote_id}`}>
-                            <td>{item.vote_id}</td>
-                            <td>{item.title}</td>
-                            <td className='voteViewTD'>
-                                <div>
-                                    <span onClick={()=>handleView(item.vote_id)}><img src={voteActive} alt=""/></span>
-                                    <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>
-                                </div>
+                    {/*{*/}
+                    {/*    indexList.map((item)=><tr key={`active_${item.vote_id}`}>*/}
+                    {/*        <td>{item.vote_id}</td>*/}
+                    {/*        <td>{item.title}</td>*/}
+                    {/*        <td className='voteViewTD'>*/}
+                    {/*            <div>*/}
+                    {/*                <span onClick={()=>handleView(item.vote_id)}><img src={voteActive} alt=""/></span>*/}
+                    {/*                <span onClick={()=>handleClicktoVoteview(item.vote_id)}><img src={view} alt=""/></span>*/}
+                    {/*            </div>*/}
 
-                            </td>
+                    {/*        </td>*/}
 
-                        </tr>)
-                    }
+                    {/*    </tr>)*/}
+                    {/*}*/}
+
+                    <tr>
+                        <td>01</td>
+                        <td>12:28:00  8/11/2021</td>
+                        <td>This confirm the statement ack packet</td>
+                        <td><img src={TriggerBtn} alt=""/></td>
+                    </tr><tr>
+                        <td>01</td>
+                        <td>12:28:00  8/11/2021</td>
+                        <td>This confirm the statement ack packet</td>
+                        <td><img src={TriggerBtnActive} alt=""/></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
