@@ -114,42 +114,29 @@ const Deposit = forwardRef((props, ref) => {
                     {/* <img src={sender} alt="" /> */}
                     <span>{t('send')}</span>
                 </div>
-                <div>
 
-                    <div className="label">Select recipient</div>
-                    <div className="inputBrdr">
-                        <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
-                            {
-                                // list.map((i) =>
-                                //     <Select.Option value={i} key={i}>{i}</Select.Option>
-                                // )
-                            }
-                        </Select>
-                    </div>
-
-                    <div className="label">Select token</div>
-                    <div className="inputBrdr">
-                        <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
-                            {
-                                list.map((i) =>
-                                    <Select.Option value={i} key={i}>{i}</Select.Option>
-                                )
-                            }
-                        </Select>
-                    </div>
-
-                    <div className="label">{t('fillAmount')}</div>
-                    <div className="inputBrdr">
-                        <Input
-                            placeholder={t('fillAmount')}
-                            value={amount}
-                            name='amount'
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <Button type="primary" onClick={() => handleConfirm()} style={{width: '100%', marginTop:'3.9rem'}}>Confirm</Button>
+                <div className="label">{t('SelectOption')}</div>
+                <div className="inputBrdr">
+                    <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
+                        {
+                            list.map((i) =>
+                                <Select.Option value={i} key={i}>{i}</Select.Option>
+                            )
+                        }
+                    </Select>
                 </div>
+
+                <div className="label">{t('fillAmount')}</div>
+                <div className="inputBrdr">
+                    <Input
+                        placeholder={t('fillAmount')}
+                        value={amount}
+                        name='amount'
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <Button type="primary" onClick={() => handleConfirm()} style={{ width: '100%', marginTop: '3.9rem' }}>Confirm</Button>
             </Modal>
         </div>
     )

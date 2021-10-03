@@ -33,7 +33,7 @@ module.exports = {
     authcontract:null,
 
     daoType:null,
+    msgType:null,
+    loadingType:null,
     wallet:null,
-
-
 };

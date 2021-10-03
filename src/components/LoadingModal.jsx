@@ -50,6 +50,7 @@ const LoadingModal = (props) => {
 
     return (
         <Modal
+            closable={false}
             visible={showMsg}
             onCancel={handleClose}
             footer={null}

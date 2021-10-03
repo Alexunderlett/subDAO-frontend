@@ -41,6 +41,7 @@ body,html{
   }
 
   button{
+    border-radius: 0.8rem !important;
     img{
       width: 1.8rem;
       height: 1.2rem;
@@ -50,6 +51,13 @@ body,html{
       }
     }
   }
+
+  .ant-btn-primary[disabled], .ant-btn-primary[disabled]:hover, .ant-btn-primary[disabled]:focus, .ant-btn-primary[disabled]:active{
+    background: #D52473;
+    opacity: 0.3;
+    color: #FFFFFF;
+  }
+
   .btn{
     cursor: pointer;
     margin-right: 2rem;

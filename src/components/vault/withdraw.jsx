@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { Button, Modal, Input, Select} from 'antd';
+import { Button, Modal, Input, Select } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
@@ -74,54 +74,39 @@ const Withdraw = forwardRef((props, ref) => {
         <div>
             <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
+                <div className="title">
+                    {/* <img src={sender} alt="" /> */}
+                    <span>{t('withdraw')}</span>
+                </div>
 
-                <div className="title"><img src={sender} alt="" /><span>{t('withdraw')}</span></div>
+                <div className="label">{t('SelectOption')}</div>
+                <div className="inputBrdr">
+                    <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
+                        {
+                            list.map((i) =>
+                                <Select.Option value={i} key={i}>{i}</Select.Option>
+                            )
+                        }
+                    </Select>
+                </div>
 
-                <section>
-                    <ul className="withdraw">
-                        <li>
-                            <div>{t('SelectOption')}</div>
-                            <div className="inputBrdr">
-                                <Select style={{ width: '100%' }} onChange={handleSelect}>
-                                    <Select.Option key='noselect'>{t('SelectOption')}</Select.Option>
-                                    {
-                                        list.map((i) =>
-                                            <Select.Option  value={i} key={i}>{i}</Select.Option>
-                                        )
-                                    }
-                                </Select>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="mb-3">
-                                <div>{t('fillAddress')}</div>
-                                <div className="inputBrdr">
-                                    <Input
-                                        placeholder={t('fillAddress')}
-                                        value={address}
-                                        name='address'
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
+                <div className="label">{t('fillAddress')}</div>
+                <Input
+                    placeholder={t('fillAddress')}
+                    value={address}
+                    name='address'
+                    onChange={handleChange}
+                />
 
-                            <div className="mb-3">
-                                <div>{t('fillAmount')}</div>
-                                <div className="inputBrdr">
-                                    <Input
-                                        placeholder={t('fillAmount')}
-                                        value={amount}
-                                        name='amount'
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </li>
-                        <li className='NextBrdr'>
-                            <Button onClick={() => handleConfirm()}>{t('Request')}</Button>
-                        </li>
-                    </ul>
-                </section>
+                <div className="label">{t('fillAmount')}</div>
+                <Input
+                    placeholder={t('fillAmount')}
+                    value={amount}
+                    name='amount'
+                    onChange={handleChange}
+                />
+
+                <Button type="primary" onClick={() => handleConfirm()} style={{ width: '100%', marginTop: '3.9rem' }}>{t('Request')}</Button>
             </Modal>
         </div>
     )

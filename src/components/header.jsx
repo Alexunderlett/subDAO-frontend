@@ -10,6 +10,8 @@ import myDao from '../img/myDao.png';
 import styled from 'styled-components';
 import { Modal, Button, Select } from 'antd';
 import DaosModal from "./DaosModal";
+import MsgModal from "./MsgModal";
+import LoadingModal from "./LoadingModal";
 
 import { useTranslation, Trans, Translation } from 'react-i18next'
 
@@ -101,12 +103,14 @@ const HeaderBg = styled.div`
 
 export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
-    const { allAccounts, api, maincontract, daoManagercontract,daoType, wallet } = state;
-    let { i18n} = useTranslation()
+    const { allAccounts, api, maincontract, daoManagercontract, daoType, wallet } = state;
+    let { i18n } = useTranslation()
 
     const [selected, setselected] = useState([]);
 
     const [moreDaos, setMoreDaos] = useState(false);
+    const [showMsg, setshowMsg] = useState(false);
+    const [loading, setloading] = useState(false);
 
 
     const [showButton, setShowButton] = useState(false);
@@ -124,9 +128,9 @@ export default function Headertop(props) {
         });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         i18n.changeLanguage('en')
-    },[])
+    }, [])
 
     useEffect(() => {
         if (allAccounts == null) return;
@@ -151,7 +155,7 @@ export default function Headertop(props) {
         }
     }
     const handleMyClick = () => {
-        dispatch({ type: 'DAOTYPE',payload:'my' });
+        dispatch({ type: 'DAOTYPE', payload: 'my' });
     }
     const toFirst = () => {
         createHashHistory.push('/')
@@ -197,39 +201,39 @@ export default function Headertop(props) {
         dispatch({ type: 'WALLET', payload: null });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setMoreDaos(daoType != null);
-    },[daoType]);
+    }, [daoType]);
 
 
-  useEffect(()=>{
-      setshowlist(wallet != null);
-      const loadUser = async () =>{
-          const accoutlist = await Accounts.accountlist();
-          if (typeof (accoutlist) === "string") {
-              setWalletTips(true)
-          } else {
-              setallList(accoutlist);
-          }
-      };
+    useEffect(() => {
+        setshowlist(wallet != null);
+        const loadUser = async () => {
+            const accoutlist = await Accounts.accountlist();
+            if (typeof (accoutlist) === "string") {
+                setWalletTips(true)
+            } else {
+                setallList(accoutlist);
+            }
+        };
 
-      if(wallet != null){
-          loadUser()
-      }else{
-          setcurrentAccount(null)
-      }
-    },[wallet]);
+        if (wallet != null) {
+            loadUser()
+        } else {
+            setcurrentAccount(null)
+        }
+    }, [wallet]);
 
-    const closeDAOModal = () =>{
-        dispatch({ type: 'DAOTYPE',payload: null });
+    const closeDAOModal = () => {
+        dispatch({ type: 'DAOTYPE', payload: null });
         setMoreDaos(false);
-
     }
+
     return (
         <HeaderBg className='header'>
             <div className="row">
                 <div className="lftTit">
-                    <div className="toFirst" onClick={()=>toFirst()}>
+                    <div className="toFirst" onClick={() => toFirst()}>
                         <img src={logo} alt="" />
                     </div>
                     <div className="title">SubDAO</div>
@@ -245,7 +249,7 @@ export default function Headertop(props) {
                             <h4>Please connect wallet</h4>
                         </Modal>
                         {!selected.length &&
-                            <div className="signin" onClick={()=>connectWallet()}>Sign in</div>
+                            <div className="signin" onClick={() => connectWallet()}>Sign in</div>
                         }
                         {!!selected.length &&
                             <div className='addressBrdr'>
@@ -259,15 +263,15 @@ export default function Headertop(props) {
 
 
                         {
-                            allAccounts != null && <span className='createDAO' onClick={()=>handleClick()}>Create My DAO</span>
+                            allAccounts != null && <span className='createDAO' onClick={() => handleClick()}>Create My DAO</span>
                         }
 
                         {
-                            allAccounts != null && <span className='myDao' onClick={()=>handleMyClick()}><img src={myDao} alt="" />My DAO</span>
+                            allAccounts != null && <span className='myDao' onClick={() => handleMyClick()}><img src={myDao} alt="" />My DAO</span>
                         }
                         {!!selected.length &&
-                            <span className='logout' onClick={()=>exitAccount()}>
-                               Logout
+                            <span className='logout' onClick={() => exitAccount()}>
+                                Logout
                             </span>
                         }
 
@@ -275,7 +279,12 @@ export default function Headertop(props) {
                 </div>
             </div>
 
-            <DaosModal moreDaos={moreDaos} handleClose={() =>closeDAOModal() }  history={createHashHistory}/>
+            <DaosModal moreDaos={moreDaos} handleClose={() => closeDAOModal()} history={createHashHistory} />
+
+            <LoadingModal showMsg={showMsg} handleClose={() => { setshowMsg(false); dispatch({ type: 'MSGTYPE', payload: null }) }} />
+
+            <MsgModal showMsg={loading} handleClose={() => { setloading(false); dispatch({ type: 'LOADINGTYPE', payload: null }) }} />
+
             {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
@@ -287,10 +296,10 @@ export default function Headertop(props) {
                             )
                         }
                     </Select>
-                    <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={()=>changeAccounts()}>
+                    <Button type="primary" style={{ width: '100%', margin: '10rem 0 3rem 0' }} onClick={() => changeAccounts()}>
                         Confirm
                     </Button>
-                    <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={()=>cancleShowlist()}>Cancel</div>
+                    <div style={{ textAlign: 'center', cursor: 'pointer', color: '#A6A6B7' }} onClick={() => cancleShowlist()}>Cancel</div>
                 </Modal>
             }
         </HeaderBg>

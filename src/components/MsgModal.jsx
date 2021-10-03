@@ -24,10 +24,11 @@ const Msg = styled.div`
 
 
 const MsgModal = (props) => {
-    const { showMsg, handleClose, msg } = props
+    const { showMsg, handleClose, msg, closable } = props
 
     return (
         <Modal
+            closable={closable !== false}
             visible={showMsg}
             onCancel={handleClose}
             footer={null}

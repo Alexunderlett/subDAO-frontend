@@ -107,7 +107,9 @@ const Vote = styled.div`
 `
 
 export default function NewVote(props) {
-
+    const { search } = props.location
+    const searchParams = new URLSearchParams(search)
+    const pURL = searchParams.get('url')
 
     const { state } = useSubstrate();
     const { votecontract, erc20address } = state;
@@ -131,6 +133,8 @@ export default function NewVote(props) {
     const [errorTips, seterrorTips] = useState('');
     const [errorShow, seterrorShow] = useState(false);
     const [resultDate, setresultDate] = useState('');
+
+    const { TextArea } = Input;
 
     let { t } = useTranslation();
     const datetimeRef = useRef();
@@ -341,8 +345,12 @@ export default function NewVote(props) {
                         />
                     </div>
 
-                    <div className='btnLine' style={{ justifyContent: 'end' }}>
-                        <Button type="primary" onClick={() => nextStep(2)}>
+                    <div className='btnLine'>
+                        <Button className="previous" onClick={() => { props.history.push(pURL) }}>
+                            <img className="left" src={left} alt="" />
+                            Previous
+                        </Button>
+                        <Button type="primary" disabled={!date} onClick={() => nextStep(2)}>
                             {t('Next')}
                             <img src={right} alt="" />
                         </Button>
@@ -389,7 +397,8 @@ export default function NewVote(props) {
 
                     <div className="line">
                         <div className="label">{t('Description')}</div>
-                        <Input as="textarea"
+                        <TextArea
+                            rows={4}
                             placeholder={t('FillDescription')}
                             name='desc'
                             value={desc}

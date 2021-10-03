@@ -112,6 +112,12 @@ const reducer = (state, action) => {
         case 'DAOTYPE':
             return { ...state, daoType: action.payload};
 
+        case 'MSGTYPE':
+            return { ...state, msgType: action.payload};
+
+        case 'LOADINGTYPE':
+            return { ...state, loadingType: action.payload};
+
         case 'WALLET':
             return { ...state, wallet: action.payload};
 

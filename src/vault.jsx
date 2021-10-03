@@ -39,12 +39,23 @@ const BtnRht = styled.div`
         margin-left: 2rem;
         padding: 0;
         line-height: 3rem;
+        font-family: PingFangSC-Light, PingFang SC;
+        font-weight: 300;
+        
         &.active{
-        width: 9rem;
-        height: 3rem;
-        border-radius: 0.4rem;
-        border: 0.1rem solid #D52473;
-        color: #d52473;
+            width: 9rem;
+            height: 3rem;
+            border-radius: 0.4rem;
+            border: 0.1rem solid #D52473;
+            color: #d52473;
+        }
+    }
+    .withdrawBtn{
+        background: #10164B;
+        color: #FFFFFF;
+        &:hover{
+            border: 0;
+            opacity: 0.8;
         }
     }
 `;
@@ -202,7 +213,6 @@ export default function Vault(props) {
 
     }
     const setAlllist = async () => {
-
         // setLoading(true);
         setTips(t('InitializeVault'));
         await api.vault.getTokenList(vaultcontract).then(data => {
@@ -211,11 +221,10 @@ export default function Vault(props) {
         });
         await api.vault.getTransferHistory(vaultcontract).then(data => {
             if (!data) return;
+            console.info(111, data)
             sethistorylist(data)
             afterlen = data.length
-
         });
-
     };
 
     useEffect(async () => {
@@ -257,13 +266,15 @@ export default function Vault(props) {
         },
         {
             title: 'From',
-            dataIndex: 'From',
+            dataIndex: 'from_address',
             key: 'from_address',
+            render: tag => (`${tag.slice(0, 15)}…${tag.slice(-15)}`),
         },
         {
             title: 'To',
-            dataIndex: 'To',
+            dataIndex: 'to_address',
             key: 'to_address',
+            render: tag => (`${tag.slice(0, 15)}…${tag.slice(-15)}`),
         },
         {
             title: 'Behavior',
@@ -302,7 +313,7 @@ export default function Vault(props) {
                 }
                 return (
                     <>
-                        <img src={img} alt="" style={{width: '2rem', height: '2rem'}}/>
+                        <img src={img} alt="" style={{ width: '2rem', height: '2rem' }} />
                         {State}
                     </>
                 )
@@ -343,33 +354,35 @@ export default function Vault(props) {
                 ref={childRef}
             />
             <Withdraw
-               handleClose={handleClose}
-               showTips={newWithdraw}
-               setShow={() => setShow('withdraw')}
-               ref={withdrawRef}
+                handleClose={handleClose}
+                showTips={newWithdraw}
+                setShow={() => setShow('withdraw')}
+                ref={withdrawRef}
             />
             <section>
                 <FirstLine>
                     <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
-                    <BtnRht className='voteTop'>
+                    <BtnRht>
                         {/* <div className='voteLft' onClick={handleClicktoAbout}>
                             <img src={Back} alt="" /> 
                             {t('Back')}
                         </div> */}
 
-                        <Button type="primary" className='btnR' onClick={() => handleClicktoDetail('deposit')}>
+                        <Button type="primary" onClick={() => handleClicktoDetail('deposit')}>
                             {/* <img src={depositimg} alt="" /> */}
                             {t('deposit')}
                         </Button>
-                        {/*{*/}
-                        {/*    withDrawS &&*/}
-                        {/*    <Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
-                        {/*        src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
-                        {/*} */}
-
-                        {/*<Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
-                        {/*    src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
-
+                        <Button className='withdrawBtn' onClick={() => handleClicktoDetail('withdraw')}>
+                            {/* <img src={withdrawimg} alt="" /> */}
+                            {t('withdraw')}
+                        </Button>
+                        {/* {
+                            withDrawS &&
+                            <Button onClick={() => handleClicktoDetail('withdraw')}>
+                                <img src={withdrawimg} alt="" />
+                                {t('withdraw')}
+                            </Button>
+                        } */}
                     </BtnRht>
                 </FirstLine>
 
@@ -408,7 +421,7 @@ export default function Vault(props) {
                         dataSource={historylist}
                         columns={columns}
                         size="middle"
-                        pagination={{ position: ['bottomRight'] }}
+                        pagination={false}
                     />
                 </div>
             </section>
