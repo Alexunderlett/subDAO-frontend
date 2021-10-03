@@ -213,7 +213,6 @@ export default function Headertop(props) {
         setMoreDaos(false);
 
     }
-
     return (
         <HeaderBg className='header'>
             <div className="row">

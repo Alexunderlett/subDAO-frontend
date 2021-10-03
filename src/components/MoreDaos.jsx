@@ -15,7 +15,7 @@ const AllDaos = styled.div`
         cursor: pointer;
         height: 2.5rem;
         font-size: 1.8rem;
-        font-family: PingFang-SC-Medium, PingFang-SC;
+        font-family: PingFang-Medium;
         font-weight: 500;
         color: #10164B;
         line-height: 2.5rem;
@@ -70,12 +70,20 @@ const MoreDaos = (props) => {
 
     return (
         <AllDaos>
+            {/*{*/}
+            {/*    !!list.length && list.length >5 &&<div className="more" onClick={() => showDAOModal()}>*/}
+            {/*    More DAOs<span>···</span>*/}
+            {/*    </div>*/}
+            {/*}*/}
+
             <div className="more" onClick={() => showDAOModal()}>
                 More DAOs<span>···</span>
             </div>
+
+
             <div className="daos">
                 {
-                    !!list.length &&list.map((item, index) =>
+                    !!list.length && list.map((item, index) =>
                         <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
                             <img src={item.logo} alt="" />
                             <div className="title">{item.name}</div>
