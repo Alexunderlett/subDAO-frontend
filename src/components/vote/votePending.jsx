@@ -61,7 +61,7 @@ export default function VotePending(props) {
     }
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}`)
+        props.history.push(`/voteOverview/${id}/${voteid}/${props.owner}`)
     }
     return (<div className='votePending'>
         <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>

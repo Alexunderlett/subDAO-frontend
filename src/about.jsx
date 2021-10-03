@@ -319,7 +319,7 @@ export default function About(props) {
             </Modal>
 
             <div className='container'>
-                <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
                 <section>
                     <div className="titleTop">Balance</div>
                     <Ul>

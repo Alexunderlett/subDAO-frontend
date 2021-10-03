@@ -3,8 +3,96 @@ import VoteEcharts from "./voteEcharts";
 import api from "../../api";
 import {useSubstrate} from "../../api/contracts";
 import Left from "../left";
-import Back from "../../images/prev.png";
+import Back from "../../img/back.png";
 import {useTranslation} from "react-i18next";
+import styled from 'styled-components';
+
+const BackBrdr = styled.div`
+    //width: 12rem;
+    //height: 3rem;
+    border-radius: 4px;
+    border: 1px solid #B7B9C9;
+    margin-top: 6rem;
+     display: inline-block;
+    font-size: 1.2rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #3F446E;
+    padding: .7rem .6rem;
+`;
+
+const SectionLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3.2rem;
+`;
+
+const Li = styled.li`
+  margin-top: 3.2rem;
+`;
+
+const Titles = styled.div`
+    font-size: 1.2rem;
+    font-family: Roboto-Light;
+    font-weight: 300;
+    margin-bottom: .9rem;
+    opacity: 0.6;
+`;
+
+const TitleValue = styled.div`
+    font-size:1.6rem;
+    font-family: Roboto-Regular;
+    font-weight: 400;
+`;
+
+const FlexRht = styled.div`
+  flex-grow: 1;
+`;
+
+const CardBrdr = styled.div`
+  display: flex;
+`
+
+const CardWhite = styled.div`
+    width: 16rem;
+    height: 9rem;
+    background: #FFFFFF;
+    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+    border-radius: .9rem;
+    margin-top: .5rem;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 1.7rem 0;
+    font-size: 1.4rem;
+    font-family: Roboto-Light;
+    line-height: 2.6rem;
+    margin-right: 2rem;
+    opacity: .8;
+    span{
+        height: 2.4rem;
+        font-size: 2rem;
+        font-weight: 300;
+        color: #10164B;
+        line-height: 3rem;
+        padding-bottom: 2rem;
+        opacity: 1;
+    }
+`;
+
+const Address = styled.div`
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+`;
+
+const  Desc = styled.div`
+    width: 47.1rem;
+    background: #EFF0FA;
+    border-radius: 2.4rem;
+    padding: 2rem;
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+`;
+
 
 export default function VoteOverview (props){
     const {state} = useSubstrate();
@@ -83,28 +171,58 @@ export default function VoteOverview (props){
 
     return (
         <div>
+            <div className="container">
+                <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}  removeGroup={true}/>
+                <div>
+                    <BackBrdr onClick={handleClicktoVote}><img src={Back} alt=""/> Back Voting</BackBrdr>
+                </div>
+                <SectionLayout>
+                    <ul>
+                        <Li>
+                            <Titles>Title</Titles>
+                            <TitleValue>{title}</TitleValue>
+                        </Li>
+                        <Li>
+                            <Titles>Data Statistics</Titles>
+                            <CardBrdr>
+                                <CardWhite>
+                                    <span>{support}</span>
+                                    <div>Support Require</div>
+                                </CardWhite>
+                                <CardWhite>
+                                    <span>{min}</span>
+                                    <div>Min Require</div>
+                                </CardWhite>
+                            </CardBrdr>
+                        </Li>
+                        <Li>
+                            <Titles>Recipient Address</Titles>
+                            <Address>
+                                {toaddress}
+                            </Address>
+                        </Li>
+                        <Li>
+                            <Titles>Voting Description</Titles>
+                            <Desc>{desc}</Desc>
+                        </Li>
+
+                    </ul>
+                    <FlexRht>
+                        {
+                            !!optionlist.length&&<VoteEcharts optionlist={optionlist} />
+                        }
+                    </FlexRht>
+                </SectionLayout>
+
+            </div>
             <section>
                 <div className="row">
-                        <div className="col-lg-3">
-                            <Left />
-                        </div>
+
                         <div className="col-lg-9">
-                            <div className='voteTop mt10'>
-                                <div className='voteLft' onClick={handleClicktoVote}>
-                                    <img src={Back} alt=""/> {t('Back')}
-                                </div>
-                            </div>
                             <div className="row">
                                 <div className='col-lg-4 bg overView'>
                                     <ul>
-                                        <li>
-                                            <h6>{t('Title')}</h6>
-                                            <div>{title}</div>
-                                        </li>
-                                        <li>
-                                            <h6>{t('VotingDescription')}</h6>
-                                            <div>{desc}</div>
-                                        </li>
+
                                         <li>
                                             <h6>Ends at</h6>
                                             <div className='endtime'>{endtime}</div>
@@ -112,18 +230,6 @@ export default function VoteOverview (props){
                                         <li>
                                             <h6>{t('VotingNumber')}</h6>
                                             <div>{voteid}</div>
-
-                                        </li>
-
-                                        <li>
-                                            <h6>{t('supportnumber')}</h6>
-                                            <div>{support}</div>
-
-                                        </li>
-                                        <li>
-                                            <h6>{t('minnumber')}</h6>
-                                            <div>{min}</div>
-
                                         </li>
 
                                         {
@@ -135,23 +241,13 @@ export default function VoteOverview (props){
 
                                                 </li>
                                                 <li>
-                                                    <h6>{t('ReceiverAddress')}</h6>
-                                                    <div className='address'>{toaddress}</div>
-                                                </li>
-                                                <li>
                                                     <h6>Transaction Status</h6>
                                                     <div className='address'>{executed?'Successful':'Not triggered'}</div>
                                                 </li>
 
                                             </div>
                                         }
-
                                     </ul>
-                                </div>
-                                <div className='col-lg-8 bg'>
-                                    {
-                                        !!optionlist.length&&<VoteEcharts optionlist={optionlist} />
-                                    }
                                 </div>
                             </div>
                         </div>

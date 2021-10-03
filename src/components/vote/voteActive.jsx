@@ -42,7 +42,7 @@ export default function VoteActive(props){
 
     const handleClicktoVoteview = (voteid) => {
         let { id } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}`)
+        props.history.push(`/voteOverview/${id}/${voteid}/${props.owner}`)
 
     }
         return (

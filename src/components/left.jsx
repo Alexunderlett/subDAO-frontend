@@ -360,18 +360,21 @@ export default function Left(props){
                 info && <TopTitles><LoadingNew  /></TopTitles>
             }
 
-            <BtnGroup>
-                <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('about')}>Home</span>
-                {
-                    contractlist.vote_addr != null &&<span className={type === 'vote' ? 'active' : ''} onClick={() => handleClicktoType('vote')}>Voting</span>
-                }
-                {
-                    contractlist.vault_addr != null && <span className={type === 'vault' ? 'active' : ''} onClick={() => handleClicktoType('vault')}>Vault</span>
-                }
-                {
-                    contractlist.org_addr != null && <span className={type === 'org' ? 'active' : ''} onClick={() => handleClicktoType('org')}>Org</span>
-                }
-            </BtnGroup>
+            {
+                !props.removeGroup && <BtnGroup>
+                    <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('about')}>Home</span>
+                    {
+                        contractlist.vote_addr != null &&<span className={type === 'vote' ? 'active' : ''} onClick={() => handleClicktoType('vote')}>Voting</span>
+                    }
+                    {
+                        contractlist.vault_addr != null && <span className={type === 'vault' ? 'active' : ''} onClick={() => handleClicktoType('vault')}>Vault</span>
+                    }
+                    {
+                        contractlist.org_addr != null && <span className={type === 'org' ? 'active' : ''} onClick={() => handleClicktoType('org')}>Org</span>
+                    }
+                </BtnGroup>
+            }
+
         </div>
     )
 

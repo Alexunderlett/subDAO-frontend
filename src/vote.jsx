@@ -156,6 +156,7 @@ export default function Vote(props){
                             list={pendinglist}
                             history={props.history}
                             refresh={setAll}
+                            owner={props.match.params.owner}
                         />
                     </Tablesec>
                     <Tablesec>
@@ -164,6 +165,7 @@ export default function Vote(props){
                             id={id}
                             list={activelist}
                             history={props.history}
+                            owner={props.match.params.owner}
                         />
                     </Tablesec>
                     <Tablesec>
@@ -171,7 +173,9 @@ export default function Vote(props){
                         <VotePagination
                             id={id}
                             list={historylist}
-                            history={props.history}  />
+                            history={props.history}
+                            owner={props.match.params.owner}
+                        />
                     </Tablesec>
                 </div>
 
