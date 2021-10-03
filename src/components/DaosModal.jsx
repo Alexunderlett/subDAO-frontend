@@ -4,7 +4,8 @@ import { Modal, Button } from 'antd';
 import { useSubstrate } from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom';
+import nodaos from "../img/noDaos.png";
 
 const DaoBody = styled.div`
     width: 80%;
@@ -37,7 +38,12 @@ const DaoBody = styled.div`
             margin: 1rem 3.6rem;
         }
     }
-`
+`;
+
+const Imgbrdr = styled.img`
+    width: 40rem;
+    height: 21.8rem;
+`;
 
 
 const DaosModal = (props) => {
@@ -117,13 +123,16 @@ const DaosModal = (props) => {
                         alls && <LoadingNew  />
                     }
                     {
-                        !alls && imglist.map((item) =>
+                        !alls && !!imglist.length && imglist.map((item) =>
                             <div key={item.address} className="daoItem" onClick={() => handleClicktoAbout(item.address, item.owner)}>
                                 <img src={item.logo} alt="" />
                                 <div className="title">{item.name}</div>
                                 <div className="detail">{item.desc}</div>
                             </div>
                         )
+                    }
+                    {
+                        !alls && !imglist.length &&<Imgbrdr src={nodaos} alt=""/>
                     }
                 </div>
             </DaoBody>

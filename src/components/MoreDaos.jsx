@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import right from '../img/right.png'
 import {useSubstrate} from "../api/contracts";
 import api from "../api";
 
@@ -65,7 +64,7 @@ const MoreDaos = (props) => {
     },[]);
 
     const toAbout = (obj) =>{
-        const { address, owner } = obj
+        const { address, owner } = obj;
         props.history.push(`/about/${address}/${owner}`)
     }
 
@@ -76,7 +75,7 @@ const MoreDaos = (props) => {
             </div>
             <div className="daos">
                 {
-                    list.map((item, index) =>
+                    !!list.length &&list.map((item, index) =>
                         <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
                             <img src={item.logo} alt="" />
                             <div className="title">{item.name}</div>

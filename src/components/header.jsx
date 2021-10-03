@@ -263,9 +263,7 @@ export default function Headertop(props) {
                     </div>
                 </div>
             </div>
-            {
 
-            }
             <DaosModal moreDaos={moreDaos} handleClose={() =>closeDAOModal() }  history={createHashHistory}/>
             {
                 showlist && !selected.length &&
