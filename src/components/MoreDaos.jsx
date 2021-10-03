@@ -74,15 +74,12 @@ const MoreDaos = (props) => {
 
     return (
         <AllDaos>
-            {/*{*/}
-            {/*    !!list.length && list.length >5 &&<div className="more" onClick={() => showDAOModal()}>*/}
-            {/*    More DAOs<span>···</span>*/}
-            {/*    </div>*/}
-            {/*}*/}
-
-            <div className="more" onClick={() => showDAOModal()}>
+            {
+                !!list.length && list.length >5 &&<div className="more" onClick={() => showDAOModal()}>
                 More DAOs<span>···</span>
-            </div>
+                </div>
+            }
+            
 
 
             <div className="daos">
