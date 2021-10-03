@@ -8,45 +8,45 @@ import right from '../../img/right.png';
 
 const Info = styled.div`
     .title{
-        height: 40px;
-        font-size: 34px;
+        height: 4rem;
+        font-size: 3.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #10134E;
-        line-height: 40px;
+        line-height: 4rem;
     }
     .detail{
-        width: 600px;
-        height: 50px;
-        font-size: 18px;
+        width: 60rem;
+        height: 5rem;
+        font-size: 1.8rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #A6A6B7;
-        line-height: 22px;
+        line-height: 2.2rem;
     }
 `
 const Tip = styled.div`
     text-align: center;
-    padding: 50px 20px;
-    font-size: 18px;
+    padding: 5rem 2rem;
+    font-size: 1.8rem;
     font-family: Roboto-Light, Roboto;
     font-weight: 300;
     color: #010643;
-    line-height: 21px;
+    line-height: 2.1rem;
 `
 const Content = styled.div`
     .title{
-        height: 21px;
-        font-size: 18px;
+        height: 2.1rem;
+        font-size: 1.8rem;
         font-family: Roboto-Regular, Roboto;
         font-weight: 400;
         color: #10164B;
-        line-height: 21px;
-        margin-bottom: 10px;
+        line-height: 2.1rem;
+        margin-bottom: 1rem;
     }
     .imgBrdr{
-        width: 140px;
-        height: 140px;
+        width: 14rem;
+        height: 14rem;
         position: relative;
         img{
             width: 100%;
@@ -54,16 +54,16 @@ const Content = styled.div`
         }
         .removeBrdr{
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -1rem;
+            right: -1rem;
             background: #A6A6B7;
             color: #fff;
-            width: 20px;
-            font-size: 16px;
-            height: 20px;
+            width: 2rem;
+            font-size: 1.6rem;
+            height: 2rem;
             z-index: 99;
             text-align: center;
-            line-height: 20px;
+            line-height: 2rem;
             border-radius: 100%;
             cursor: pointer;
         }
@@ -71,14 +71,14 @@ const Content = styled.div`
     .imageBox{
         display: flex;
         .img{
-            width: 140px;
-            height: 140px;
+            width: 14rem;
+            height: 14rem;
             background: #FFFFFF;
-            box-shadow: 0px 0px 4px 0px rgba(16, 22, 75, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 0 0.4rem 0 rgba(16, 22, 75, 0.1);
+            border-radius: 0.8rem;
             text-align: center;
-            line-height: 140px;
-            margin-right: 20px;
+            line-height: 14rem;
+            margin-right: 2rem;
         }
         .inputBrdr{
             flex: 1;
@@ -87,7 +87,7 @@ const Content = styled.div`
         }
     }
     .uploadBrdr, .line{
-        margin-top: 30px;
+        margin-top: 3rem;
     }
 `
 
@@ -193,7 +193,7 @@ class FirstStep extends Component {
                                     placeholder='Url'
                                     onChange={this.handleImageChange}
                                     allowClear={true}
-                                    />}
+                                />}
                                 </Translation>
                             </div>
                         </div>
@@ -234,10 +234,10 @@ class FirstStep extends Component {
                     </div>
                 </div>
 
-                <div className="line" style={{textAlign: 'right'}}>
+                <div className="line" style={{ textAlign: 'right' }}>
                     <Button type="primary" disabled={errTips} onClick={this.toSecondStep}>
                         <Trans>Next</Trans>
-                        <img src={right} alt="" style={{ width: '20px' }} />
+                        <img src={right} alt="" />
                     </Button>
                 </div>
             </Content>

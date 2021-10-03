@@ -81,8 +81,8 @@ const Deposit = forwardRef((props, ref) => {
         })
 
     }
-    const handleSelect = (e) => {
-        setSelected(e.target.value)
+    const handleSelect = (value) => {
+        setSelected(value)
     }
 
 
@@ -110,40 +110,46 @@ const Deposit = forwardRef((props, ref) => {
                 <div className="title">{errorTips}</div>
             </Modal>
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
-                <div className="title"><img src={sender} alt="" /><span>{t('send')}</span></div>
-                <section>
-                    <ul className="withdraw">
-                        <li>
-                            <div>{t('SelectOption')}</div>
-                            <div className="inputBrdr">
-                                <Select style={{ width: '100%' }} onChange={handleSelect}>
-                                    <Select.Option key='noselect'>{t('SelectOption')}</Select.Option>
-                                    {
-                                        list.map((i) =>
-                                            <Select.Option value={i} key={i}>{i}</Select.Option>
-                                        )
-                                    }
-                                </Select>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="mb-3">
-                                <div>{t('fillAmount')}</div>
-                                <div className="inputBrdr">
-                                    <Input
-                                        placeholder={t('fillAmount')}
-                                        value={amount}
-                                        name='amount'
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </li>
-                        <li className='NextBrdr'>
-                            <Button onClick={() => handleConfirm()}>{t('Request')}</Button>
-                        </li>
-                    </ul>
-                </section>
+                <div className="title">
+                    {/* <img src={sender} alt="" /> */}
+                    <span>{t('send')}</span>
+                </div>
+                <div>
+
+                    <div className="label">Select recipient</div>
+                    <div className="inputBrdr">
+                        <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
+                            {
+                                // list.map((i) =>
+                                //     <Select.Option value={i} key={i}>{i}</Select.Option>
+                                // )
+                            }
+                        </Select>
+                    </div>
+
+                    <div className="label">Select token</div>
+                    <div className="inputBrdr">
+                        <Select style={{ width: '100%' }} onChange={handleSelect} placeholder={t('SelectOption')}>
+                            {
+                                list.map((i) =>
+                                    <Select.Option value={i} key={i}>{i}</Select.Option>
+                                )
+                            }
+                        </Select>
+                    </div>
+
+                    <div className="label">{t('fillAmount')}</div>
+                    <div className="inputBrdr">
+                        <Input
+                            placeholder={t('fillAmount')}
+                            value={amount}
+                            name='amount'
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <Button type="primary" onClick={() => handleConfirm()} style={{width: '100%', marginTop:'3.9rem'}}>Confirm</Button>
+                </div>
             </Modal>
         </div>
     )

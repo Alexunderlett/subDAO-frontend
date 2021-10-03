@@ -18,7 +18,7 @@ export default function VotePagination(props){
     }
         return (
             <div className='votePending'>
-                <table>
+                <table className="myTable">
                     <thead>
                     <tr>
 

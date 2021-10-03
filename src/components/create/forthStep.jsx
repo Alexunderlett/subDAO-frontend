@@ -9,47 +9,47 @@ import right from '../../img/right.png';
 
 const Content = styled.div`
     .line{
-        margin-top: 30px;
+        margin-top: 3rem;
         .title{
-            height: 21px;
-            font-size: 18px;
+            height: 2.1rem;
+            font-size: 1.8rem;
             font-family: Roboto-Regular, Roboto;
             font-weight: 400;
             color: #10164B;
-            line-height: 21px;
-            margin-bottom: 10px;
+            line-height: 2.1rem;
+            margin-bottom: 1rem;
         }
     }
 `
 
 const Tip = styled.div`
     text-align: center;
-    padding: 50px 20px;
-    font-size: 18px;
+    padding: 5rem 2rem;
+    font-size: 1.8rem;
     font-family: Roboto-Light, Roboto;
     font-weight: 300;
     color: #010643;
-    line-height: 21px;
+    line-height: 2.1rem;
 `
 
 const Info = styled.div`
-    margin-bottom: 60px;
+    margin-bottom: 6rem;
 
     .title{
-        height: 40px;
-        font-size: 34px;
+        height: 4rem;
+        font-size: 3.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #10134E;
-        line-height: 40px;
+        line-height: 4rem;
     }
     .detail{
-        width: 600px;
-        font-size: 18px;
+        width: 60rem;
+        font-size: 1.8rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #A6A6B7;
-        line-height: 22px;
+        line-height: 2.2rem;
     }
 `
 
@@ -335,7 +335,7 @@ export default function ThirdStep(props) {
 
 
     return <Content className="content">
-        <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
+        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
         <Modal
             visible={errorShow}
             onCancel={() => seterrorShow(false)}
@@ -450,9 +450,9 @@ export default function ThirdStep(props) {
         }
         </Translation>
 
-        <div className="line" style={{ textAlign: 'right', marginTop: '40px' }}>
-            <Button className='leftBtn' style={{ marginRight: '30px' }} onClick={toThirdStep}>
-                <img src={right} alt="" style={{ width: '20px' }} />
+        <div className="line" style={{ textAlign: 'right', marginTop: '4rem' }}>
+            <Button className='leftBtn' style={{ marginRight: '3rem' }} onClick={toThirdStep}>
+                <img src={right} alt="" />
                 <Trans>think</Trans>
             </Button>
             <Button type="primary" onClick={Submit}>

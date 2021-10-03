@@ -1,20 +1,53 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Form, Button, Tag } from 'antd';
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
 import Loading from "./components/loading/Loading";
 import Left from "./components/left";
 import Back from "./images/prev.png";
+import cancel from "./img/cancel.png";
+import failure from "./img/failure.png";
+import finish from "./img/finish.png";
 import depositimg from "./images/deposit.png";
 import withdrawimg from "./images/Withdraw.png";
 import Deposit from './components/vault/deposit';
 import sel from './images/Sel.png';
 import close from './images/shutdownW.png';
-// import Withdraw from "./components/vault/withdraw";
+import Withdraw from "./components/vault/withdraw";
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import LoadingNew from "./components/loadingNEW";
 
+
+const FirstLine = styled.div`
+  position: relative;
+`;
+
+const BtnRht = styled.div`
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    padding-right: 3rem;
+    button{
+        width: 9rem;
+        height: 3rem;
+        border-radius: 0.4rem;
+        font-size: 1.2rem;
+        margin-left: 2rem;
+        padding: 0;
+        line-height: 3rem;
+        &.active{
+        width: 9rem;
+        height: 3rem;
+        border-radius: 0.4rem;
+        border: 0.1rem solid #D52473;
+        color: #d52473;
+        }
+    }
+`;
 
 const Ul = styled.ul`
     color: #10164B;
@@ -31,6 +64,7 @@ const Ul = styled.ul`
     box-sizing: border-box;
     word-break: break-all;    
     margin-left: 6rem;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -56,7 +90,6 @@ const Address = styled.div`
     opacity: 0.4;
 `;
 
-
 export default function Vault(props) {
 
 
@@ -78,6 +111,7 @@ export default function Vault(props) {
     const [TipsNum, setTipsNum] = useState(0);
     const [TipsAddress, setTipsAddress] = useState(0);
     const [type, setType] = useState(true);
+    const [current, setcurrent] = useState(1);
 
 
     let { t } = useTranslation();
@@ -164,10 +198,7 @@ export default function Vault(props) {
 
         setTimeout(async () => {
             setshowvaultTips(false)
-
-
         }, 3000)
-
 
     }
     const setAlllist = async () => {
@@ -218,6 +249,73 @@ export default function Vault(props) {
         props.history.push(`/about/${props.match.params.id}`);
     }
 
+    const columns = [
+        {
+            title: 'Deposit',
+            dataIndex: 'Deposit',
+            key: 'value',
+        },
+        {
+            title: 'From',
+            dataIndex: 'From',
+            key: 'from_address',
+        },
+        {
+            title: 'To',
+            dataIndex: 'To',
+            key: 'to_address',
+        },
+        {
+            title: 'Behavior',
+            dataIndex: 'Behavior',
+            key: 'Behavior',
+            align: 'center',
+            render: tags => (
+                <>
+                    {tags && tags.map(tag => {
+                        let color = 'green';
+                        if (tag === 'loser') {
+                            color = 'volcano';
+                        }
+                        return (
+                            <Tag color={color} key={tag}>
+                                {tag.toUpperCase()}
+                            </Tag>
+                        );
+                    })}
+                </>
+            ),
+        },
+        {
+            title: 'State',
+            dataIndex: 'State',
+            key: 'State',
+            align: 'center',
+            render: State => {
+                let img
+                if (State === 'finish') {
+                    img = finish
+                } else if (State === 'cancel') {
+                    img = cancel
+                } else {
+                    img = failure
+                }
+                return (
+                    <>
+                        <img src={img} alt="" style={{width: '2rem', height: '2rem'}}/>
+                        {State}
+                    </>
+                )
+            },
+        },
+        {
+            title: 'Time',
+            dataIndex: 'Time',
+            key: 'Time',
+            align: 'center',
+        },
+    ];
+
     return (
         <div className='container'>
             {/* <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} /> */}
@@ -244,54 +342,54 @@ export default function Vault(props) {
                 setShow={() => setShow('deposit')}
                 ref={childRef}
             />
-            {/*<Withdraw*/}
-            {/*    handleClose={handleClose}*/}
-            {/*    showTips={newWithdraw}*/}
-            {/*    setShow={() => setShow('withdraw')}*/}
-            {/*    ref={withdrawRef}*/}
-            {/*/>*/}
+            <Withdraw
+               handleClose={handleClose}
+               showTips={newWithdraw}
+               setShow={() => setShow('withdraw')}
+               ref={withdrawRef}
+            />
             <section>
-                <div className="row">
-                    <div className='col-lg-3'>
-                        <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
-                    </div>
-                    <div className='col-lg-9'>
-                        <div className='voteTop'>
-                            <div className='voteLft' onClick={handleClicktoAbout}>
-                                <img src={Back} alt="" /> {t('Back')}
-                            </div>
-                            <div>
-                                <Button className='btnR' onClick={() => handleClicktoDetail('deposit')}><img
-                                    src={depositimg} alt="" />{t('deposit')}</Button>
-                                {/*{*/}
-                                {/*    withDrawS &&*/}
-                                {/*    <Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
-                                {/*        src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
-                                {/*} */}
+                <FirstLine>
+                    <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
+                    <BtnRht className='voteTop'>
+                        {/* <div className='voteLft' onClick={handleClicktoAbout}>
+                            <img src={Back} alt="" /> 
+                            {t('Back')}
+                        </div> */}
 
-                                {/*<Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
-                                {/*    src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
-                            </div>
-                        </div>
+                        <Button type="primary" className='btnR' onClick={() => handleClicktoDetail('deposit')}>
+                            {/* <img src={depositimg} alt="" /> */}
+                            {t('deposit')}
+                        </Button>
+                        {/*{*/}
+                        {/*    withDrawS &&*/}
+                        {/*    <Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                        {/*        src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
+                        {/*} */}
 
-                        <div>
-                            <div className="titleTop">{t('Balance')}</div>
-                            <Ul>
-                                {
-                                    false && <LoadingNew />
-                                }
+                        {/*<Button className='btnR' onClick={() => handleClicktoDetail('withdraw')}><img*/}
+                        {/*    src={withdrawimg} alt=""/>{t('withdraw')}</Button>*/}
 
-                                {
-                                    true && tokenlist.map((item, index) =>
-                                        <li key={`balance_${index}`}>
-                                            <BalanceNum>{item.balance}</BalanceNum>
-                                            <Symbol>{item.symbol}</Symbol>
-                                            <Address>{item.token}</Address>
-                                        </li>
-                                    )
-                                }
-                            </Ul>
-                            {/* <div className="vaultwrap">
+                    </BtnRht>
+                </FirstLine>
+
+                <div>
+                    <div className="titleTop">{t('Balance')}</div>
+                    <Ul>
+                        {
+                            false && <LoadingNew />
+                        }
+                        {
+                            true && tokenlist.map((item, index) =>
+                                <li key={`balance_${index}`}>
+                                    <BalanceNum>{item.balance}</BalanceNum>
+                                    <Symbol>{item.symbol}</Symbol>
+                                    <Address>{item.token}</Address>
+                                </li>
+                            )
+                        }
+                    </Ul>
+                    {/* <div className="vaultwrap">
                                 <div className='vaultbg'>
                                     <div className="vaultbalance">
                                         {
@@ -303,28 +401,15 @@ export default function Vault(props) {
                                     </div>
                                 </div>
                             </div> */}
-                        </div>
-                        <div className='hslist'>
-                            <div className="titleTop">{t('History')}</div>
-                            <Table hover>
-                                <thead>
-                                    <tr>
-                                        <th>{t('Amount')}</th>
-                                        <th>{t('Transfer')}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        historylist.map((item, index) => <tr key={`history_${index}`}>
-                                            <td>{item.value}</td>
-                                            <td>{item.from_address}</td>
-
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </Table>
-                        </div>
-                    </div>
+                </div>
+                <div className='hslist'>
+                    <div className="titleTop">{t('History')}</div>
+                    <Table
+                        dataSource={historylist}
+                        columns={columns}
+                        size="middle"
+                        pagination={{ position: ['bottomRight'] }}
+                    />
                 </div>
             </section>
         </div>

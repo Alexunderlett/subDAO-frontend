@@ -41,7 +41,7 @@ export default function VoteActive(props){
                     newshow &&   <VoteView  handleClose={handleClose} showTips={newshow} voteid={voteid} id={props.id}/>
                 }
 
-                <table>
+                <table className="myTable">
                     <thead>
                     <tr>
                         <th>Number</th>

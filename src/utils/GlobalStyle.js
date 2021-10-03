@@ -39,6 +39,17 @@ body,html{
     line-height: 2.1rem;
     margin:3rem 0 2rem;
   }
+
+  button{
+    img{
+      width: 1.8rem;
+      height: 1.2rem;
+      margin-left: 1rem;
+      &.left{
+        margin: 0 1rem 0 0;
+      }
+    }
+  }
   .btn{
     cursor: pointer;
     margin-right: 2rem;
@@ -104,6 +115,15 @@ body,html{
             text-align: center;
           }
 
+          .label{
+            font-size: 1.8rem;
+            font-family: Roboto-Light, Roboto;
+            font-weight: 300;
+            color: #A6A6B7;
+            line-height: 2.1rem;
+            margin: 3rem 0 1rem 0;
+          }
+
           /* button */
           .ant-btn.ant-btn-primary{
             height: 7.6rem;
@@ -141,6 +161,13 @@ body,html{
           }
           /* select */
 
+          /* input */
+          .ant-input{
+            height: 7.6rem;
+            background: #F4F4FA;
+            border-radius: 1.2rem;
+          }
+          /* input */
         }
       }
     }
@@ -234,37 +261,41 @@ body,html{
         overflow: hidden;
     }
   }
-  table{
+
+  .ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before{
+    width: 0;
+  }
+
+  table.myTable{
     width: 100%;
       border: 1px solid #E8E8EA;
 
-  th{
-    height: 4rem;
-    background: #F5F5F7;
-    padding:0 2.3rem;
-    font-size: 1.4rem;
-    font-family: PingFang-Medium;
-    font-weight: bolder;
-    color: #10164B;
-    line-height: 2rem;
-    text-align: left;
-    border-bottom: 1px solid #E8E8EA;
-    &:first-child{
-
-    }
-  }
-  td{
+    th{
       height: 4rem;
-    background: #ffffff;
-    padding-left: 2.3rem;
+      background: #F5F5F7;
+      padding:0 2.3rem;
+      font-size: 1.4rem;
+      font-family: PingFang-Medium;
+      font-weight: bolder;
+      color: #10164B;
+      line-height: 2rem;
+      text-align: left;
       border-bottom: 1px solid #E8E8EA;
-    font-size: 1.4rem;
-    font-family: Roboto-Light;
-    font-weight: 300;
-    color: #10164B;
-    line-height: 1.6rem;
-    cursor: pointer;
-  }
+      &:first-child{
+
+      }
+    }
+    td{
+        height: 4rem;
+      background: #ffffff;
+      padding-left: 2.3rem;
+        border-bottom: 1px solid #E8E8EA;
+      font-size: 1.4rem;
+      font-family: Roboto-Light;
+      font-weight: 300;
+      color: #10164B;
+      line-height: 1.6rem;
+    }
   }
 }
 `;

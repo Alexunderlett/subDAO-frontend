@@ -90,7 +90,7 @@ function Home(props) {
     const { state, dispatch } = useSubstrate();
     let { t } = useTranslation();
 
-    const {  maincontract, allAccounts, apiState } = state;
+    const { maincontract, allAccounts, apiState } = state;
     const [loading, setLoading] = useState(false);
 
     const [showButton, setShowButton] = useState(false);
@@ -103,7 +103,7 @@ function Home(props) {
     const [selected, setselected] = useState([]);
     const [createDAOModal, setcreateDAOModal] = useState(false);
     const [moreDaos, setMoreDaos] = useState(false);
-
+    const [showMsg, setshowMsg] = useState(false);
 
     const account = JSON.parse(sessionStorage.getItem('account'));
 
@@ -125,34 +125,34 @@ function Home(props) {
         if (!allAccounts && account) {
             dispatch({ type: 'SET_ALLACCOUNTS', payload: account });
         }
-        dispatch({ type: 'DAOTYPE',payload: null });
+        dispatch({ type: 'DAOTYPE', payload: null });
         setfirst(false)
     }, []);
     useEffect(() => {
-        if(maincontract == null || imglist == null ) return;
-        setcreateDAOModal(!!selected && !!selected.length &&  !imglist.length);
-    }, [selected, imglist,maincontract]);
+        if (maincontract == null || imglist == null) return;
+        setcreateDAOModal(!!selected && !!selected.length && !imglist.length);
+    }, [selected, imglist, maincontract]);
 
 
     useEffect(() => {
         if (maincontract == null || (selected && !selected.length)) return;
         const setInstances = async () => {
             setLoading(true);
-            let addresslist = await api.main.listDaoInstances(maincontract) ||[];
+            let addresslist = await api.main.listDaoInstances(maincontract) || [];
             console.log('===========addresslist============', addresslist);
-            let mydaolist= addresslist.filter(i => i.owner === selected[0].address);
+            let mydaolist = addresslist.filter(i => i.owner === selected[0].address);
 
             setimglist(mydaolist);
             setLoading(false);
-            setListAll(addresslist,'all');
-            setListAll(mydaolist,'my');
+            setListAll(addresslist, 'all');
+            setListAll(mydaolist, 'my');
         };
-        const setListAll = async (mydaolist,typeStr) => {
-            let arr=[];
+        const setListAll = async (mydaolist, typeStr) => {
+            let arr = [];
             if (mydaolist && mydaolist.length) {
                 for (let item of mydaolist) {
                     const data = await api.base.InitHome(state, item.dao_manager_addr);
-                    if(!data) continue;
+                    if (!data) continue;
                     const logo = data.logo ? data.logo : '';
                     const name = data.name ? data.name : '';
                     const desc = data.desc ? data.desc : '';
@@ -160,16 +160,16 @@ function Home(props) {
                         address: item.dao_manager_addr,
                         logo,
                         name,
-                        owner:item.owner,
+                        owner: item.owner,
                         desc,
                     });
                 }
             }
-            if( typeStr  === 'all'){
-                sessionStorage.setItem('daoList',JSON.stringify(arr));
+            if (typeStr === 'all') {
+                sessionStorage.setItem('daoList', JSON.stringify(arr));
 
-            }else{
-                sessionStorage.setItem('mydaoList',JSON.stringify(arr))
+            } else {
+                sessionStorage.setItem('mydaoList', JSON.stringify(arr))
             }
         }
         setInstances();
@@ -218,7 +218,7 @@ function Home(props) {
                         <div className="header-button">
                             <Button type="primary">
                                 {t('ConnectWallet')}
-                                <img src={right} alt="" style={{ width: '2rem' }} />
+                                <img src={right} alt="" />
                             </Button>
                             {
                                 // !showlist && !selected.length && !allList.length
@@ -231,6 +231,11 @@ function Home(props) {
                 </div>
 
                 <MoreDaos history={props.history} />
+
+                {/* <Button onClick={()=>{setshowMsg(true)}}>123</Button> */}
+                {/* <LoadingModal showMsg={showMsg} handleClose={()=>{setshowMsg(false)}} msg="Creating DAO from Template"/> */}
+                {/* <MsgModal showMsg={showMsg} handleClose={()=>{setshowMsg(false)}} msg="12312"/> */}
+
             </section>
         </HomeBg>
     )

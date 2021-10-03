@@ -1,18 +1,110 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, Button, Input } from 'antd';
-
-
+import { Modal, Button, Input, DatePicker, Checkbox } from 'antd';
 import { useSubstrate } from '../../api/contracts';
 import api from "../../api";
+import left from '../../img/left.png';
+import right from '../../img/right.png';
 
 import Loading from "../loading/Loading";
 import newVote from '../../images/newvoting.png';
 import NewVoteTop from './newVoteTop';
 import remove from "../../images/shutdown.png";
-import add from "../../images/Add.png";
+import add from "../../img/Add.png";
 import { useTranslation } from "react-i18next";
 import Datetime from 'react-datetime';
 import moment from 'moment';
+import styled from 'styled-components';
+
+const AddButton = styled(Button)`
+    width: 100%;
+    height: 4.4rem;
+    background: #F1F3FA;
+    box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+    border-radius: 0.8rem;
+    font-size: 1.6rem;
+    font-family: Roboto-Light, Roboto;
+    font-weight: 300;
+    color: #10164B !important;
+    line-height: 1.9rem;
+`
+
+const Vote = styled.div`
+    width: 50.9rem !Important;
+    .title{
+        width: 50.9rem;
+        height: 4rem;
+        font-size: 3.4rem;
+        font-family: Roboto-Light, Roboto;
+        font-weight: 300;
+        color: #10134E;
+        line-height: 4rem;
+        margin-bottom: 3.9rem;
+    }
+    .line{
+        margin-bottom: 2.6rem;
+
+        .label{
+            height: 2.1rem;
+            font-size: 1.8rem;
+            font-family: Roboto-Light, Roboto;
+            font-weight: 300;
+            color: #10164B;
+            line-height: 2.1rem;
+            margin-bottom: 1rem;
+            span{
+                height: 1.4rem;
+                font-size: 1.2rem;
+                font-family: Roboto-Light, Roboto;
+                font-weight: 300;
+                color: #A6A6B7;
+                line-height: 1.4rem;
+                margin-left: 1rem;
+            }
+        }
+        .addLine{
+            display: flex;
+            margin-bottom: 2rem;
+            .removerht{
+                margin-left: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 4.4rem;
+                height: 4.4rem;
+                background: rgba(230, 233, 242, 0.4);
+                box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+                border-radius: 0.8rem;
+                img{
+                    width: 3.2rem;
+                    height: 3.2rem;
+                }
+            }
+        }
+    }
+    .btnLine{
+        margin-top: 6rem;
+        display: flex;
+        justify-content: space-between;
+        .previous{
+            color: #e34b8a;
+            border-color: #e34b8a;
+        }
+    }
+    .myDatePicker{
+        height: 4.4rem;
+        input{
+            height: 100%;
+            box-shadow: none;
+        }
+    }
+
+    input{
+        height: 4.4rem;
+        background: #FFFFFF;
+        box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+        border-radius: 0.8rem;
+    }
+`
 
 export default function NewVote(props) {
 
@@ -34,7 +126,7 @@ export default function NewVote(props) {
     const [valueAmount, setvalueAmount] = useState('');
 
     const [optionlist, setoptionlist] = useState(['']);
-    const [optchecked, setoptchecked] = useState(true);
+    const [optchecked, setoptchecked] = useState(false);
     const [walletTips, setWalletTips] = useState(false);
     const [errorTips, seterrorTips] = useState('');
     const [errorShow, seterrorShow] = useState(false);
@@ -157,16 +249,6 @@ export default function NewVote(props) {
 
     }
 
-    const yesterday = moment().subtract(1, 'day');
-    const valid = function (current) {
-        return current.isAfter(yesterday);
-    };
-
-    let inputProps = {
-        placeholder: 'Please select end time',
-        // disabled:true
-    };
-
     const format = (dateTime) => {
         var time = new Date(dateTime);
         var y = time.getFullYear();
@@ -178,13 +260,17 @@ export default function NewVote(props) {
         return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
     }
 
+    const dateFormat = (value) => {
+        return moment(value).startOf().format('YYYY-MM-DD HH:mm:ss')
+    }
+
     const handleChange = (value) => {
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
         setdate(dateTime - nowTime)
         setresultDate(format(dateTime))
-
     }
+
     const renderInput = (itemprops, openCalendar, closeCalendar) => {
         function clear() {
             itemprops.onChange({ target: { value: '' } });
@@ -203,8 +289,8 @@ export default function NewVote(props) {
         );
     }
     const handleActive = (e) => {
-        let values = JSON.parse(e.currentTarget.value)
-        setoptchecked(!values)
+        let values = JSON.parse(e.target.checked)
+        setoptchecked(values)
     };
     const removeDate = () => {
         setdate('')
@@ -212,7 +298,7 @@ export default function NewVote(props) {
 
     let { handleClose, showTips } = props;
     return (
-        <div>
+        <Vote className="container">
             <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Modal
                 visible={walletTips}
@@ -222,259 +308,191 @@ export default function NewVote(props) {
                 <div>{errorTips}</div>
             </Modal>
 
-            <Modal backdrop={false} visible={showTips} onCancel={handleClose} footer={null}>
-                <div className="title">
-                    <img src={newVote} alt="" /><span>{t('Newvoting')}</span>
+            <div className="title">
+                {/* <img src={newVote} alt="" /> */}
+                <span>{t('Newvoting')}</span>
+            </div>
+
+            <NewVoteTop type={type} style={{ marginBottom: '10rem' }} />
+
+            {
+                type === 1 && <div>
+                    <div className="line">
+                        <div className="label">
+                            Voting Time
+                            <span>Select how long the vote durate by seconds</span>
+                        </div>
+                        <DatePicker
+                            placeholder='Please select end time'
+                            className="myDatePicker"
+                            style={{ width: '100%' }}
+                            format={dateFormat}
+                            allowClear={false}
+                            onChange={handleChange} />
+                    </div>
+                    <div>
+                        <div className="label">{t('Title')}</div>
+                        <Input
+                            placeholder={t('fillTitle')}
+                            name='title'
+                            value={title}
+                            autoComplete="off"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+
+                    <div className='btnLine' style={{ justifyContent: 'end' }}>
+                        <Button type="primary" onClick={() => nextStep(2)}>
+                            {t('Next')}
+                            <img src={right} alt="" />
+                        </Button>
+                    </div>
                 </div>
+            }
 
-                <div><NewVoteTop type={type} /></div>
-                <section>
-                    {
-                        type === 1 && <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <div className="mb-3">
-                                            <div>{t('Votingtime')}</div>
-                                            <div className='inputBrdr'>
-                                                <Datetime
-                                                    renderInput={renderInput}
-                                                    inputProps={inputProps}
-                                                    isValidDate={valid}
-                                                    ref={datetimeRef}
-                                                    onChange={handleChange}
-                                                />
+            {
+                type === 2 && <div>
+                    <div className="line">
+                        <div className="label">{t('MinimumSupport')}</div>
+                        <Input
+                            placeholder={t('FillMinimumSupport')}
+                            name='supportInput'
+                            value={supportInput}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                                                {/*{*/}
-                                                {/*    !date &&<Datetime*/}
-                                                {/*        renderInput={renderInput}*/}
-                                                {/*        inputProps={inputProps}*/}
-                                                {/*        isValidDate={valid}*/}
-                                                {/*        ref={datetimeRef}*/}
-                                                {/*        onChange={handleChange}*/}
-                                                {/*    />*/}
-                                                {/*}*/}
-                                                {/*{*/}
-                                                {/*    date &&<div>*/}
-                                                {/*        <FormControl*/}
-                                                {/*            name='date'*/}
-                                                {/*            value={resultDate}*/}
-                                                {/*            autoComplete="off"*/}
-                                                {/*            disabled*/}
-                                                {/*        />*/}
-                                                {/*        <img src={remove} className='removeInput' onClick={removeDate}/>*/}
-                                                {/*    </div>*/}
+                    <div className="line">
+                        <div className="label">{t('MinimumVoter')}</div>
+                        <Input
+                            placeholder={t('FillMinimumVoter')}
+                            name='min'
+                            value={min}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                                                {/*}*/}
+                    <div className='btnLine'>
+                        <Button className="previous" onClick={() => nextStep(1)}>
+                            <img className="left" src={left} alt="" />
+                            Previous
+                        </Button>
+                        <Button type="primary" onClick={() => nextStep(3)}>
+                            {t('Next')}
+                            <img src={right} alt="" />
+                        </Button>
+                    </div>
+                </div>
+            }
+            {
+                type === 3 && <div>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <div className="mb-3">
-                                            <div>{t('Title')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input
-                                                    placeholder={t('fillTitle')}
-                                                    name='title'
-                                                    value={title}
-                                                    autoComplete="off"
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+                    <div className="line">
+                        <div className="label">{t('Description')}</div>
+                        <Input as="textarea"
+                            placeholder={t('FillDescription')}
+                            name='desc'
+                            value={desc}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                                <li className='NextBrdr'>
-                                    <Button type="primary" onClick={() => nextStep(2)}>{t('Next')}</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    }
+                    <div className='btnLine'>
+                        <Button className="previous" onClick={() => nextStep(2)}>
+                            <img className="left" src={left} alt="" />
+                            Previous
+                        </Button>
+                        <Button type="primary" onClick={() => nextStep(4)}>
+                            {t('Next')}
+                            <img src={right} alt="" />
+                        </Button>
+                    </div>
+                </div>
+            }
 
-                    {
-                        type === 2 && <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <div className="mb-3">
-                                            <div>{t('MinimumSupport')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input
-                                                    placeholder={t('FillMinimumSupport')}
-                                                    name='supportInput'
-                                                    value={supportInput}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <div className="mb-3">
-                                            <div>{t('MinimumVoter')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input
-                                                    placeholder={t('FillMinimumVoter')}
-                                                    name='min'
-                                                    value={min}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+            {
+                type === 4 &&
+                <div>
+                    <div className="line">
+                        <div className="label">Fill in options</div>
 
-                                <li className='NextBrdr button2'>
-                                    <Button type="primary" onClick={() => nextStep(1)}>{t('Back')}</Button>
-                                    <Button type="primary" onClick={() => nextStep(3)}>{t('Next')}</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    }
-                    {
-                        type === 3 && <div>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <div>
-                                            <div>{t('Description')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input as="textarea"
-                                                    placeholder={t('FillDescription')}
-                                                    name='desc'
-                                                    value={desc}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className='NextBrdr button2'>
-                                    <Button type="primary" onClick={() => nextStep(2)}>{t('Back')}</Button>
-                                    <Button type="primary" onClick={() => nextStep(4)}>{t('Next')}</Button>
-                                </li>
-                            </ul>
-                        </div>
-                    }
-
-                    {
-                        type === 4 &&
-                        <div>
-                            <ul>
-
-                                <li>
-                                    {optionlist.map((i, index) => (
-
-                                        <div key={index}>
-                                            <div className="row">
-                                                <div className="col-12 flexBrdr">
-                                                    <div className="mb-3">
-                                                        <div className='inputBrdr'>
-                                                            <Input
-                                                                placeholder={t('FillOption')}
-                                                                value={optionlist[index]}
-                                                                onChange={(event) => setAddress(event, index)}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    {
-                                                        !!index && <img src={remove} className="removerht" alt=''
-                                                            onClick={removeOption.bind(this, i, index)} />
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                    }
-
-                                    <div className='NextBrdr NextBrdrAdd'>
-                                        <Button onClick={addOption}><img src={add} className="addRht" alt='' /> {t('AddOption')}</Button>
-
-                                    </div>
-
-                                </li>
-
-                                <li className='NextBrdr button2'>
-                                    <Button type="primary" onClick={() => nextStep(3)}>{t('Back')}</Button>
-                                    <Button type="primary" onClick={() => nextStep(5)}>{t('Next')}</Button>
-
-                                </li>
-                            </ul>
-                        </div>
-                    }
-                    {
-                        type === 5 &&
-                        <ul>
-                            <li>
-                                <div className='orgSelect'>
-                                    <div className={optchecked ? 'radioOption radioActive' : 'radioOption'} id={`active`} >
-                                        <div className="form-group">
-                                            <div className="form-check"  >
-                                                <input name="radiobutton"
-                                                    type="checkbox"
-                                                    id={`radio`}
-                                                    className="form-check-inputRadio"
-                                                    value={optchecked}
-                                                    onChange={(e) => handleActive(e)}
-                                                    checked={optchecked}
-                                                />
-                                                <label htmlFor={`radio`}>add transfer</label>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        {optionlist.map((i, index) => (
+                            <div className="addLine" key={index}>
+                                <Input
+                                    placeholder={t('FillOption')}
+                                    value={optionlist[index]}
+                                    onChange={(event) => setAddress(event, index)}
+                                />
                                 {
-                                    optchecked && <div>
-                                        <div className="mb-3">
-                                            <div>{t('fillAddress')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input
-                                                    placeholder={t('fillAddress')}
-                                                    name='to_address'
-                                                    value={to_address}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
+                                    !!index && <div className="removerht" onClick={removeOption.bind(this, i, index)} >
+                                        <img src={remove} alt='' />
                                     </div>
                                 }
+                            </div>
+                        ))
+                        }
+                    </div>
 
-                            </li>
-                            {
-                                optchecked && <li>
-                                    <div>
-                                        <div className="mb-3">
-                                            <div>{t('fillAmount')}</div>
-                                            <div className='inputBrdr'>
-                                                <Input
-                                                    placeholder={t('fillAmount')}
-                                                    name='valueAmount'
-                                                    value={valueAmount}
-                                                    onChange={handleInputChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
+                    <AddButton onClick={addOption}>
+                        {/* <img src={add} className="addRht" alt='' /> */}
+                        + {t('AddOption')}
+                    </AddButton>
 
-
-                            <li className='NextBrdr button2'>
-                                <Button type="primary" onClick={() => nextStep(4)}>{t('Back')}</Button>
-                                <Button type="primary" onClick={handleClicktoVote}>{t('Create')}</Button>
-                            </li>
-                        </ul>
+                    <div className='btnLine'>
+                        <Button className="previous" onClick={() => nextStep(3)}>
+                            <img className="left" src={left} alt="" />
+                            Previous
+                        </Button>
+                        <Button type="primary" onClick={() => nextStep(5)}>
+                            {t('Next')}
+                            <img src={right} alt="" />
+                        </Button>
+                    </div>
+                </div>
+            }
+            {
+                type === 5 &&
+                <div>
+                    <div className="line">
+                        <Checkbox onChange={(e) => handleActive(e)}>add transfer</Checkbox>
+                    </div>
+                    {
+                        optchecked && <div className="line">
+                            <div className="label">{t('fillAddress')}</div>
+                            <Input
+                                placeholder={t('fillAddress')}
+                                name='to_address'
+                                value={to_address}
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     }
-                </section>
-            </Modal>
-        </div>
+
+                    {
+                        optchecked && <div className="line">
+                            <div className="label">{t('fillAmount')}</div>
+                            <Input
+                                placeholder={t('fillAmount')}
+                                name='valueAmount'
+                                value={valueAmount}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                    }
+
+                    <div className='btnLine'>
+                        <Button className="previous" onClick={() => nextStep(4)}>
+                            <img className="left" src={left} alt="" />
+                            Previous
+                        </Button>
+                        <Button type="primary" onClick={handleClicktoVote}>
+                            {t('Create')}
+                            <img src={right} alt="" />
+                        </Button>
+                    </div>
+                </div>
+            }
+        </Vote >
     )
 }
 

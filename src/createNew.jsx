@@ -9,8 +9,7 @@ import styled from 'styled-components';
 
 
 const Container = styled.div`
-    width: 60%;
-    margin: 0 auto;
+    width: 87rem !important;
     .createSingle{
         margin-top: 6rem;
     }
@@ -25,10 +24,9 @@ export default function Createnew(props) {
         settype(i);
         sessionStorage.setItem('step', i)
     }
-    return (<div>
-        <section>
+    return (
             <Container className="container">
-                <div className="createSingle row">
+                <div className="createSingle">
                     {/* <StepNav type={type} /> */}
                     <MySteps type={type} />
 
@@ -40,8 +38,6 @@ export default function Createnew(props) {
                     </div>
                 </div>
             </Container>
-        </section>
-    </div>
     );
 
 }

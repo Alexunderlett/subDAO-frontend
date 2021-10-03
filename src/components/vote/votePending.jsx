@@ -76,7 +76,7 @@ export default function VotePending(props) {
                 handleClose={handleClose}
                 handleConfirm={handleConfirm}
                 showTips={showModal}/>
-            <table className="">
+            <table className="myTable">
                 <thead>
                 <tr>
                     <th>Number</th>

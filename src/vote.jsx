@@ -130,18 +130,17 @@ export default function Vote(props){
         return (
             <div>
                 <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
-
-
-                <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/>
+                {/* <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/> */}
 
                 <div className="container">
                     <FirstLine>
                         <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
                         <BtnRht>
                             {
-                                isModerator &&  <Button type="primary" onClick={()=>handleClicktonewVote()}>New voting</Button>
+                                isModerator &&  
+                                // <Button type="primary" onClick={()=>handleClicktonewVote()}>New voting</Button>
+                                <Button type="primary" onClick={()=>props.history.push(`/newVote/${props.match.params.owner}`)}>New voting</Button>
                             }
-
                         </BtnRht>
                     </FirstLine>
                     <Tablesec>

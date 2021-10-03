@@ -2,7 +2,7 @@ import React, { useEffect, useState} from 'react';
 import { Button, Checkbox, Input} from 'antd';
 
 import remove from '../../images/shutdown.png';
-import add from '../../images/Add.png';
+import add from '../../img/Add.png';
 import Loading from "../loading/Loading";
 import {Trans, Translation, useTranslation} from 'react-i18next';
 

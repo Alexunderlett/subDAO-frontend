@@ -11,13 +11,13 @@ const Content = styled.div`
     .listBrdr{
         overflow-y: auto;
         dl{
-            margin: 15px 0;
-            height: 178px;
-            padding: 30px;
+            margin: 1.5rem 0;
+            height: 17.8rem;
+            padding: 3rem;
             background: #FFFFFF;
-            box-shadow: 0px 0px 20px 0px rgba(16, 22, 75, 0.1);
-            border-radius: 4px 12px 12px 4px;
-            border-left: 10px solid #7DDC8B;;
+            box-shadow: 0 0 2rem 0 rgba(16, 22, 75, 0.1);
+            border-radius: 0.4rem 1.2rem 1.2rem 0.4rem;
+            border-left: 1rem solid #7DDC8B;;
             position: relative;
             &.active{
                 border-top: 1px solid #A6A6B7;
@@ -25,55 +25,55 @@ const Content = styled.div`
                 border-bottom: 1px solid #A6A6B7;
             }
             dt{
-                height: 28px;
-                font-size: 24px;
+                height: 2.8rem;
+                font-size: 2.4rem;
                 font-family: Roboto-Regular, Roboto;
                 font-weight: 400;
                 color: #212758;
-                line-height: 28px;
+                line-height: 2.8rem;
                 
             }
             .ddBox{
-                height: calc(100% - 30px);
+                height: calc(100% - 3rem);
                 overflow-y: auto;
                 dd{
-                    height: 28px;
-                    font-size: 18px;
+                    height: 2.8rem;
+                    font-size: 1.8rem;
                     font-family: Roboto-Regular, Roboto;
                     font-weight: 400;
                     color: #212758;
-                    line-height: 21px;
+                    line-height: 2.1rem;
                     float: left;
-                    margin: 10px 10px 0 0;
+                    margin: 1rem 1rem 0 0;
                 }
             }
             .useBtn{
                 position: absolute;
-                top: 24px;
-                right: 40px;
+                top: 2.4rem;
+                right: 4rem;
             }
         }
     }
 `
 
 const Info = styled.div`
-    margin-bottom: 60px;
+    margin-bottom: 6rem;
 
     .title{
-        height: 40px;
-        font-size: 34px;
+        height: 4rem;
+        font-size: 3.4rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #10134E;
-        line-height: 40px;
+        line-height: 4rem;
     }
     .detail{
-        width: 600px;
-        font-size: 18px;
+        width: 60rem;
+        font-size: 1.8rem;
         font-family: Roboto-Light, Roboto;
         font-weight: 300;
         color: #A6A6B7;
-        line-height: 22px;
+        line-height: 2.2rem;
     }
 `
 
@@ -142,7 +142,7 @@ export default function SecondStep(props) {
     }, [maincontract]);
     return (
         <Content className="content">
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips} />
+            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Info>
                 <div className="title">Template selection</div>
                 <div className='detail'>{t('chooseTemplate')}</div>
@@ -166,14 +166,14 @@ export default function SecondStep(props) {
                 }
             </div>
 
-            <div className="line" style={{ textAlign: 'right', marginTop: '40px' }}>
-                <Button className='leftBtn' style={{ marginRight: '30px' }} onClick={toFirstStep}>
-                    <img src={right} alt="" style={{ width: '20px' }} />
+            <div className="line" style={{ textAlign: 'right', marginTop: '4rem' }}>
+                <Button className='leftBtn' style={{ marginRight: '3rem' }} onClick={toFirstStep}>
+                    <img src={right} alt="" />
                     {t('think')}
                 </Button>
                 <Button type="primary" onClick={toThirdStep}>
                     {t('Next')}
-                    <img src={right} alt="" style={{ width: '20px' }} />
+                    <img src={right} alt="" />
                 </Button>
             </div>
         </Content>

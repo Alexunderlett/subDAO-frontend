@@ -7,7 +7,7 @@ import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
 import { useTranslation } from "react-i18next";
 import remove from "../../images/shutdown.png";
-import add from "../../images/Add.png";
+import add from "../../img/Add.png";
 import Back from "../../images/prev.png";
 
 export default function AddBatch(props) {
