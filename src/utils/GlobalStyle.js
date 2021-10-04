@@ -305,6 +305,26 @@ body,html{
       line-height: 1.6rem;
     }
   }
+          .inputBrdr{
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 1.6rem;
+            .ant-input-affix-wrapper{
+                border: 0;
+            background: #FFFFFF;
+            width: 100%;
+        box-shadow: 0 0 0.4rem 0 rgba(16, 22, 75, 0.1);
+            border-radius: 0.8rem!important;
+            }
+            .ant-input{
+            border: 0;
+            }
+            }
+              textarea{
+      resize: none;
+      }
 }
 `;
 

@@ -27,8 +27,8 @@ export default function Createnew(props) {
     return (
             <Container className="container">
                 <div className="createSingle">
-                    {/* <StepNav type={type} /> */}
-                    <MySteps type={type} />
+                     <StepNav type={type} />
+                    {/*<MySteps type={type} />*/}
 
                     <div className='createBrdr'>
                         {type === 1 && <FirstStep handlerSet={setStep} />}

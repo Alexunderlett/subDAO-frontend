@@ -13,12 +13,16 @@ const Msg = styled.div`
     align-items: center;
     .loagding{
         display: flex;
-        
+        text-align: center;
+        align-content: center;
+        justify-content: center;
         .img{
             display: flex;
+            align-content: center;
             flex-direction: column;
             margin-right: 0.9rem;
-            margin-bottom: 1rem;
+            //margin-bottom: 1rem;
+            height: 2rem;
             .logo{
                 width: 3rem;
                 height: 3rem;
@@ -30,18 +34,21 @@ const Msg = styled.div`
         }
         .text{
             font-size: 1.4rem;
-            font-family: PingFangSC-Regular, PingFang SC;
+            font-family:PingFang-Regular;
             font-weight: 400;
             color: rgba(1, 6, 67, 0.6);
             line-height: 3rem;
+      
         }
     }
     .msg{
         font-size: 1.8rem;
-        font-family: Roboto-Light, Roboto;
+        font-family: Roboto-Light;
         font-weight: 300;
         color: #010643;
         line-height: 2.1rem;
+      padding-top: 1.5rem;
+              
     }
 `
 
@@ -56,7 +63,9 @@ const LoadingModal = (props) => {
             closable={false}
             visible={showMsg}
             onCancel={handleClose}
+            maskClosable={false}
             footer={null}
+            centered={true}
         >
             <Msg>
                 <div className="loagding">

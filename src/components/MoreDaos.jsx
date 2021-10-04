@@ -34,12 +34,17 @@ const MoreDaos = (props) => {
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [len, setLen] = useState(0);
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
         window.scrollTo(0,0);
     }
     const setALLlist = async () =>{
+
+        let daolist = JSON.parse(sessionStorage.getItem('daoList')) ;
+        console.error("====daolist",daolist);
+        setLen(daolist.length)
         let arr=[];
         let index = 0;
         for( let item  of favoriteDAOs){
@@ -80,7 +85,7 @@ const MoreDaos = (props) => {
     return (
         <AllDaos>
             {
-                !!list.length && list.length >5 &&<div className="more" onClick={() => showDAOModal()}>
+                len >5 &&<div className="more" onClick={() => showDAOModal()}>
                 More DAOs<span>···</span>
                 </div>
             }
