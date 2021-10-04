@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal, Button, Input } from 'antd';
 import { useSubstrate } from "../api/contracts";
-import api from "../api";
 import LoadingNew from "./loadingNEW";
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import nodaos from "../img/noDaos.png";
 
-
-
 const DaoBody = styled.div`
-    width: 80%;
+    width: 81%;
     height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -29,15 +28,19 @@ const DaoBody = styled.div`
     .daos{
         width: calc(100% + 7rem);
         margin-left: -3.5rem;
-        height: 100%;
+        //max-height: 100%;
         display: flex;
         flex-wrap: wrap;
-        overflow-y: auto;
+        //overflow-y: auto;
         padding: 2rem 0;
         .daoItem{
             width: 23rem;
             height: 26.8rem;
-            margin: 1rem 3.6rem;
+            margin: 1rem 3.6rem 6rem;
+        }
+        .detail{
+        font-size: 1.4rem;
+        line-height: 1.9rem;
         }
     }
 `;
@@ -82,9 +85,15 @@ const Inputbrdr = styled(Input)`
       color: #B5B6C6;
 
     }
-`
-
-
+`;
+const Tips = styled.div`
+    text-align: center;
+    font-size: 1.8rem;
+    font-family: PingFang-Medium;
+    line-height: 2.5rem;
+    color: #0069ff;
+    cursor: pointer;
+`;
 const DaosModal = (props) => {
     const { moreDaos, handleClose } = props;
 
@@ -116,7 +125,6 @@ const DaosModal = (props) => {
             return
         }
 
-        console.error(sessionStorage.getItem('mydaoList'),sessionStorage.getItem('daoList'))
         setimglist(mydaolist);
         setAlls(false);
 
@@ -145,6 +153,9 @@ const DaosModal = (props) => {
        let arr =  imglist.filter(item=> item.name.indexOf(e.target.value)>-1);
         setimglist(arr);
     }
+    const switchModal = () =>{
+        dispatch({ type: 'DAOTYPE',payload: 'all' });
+    }
     return (
         <Modal
             visible={moreDaos}
@@ -170,6 +181,9 @@ const DaosModal = (props) => {
                     </Button>}
                 </div>
                 <div className="daos">
+                    <div>
+
+                    </div>
                     {
                         alls && <LoadingNew  />
                     }
@@ -189,6 +203,12 @@ const DaosModal = (props) => {
                         </Bgmid>
                     }
                 </div>
+                {
+                    daoType ==='my' &&   <Tips onClick={()=>switchModal()}>
+                        Explorer other DAOs ...
+                    </Tips>
+                }
+
             </DaoBody>
         </Modal>
     );
