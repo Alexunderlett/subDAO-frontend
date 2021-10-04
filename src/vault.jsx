@@ -364,7 +364,7 @@ export default function Vault(props) {
                     <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
                     <BtnRht>
                         {/* <div className='voteLft' onClick={handleClicktoAbout}>
-                            <img src={Back} alt="" /> 
+                            <img src={Back} alt="" />
                             {t('Back')}
                         </div> */}
 

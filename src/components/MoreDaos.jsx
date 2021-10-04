@@ -79,8 +79,6 @@ const MoreDaos = (props) => {
                 More DAOs<span>···</span>
                 </div>
             }
-            
-
 
             <div className="daos">
                 {
