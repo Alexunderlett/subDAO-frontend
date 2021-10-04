@@ -9,6 +9,11 @@ import {useSubstrate} from "../api/contracts";
 import api from '../api/index';
 import LoadingNew from "./loadingNEW";
 
+
+import Addnew from './org/addNew';
+import AddApply from './org/addApply';
+import AddBatch from "./org/addbatch";
+
 const TopTitles = styled.div`
     width: 100%;
     min-height: 17rem;
@@ -115,6 +120,11 @@ export default function Left(props){
     const [isModerator, setisModerator] = useState(false);
     const [isOwner, setisOwner] = useState(false);
 
+
+
+    const [addshow,setaddshow]= useState(false);
+    const [applyAuth, setapplyAuth] = useState(false);
+    const [addapplyshow,setaddapplyshow]= useState(false);
 
     const [contractlist, setcontractlist] = useState({
         base_addr:null,
@@ -313,6 +323,17 @@ export default function Left(props){
         setShowModal(true)
     }
 
+    const joinDaos = async () =>{
+        await api.org.getFreeAddMember(orgcontract).then(data => {
+            console.error("=====",data)
+            if(data){
+                setaddshow(true)
+            }else{
+                setaddapplyshow(true)
+            }
+        });
+    }
+
     const handleExitConfirm = async () => {
         setShowModal(false);
 
@@ -330,6 +351,44 @@ export default function Left(props){
             setdelMem(true)
         }
     }
+
+    //add members begin
+    const handleAddClose = () => {
+        setaddshow(false)
+    }
+    // const handleBatch = () => {
+    //     setaddshow(false);
+    //     setbatchshow(true);
+    // }
+    // const handleBatchAdd = () => {
+    //     setaddshow(true);
+    //     setbatchshow(false);
+    // }
+    // const handleBatchClose = () => {
+    //     setbatchshow(false);
+    // }
+    // const handleAdd = () => {
+    //     setaddshow(true)
+    // }
+
+    const setall = () => {
+        // setModeratorFunc()
+        // setMemberFunc()
+        window.location.reload()
+
+    }
+    const handleApplyClose = () => {
+        setaddapplyshow(false)
+    }
+    // const handleaddApply = () => {
+    //     setaddapplyshow(true)
+    // }
+    const handleAppTips = () => {
+        // setshowTips(true)
+    }
+    const handleAppTipsClose = () => {
+        // setshowTips(false)
+    }
     return (
         <div>
             <Transfer
@@ -340,6 +399,23 @@ export default function Left(props){
                 handleClose={handleExitClose}
                 handleConfirm={() => handleExitConfirm()}
                 showTips={showModal} />
+
+
+            <Addnew
+                handleClose={handleAddClose}
+
+                showTips={addshow}
+                typeName='members'
+                refresh={setall}
+                handleBatch={false}
+                applyAuth={applyAuth}
+            />
+            <AddApply
+                handleClose={handleApplyClose}
+                showTips={addapplyshow}
+                handleTips={handleAppTips}
+                refresh={setall} />
+
             {
                 !info && <TopTitles>
                     <LftTop>
@@ -362,7 +438,7 @@ export default function Left(props){
                         </div>
                         }
                         {
-                            ( !isOwner && !isMember && !isModerator) &&  <Button type="primary">Join</Button>
+                            ( !isOwner && !isMember && !isModerator) &&  <Button type="primary" onClick={()=>joinDaos()}>Join</Button>
                         }
                     </RhtTop>
                 </TopTitles>

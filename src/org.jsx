@@ -309,7 +309,7 @@ export default function Org(props) {
             dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
             seterrorShow(true);
-            dispatch({ type: 'MSGTYPE', payload: { msg: `Org: ${error.message}` } })
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Org: ${error.message}`, closable: true  } })
             dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
@@ -330,7 +330,7 @@ export default function Org(props) {
 
             }).catch((error) => {
                 seterrorShow(true)
-                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Moderator: ${error.message}` } })
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Moderator: ${error.message}` , closable: true } })
                 dispatch({ type: 'LOADINGTYPE', payload: null });
             });
         } else if (type === 'members') {
@@ -344,7 +344,7 @@ export default function Org(props) {
 
             }).catch((error) => {
                 seterrorShow(true)
-                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Member: ${error.message}` } })
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Member: ${error.message}`, closable: true  } })
                 dispatch({ type: 'LOADINGTYPE', payload: null });
             });
         }
