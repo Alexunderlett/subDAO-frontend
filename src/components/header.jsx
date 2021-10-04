@@ -156,6 +156,7 @@ export default function Headertop(props) {
     }
     const handleMyClick = () => {
         dispatch({ type: 'DAOTYPE', payload: 'my' });
+        window.scrollTo(0,0);
     }
     const toFirst = () => {
         createHashHistory.push('/')
