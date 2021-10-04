@@ -72,6 +72,7 @@ const RhtTop = styled.div`
      border-radius: 0.4rem;
      width: 9rem;
     height: 3rem;
+    line-height: 3rem;
     margin-left: 1rem;
     padding: 0!important;
   }
@@ -139,6 +140,7 @@ export default function Left(props){
     useEffect(() => {
         if (orgcontract == null || !delMem) return;
         const setAdmin = async () => {
+            dispatch({ type: 'LOADINGTYPE', payload:'Resign Moderator' });
             if (isModerator) {
                 await api.org.resignModerator(orgcontract, function (result) {
                     if (!result) return;
@@ -336,7 +338,7 @@ export default function Left(props){
 
     const handleExitConfirm = async () => {
         setShowModal(false);
-
+        dispatch({ type: 'LOADINGTYPE', payload:'Resign Member' });
         if (isMember) {
             await api.org.resignMember(orgcontract, function (result) {
                 if (!result) return;

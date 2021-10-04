@@ -3,13 +3,9 @@ import { Button, Modal } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import Loading from "../loading/Loading";
-import auth from '../../images/Vector.png';
-import authWhite from '../../images/auth.png';
 import { useTranslation } from "react-i18next";
 import applyList from "../../images/apply.png";
 import Sel from "../../img/Sel.png";
-import closeImg from "../../images/shutdownW.png";
 import styled from 'styled-components';
 
 const Li = styled.li`
@@ -28,6 +24,7 @@ const Li = styled.li`
         img{
             width: 3.2rem;
             height: 3.2rem;
+            cursor: pointer;
         }
     }
     .detail{
@@ -70,11 +67,12 @@ export default function ApplyList(props) {
             name: i[1]
         };
         dispatch({ type: 'LOADINGTYPE', payload: t('ApproveSent') });
+        props.handleClose();
         await api.org.ApproveMember(orgcontract, obj, function (result) {
             console.log("ApproveMember", result)
             setapproveApply(!approveApply);
             dispatch({ type: 'LOADINGTYPE', payload: null });
-            props.handleClose();
+
             props.refresh()
         }).catch((error) => {
             seterrorShow(true)
