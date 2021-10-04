@@ -3,7 +3,6 @@ import { Button, Modal, Input } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
 import { useTranslation } from "react-i18next";
 import remove from "../../img/shutdown.png";

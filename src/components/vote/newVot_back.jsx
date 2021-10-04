@@ -5,7 +5,6 @@ import { Modal, Button, Input } from 'antd';
 import { useSubstrate } from '../../api/contracts';
 import api from "../../api";
 
-import Loading from "../loading/Loading";
 import newVote from '../../images/newvoting.png';
 import NewVoteTop from './newVoteTop';
 import remove from "../../img/shutdown.png";

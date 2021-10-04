@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
-import Loading from "./components/loading/Loading";
 
 import right from './img/right.png';
 import homeImg from './img/homeImg.png';

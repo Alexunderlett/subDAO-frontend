@@ -4,7 +4,6 @@ import { Modal } from 'antd';
 import VoteModalTips from "./votemodalTips";
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import Loading from "../loading/Loading";
 
 import TriggerBtn from "../../img/switchClose.png";
 import PublicJS from "../../utils/publicJs";

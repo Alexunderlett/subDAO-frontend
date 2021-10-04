@@ -5,7 +5,6 @@ import api from "../../api";
 import left from '../../img/left.png';
 import right from '../../img/right.png';
 
-import Loading from "../loading/Loading";
 import newVote from '../../images/newvoting.png';
 import NewVoteTop from './newVoteTop';
 import remove from "../../img/shutdown.png";

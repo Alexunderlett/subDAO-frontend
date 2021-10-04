@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Table, Form, Button, Tag } from 'antd';
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
-import Loading from "./components/loading/Loading";
 import Left from "./components/left";
 import Back from "./images/prev.png";
 import cancel from "./img/cancel.png";

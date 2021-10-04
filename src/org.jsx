@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSubstrate } from "./api/contracts";
 import api from "./api";
 
-import Loading from './components/loading/Loading';
-
 import Left from './components/left';
 
 import Addnew from './components/org/addNew';

@@ -4,7 +4,6 @@ import { Button, Modal, Input, Select } from 'antd';
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
 
-import Loading from "../loading/Loading";
 import sender from "../../images/send.png";
 import { useTranslation } from "react-i18next";
 

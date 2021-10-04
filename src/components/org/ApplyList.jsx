@@ -9,10 +9,12 @@ import Sel from "../../img/Sel.png";
 import styled from 'styled-components';
 
 const Li = styled.li`
+    margin-bottom: 2.6rem;
     .title{
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1rem;
         .name{
 
             font-size: 1.6rem;
