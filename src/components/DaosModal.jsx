@@ -168,15 +168,7 @@ const DaosModal = (props) => {
         setAlls(true);
         setimglist([]);
     }, [daoType]);
-
-    useEffect(() => {
-
-        if (maincontract == null || allAccounts == null || daoType == null) return;
-        setInstances();
-
-    }, []);
-
-
+    
     const handleClick = () => {
         if (allAccounts != null && allAccounts.length) {
             props.history.push('/create');
