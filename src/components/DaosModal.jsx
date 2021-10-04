@@ -123,14 +123,10 @@ const DaosModal = (props) => {
         if ( daoType === 'my'){
             mydaolist = mydaolist.filter(i => i.owner === allAccounts[0].address);
         }
-
-        console.error("==========mydaolist",mydaolist,mydaolist.length)
         const setListAll = async (mydaolist) => {
             let arr = [];
-            let index =0;
-            if (mydaolist && mydaolist.length) {
+            if (!!mydaolist && mydaolist.length) {
                 for (let item of mydaolist) {
-                    index++;
                     const data = await api.base.InitHome(state, item.dao_manager_addr);
                     if (!data) continue;
 
@@ -149,14 +145,19 @@ const DaosModal = (props) => {
                 setimglist(arr);
 
             }else{
-
                 setimglist([]);
             }
-            setAlls(false);
+
+            setTimeout(()=>{
+                setAlls(false);
+            },0)
+
         }
 
         setListAll(mydaolist, daoType);
     };
+
+
     useEffect(() => {
         if (maincontract == null || allAccounts == null || daoType == null) return;
         setInstances();
@@ -164,7 +165,7 @@ const DaosModal = (props) => {
     }, [allAccounts, maincontract,daoType]);
 
     useEffect(() => {
-        setAlls(true)
+        setAlls(true);
         setimglist([]);
     }, [daoType]);
 
