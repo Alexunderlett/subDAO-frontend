@@ -131,25 +131,21 @@ function Home(props) {
         setcreateDAOModal(!!selected && !!selected.length && !imglist.length);
     }, [selected, imglist, maincontract]);
 
+    const setInstances = async () => {
+        dispatch({ type: 'LOADINGTYPE', payload: t('InitializeHome') });
 
+        let addresslist = await api.main.listDaoInstances(maincontract) || [];
+        console.log('===========addresslist============', addresslist);
+        let mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
+
+        setimglist(mydaolist);
+        dispatch({ type: 'LOADINGTYPE', payload: null });
+        sessionStorage.setItem('addresslist', JSON.stringify(addresslist));
+    };
     useEffect(() => {
 
         if (maincontract == null || allAccounts == null ) return;
-        const setInstances = async () => {
-            dispatch({ type: 'LOADINGTYPE', payload: t('InitializeHome') });
-
-            let addresslist = await api.main.listDaoInstances(maincontract) || [];
-            console.log('===========addresslist============', addresslist);
-            let mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
-
-            setimglist(mydaolist);
-            dispatch({ type: 'LOADINGTYPE', payload: null });
-            sessionStorage.setItem('addresslist', JSON.stringify(mydaolist));
-        };
-
         setInstances();
-
-
     }, [allAccounts, maincontract, first]);
 
     const ConnectWallet = () => {

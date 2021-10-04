@@ -118,11 +118,18 @@ const DaosModal = (props) => {
 
         let mydaolist=[];
         mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
+
+
+        if ( daoType === 'my'){
+            mydaolist = mydaolist.filter(i => i.owner === allAccounts[0].address);
+        }
+
+        console.error("==========mydaolist",mydaolist,mydaolist.length)
         const setListAll = async (mydaolist) => {
             let arr = [];
             let index =0;
             if (mydaolist && mydaolist.length) {
-                for await(let item of mydaolist) {
+                for (let item of mydaolist) {
                     index++;
                     const data = await api.base.InitHome(state, item.dao_manager_addr);
                     if (!data) continue;
@@ -140,22 +147,26 @@ const DaosModal = (props) => {
                 }
 
                 setimglist(arr);
-                setAlls(false);
-            }
 
-        }
-        if(mydaolist.length){
-            setListAll(mydaolist, daoType);
-        }else{
+            }else{
+
+                setimglist([]);
+            }
             setAlls(false);
         }
 
+        setListAll(mydaolist, daoType);
     };
     useEffect(() => {
         if (maincontract == null || allAccounts == null || daoType == null) return;
         setInstances();
 
     }, [allAccounts, maincontract,daoType]);
+
+    useEffect(() => {
+        setAlls(true)
+        setimglist([]);
+    }, [daoType]);
 
     useEffect(() => {
 
@@ -236,7 +247,7 @@ const DaosModal = (props) => {
                     }
                 </div>
                 {
-                    daoType ==='my' &&   <Tips onClick={()=>switchModal()}>
+                    daoType ==='my' && <Tips onClick={()=>switchModal()}>
                         Explorer other DAOs ...
                     </Tips>
                 }

@@ -143,6 +143,14 @@ export default function Headertop(props) {
         }
     }, [allAccounts]);
 
+    useEffect(() => {
+
+        if(selected.length && allAccounts == null){
+            dispatch({ type: 'SET_ALLACCOUNTS', payload: selected });
+        }
+
+    }, [selected]);
+
 
     const account = JSON.parse(sessionStorage.getItem('account'));
     const handleClick = () => {
@@ -188,7 +196,7 @@ export default function Headertop(props) {
         setcurrentAccount(val)
     }
 
-    const changeAccounts = async (val) => {
+    const changeAccounts = async () => {
         let selected = allList.filter(i => i.address === currentAccount);
         setselected(selected);
         sessionStorage.setItem('account', JSON.stringify(selected));
