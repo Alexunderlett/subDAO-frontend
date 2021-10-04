@@ -31,7 +31,7 @@ const MsgModal = (props) => {
 
     return (
         <Modal
-            closable={msgType && !!msgType.closable}
+            closable={msgType && msgType.closable !== false}
             visible={showMsg}
             onCancel={handleClose}
             footer={null}
