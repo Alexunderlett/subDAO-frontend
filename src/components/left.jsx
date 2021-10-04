@@ -179,14 +179,13 @@ export default function Left(props){
         if (daoManagercontract == null ) return;
         queryAddrs();
     }, [daoManagercontract, props.id,maincontract]);
-    useEffect(() => {
-        queryAddrs();
-        init();
-    }, []);
 
     useEffect(() => {
+        console.error("==============",contractlist.base_addr)
         const { vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
         sessionStorage.setItem('contractlist', JSON.stringify(contractlist));
+
+
         if (base_addr != null) {
             const setInitBase = async () => {
                 await api.base.InitBase(state, dispatch, base_addr, (data) => {
@@ -257,16 +256,23 @@ export default function Left(props){
                 setisMember(data[0]);
                 setisModerator(data[1]);
                 setisOwner(data[2]);
-                sessionStorage.setItem('isMember',data[0])
-                sessionStorage.setItem('isModerator',data[1])
-                sessionStorage.setItem('isOwner',data[2])
+                sessionStorage.setItem('isMember',data[0]);
+                sessionStorage.setItem('isModerator',data[1]);
+                sessionStorage.setItem('isOwner',data[2]);
             });
         };
         whoAmI();
     }, [orgcontract, props.id]);
+    useEffect(()=>{
+        setName('');
+        setLogo('');
+        setDescription('');
+        setOwner('');
+    },[props.id])
 
     const init = () =>{
         const setBase = async () => {
+            console.error("==========setBase=======",basecontract.address.toString())
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
                 let { owner, name, logo, desc } = data;
@@ -274,7 +280,10 @@ export default function Left(props){
                 setLogo(logo);
                 setDescription(desc);
                 setOwner(owner);
-                setinfo(false);
+                setTimeout(()=>{
+                    setinfo(false);
+                },2000)
+
             });
         };
         setBase();

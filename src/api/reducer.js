@@ -48,8 +48,11 @@ const reducer = (state, action) => {
             return { ...state, erc20contractState: 'LOAD_ERC20' };
 
         case 'SET_ERC20':
-
-            return { ...state, erc20contract: action.payload.erc20contract,erc20address:action.payload.address, erc20contractState: 'READY' };
+            if(action.payload != null ){
+                return { ...state, erc20contract: action.payload.erc20contract,erc20address:action.payload.address, erc20contractState: 'READY' };
+            }else{
+                return { ...state, erc20contract: action.payload, erc20contractState: 'READY' };
+            }
 
         case 'ERC20_ERROR':
             return { ...state, erc20contract: null, erc20contractState: 'ERROR' };
