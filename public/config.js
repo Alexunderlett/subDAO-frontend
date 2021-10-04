@@ -6,7 +6,6 @@ window.mainAddress = {
     rpc_server: "wss://alpha.subdao.org",
     // rpc_server: "ws://47.243.45.84:9944",
     favoriteDAOs:[
-        '5DBVPYnfcYtBLj9xoHqDLGPtCaKadhGGeeQXzYqUjk3Jtn2X',
-        '5GGPxsi71p8AkAMd62EvkaE2ceqeLkT5w6hJ2tjoaNS9HbsS'
+        '5GGdPn9yqDmcbKwqsQ1MzP7Qzsh5dqJybc5LaRgRCoukL58H'
     ]
 };

@@ -114,7 +114,7 @@ function Home(props) {
 
     useEffect(() => {
         dispatch({ type: 'LOAD_MAINCONTRACT' });
-
+        dispatch({ type: 'LOADINGTYPE', payload: 'Initialize the home page' });
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
@@ -163,7 +163,6 @@ function Home(props) {
                     });
                 }
             }
-            console.log("======arr============", arr)
             if (typeStr === 'all') {
                 sessionStorage.setItem('daoList', JSON.stringify(arr));
 

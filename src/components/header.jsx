@@ -14,6 +14,7 @@ import MsgModal from "./MsgModal";
 import LoadingModal from "./LoadingModal";
 
 import { useTranslation, Trans, Translation } from 'react-i18next'
+import LoadingNew from "./loadingNEW";
 
 const createHashHistory = history.createHashHistory();
 
@@ -114,35 +115,32 @@ export default function Headertop(props) {
 
 
     const [showButton, setShowButton] = useState(false);
-    const [daoExit, setdaoExit] = useState(false);
-    const [first, setfirst] = useState(false);
     const [balanceOf, setbalanceOf] = useState(0);
     const [showlist, setshowlist] = useState(false);
     const [currentAccount, setcurrentAccount] = useState(null);
 
-    const queryBalance = async (account) => {
-
-        if (api == null || account == null || !account.length || !account[0].address) return;
-        await api.query.system.account(account[0].address, ({ data: balance }) => {
+    const queryBalance = async () => {
+        await api.query.system.account(selected[0].address, ({ data: balance }) => {
             setbalanceOf(balance.toHuman().free)
         });
     }
 
     useEffect(() => {
-        i18n.changeLanguage('en')
+        i18n.changeLanguage('en');
+        if (!selected.length || api == null) return;
+        queryBalance(selected)
     }, [])
 
     useEffect(() => {
-        if (allAccounts == null) return;
-        queryBalance(allAccounts)
-    }, [allAccounts, maincontract, daoManagercontract]);
+        if (!selected.length || api == null) return;
+        queryBalance(selected)
+    }, [allAccounts, maincontract, daoManagercontract,selected,api]);
 
     useEffect(() => {
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
         }
-
     }, [allAccounts]);
 
 
@@ -267,16 +265,15 @@ export default function Headertop(props) {
                             </div>
                         }
                         {
-                            allAccounts != null && <span className='balanceRht'><img src={balanceOfImg} alt="" />{balanceOf}</span>
-                        }
-
-
-                        {
-                            allAccounts != null && <span className='createDAO' onClick={() => handleClick()}>Create My DAO</span>
+                            !!selected.length && <span className='balanceRht'><img src={balanceOfImg} alt="" />{balanceOf}</span>
                         }
 
                         {
-                            allAccounts != null && <span className='myDao' onClick={() => handleMyClick()}><img src={myDao} alt="" />My DAO</span>
+                            !!selected.length && <span className='createDAO' onClick={() => handleClick()}>Create My DAO</span>
+                        }
+
+                        {
+                            !!selected.length && <span className='myDao' onClick={() => handleMyClick()}><img src={myDao} alt="" />My DAO</span>
                         }
                         {!!selected.length &&
                             <span className='logout' onClick={() => exitAccount()}>

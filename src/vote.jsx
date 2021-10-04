@@ -11,6 +11,7 @@ import Left from './components/left';
 import { useTranslation } from "react-i18next";
 import { Button } from "antd";
 import styled from "styled-components";
+import LoadingNew from "./components/loadingNEW";
 
 
 const FirstLine = styled.div`
@@ -60,16 +61,15 @@ export default function Vote(props) {
     const [isModerator, setisModerator] = useState(false);
     const [isOwner, setisOwner] = useState(false);
 
-    const [newshow, setnewshow] = useState(false);
+
+    const [showPending, setShowPending] = useState(true);
+    const [showActive, setShowActive] = useState(true);
+    const [showHistory, setShowHistory] = useState(true);
+
+
 
     let { t } = useTranslation();
 
-    const handleClicktonewVote = () => {
-        setnewshow(true)
-    }
-    const handleClose = () => {
-        setnewshow(false)
-    }
     useEffect(async () => {
         setAId(props.match.params.id);
     }, []);
@@ -104,68 +104,85 @@ export default function Vote(props) {
     }, [votecontract, allAccounts, apiState, erc20contract, orgcontract]);
 
     const setAll = async () => {
-        dispatch({ type: 'LOADINGTYPE', payload: 'Initialize the vote page' });
 
         await api.vote.queryOpenVote(votecontract).then(data => {
             if (!data) return;
-            setActivelist(data)
+            setActivelist(data);
+            setShowActive(false);
         });
+
 
         await api.vote.queryWaitVote(votecontract).then(data => {
             if (!data) return;
-            setPendinglist(data)
+            setPendinglist(data);
+            setShowPending(false);
         });
 
         await api.vote.queryAllVote(votecontract).then(data => {
             if (!data) return;
             setHistorylist(data)
+            setShowHistory(false)
         });
 
-        dispatch({ type: 'LOADINGTYPE', payload: null });
     };
 
     return (
         <div>
-            {/* <NewVote handleClose={handleClose} showTips={newshow} refresh={setAll}/> */}
-
             <div className="container">
                 <FirstLine>
                     <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
                     <BtnRht>
                         {
                             isModerator &&
-                            // <Button type="primary" onClick={()=>handleClicktonewVote()}>New voting</Button>
                             <Button type="primary" onClick={() => props.history.push(`/newVote/${props.match.params.owner}?url=${props.match.url}`)}>New voting</Button>
                         }
                     </BtnRht>
                 </FirstLine>
                 <Tablesec>
                     <div className="titleTop">Pendinng Voting List</div>
-                    <VotePending
-                        id={id}
-                        list={pendinglist}
-                        history={props.history}
-                        refresh={setAll}
-                        owner={props.match.params.owner}
-                    />
+                    {
+                        !showPending && <VotePending
+                            id={id}
+                            list={pendinglist}
+                            history={props.history}
+                            refresh={setAll}
+                            owner={props.match.params.owner}
+                        />
+                    }
+                    {
+                        showPending && <LoadingNew  />
+                    }
+
                 </Tablesec>
                 <Tablesec>
                     <div className="titleTop">Active Votinng List</div>
-                    <VoteActive
-                        id={id}
-                        list={activelist}
-                        history={props.history}
-                        owner={props.match.params.owner}
-                    />
+                    {
+                        !showActive &&<VoteActive
+                            id={id}
+                            list={activelist}
+                            history={props.history}
+                            owner={props.match.params.owner}
+                        />
+                    }
+                    {
+                        showActive &&<LoadingNew  />
+                    }
+
                 </Tablesec>
                 <Tablesec>
                     <div className="titleTop">History</div>
-                    <VotePagination
-                        id={id}
-                        list={historylist}
-                        history={props.history}
-                        owner={props.match.params.owner}
-                    />
+                    {
+                        !showHistory &&<VotePagination
+                            id={id}
+                            list={historylist}
+                            history={props.history}
+                            owner={props.match.params.owner}
+                        />
+                    }
+                    {
+                        showHistory &&<LoadingNew  />
+                    }
+
                 </Tablesec>
             </div>
 

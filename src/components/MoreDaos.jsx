@@ -31,41 +31,42 @@ const AllDaos = styled.div`
 const MoreDaos = (props) => {
 
     const { dispatch,state } = useSubstrate();
+    const { maincontract, allAccounts } = state;
 
     const [list, setList] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
         window.scrollTo(0,0);
     }
+    const setALLlist = async () =>{
+        let arr=[];
+        for( let item of favoriteDAOs){
+            const data = await api.base.InitHome(state,item);
+            if(!data) continue;
+            const logo = data.logo ? data.logo : '';
+            const name = data.name ? data.name : '';
+            const desc = data.desc ? data.desc : '';
+            const owner = data.owner ? data.owner : '';
+            arr.push({
+                address: item,
+                logo,
+                name,
+                desc,
+                owner,
+            })
+        }
+        setList(arr);
+        setLoading(false)
+    }
+    useEffect(()=>{
+        setALLlist()
+    },[]);
 
     useEffect(()=>{
-        setLoading(true)
-        const setALLlist = async () =>{
-            let arr=[];
-            for( let item of favoriteDAOs){
-                const data = await api.base.InitHome(state,item);
-                if(!data) continue;
-                const logo = data.logo ? data.logo : '';
-                const name = data.name ? data.name : '';
-                const desc = data.desc ? data.desc : '';
-                const owner = data.owner ? data.owner : '';
-                arr.push({
-                    address: item,
-                    logo,
-                    name,
-                    desc,
-                    owner,
-                })
-            }
-            setList(arr);
-            setLoading(false)
-            console.error("====arr=======",arr)
-        }
         setALLlist()
-
-    },[]);
+    },[maincontract]);
 
     const toAbout = (obj) =>{
         const { address, owner } = obj;

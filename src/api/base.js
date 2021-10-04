@@ -40,7 +40,6 @@ const InitHome = async (state,address) => {
     let data = await daoManagercontract.query.queryComponentAddrs(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
-    console.error("========InitHome",data,data.base_addr,!data.base_addr,"address",address)
 
     if( !data || data.base_addr==null)return;
     const basecontract = await ConnectContract(api, 'base', data.base_addr);
@@ -49,8 +48,6 @@ const InitHome = async (state,address) => {
     res = publicJs.formatResult(res);
 
 
-
-    console.log("======res",res)
     return res;
 };
 

@@ -270,7 +270,6 @@ export default function Left(props){
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
                 let { owner, name, logo, desc } = data;
-                console.error("====getBaseData",name)
                 setName(name);
                 setLogo(logo);
                 setDescription(desc);
