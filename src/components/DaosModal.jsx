@@ -141,9 +141,7 @@ const DaosModal = (props) => {
                         desc,
                     });
                 }
-
                 setimglist(arr);
-
             }else{
                 setimglist([]);
             }
@@ -154,7 +152,7 @@ const DaosModal = (props) => {
 
         }
 
-        setListAll(mydaolist, daoType);
+        setListAll(mydaolist);
     };
 
 
@@ -168,7 +166,7 @@ const DaosModal = (props) => {
         setAlls(true);
         setimglist([]);
     }, [daoType]);
-    
+
     const handleClick = () => {
         if (allAccounts != null && allAccounts.length) {
             props.history.push('/create');
