@@ -43,7 +43,6 @@ const MoreDaos = (props) => {
     const setALLlist = async () =>{
 
         let daolist = JSON.parse(sessionStorage.getItem('daoList')) ;
-        console.error("====daolist",daolist);
         setLen(daolist.length)
         let arr=[];
         let index = 0;
@@ -84,12 +83,14 @@ const MoreDaos = (props) => {
 
     return (
         <AllDaos>
-            {
-                len >5 &&<div className="more" onClick={() => showDAOModal()}>
-                More DAOs<span>···</span>
-                </div>
-            }
-
+            {/*{*/}
+            {/*    len >5 &&<div className="more" onClick={() => showDAOModal()}>*/}
+            {/*    More DAOs<span>···</span>*/}
+            {/*    </div>*/}
+            {/*}*/}
+            <div className="more" onClick={() => showDAOModal()}>
+                More DAO
+            </div>
             <div className="daos">
                 {
                     loading && <LoadingNew  />

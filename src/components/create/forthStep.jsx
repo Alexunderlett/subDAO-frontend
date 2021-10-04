@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api";
-import Loading from "../loading/Loading";
 import { Trans, Translation, useTranslation } from 'react-i18next';
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
 import right from '../../img/right.png';
+import left from "../../img/left.png";
 
 const Content = styled.div`
     .line{
         margin-top: 3rem;
+        
         .title{
             height: 2.1rem;
             font-size: 1.8rem;
@@ -19,6 +20,23 @@ const Content = styled.div`
             line-height: 2.1rem;
             margin-bottom: 1rem;
         }
+        .previous{
+            color: #e34b8a;
+            border:0.15rem solid #e34b8a;
+                  width: 18rem;
+        height: 5rem;
+        padding: 0;
+        }
+            .nextBtn{
+        width: 18rem;
+        height: 5rem;
+        border-radius: 0.8rem;
+        font-family: PingFang-Regular;
+        padding: 0;
+        &:disabled{
+        opacity: 0.3;
+        }
+    }
     }
 `
 
@@ -42,6 +60,7 @@ const Info = styled.div`
         font-weight: 300;
         color: #10134E;
         line-height: 4rem;
+        margin-bottom: 0.9rem;
     }
     .detail{
         width: 60rem;
@@ -57,9 +76,6 @@ export default function ThirdStep(props) {
 
     const { state, dispatch } = useSubstrate();
     const { maincontract, daoManagercontract, orgcontract } = state;
-
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     const [admin, setAdmin] = useState(false);
     const [token, setToken] = useState(true);
@@ -98,11 +114,13 @@ export default function ThirdStep(props) {
     const [adminstate, setadminstate] = useState(false);
     const [errorShow, seterrorShow] = useState(false);
     const [errorTips, seterrorTips] = useState('');
+    const [showDisable, setshowDisable] = useState(false);
 
     let { t } = useTranslation();
 
 
     const Submit = () => {
+
         let form = {
             token,
             name,
@@ -110,7 +128,7 @@ export default function ThirdStep(props) {
             supply,
             tokenlist
         }
-        sessionStorage.setItem('forthStep', JSON.stringify(form))
+        sessionStorage.setItem('forthStep', JSON.stringify(form));
         toDataFormat()
     }
 
@@ -200,6 +218,10 @@ export default function ThirdStep(props) {
 
     }, []);
 
+    useEffect(() => {
+        setshowDisable(name.length && symbol.length&&supply.length)
+    }, [name,symbol,supply]);
+
     const toDataFormat = () => {
         const firstStep = JSON.parse(sessionStorage.getItem('firstStep'));
         setdaoname(firstStep.name);
@@ -232,15 +254,14 @@ export default function ThirdStep(props) {
 
         if (secondStep && secondStep[0] && secondStep[0].id) {
             const stepone = async () => {
-                setLoading(true);
-                setTips(t('InstanceByTemplate'));
+                dispatch({ type: 'LOADINGTYPE', payload: t('InstanceByTemplate') });
                 await api.main.instanceByTemplate(maincontract, secondStep[0].id, (result) => {
                     setinstanceByTemplate(result);
                     console.log("Step 1 =======instanceByTemplate", secondStep[0].id, parseInt(secondStep[0].id))
                 }).catch((error) => {
                     seterrorShow(true)
                     seterrorTips(`instance By Template: ${error.message}`)
-                    setLoading(false);
+                    // setLoading(false);
                     setstart(false);
                     setTimeout(() => {
                         window.location.reload()
@@ -257,7 +278,7 @@ export default function ThirdStep(props) {
         if (instanceByTemplate) {
             console.log("Step 2 =======listDaoInstancesByOwner")
             const steptwo = async () => {
-                setTips(t('ListDao'));
+                dispatch({ type: 'LOADINGTYPE', payload: t('ListDao')});
                 await api.main.listDaoInstancesByOwner(maincontract).then(data => {
                     if (!data) return;
                     if (data.length) {
@@ -274,7 +295,7 @@ export default function ThirdStep(props) {
         if (baseC != null && instanceByTemplate) {
             console.log("Step 3 =======InitDAO")
             const stepthree = async () => {
-                setTips(t('InitDAO'));
+                dispatch({ type: 'LOADINGTYPE', payload: t('InitDAO')});
                 await api.dao.InitDAO(state, dispatch, baseC.dao_manager_addr, (data) => {
                     setDaoinit(true)
                 });
@@ -300,14 +321,14 @@ export default function ThirdStep(props) {
             };
             if (daoManagercontract == null) return;
             const stepfour = async () => {
-                setTips(t('Uploadinformation'));
+                dispatch({ type: 'LOADINGTYPE', payload: t('Uploadinformation')});
                 await api.dao.setDAO(daoManagercontract, obj, (data) => {
                     // setqueryAddrs(true)
                     setnext(true);
                 }).catch((error) => {
                     seterrorShow(true)
                     seterrorTips(`Upload information: ${error.message}`)
-                    setLoading(false);
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                     setstart(false);
                     setTimeout(() => {
                         window.location.reload()
@@ -335,7 +356,7 @@ export default function ThirdStep(props) {
 
 
     return <Content className="content">
-        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
+
         <Modal
             visible={errorShow}
             onCancel={() => seterrorShow(false)}
@@ -451,12 +472,13 @@ export default function ThirdStep(props) {
         </Translation>
 
         <div className="line" style={{ textAlign: 'right', marginTop: '4rem' }}>
-            <Button className='leftBtn' style={{ marginRight: '3rem' }} onClick={toThirdStep}>
-                <img src={right} alt="" />
+            <Button className='previous' style={{ marginRight: '3rem' }} onClick={()=>toThirdStep()}>
+                <img className="left" src={left} alt="" />
                 <Trans>think</Trans>
             </Button>
-            <Button type="primary" onClick={Submit}>
+            <Button type="primary" onClick={()=>Submit()} className="nextBtn"  disabled={!showDisable}>
                 Submit
+                <img src={right} alt="" />
             </Button>
         </div>
 

@@ -130,27 +130,12 @@ export default function FirstStep(props){
 
     const handleChange = (e) => {
         const {name, value} = e.target;
-        console.log("===",name)
 
         if(name === "name"){
             setName(value)
         }else{
             setdescription(value)
         }
-
-        // this.setState((prevState) => {
-        //     const form = {
-        //         ...prevState.form,
-        //         [name]: value
-        //     };
-        //     console.log("======",this.state.imgUrl.length,this.state.form.name.length,this.state.form.description.length)
-        //     if(this.state.imgUrl.length && this.state.form.name.length&&this.state.form.description.length ){
-        //         this.setState({showDisable:false})
-        //     }
-        //     return {
-        //         form
-        //     };
-        // });
     }
 
     useEffect(()=>{
@@ -159,13 +144,13 @@ export default function FirstStep(props){
         if (form1 != null) {
             setName(form1.name);
             setdescription(form1.description);
-            setimgUrl(imgUrl1)
+            setimgUrl(imgUrl1);
+            setshowDisable(imgUrl1.length && form1.name.length&&form1.description.length)
         }
-        setshowDisable(imgUrl1.length && form1.name.length&&form1.description.length)
+
     },[]);
 
     useEffect(()=>{
-        console.log(imgUrl.length , name.length,description.length)
         setshowDisable(imgUrl.length && name.length&&description.length)
 
     },[imgUrl,name,description]);

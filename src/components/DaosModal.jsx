@@ -66,7 +66,7 @@ const Bgmid = styled.div`
 const Inputbrdr = styled(Input)`
     width: 30rem;
     height: 6rem;
-    background: #FFFFFF!important;
+    background:#F5F5F7!important;
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.1);
     border-radius: 1.2rem;
     border: 0;
@@ -74,6 +74,7 @@ const Inputbrdr = styled(Input)`
     font-size: 1.8rem;
   font-family: Roboto-Light;
   padding-left: 4.1rem;
+  margin-left: 1rem;
   .ant-input{
   background: #Fff!important;
   height: 100%!important;
@@ -150,7 +151,18 @@ const DaosModal = (props) => {
         dispatch({ type: 'DAOTYPE',payload: null });
     }
     const handleSearch = (e) =>{
-       let arr =  imglist.filter(item=> item.name.indexOf(e.target.value)>-1);
+        console.log("====",e.target.value,e.target.value.length)
+        let list = JSON.parse(sessionStorage.getItem('daoList'));
+        let arr;
+        if(e.target.value.length){
+            arr =  list.filter(item=> {
+                console.log("=======",item.name)
+                return item.name.indexOf(e.target.value)>-1
+            });
+
+        }else{
+            arr = list ;
+        }
         setimglist(arr);
     }
     const switchModal = () =>{
@@ -168,7 +180,7 @@ const DaosModal = (props) => {
                 <div className="top">
                     {
                         daoType ==='all' && <div className="left">
-                            <Inputbrdr type="text" placeholder="search" onChange={(e) =>handleSearch(e)}  allowClear={true}/>
+                            <Inputbrdr type="text" placeholder="search" onChange={(e) =>handleSearch(e)}/>
                         </div>
                     }
                    {
