@@ -32,7 +32,7 @@ const Transfer = forwardRef((props, ref) => {
                     window.location.reload()
                 }
             }).catch((error) => {
-                dispatch({ type: 'MSGTYPE', payload: { msg: `Transfer Ownership: ${error.message}` } });
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Transfer Ownership: ${error.message}`, closable: true } });
                 dispatch({ type: 'LOADINGTYPE', payload: null });
             });
 

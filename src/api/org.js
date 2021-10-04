@@ -265,8 +265,6 @@ const setFreeAddMember = async (orgcontract,freeAdd,cb) => {
          });
 };
 const getFreeAddMember = async (orgcontract) => {
-
-
     const AccountId = await Accounts.accountAddress();
     if (orgcontract === null || !orgcontract || !orgcontract.tx || !AccountId) return;
 

@@ -7,5 +7,6 @@ window.mainAddress = {
     // rpc_server: "ws://47.243.45.84:9944",
     favoriteDAOs:[
         '5GGdPn9yqDmcbKwqsQ1MzP7Qzsh5dqJybc5LaRgRCoukL58H',
+        '5FgZU6dWprgUYfsJACGBp7Kb1VjZcAvwi59AkDpnt1dnRbn7',
     ]
 };

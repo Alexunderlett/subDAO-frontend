@@ -39,10 +39,10 @@ export default function AddApply(props) {
         };
 
         dispatch({ type: 'LOADINGTYPE', payload: t('ApplyMember') });
-
+        props.handleClose()
         await api.org.applyMember(orgcontract, name, function (result) {
             setaddMember(result)
-            props.handleClose()
+
             props.refresh()
             setname('')
         }).catch((error) => {
