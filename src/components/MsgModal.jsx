@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Modal } from 'antd';
 import exclamation from '../img/exclamation.png';
 import { withRouter } from 'react-router-dom';
+import { useSubstrate } from "../api/contracts";
 
 
 const Msg = styled.div`
@@ -24,11 +25,13 @@ const Msg = styled.div`
 
 
 const MsgModal = (props) => {
-    const { showMsg, handleClose, msg, closable } = props
+    const { showMsg, handleClose } = props
+    const { state, dispatch } = useSubstrate();
+    const { msgType } = state;
 
     return (
         <Modal
-            closable={closable !== false}
+            closable={msgType && msgType.closable !== false}
             visible={showMsg}
             onCancel={handleClose}
             footer={null}
@@ -37,7 +40,7 @@ const MsgModal = (props) => {
             <Msg>
                 <img src={exclamation} alt="" />
                 <div className="msg">
-                    {msg}
+                    {msgType && msgType.msg}
                 </div>
             </Msg>
         </Modal>

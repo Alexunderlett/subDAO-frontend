@@ -5,6 +5,7 @@ import Loading from "../loading/Loading";
 import { useTranslation } from "react-i18next";
 import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
+import left from '../../img/left.png';
 import right from '../../img/right.png';
 
 const Content = styled.div`
@@ -54,6 +55,12 @@ const Content = styled.div`
             }
         }
     }
+    .line{
+        .previous{
+            color: #e34b8a;
+            border-color: #e34b8a;
+        }
+    }
 `
 
 const Info = styled.div`
@@ -80,9 +87,6 @@ const Info = styled.div`
 export default function SecondStep(props) {
     const { state, dispatch } = useSubstrate();
     const { maincontract, apiState } = state;
-
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     let [selected, setselected] = useState([{ id: null }]);
     let [list, setlist] = useState([]);
@@ -124,17 +128,19 @@ export default function SecondStep(props) {
     useEffect(() => {
         if (maincontract == null) return;
         const setlisttemplate = async () => {
-            setLoading(true);
-            setTips(t('InitializeTemplate'));
+            dispatch({ type: 'LOADINGTYPE', payload: t('InitializeTemplate') });
+
             await api.main.listTemplates(maincontract).then(data => {
                 if (!data) {
-                    setTips(t('initializationFailed'));
+                    dispatch({ type: 'LOADINGTYPE', payload: t('initializationFailed') });
+
                     setTimeout(() => {
                         props.history.push(`/`)
                     }, 2000)
                 } else {
                     setlist(data);
-                    setLoading(false);
+
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                 }
             })
         };
@@ -142,7 +148,6 @@ export default function SecondStep(props) {
     }, [maincontract]);
     return (
         <Content className="content">
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Info>
                 <div className="title">Template selection</div>
                 <div className='detail'>{t('chooseTemplate')}</div>
@@ -167,8 +172,8 @@ export default function SecondStep(props) {
             </div>
 
             <div className="line" style={{ textAlign: 'right', marginTop: '4rem' }}>
-                <Button className='leftBtn' style={{ marginRight: '3rem' }} onClick={toFirstStep}>
-                    <img src={right} alt="" />
+                <Button className="previous" style={{ marginRight: '3rem' }} onClick={toFirstStep}>
+                    <img className="left" src={left} alt="" />
                     {t('think')}
                 </Button>
                 <Button type="primary" onClick={toThirdStep}>

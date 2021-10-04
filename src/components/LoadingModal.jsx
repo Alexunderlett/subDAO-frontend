@@ -4,6 +4,7 @@ import { Modal } from 'antd';
 import logoRound from '../img/logoRound.png';
 import logoShadow from '../img/logoShadow.png';
 import { withRouter } from 'react-router-dom';
+import { useSubstrate } from "../api/contracts";
 
 
 const Msg = styled.div`
@@ -46,7 +47,9 @@ const Msg = styled.div`
 
 
 const LoadingModal = (props) => {
-    const { showMsg, handleClose, msg } = props
+    const { showMsg, handleClose } = props
+    const { state, dispatch } = useSubstrate();
+    const { loadingType } = state;
 
     return (
         <Modal
@@ -54,7 +57,6 @@ const LoadingModal = (props) => {
             visible={showMsg}
             onCancel={handleClose}
             footer={null}
-            mask={false}
         >
             <Msg>
                 <div className="loagding">
@@ -65,7 +67,7 @@ const LoadingModal = (props) => {
                     <div className="text">Loading…</div>
                 </div>
                 <div className="msg">
-                    {msg}
+                    {loadingType}
                 </div>
             </Msg>
         </Modal>

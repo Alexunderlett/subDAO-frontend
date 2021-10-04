@@ -5,12 +5,9 @@ const formatResult =  (result) =>{
     }
     return str;
 }
-const formatvoteDateTime = (dateTime,endTime) =>{
-    dateTime = parseInt(dateTime.replace(/,/g, ""));
-    endTime = parseInt(endTime.replace(/,/g, ""));
 
-
-    const t = new Date(dateTime + endTime);
+const dateFormat = (dateTime) => {
+    const t = new Date(dateTime);
     const format = 'Y-m-d h:i:s';
     const year = t.getFullYear();
     const month = t.getMonth() + 1;
@@ -31,5 +28,12 @@ const formatvoteDateTime = (dateTime,endTime) =>{
     })
 }
 
+const formatvoteDateTime = (dateTime,endTime) =>{
+    dateTime = parseInt(dateTime.replace(/,/g, ""));
+    endTime = parseInt(endTime.replace(/,/g, ""));
 
-export default{ formatResult, formatvoteDateTime }
+    return dateFormat(dateTime + endTime)
+}
+
+
+export default{ formatResult, dateFormat, formatvoteDateTime }

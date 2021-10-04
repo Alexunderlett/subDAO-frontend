@@ -91,7 +91,6 @@ function Home(props) {
     let { t } = useTranslation();
 
     const { maincontract, allAccounts, apiState } = state;
-    const [loading, setLoading] = useState(false);
 
     const [showButton, setShowButton] = useState(false);
 
@@ -135,13 +134,14 @@ function Home(props) {
     useEffect(() => {
         if (maincontract == null || (selected && !selected.length)) return;
         const setInstances = async () => {
-            setLoading(true);
+            dispatch({ type: 'LOADINGTYPE', payload: t('InitializeHome') });
+
             let addresslist = await api.main.listDaoInstances(maincontract) || [];
             console.log('===========addresslist============', addresslist);
             let mydaolist = addresslist.filter(i => i.owner === selected[0].address);
 
             setimglist(mydaolist);
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
             setListAll(addresslist, 'all');
             setListAll(mydaolist, 'my');
         };
@@ -163,9 +163,9 @@ function Home(props) {
                     });
                 }
             }
-            console.log("======arr============",arr)
-            if( typeStr  === 'all'){
-                sessionStorage.setItem('daoList',JSON.stringify(arr));
+            console.log("======arr============", arr)
+            if (typeStr === 'all') {
+                sessionStorage.setItem('daoList', JSON.stringify(arr));
 
             } else {
                 sessionStorage.setItem('mydaoList', JSON.stringify(arr))
@@ -176,13 +176,11 @@ function Home(props) {
 
     }, [allAccounts, maincontract, first]);
 
-    const ConnectWallet = () =>{
-        dispatch({ type: 'WALLET',payload: true });
+    const ConnectWallet = () => {
+        dispatch({ type: 'WALLET', payload: true });
     }
     return (
         <HomeBg>
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={t('InitializeHome')} />
-
             <section className="padding">
                 <Modal
                     visible={createDAOModal}
@@ -220,13 +218,13 @@ function Home(props) {
                         <div className="header-button">
 
                             {
-                                !account && <Button type="primary" onClick={()=>ConnectWallet()}>
+                                !account && <Button type="primary" onClick={() => ConnectWallet()}>
                                     Connect Wallet
                                     <img src={right} alt="" style={{ width: '2rem' }} />
                                 </Button>
                             }
                             {
-                                account && <Button type="primary" onClick={()=>handleClick()}>
+                                account && <Button type="primary" onClick={() => handleClick()}>
                                     Get Started
                                     <img src={right} alt="" style={{ width: '2rem' }} />
                                 </Button>

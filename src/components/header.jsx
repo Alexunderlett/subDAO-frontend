@@ -103,7 +103,7 @@ const HeaderBg = styled.div`
 
 export default function Headertop(props) {
     const { state, dispatch } = useSubstrate();
-    const { allAccounts, api, maincontract, daoManagercontract, daoType, wallet } = state;
+    const { allAccounts, api, maincontract, daoManagercontract, daoType, msgType, loadingType, wallet } = state;
     let { i18n } = useTranslation()
 
     const [selected, setselected] = useState([]);
@@ -205,6 +205,14 @@ export default function Headertop(props) {
         setMoreDaos(daoType != null);
     }, [daoType]);
 
+    useEffect(() => {
+        setshowMsg(msgType != null);
+    }, [msgType]);
+
+    useEffect(() => {
+        setloading(loadingType != null);
+    }, [loadingType]);
+
 
     useEffect(() => {
         setshowlist(wallet != null);
@@ -281,9 +289,9 @@ export default function Headertop(props) {
 
             <DaosModal moreDaos={moreDaos} handleClose={() => closeDAOModal()} history={createHashHistory} />
 
-            <LoadingModal showMsg={showMsg} handleClose={() => { setshowMsg(false); dispatch({ type: 'MSGTYPE', payload: null }) }} />
+            <MsgModal showMsg={showMsg} handleClose={() => { setshowMsg(false); dispatch({ type: 'MSGTYPE', payload: null }) }} />
 
-            <MsgModal showMsg={loading} handleClose={() => { setloading(false); dispatch({ type: 'LOADINGTYPE', payload: null }) }} />
+            <LoadingModal showMsg={loading} handleClose={() => { setloading(false); dispatch({ type: 'LOADINGTYPE', payload: null }) }} />
 
             {
                 showlist && !selected.length &&

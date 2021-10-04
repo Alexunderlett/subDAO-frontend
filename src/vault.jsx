@@ -17,7 +17,7 @@ import Withdraw from "./components/vault/withdraw";
 import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import LoadingNew from "./components/loadingNEW";
-
+import PublicJS from './utils/publicJs';
 
 const FirstLine = styled.div`
   position: relative;
@@ -107,7 +107,7 @@ export default function Vault(props) {
     const { state, dispatch } = useSubstrate();
     const { vaultcontract, allAccounts, apiState, erc20contract } = state;
 
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
     const [newshow, setnewshow] = useState(false);
@@ -146,6 +146,7 @@ export default function Vault(props) {
         setId(props.match.params.id);
 
     }, []);
+
     // useEffect(() => {
     //     if (vaultcontract == null) return;
     //     const checkAuthority = async () => {
@@ -155,6 +156,7 @@ export default function Vault(props) {
     //     };
     //     checkAuthority();
     // }, [vaultcontract]);
+
     const setbalance = async () => {
         let arr = [{
             token: '',
@@ -171,7 +173,7 @@ export default function Vault(props) {
             index++;
         }
         settokenlist(arr);
-        // setLoading(false);
+        setLoading(false);
     };
     useEffect(() => {
         setbalance();
@@ -202,7 +204,7 @@ export default function Vault(props) {
 
         beforelen = historylist.length
 
-        await await setAlllist()
+        await setAlllist()
         if (afterlen > beforelen) {
             setshowvaultTips(true)
         }
@@ -213,7 +215,7 @@ export default function Vault(props) {
 
     }
     const setAlllist = async () => {
-        // setLoading(true);
+        setLoading(true);
         setTips(t('InitializeVault'));
         await api.vault.getTokenList(vaultcontract).then(data => {
             if (!data) return;
@@ -221,7 +223,6 @@ export default function Vault(props) {
         });
         await api.vault.getTransferHistory(vaultcontract).then(data => {
             if (!data) return;
-            console.info(111, data)
             sethistorylist(data)
             afterlen = data.length
         });
@@ -261,7 +262,7 @@ export default function Vault(props) {
     const columns = [
         {
             title: 'Deposit',
-            dataIndex: 'Deposit',
+            dataIndex: 'value',
             key: 'value',
         },
         {
@@ -278,34 +279,34 @@ export default function Vault(props) {
         },
         {
             title: 'Behavior',
-            dataIndex: 'Behavior',
-            key: 'Behavior',
+            dataIndex: 'transfer_direction',
+            key: 'transfer_direction',
             align: 'center',
-            render: tags => (
-                <>
-                    {tags && tags.map(tag => {
-                        let color = 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
+            render: tag => {
+                let color = 'green';
+                let text = 'OUT';
+                if (tag === '2') {
+                    color = 'volcano'
+                    text = 'IN'
+                }
+                return (
+                    <Tag color={color} key={tag}>
+                        {text}
+                    </Tag>
+                );
+            }
         },
         {
             title: 'State',
-            dataIndex: 'State',
-            key: 'State',
+            dataIndex: 'transfer_time',
+            key: 'transfer_time',
             align: 'center',
             render: State => {
                 let img
-                if (State === 'finish') {
+                let text = 'Failure'
+                if (State) {
                     img = finish
+                    text = 'Finish'
                 } else if (State === 'cancel') {
                     img = cancel
                 } else {
@@ -313,17 +314,22 @@ export default function Vault(props) {
                 }
                 return (
                     <>
-                        <img src={img} alt="" style={{ width: '2rem', height: '2rem' }} />
-                        {State}
+                        <img src={img} alt="" style={{ width: '2rem', height: '2rem',marginRight: '1rem' }} />
+                        {text}
                     </>
                 )
             },
         },
         {
             title: 'Time',
-            dataIndex: 'Time',
-            key: 'Time',
+            dataIndex: 'transfer_time',
+            key: 'transfer_time',
             align: 'center',
+            render: time => {
+                let t = parseInt(time.replace(/,/g, ""))
+                let date = PublicJS.dateFormat(t)
+                return date
+            }
         },
     ];
 
@@ -372,17 +378,13 @@ export default function Vault(props) {
                             {/* <img src={depositimg} alt="" /> */}
                             {t('deposit')}
                         </Button>
-                        <Button className='withdrawBtn' onClick={() => handleClicktoDetail('withdraw')}>
-                            {/* <img src={withdrawimg} alt="" /> */}
-                            {t('withdraw')}
-                        </Button>
-                        {/* {
-                            withDrawS &&
-                            <Button onClick={() => handleClicktoDetail('withdraw')}>
-                                <img src={withdrawimg} alt="" />
+
+                        {/* {withDrawS &&
+                            <Button className='withdrawBtn' onClick={() => handleClicktoDetail('withdraw')}>
                                 {t('withdraw')}
                             </Button>
                         } */}
+                        {/* <img src={withdrawimg} alt="" /> */}
                     </BtnRht>
                 </FirstLine>
 
@@ -390,10 +392,10 @@ export default function Vault(props) {
                     <div className="titleTop">{t('Balance')}</div>
                     <Ul>
                         {
-                            false && <LoadingNew />
+                            loading && <LoadingNew />
                         }
                         {
-                            true && tokenlist.map((item, index) =>
+                            !loading && tokenlist.map((item, index) =>
                                 <li key={`balance_${index}`}>
                                     <BalanceNum>{item.balance}</BalanceNum>
                                     <Symbol>{item.symbol}</Symbol>
