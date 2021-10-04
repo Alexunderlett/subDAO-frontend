@@ -175,6 +175,16 @@ const DaosModal = (props) => {
     }
 
     const handleClicktoAbout = (id,owner) => {
+
+            // dispatch({ type: 'SET_BASE',payload: null });
+            // dispatch({ type: 'SET_ERC20',payload:null });
+            // dispatch({ type: 'SET_ORG',payload: null });
+            // dispatch({ type: 'SET_VAULT',payload: null });
+            // dispatch({ type: 'SET_VOTE',payload: null });
+            // dispatch({ type: 'SET_AUTH',payload: null });
+            //
+
+
         props.history.push(`/about/${id}/${owner}`);
         dispatch({ type: 'DAOTYPE',payload: null });
     }
