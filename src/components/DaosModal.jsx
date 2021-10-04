@@ -5,6 +5,7 @@ import { useSubstrate } from "../api/contracts";
 import LoadingNew from "./loadingNEW";
 import { useLocation } from 'react-router-dom';
 import nodaos from "../img/noDaos.png";
+import api from "../api";
 
 const DaoBody = styled.div`
     width: 81%;
@@ -100,7 +101,7 @@ const DaosModal = (props) => {
 
     const { state, dispatch } = useSubstrate();
     const {  maincontract, allAccounts, daoManagercontract,daoType } = state;
-    const [alls, setAlls] = useState(false);
+    const [alls, setAlls] = useState(true);
     const [imglist, setimglist] = useState([]);
     const [showCreatDaoBtn, setshowCreatDaoBtn] = useState(true);
     const { pathname } = useLocation()
@@ -115,28 +116,55 @@ const DaosModal = (props) => {
 
     const setInstances = async () => {
 
-        setAlls(true);
         let mydaolist=[];
 
-        if (daoType === 'my') {
-            mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
-        } else if(daoType === 'all'){
-            mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
-        } else {
-            return
+        // if (daoType === 'my') {
+        //     mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
+        // } else if(daoType === 'all'){
+        //     mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
+        // } else {
+        //     return;
+        // }
+        mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
+        console.error("========mydaolist",mydaolist)
+        const setListAll = async (mydaolist, typeStr) => {
+            let arr = [];
+            let index =0;
+            if (mydaolist && mydaolist.length) {
+                for await(let item of mydaolist) {
+                    index++;
+                    const data = await api.base.InitHome(state, item.dao_manager_addr);
+                    if (!data) continue;
+                    const logo = data.logo ? data.logo : '';
+                    const name = data.name ? data.name : '';
+                    const desc = data.desc ? data.desc : '';
+                    arr.push({
+                        address: item.dao_manager_addr,
+                        logo,
+                        name,
+                        owner: item.owner,
+                        desc,
+                    });
+                }
+                setimglist(arr);
+                setAlls(false);
+            }
+
         }
-
-        setimglist(mydaolist);
-        setAlls(false);
-
+        setListAll(mydaolist, daoType);
     };
     useEffect(() => {
-
         if (maincontract == null || allAccounts == null || daoType == null) return;
-
         setInstances();
 
     }, [allAccounts, maincontract,daoType]);
+
+    useEffect(() => {
+
+        if (maincontract == null || allAccounts == null || daoType == null) return;
+        setInstances();
+
+    }, []);
 
 
     const handleClick = () => {
@@ -151,15 +179,12 @@ const DaosModal = (props) => {
         dispatch({ type: 'DAOTYPE',payload: null });
     }
     const handleSearch = (e) =>{
-        console.log("====",e.target.value,e.target.value.length)
         let list = JSON.parse(sessionStorage.getItem('daoList'));
         let arr;
         if(e.target.value.length){
             arr =  list.filter(item=> {
-                console.log("=======",item.name)
                 return item.name.indexOf(e.target.value)>-1
             });
-
         }else{
             arr = list ;
         }
@@ -193,9 +218,6 @@ const DaosModal = (props) => {
                     </Button>}
                 </div>
                 <div className="daos">
-                    <div>
-
-                    </div>
                     {
                         alls && <LoadingNew  />
                     }

@@ -34,13 +34,15 @@ const MsgModal = (props) => {
             closable={msgType && msgType.closable !== false}
             visible={showMsg}
             onCancel={handleClose}
+            maskClosable={false}
             footer={null}
-            mask={false}
+            centered={true}
+            mask={true}
         >
             <Msg>
                 <img src={exclamation} alt="" />
                 <div className="msg">
-                    {msgType && msgType.msg}
+                    {msgType}
                 </div>
             </Msg>
         </Modal>

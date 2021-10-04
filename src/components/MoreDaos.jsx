@@ -34,7 +34,7 @@ const MoreDaos = (props) => {
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [len, setLen] = useState(0);
+    // const [len, setLen] = useState(0);
 
     const showDAOModal = () =>{
         dispatch({ type: 'DAOTYPE',payload:'all' });
@@ -42,13 +42,15 @@ const MoreDaos = (props) => {
     }
     const setALLlist = async () =>{
 
-        let daolist = JSON.parse(sessionStorage.getItem('daoList')) ;
-        setLen(daolist.length)
+        // let daolist = JSON.parse(sessionStorage.getItem('daoList')) ;
+        // if(daolist == null) return;
+        // setLen(daolist.length)
         let arr=[];
         let index = 0;
         for( let item  of favoriteDAOs){
             index ++;
             const data = await api.base.InitHome(state,item);
+
             if(!data) continue;
             const logo = data.logo ? data.logo : '';
             const name = data.name ? data.name : '';
@@ -69,14 +71,20 @@ const MoreDaos = (props) => {
         setList(arr);
     }
     useEffect(()=>{
+        if(maincontract ==null ) return;
         setALLlist()
     },[]);
 
     useEffect(()=>{
+        if(maincontract ==null ) return;
         setALLlist()
     },[maincontract]);
 
     const toAbout = (obj) =>{
+        if(allAccounts == null){
+            dispatch({ type: 'MSGTYPE', payload:'Please connect wallet'  });
+            return;
+        }
         const { address, owner } = obj;
         props.history.push(`/about/${address}/${owner}`)
     }

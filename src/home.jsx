@@ -111,16 +111,17 @@ function Home(props) {
             props.history.push('/create')
         }
     }
-
     useEffect(() => {
-        dispatch({ type: 'LOAD_MAINCONTRACT' });
-        dispatch({ type: 'LOADINGTYPE', payload: 'Initialize the home page' });
         let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
         if (selectedStorage) {
             setselected(selectedStorage)
         }
-        if (!allAccounts && account) {
-            dispatch({ type: 'SET_ALLACCOUNTS', payload: account });
+    }, [allAccounts]);
+    useEffect(() => {
+        dispatch({ type: 'LOAD_MAINCONTRACT' });
+        let selectedStorage = JSON.parse(sessionStorage.getItem('account'));
+        if (selectedStorage) {
+            setselected(selectedStorage)
         }
         dispatch({ type: 'DAOTYPE', payload: null });
         setfirst(false)
@@ -132,44 +133,26 @@ function Home(props) {
 
 
     useEffect(() => {
-        if (maincontract == null || (selected && !selected.length)) return;
+
+        if (maincontract == null || allAccounts == null ) return;
         const setInstances = async () => {
             dispatch({ type: 'LOADINGTYPE', payload: t('InitializeHome') });
 
             let addresslist = await api.main.listDaoInstances(maincontract) || [];
-            console.log('===========addresslist============', addresslist);
-            let mydaolist = addresslist.filter(i => i.owner === selected[0].address);
+            console.error('===========addresslist============', addresslist);
+            let mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
 
             setimglist(mydaolist);
             dispatch({ type: 'LOADINGTYPE', payload: null });
-            setListAll(addresslist, 'all');
-            setListAll(mydaolist, 'my');
+            sessionStorage.setItem('addresslist', JSON.stringify(mydaolist));
+            // if (typeStr === 'all') {
+            //     sessionStorage.setItem('daoList', JSON.stringify(arr));
+            //
+            // } else {
+            //     sessionStorage.setItem('mydaoList', JSON.stringify(arr))
+            // }
         };
-        const setListAll = async (mydaolist, typeStr) => {
-            let arr = [];
-            if (mydaolist && mydaolist.length) {
-                for (let item of mydaolist) {
-                    const data = await api.base.InitHome(state, item.dao_manager_addr);
-                    if (!data) continue;
-                    const logo = data.logo ? data.logo : '';
-                    const name = data.name ? data.name : '';
-                    const desc = data.desc ? data.desc : '';
-                    arr.push({
-                        address: item.dao_manager_addr,
-                        logo,
-                        name,
-                        owner: item.owner,
-                        desc,
-                    });
-                }
-            }
-            if (typeStr === 'all') {
-                sessionStorage.setItem('daoList', JSON.stringify(arr));
 
-            } else {
-                sessionStorage.setItem('mydaoList', JSON.stringify(arr))
-            }
-        }
         setInstances();
 
 
