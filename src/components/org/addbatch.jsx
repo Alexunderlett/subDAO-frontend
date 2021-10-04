@@ -12,11 +12,8 @@ import Back from "../../images/prev.png";
 
 export default function AddBatch(props) {
 
-    const { state } = useSubstrate();
+    const { state, dispatch } = useSubstrate();
     const { orgcontract } = state;
-
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     const [addMember, setaddMember] = useState(false);
     const [adminlist, setadminlist] = useState([
@@ -25,14 +22,12 @@ export default function AddBatch(props) {
             address: ''
         }
     ]);
-    const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
+
     let { t } = useTranslation();
 
 
     const handleSubmit = async () => {
-        setLoading(true);
-        setTips(t('AddMember'));
+        dispatch({ type: 'LOADINGTYPE', payload: t('AddMember') });
 
         let obj = [];
         let i = 0;
@@ -43,7 +38,7 @@ export default function AddBatch(props) {
         }
 
         await api.org.batchAddMember(orgcontract, obj, function (result) {
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
             props.handleClose();
             props.refresh();
             setadminlist([
@@ -54,9 +49,8 @@ export default function AddBatch(props) {
             ])
 
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Batch Add Member: ${error.message}`)
-            setLoading(false);
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Batch Add Member: ${error.message}` } });
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
     const setAdminInput = (e, index) => {
@@ -85,15 +79,6 @@ export default function AddBatch(props) {
 
     let { handleClose, showTips } = props;
     return <div>
-        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-        <Modal
-            visible={errorShow}
-            onCancel={() => seterrorShow(false)}
-            footer={null}
-        >
-            <div className="title">{errorTips}</div>
-        </Modal>
-
         <Modal visible={showTips} onCancel={handleClose} footer={null}>
             <div className="title"><img src={addnew} alt="" /><span >{t('Members')}</span></div>
 

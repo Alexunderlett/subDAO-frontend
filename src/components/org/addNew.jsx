@@ -11,10 +11,9 @@ import add from "../../img/Add.png";
 
 export default function AddNew(props) {
 
-    const { state } = useSubstrate();
+    const { state, dispatch } = useSubstrate();
     const { orgcontract } = state;
 
-    const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
     const [name, setname] = useState('');
@@ -30,41 +29,42 @@ export default function AddNew(props) {
         }
     ]);
     const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
 
 
     const submitModerators = async (obj) => {
-        setLoading(true);
-        setTips(t('AddModerator'));
+        dispatch({ type: 'LOADINGTYPE', payload: t('AddModerator') });
+
         await api.org.addDaoModerator(orgcontract, obj, function (result) {
             setaddModerator(result)
             props.handleClose()
             props.refresh()
             setname('')
             setaddress('')
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
             seterrorShow(true)
-            seterrorTips(`Add Moderator: ${error.message}`)
-            setLoading(false);
+
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Add Moderator: ${error.message}` } });
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
     const submitMembers = async (obj) => {
-        setLoading(true);
-        setTips(t('AddMember'));
+        dispatch({ type: 'LOADINGTYPE', payload: t('AddMember') });
+
         await api.org.addDaoMember(orgcontract, obj, function (result) {
             setaddMember(result)
             props.handleClose()
             props.refresh()
             setname('')
             setaddress('')
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
             seterrorShow(true)
-            seterrorTips(`Add Member: ${error.message}`)
-            setLoading(false);
+
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Add Member: ${error.message}` } });
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
 
@@ -102,61 +102,45 @@ export default function AddNew(props) {
 
     let { handleClose, showTips, typeName, applyAuth } = props;
     return <div>
-        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-        <Modal
-            visible={errorShow}
-            onCancel={() => seterrorShow(false)}
-            footer={null}
-        >
-            <div className="title">{errorTips}</div>
-        </Modal>
-
         <Modal visible={showTips} onCancel={handleClose} footer={null}>
-            <div className="title"><img src={add} alt="" /><span >{t(typeName)}</span></div>
+            <div className="title">
+                {/* <img src={add} alt="" /> */}
+                <span >{t(typeName)}</span>
+            </div>
 
-            <section>
-                <ul className='addnew'>
-                    <li>
-                        <div>{t('FilltheName')}</div>
-                        <div className="inputBrdr">
-                            <Input
-                                placeholder={t('FilltheName')}
-                                name='name'
-                                value={name}
-                                autoComplete="off"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </li>
-                    <li>
-                        <div>{t('FillAddress')}</div>
-                        <div className="inputBrdr">
-                            <Input
-                                placeholder={t('FillAddress')}
-                                name='address'
-                                value={address}
-                                autoComplete="off"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </li>
-                    <li>
-                        <div className='NextBrdr'>
-                            <Button type="primary" onClick={() => handleSubmit(typeName)}>
-                                Add
-                            </Button>
-                            {
-                                typeName === 'Members' && applyAuth &&
-                                <Button type="primary" onClick={() => handleBatch()} className='top20'>
-                                    Batch Import
-                                </Button>
-                            }
+            <div className="label">{t('FilltheName')}</div>
+            <div className="inputBrdr">
+                <Input
+                    placeholder={t('FilltheName')}
+                    name='name'
+                    value={name}
+                    autoComplete="off"
+                    onChange={handleInputChange}
+                />
+            </div>
 
-                        </div>
-                    </li>
-                </ul>
-            </section>
+            <div className="label">{t('FillAddress')}</div>
+            <div className="inputBrdr">
+                <Input
+                    placeholder={t('FillAddress')}
+                    name='address'
+                    value={address}
+                    autoComplete="off"
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className='NextBrdr'>
+                <Button type="primary" onClick={() => handleSubmit(typeName)} style={{ width: '100%', marginTop: '3rem' }}>
+                    Add
+                </Button>
+                {
+                    typeName === 'Members' && applyAuth &&
+                    <Button className="default" onClick={() => handleBatch()} style={{ width: '100%', marginTop: '3rem' }}>
+                        Batch Import
+                    </Button>
+                }
+            </div>
         </Modal>
     </div>;
-
 }

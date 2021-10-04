@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useSubstrate} from "./api/contracts";
+import React, { useEffect, useState } from 'react';
+import { useSubstrate } from "./api/contracts";
 import api from "./api";
 
 import Loading from './components/loading/Loading';
@@ -146,19 +146,18 @@ const SwitchBtn = styled.img`
 
 export default function Org(props) {
 
-    const {state,dispatch} = useSubstrate();
-    const {orgcontract,allAccounts,apiState,authcontract,erc20contract} = state;
+    const { state, dispatch } = useSubstrate();
+    const { orgcontract, allAccounts, apiState, authcontract, erc20contract } = state;
 
-    const [loading,setLoading]= useState(false);
-    const [addshow,setaddshow]= useState(false);
-    const [authshow,setauthshow]= useState(false);
-    const [applyshow,setapplyshow]= useState(false);
-    const [addapplyshow,setaddapplyshow]= useState(false);
-    const [batchshow,setbatchshow]= useState(false);
-    const [typeName,settypeName]= useState('');
-    const [tips,setTips]= useState('');
-    const [showTips,setshowTips]= useState(false);
-    const [manage,setManage]= useState(false);
+    const [addshow, setaddshow] = useState(false);
+    const [authshow, setauthshow] = useState(false);
+    const [applyshow, setapplyshow] = useState(false);
+    const [addapplyshow, setaddapplyshow] = useState(false);
+    const [batchshow, setbatchshow] = useState(false);
+    const [typeName, settypeName] = useState('');
+    const [tips, setTips] = useState('');
+    const [showTips, setshowTips] = useState(false);
+    const [manage, setManage] = useState(false);
 
     const [id, setId] = useState(null);
     const [list, setlist] = useState([]);
@@ -174,15 +173,14 @@ export default function Org(props) {
     const [triggerStatus, settriggerStatus] = useState(false);
     const [address, setaddress] = useState('');
 
-    const [errorShow,seterrorShow]= useState(false);
-    const [errorTips,seterrorTips]= useState('');
+    const [errorShow, seterrorShow] = useState(false);
 
 
     useEffect(() => {
         setId(props.match.params.id);
     }, []);
 
-    useEffect( () => {
+    useEffect(() => {
         if (orgcontract == null) return;
         const whoAmI = async () => {
             await api.org.whoAmI(orgcontract).then(data => {
@@ -193,21 +191,21 @@ export default function Org(props) {
             });
         };
         whoAmI();
-        const getFree = async () =>{
+        const getFree = async () => {
             await api.org.getFreeAddMember(orgcontract).then(data => {
                 settriggerStatus(data);
                 setapplyAuth(data)
             });
         }
         getFree()
-    }, [orgcontract,id,applyAuth]);
+    }, [orgcontract, id, applyAuth]);
 
     const setall = () => {
         setModeratorFunc()
         setMemberFunc()
 
     }
-    const setModeratorFunc = async () =>{
+    const setModeratorFunc = async () => {
         setlistStatus(true);
         await api.org.getDaoModeratorList(orgcontract).then(data => {
             if (!data) return;
@@ -215,7 +213,7 @@ export default function Org(props) {
             setlistStatus(false)
         });
     }
-    const setMemberFunc = async () =>{
+    const setMemberFunc = async () => {
         setmemberlistStatus(true);
         await api.org.getDaoMembersList(orgcontract).then(data => {
             if (!data) return;
@@ -223,22 +221,22 @@ export default function Org(props) {
             setmemberlistStatus(false);
         });
     }
-    const initVoteContract = async () =>{
+    const initVoteContract = async () => {
         let org = JSON.parse(sessionStorage.getItem('contractlist'));
-        if(orgcontract == null && org!= null){
-            await api.org.InitOrg(state, dispatch, org.org_addr,(data) => {
-                console.log('orgcontract====',data);
+        if (orgcontract == null && org != null) {
+            await api.org.InitOrg(state, dispatch, org.org_addr, (data) => {
+                console.log('orgcontract====', data);
             });
         }
 
-        if(erc20contract == null && org!= null){
-            await api.erc20.InitErc20(state, dispatch, org.erc20_addr,(data) => {
-                console.log('erc20contract====',data);
+        if (erc20contract == null && org != null) {
+            await api.erc20.InitErc20(state, dispatch, org.erc20_addr, (data) => {
+                console.log('erc20contract====', data);
             });
         }
-        if(authcontract == null ){
-            await api.auth.InitAuth(state, dispatch, org.auth_addr,(data) => {
-                console.log('authcontract====',data);
+        if (authcontract == null) {
+            await api.auth.InitAuth(state, dispatch, org.auth_addr, (data) => {
+                console.log('authcontract====', data);
             });
 
         }
@@ -246,8 +244,8 @@ export default function Org(props) {
     }
     useEffect(async () => {
 
-    initVoteContract();
-    }, [orgcontract,allAccounts,apiState,authcontract,erc20contract]);
+        initVoteContract();
+    }, [orgcontract, allAccounts, apiState, authcontract, erc20contract]);
 
 
     const handleClicktoManage = (type) => {
@@ -302,82 +300,69 @@ export default function Org(props) {
     const handleAppTipsClose = () => {
         setshowTips(false)
     }
-    const handleSetApply = async() => {
-        setLoading(true);
-        setTips('Set the way to add members');
-        await api.org.setFreeAddMember(orgcontract,!applyAuth,(data) => {
+    const handleSetApply = async () => {
+        dispatch({ type: 'LOADINGTYPE', payload: 'Set the way to add members' });
+
+        await api.org.setFreeAddMember(orgcontract, !applyAuth, (data) => {
             setapplyAuth(!applyAuth);
             settriggerStatus(!triggerStatus);
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
             seterrorShow(true);
-            seterrorTips(`Org: ${error.message}`);
-            setLoading(false);
-
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Org: ${error.message}` } })
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
 
-    const handleClicktoview = async (item,type) =>{
-        let obj={
-            name:item[1],
-            address:item[0]
+    const handleClicktoview = async (item, type) => {
+        let obj = {
+            name: item[1],
+            address: item[0]
         }
-        if(type==='moderators'){
-            setLoading(true);
-            setTips('Remove a DAO moderator');
-            await api.org.removeDaoModerator(orgcontract,obj, (result)=> {
-                setLoading(false);
+        if (type === 'moderators') {
+            dispatch({ type: 'LOADINGTYPE', payload: 'Remove a DAO moderator' });
+            await api.org.removeDaoModerator(orgcontract, obj, (result) => {
+                dispatch({ type: 'LOADINGTYPE', payload: null });
+
                 setModeratorFunc();
             }).then(data => {
                 if (!data) return;
 
             }).catch((error) => {
                 seterrorShow(true)
-                seterrorTips(`Remove Moderator: ${error.message}`)
-                setLoading(false);
-
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Moderator: ${error.message}` } })
+                dispatch({ type: 'LOADINGTYPE', payload: null });
             });
-        }else if(type==='members'){
-            setLoading(true);
-            setTips('Remove a DAO member');
-            await api.org.removeDaoMember(orgcontract,obj, (result)=> {
-                setLoading(false);
+        } else if (type === 'members') {
+            dispatch({ type: 'LOADINGTYPE', payload: 'Remove a DAO member' });
+
+            await api.org.removeDaoMember(orgcontract, obj, (result) => {
+                dispatch({ type: 'LOADINGTYPE', payload: null });
                 setMemberFunc();
             }).then(data => {
                 if (!data) return;
 
             }).catch((error) => {
                 seterrorShow(true)
-                seterrorTips(`Remove Member: ${error.message}`)
-                setLoading(false);
-
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Remove Member: ${error.message}` } })
+                dispatch({ type: 'LOADINGTYPE', payload: null });
             });
         }
     }
 
     return (
         <div>
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
-            <Modal
-                visible={errorShow}
-                onCancel={() => seterrorShow(false)}
-                footer={null}
-            >
-                <h4>{errorTips}</h4>
-            </Modal>
-
-            <ApplyList  handleClose={handleApplist} showTips={applyshow} refresh={setall}/>
-            <ApplyTips  showTips={showTips} handleClose={handleAppTipsClose} />
+            <ApplyList handleClose={handleApplist} showTips={applyshow} refresh={setall} />
+            <ApplyTips showTips={showTips} handleClose={handleAppTipsClose} />
             <Addnew
                 handleClose={handleClose}
-
                 showTips={addshow}
                 typeName={typeName}
                 refresh={setall}
                 handleBatch={handleBatch}
                 applyAuth={applyAuth}
             />
-            <AddApply  handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
+            <AddApply handleClose={handleApplyClose} showTips={addapplyshow} handleTips={handleAppTips} refresh={setall} />
             <AddBatch
                 handleClose={handleBatchClose}
                 showTips={batchshow}
@@ -385,26 +370,26 @@ export default function Org(props) {
                 handleBatch={handleBatch}
                 handleBatchAdd={handleBatchAdd}
             />
-            <AddAuth  handleClose={handleAuthClose} showTips={authshow} authlist={authlist}  address={address}/>
+            <AddAuth handleClose={handleAuthClose} showTips={authshow} authlist={authlist} address={address} />
 
             <div className='container'>
                 <FirstLine>
-                    <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}/>
+                    <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} />
                     <BtnRht>
                         {
                             isOwner && !manage &&
                             <SwitchBrdr>
-                               <span>Join the org directly？</span>
-                                <SwitchBtn src={!triggerStatus?TriggerBtn:TriggerBtnActive} alt=""  onClick={()=>handleSetApply()} />
+                                <span>Join the org directly？</span>
+                                <SwitchBtn src={!triggerStatus ? TriggerBtn : TriggerBtnActive} alt="" onClick={() => handleSetApply()} />
                             </SwitchBrdr>
                         }
                         {
                             isOwner && !manage &&
                             <Button onClick={handleApplistShow}>Apply List</Button>
                         }
-                        { (isOwner ||isModerator )&& !manage&& <Button type="primary" onClick={()=>handleClicktoManage(true)}>Manage</Button>}
+                        {(isOwner || isModerator) && !manage && <Button type="primary" onClick={() => handleClicktoManage(true)}>Manage</Button>}
                         {
-                            (isOwner ||isModerator )&& manage&& <Button className="active" onClick={()=>handleClicktoManage(false)}>Complete</Button>
+                            (isOwner || isModerator) && manage && <Button className="active" onClick={() => handleClicktoManage(false)}>Complete</Button>
                         }
                     </BtnRht>
                 </FirstLine>
@@ -413,27 +398,27 @@ export default function Org(props) {
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
                         {
-                            listStatus &&  <LoadingNew  />
+                            listStatus && <LoadingNew />
                         }
                         {
-                            !listStatus && list.map((i,index) => <li key={`moderators_${index}_${i[0]}`}>
-                                <img src={ props.match.params.owner === i[0] ? Owner :Admin} alt=""/>
+                            !listStatus && list.map((i, index) => <li key={`moderators_${index}_${i[0]}`}>
+                                <img src={props.match.params.owner === i[0] ? Owner : Admin} alt="" />
                                 <div>
                                     <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>
                                 </div>
                                 {
-                                    isOwner && !manage && <img src={AuthImg} alt="" onClick={()=>handleAuth(i[0])} className="imgAuth"/>
+                                    isOwner && !manage && <img src={AuthImg} alt="" onClick={() => handleAuth(i[0])} className="imgAuth" />
                                 }
                                 {
-                                    manage && <img src={Remove} alt="" className="imgRemove" onClick={()=>handleClicktoview(i,'moderators')}/>
+                                    manage && <img src={Remove} alt="" className="imgRemove" onClick={() => handleClicktoview(i, 'moderators')} />
                                 }
 
                             </li>)
                         }
                         {
-                            isOwner &&   <li  onClick={()=>handleAdd('Moderators')}>
-                                <img src={ AddP} alt=""/>
+                            isOwner && <li onClick={() => handleAdd('Moderators')}>
+                                <img src={AddP} alt="" />
                                 <NamesAdd>Add Moderator</NamesAdd>
                             </li>
                         }
@@ -443,29 +428,29 @@ export default function Org(props) {
                     <div className="titleTop">Moderators</div>
                     <UlMdrt>
                         {
-                            memberlistStatus &&  <LoadingNew  />
+                            memberlistStatus && <LoadingNew />
                         }
                         {
-                            !memberlistStatus &&memberlist.map((i,index) => <li key={`members_${index}_${i[0]}`}>
-                                <img src={Admin} alt=""/>
+                            !memberlistStatus && memberlist.map((i, index) => <li key={`members_${index}_${i[0]}`}>
+                                <img src={Admin} alt="" />
                                 <div>
                                     <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>
                                 </div>
                                 {
-                                    manage && <img src={Remove} alt="" className="imgRemove"  onClick={()=>handleClicktoview(i,'members')}/>
+                                    manage && <img src={Remove} alt="" className="imgRemove" onClick={() => handleClicktoview(i, 'members')} />
                                 }
                             </li>)
                         }
                         {
-                            applyAuth &&<li  onClick={()=>handleAdd('Members')}>
-                                <img src={ AddP} alt=""/>
+                            applyAuth && <li onClick={() => handleAdd('Members')}>
+                                <img src={AddP} alt="" />
                                 <NamesAdd>Add Member</NamesAdd>
                             </li>
                         }
                         {
-                            !applyAuth  &&  <li  onClick={()=>handleaddApply()}>
-                                <img src={ AddP} alt=""/>
+                            !applyAuth && <li onClick={() => handleaddApply()}>
+                                <img src={AddP} alt="" />
                                 <NamesAdd>Apply Member</NamesAdd>
                             </li>
                         }

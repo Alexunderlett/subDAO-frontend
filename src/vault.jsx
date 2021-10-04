@@ -11,7 +11,7 @@ import finish from "./img/finish.png";
 import depositimg from "./images/deposit.png";
 import withdrawimg from "./images/Withdraw.png";
 import Deposit from './components/vault/deposit';
-import sel from './images/Sel.png';
+import sel from './img/Sel.png';
 import close from './images/shutdownW.png';
 import Withdraw from "./components/vault/withdraw";
 import { useTranslation } from "react-i18next";

@@ -12,7 +12,6 @@ export default function AddAuth(props) {
     const { state, dispatch } = useSubstrate();
     const { authcontract, allAccounts, apiState } = state;
 
-    const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
     const [optionlist, setoptionlist] = useState([]);
@@ -22,9 +21,6 @@ export default function AddAuth(props) {
     const [handlecancel, sethandlecancel] = useState(false);
     const [afterselected, setafterselected] = useState(false);
     const [aftercancel, setaftercancel] = useState(false);
-
-    const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
 
@@ -59,7 +55,7 @@ export default function AddAuth(props) {
     useEffect(() => {
 
         if (aftercancel && afterselected) {
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
             props.handleClose();
             setcancel([]);
             setselected([]);
@@ -103,9 +99,8 @@ export default function AddAuth(props) {
                         setafterselected(true)
                     }
                 }).catch((error) => {
-                    seterrorShow(true)
-                    seterrorTips(`Grant Permission: ${error.message}`)
-                    setLoading(false);
+                    dispatch({ type: 'MSGTYPE', payload: { msg: `Grant Permission: ${error.message}` } });
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                     props.handleClose();
                     setcancel([]);
                     setselected([]);
@@ -151,9 +146,8 @@ export default function AddAuth(props) {
                         setaftercancel(true)
                     }
                 }).catch((error) => {
-                    seterrorShow(true)
-                    seterrorTips(`Revoke Permission: ${error.message}`)
-                    setLoading(false);
+                    dispatch({ type: 'MSGTYPE', payload: { msg: `Revoke Permission: ${error.message}` } });
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                     props.handleClose();
                     setcancel([]);
                     setselected([]);
@@ -196,25 +190,17 @@ export default function AddAuth(props) {
     }
 
     const confirmAuth = async () => {
-        setLoading(true);
+        dispatch({ type: 'LOADINGTYPE', payload: tips });
         sethandleselected(true)
-
     }
 
     let { handleClose, showTips, authlist } = props;
     return <div>
-        <Loading showLoading={loading} tips={tips} />
-
-        <Modal
-            visible={errorShow}
-            onCancel={() => seterrorShow(false)}
-            footer={null}
-        >
-            <div className="title">{errorTips}</div>
-        </Modal>
-
         <Modal visible={showTips} onCancel={handleClose} footer={null}>
-            <div className="title"><img src={authWhite} alt="" /><span >{t('UpdateAuthority')}</span></div>
+            <div className="title">
+                {/* <img src={authWhite} alt="" /> */}
+                <span >{t('UpdateAuthority')}</span>
+            </div>
             <section>
                 <ul className='orgSelect'>
                     <li className="row">
@@ -250,7 +236,7 @@ export default function AddAuth(props) {
                     </li>
                     <li className='btmBtn'>
                         <div className='NextBrdr100'>
-                            <Button type="primary" onClick={confirmAuth}>{t('Confirm')}</Button>
+                            <Button type="primary" onClick={confirmAuth} style={{ width: '100%', marginTop: '3rem' }}>{t('Confirm')}</Button>
                         </div>
                     </li>
                 </ul>

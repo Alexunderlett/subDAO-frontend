@@ -147,9 +147,6 @@ const Imglft = styled.img`
     display: inline-block;
     margin-top: -0.4rem;
 `;
-const CopyImg = styled.span`
-  margin:-0.1rem 0 0  0.7rem;
-`;
 
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
@@ -367,7 +364,7 @@ export default function About(props) {
                                             <Imglft src={switchKey(item.name).img} alt=""/>
                                             <ContractName>{switchKey(item.name).addr} </ContractName>
                                             <Address>{item.address}</Address>
-                                             <CopyImg><CopyStr address={item.address} alt=""/></CopyImg>
+                                            <CopyStr address={item.address} alt=""/>
                                         </li>
                                     ))
                             }

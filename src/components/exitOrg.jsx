@@ -14,7 +14,7 @@ export default function ExitOrg(props) {
         <Button type="primary" onClick={handleConfirm} style={{ width: '100%', margin: '8rem 0px 3rem' }}>
             {t('Confirm')}
         </Button>
-        <Button onClick={handleClose} style={{ width: '100%' }}>
+        <Button className="default" onClick={handleClose} style={{ width: '100%' }}>
             {t('Close')}
         </Button>
     </Modal>;

@@ -32,7 +32,7 @@ const Transfer = forwardRef((props, ref) => {
                     window.location.reload()
                 }
             }).catch((error) => {
-                dispatch({ type: 'MSGTYPE', payload: `Transfer Ownership: ${error.message}` });
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Transfer Ownership: ${error.message}` } });
                 dispatch({ type: 'LOADINGTYPE', payload: null });
             });
 
@@ -70,7 +70,7 @@ const Transfer = forwardRef((props, ref) => {
                     />
                 </div>
 
-                <Button onClick={() => handleConfirm()} style={{ width: '100%' }}>{t('Request')}</Button>
+                <Button type="primary" onClick={() => handleConfirm()} style={{ width: '100%', marginTop: '10rem' }}>{t('Request')}</Button>
             </Modal>
         </div>
     )

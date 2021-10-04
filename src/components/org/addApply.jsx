@@ -12,23 +12,19 @@ import applyList from "../../images/apply.png";
 
 export default function AddApply(props) {
 
-    const { state } = useSubstrate();
+    const { state, dispatch } = useSubstrate();
     const { orgcontract } = state;
 
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
     const [name, setname] = useState('');
 
     const [addMember, setaddMember] = useState(false);
-    const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
 
     let { t } = useTranslation();
 
 
     useEffect(() => {
         if (addMember) {
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
             props.handleTips()
         }
     }, [addMember])
@@ -42,55 +38,41 @@ export default function AddApply(props) {
             name
         };
 
-        setLoading(true);
-        setTips(t('ApplyMember'));
+        dispatch({ type: 'LOADINGTYPE', payload: t('ApplyMember') });
+
         await api.org.applyMember(orgcontract, name, function (result) {
             setaddMember(result)
             props.handleClose()
             props.refresh()
             setname('')
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Apply Member: ${error.message}`)
-            setLoading(false);
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Apply Member: ${error.message}` } });
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         });
     }
 
     let { handleClose, showTips } = props;
     return <div>
-        <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-        <Modal
-            visible={errorShow}
-            onCancel={() => seterrorShow(false)}
-            footer={null}
-        >
-            <div className="title">{errorTips}</div>
-        </Modal>
         <Modal visible={showTips} onCancel={handleClose} footer={null}>
-            <div className="title"><img src={applyList} alt="" /><span >Apply</span></div>
-            <section>
-                <ul className='addnew'>
-                    <li>
-                        <div>{t('FilltheName')}</div>
-                        <div className="inputBrdr">
-                            <Input
-                                placeholder={t('FilltheName')}
-                                name='name'
-                                value={name}
-                                autoComplete="off"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </li>
-                    <li>
-                        <div className='NextBrdr'>
-                            <Button type="primary" onClick={() => handleSubmit()}>
-                                Add
-                            </Button>
-                        </div>
-                    </li>
-                </ul>
-            </section>
+            <div className="title">
+                {/* <img src={applyList} alt="" /> */}
+                <span >Apply</span>
+            </div>
+
+            <div className="label">{t('FilltheName')}</div>
+            <div className="inputBrdr">
+                <Input
+                    placeholder={t('FilltheName')}
+                    name='name'
+                    value={name}
+                    autoComplete="off"
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <Button type="primary" onClick={() => handleSubmit()} style={{ width: '100%', marginTop: '3rem' }}>
+                Add
+            </Button>
         </Modal>
     </div>;
 }
