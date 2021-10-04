@@ -117,17 +117,8 @@ const DaosModal = (props) => {
     const setInstances = async () => {
 
         let mydaolist=[];
-
-        // if (daoType === 'my') {
-        //     mydaolist = JSON.parse(sessionStorage.getItem('mydaoList')) ;
-        // } else if(daoType === 'all'){
-        //     mydaolist = JSON.parse(sessionStorage.getItem('daoList')) ;
-        // } else {
-        //     return;
-        // }
         mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
-        console.error("========mydaolist",mydaolist)
-        const setListAll = async (mydaolist, typeStr) => {
+        const setListAll = async (mydaolist) => {
             let arr = [];
             let index =0;
             if (mydaolist && mydaolist.length) {
@@ -135,6 +126,7 @@ const DaosModal = (props) => {
                     index++;
                     const data = await api.base.InitHome(state, item.dao_manager_addr);
                     if (!data) continue;
+
                     const logo = data.logo ? data.logo : '';
                     const name = data.name ? data.name : '';
                     const desc = data.desc ? data.desc : '';
@@ -146,12 +138,18 @@ const DaosModal = (props) => {
                         desc,
                     });
                 }
+
                 setimglist(arr);
                 setAlls(false);
             }
 
         }
-        setListAll(mydaolist, daoType);
+        if(mydaolist.length){
+            setListAll(mydaolist, daoType);
+        }else{
+            setAlls(false);
+        }
+
     };
     useEffect(() => {
         if (maincontract == null || allAccounts == null || daoType == null) return;

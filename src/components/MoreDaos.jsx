@@ -97,7 +97,7 @@ const MoreDaos = (props) => {
             {/*    </div>*/}
             {/*}*/}
             <div className="more" onClick={() => showDAOModal()}>
-                More DAO
+                More DAOs<span>···</span>
             </div>
             <div className="daos">
                 {
