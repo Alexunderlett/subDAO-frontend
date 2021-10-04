@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {useSubstrate} from "../api/contracts";
+import { useSubstrate } from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
 
@@ -29,29 +29,29 @@ const AllDaos = styled.div`
 
 const MoreDaos = (props) => {
 
-    const { dispatch,state } = useSubstrate();
+    const { dispatch, state } = useSubstrate();
     const { maincontract, allAccounts } = state;
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     // const [len, setLen] = useState(0);
 
-    const showDAOModal = () =>{
-        dispatch({ type: 'DAOTYPE',payload:'all' });
-        window.scrollTo(0,0);
+    const showDAOModal = () => {
+        dispatch({ type: 'DAOTYPE', payload: 'all' });
+        window.scrollTo(0, 0);
     }
-    const setALLlist = async () =>{
+    const setALLlist = async () => {
 
         // let daolist = JSON.parse(sessionStorage.getItem('daoList')) ;
         // if(daolist == null) return;
         // setLen(daolist.length)
-        let arr=[];
+        let arr = [];
         let index = 0;
-        for( let item  of favoriteDAOs){
-            index ++;
-            const data = await api.base.InitHome(state,item);
+        for (let item of favoriteDAOs) {
+            index++;
+            const data = await api.base.InitHome(state, item);
 
-            if(!data) continue;
+            if (!data) continue;
             const logo = data.logo ? data.logo : '';
             const name = data.name ? data.name : '';
             const desc = data.desc ? data.desc : '';
@@ -64,25 +64,25 @@ const MoreDaos = (props) => {
                 owner,
             });
 
-            if(index >= favoriteDAOs.length-1){
+            if (index >= favoriteDAOs.length - 1) {
                 setLoading(false)
             }
         }
         setList(arr);
     }
-    useEffect(()=>{
-        if(maincontract ==null ) return;
+    useEffect(() => {
+        if (maincontract == null) return;
         setALLlist()
-    },[]);
+    }, []);
 
-    useEffect(()=>{
-        if(maincontract ==null ) return;
+    useEffect(() => {
+        if (maincontract == null) return;
         setALLlist()
-    },[maincontract]);
+    }, [maincontract]);
 
-    const toAbout = (obj) =>{
-        if(allAccounts == null && sessionStorage.getItem('account')==null){
-            dispatch({ type: 'MSGTYPE', payload:'Please connect wallet'  });
+    const toAbout = (obj) => {
+        if (allAccounts == null && sessionStorage.getItem('account') == null) {
+            dispatch({ type: 'MSGTYPE', payload: { msg: 'Please connect wallet', closable: true } });
             return;
         }
         const { address, owner } = obj;
@@ -97,15 +97,15 @@ const MoreDaos = (props) => {
             {/*    </div>*/}
             {/*}*/}
             <div className="more" onClick={() => showDAOModal()}>
-                More DAOs<span>···</span>
+                More DAOs ···
             </div>
             <div className="daos">
                 {
-                    loading && <LoadingNew  />
+                    loading && <LoadingNew />
                 }
                 {
                     !loading && !!list.length && list.slice(0, 5).map((item, index) =>
-                        <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
+                        <div key={index} className="daoItem" onClick={() => toAbout(item)}>
                             <img src={item.logo} alt="" />
                             <div className="title">{item.name}</div>
                             <div className="detail">{item.desc}</div>

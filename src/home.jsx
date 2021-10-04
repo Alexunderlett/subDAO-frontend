@@ -165,7 +165,7 @@ function Home(props) {
                             You can join other DAOs or create your own DAO!
                         </div>
                         <Button type="primary" style={{ width: '100%', margin: '8rem 0 3rem 0' }} onClick={() => { setcreateDAOModal(false); setMoreDaos(true) }}>Browse other DAOs</Button>
-                        <Button style={{ width: '100%' }} onClick={handleClick}>{t('CreateDAO')}</Button>
+                        <Button className="default" style={{ width: '100%' }} onClick={handleClick}>{t('CreateDAO')}</Button>
                     </SelectAccount>
                 </Modal>
             </section>

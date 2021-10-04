@@ -1,25 +1,23 @@
 import { Button, Modal } from 'antd';
 
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
-export default function ExitOrg(props)  {
+export default function ExitOrg(props) {
 
     let { t } = useTranslation();
 
-    let {handleClose, showTips,handleConfirm} = props;
+    let { handleClose, showTips, handleConfirm } = props;
 
     return <Modal visible={showTips} onCancel={handleClose} footer={null}>
         <div className="title">{t('exitOrg')}</div>
-        <div className='NextBrdr button2'>
-            <Button onClick={handleClose}>
-                {t('Close')}
-            </Button>
-            <Button type="primary" onClick={handleConfirm}>
-                 {t('Confirm')}
-            </Button>
-        </div>
-    </Modal>;
 
+        <Button type="primary" onClick={handleConfirm} style={{ width: '100%', margin: '8rem 0px 3rem' }}>
+            {t('Confirm')}
+        </Button>
+        <Button onClick={handleClose} style={{ width: '100%' }}>
+            {t('Close')}
+        </Button>
+    </Modal>;
 }
 
 
