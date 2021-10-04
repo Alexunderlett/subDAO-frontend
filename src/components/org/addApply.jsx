@@ -6,7 +6,7 @@ import { useSubstrate } from "../../api/contracts";
 import Loading from "../loading/Loading";
 import addnew from '../../images/newvoting.png';
 import { useTranslation } from "react-i18next";
-import remove from "../../images/shutdown.png";
+import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";
 import applyList from "../../images/apply.png";
 

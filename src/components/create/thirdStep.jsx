@@ -1,14 +1,12 @@
 import React, { useEffect, useState} from 'react';
 import { Button, Checkbox, Input} from 'antd';
 
-import remove from '../../images/shutdown.png';
+import remove from '../../img/shutdown.png';
 import add from '../../img/Add.png';
-import Loading from "../loading/Loading";
+
 import {Trans, Translation, useTranslation} from 'react-i18next';
 
 export default function ThirdStep(props){
-
-    const [loading,setLoading]= useState(false);
     const [tips,setTips]= useState('');
     const [admin,setAdmin]= useState(true);
     const [adminlist,setadminlist]= useState([
@@ -78,7 +76,6 @@ export default function ThirdStep(props){
     }, []);
 
         return <div>
-            <Loading showLoading={loading} setLoading={()=>{setLoading(false)}} tips={tips}/>
             <Translation>{t =>
                 <div  title={t('Moderators')}>
                     <div className='steptitle'>

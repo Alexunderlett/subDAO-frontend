@@ -12,16 +12,11 @@ const Deposit = forwardRef((props, ref) => {
     const { state, dispatch } = useSubstrate();
     const { vaultcontract, erc20contract, allAccounts, apiState } = state;
 
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
-
     const [selected, setSelected] = useState(null);
     const [amount, setAmount] = useState('');
     const [deposit, setdeposit] = useState(false);
 
     const [list, setList] = useState([]);
-    const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
 
 
     let { t } = useTranslation();
@@ -47,16 +42,15 @@ const Deposit = forwardRef((props, ref) => {
         const setdeposittrs = async () => {
             await api.vault.deposit(vaultcontract, obj, (result) => {
                 if (result) {
-                    setLoading(false);
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                     props.handleClose()
                     props.setShow()
                     setdeposit(false)
                 }
             }).catch((error) => {
-                seterrorShow(true)
-                seterrorTips(`Deposit: ${error.message}`)
-                setLoading(false);
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Deposit: ${error.message}` } });
 
+                dispatch({ type: 'LOADINGTYPE', payload: null });
             });
 
         };
@@ -69,15 +63,14 @@ const Deposit = forwardRef((props, ref) => {
         setAmount(value)
     }
     const handleConfirm = async () => {
-        setLoading(true);
-        setTips(t('Createdeposit'));
+        dispatch({ type: 'LOADINGTYPE', payload: t('Createdeposit') });
+
         await api.erc20.approveOp(erc20contract, vaultcontract.address.toHuman(), amount, (result) => {
             setdeposit(true)
         }).catch((error) => {
-            seterrorShow(true)
-            seterrorTips(`Deposit approve: ${error.message}`)
-            setLoading(false);
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Deposit approve: ${error.message}` } });
 
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         })
 
     }
@@ -101,14 +94,6 @@ const Deposit = forwardRef((props, ref) => {
     let { handleClose, showTips } = props;
     return (
         <div>
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-            <Modal
-                visible={errorShow}
-                onCancel={() => seterrorShow(false)}
-                footer={null}
-            >
-                <div className="title">{errorTips}</div>
-            </Modal>
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
                 <div className="title">
                     {/* <img src={sender} alt="" /> */}

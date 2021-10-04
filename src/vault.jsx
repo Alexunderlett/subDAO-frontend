@@ -108,7 +108,6 @@ export default function Vault(props) {
     const { vaultcontract, allAccounts, apiState, erc20contract } = state;
 
     const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     const [newshow, setnewshow] = useState(false);
     const [newWithdraw, setnewWithdraw] = useState(false);
@@ -174,6 +173,7 @@ export default function Vault(props) {
         }
         settokenlist(arr);
         setLoading(false);
+        // dispatch({ type: 'LOADINGTYPE', payload: null });
     };
     useEffect(() => {
         setbalance();
@@ -216,7 +216,7 @@ export default function Vault(props) {
     }
     const setAlllist = async () => {
         setLoading(true);
-        setTips(t('InitializeVault'));
+        // dispatch({ type: 'LOADINGTYPE', payload: t('InitializeVault') });
         await api.vault.getTokenList(vaultcontract).then(data => {
             if (!data) return;
             setlist(data)
@@ -335,7 +335,6 @@ export default function Vault(props) {
 
     return (
         <div className='container'>
-            {/* <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} /> */}
             {
                 showvaultTips && TipsNum && <div className="vaultTips">
 

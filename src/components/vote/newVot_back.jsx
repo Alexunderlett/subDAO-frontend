@@ -8,7 +8,7 @@ import api from "../../api";
 import Loading from "../loading/Loading";
 import newVote from '../../images/newvoting.png';
 import NewVoteTop from './newVoteTop';
-import remove from "../../images/shutdown.png";
+import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";
 import { useTranslation } from "react-i18next";
 import Datetime from 'react-datetime';
@@ -17,11 +17,9 @@ import moment from 'moment';
 export default function NewVote(props) {
 
 
-    const { state } = useSubstrate();
+    const { state, dispatch } = useSubstrate();
     const { votecontract, erc20address } = state;
 
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
 
     const [date, setdate] = useState('');
     const [title, settitle] = useState('');
@@ -36,8 +34,6 @@ export default function NewVote(props) {
     const [optionlist, setoptionlist] = useState(['']);
     const [optchecked, setoptchecked] = useState(true);
     const [walletTips, setWalletTips] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
-    const [errorShow, seterrorShow] = useState(false);
     const [resultDate, setresultDate] = useState('');
 
     let { t } = useTranslation();
@@ -47,8 +43,8 @@ export default function NewVote(props) {
 
         if (optchecked) {
             if (to_address && valueAmount) {
-                setLoading(true);
-                setTips(t('CreateNewVote'));
+                dispatch({ type: 'LOADINGTYPE', payload: t('CreateNewVote') });
+
                 let dataobj = {
                     title,
                     desc,
@@ -61,7 +57,7 @@ export default function NewVote(props) {
                 }
 
                 await api.vote.newVoteTransfer(votecontract, dataobj, (result) => {
-                    setLoading(false);
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                     if (result) {
                         setdate('')
                         settitle('')
@@ -77,17 +73,17 @@ export default function NewVote(props) {
                     }
                 }).catch((error) => {
                     setWalletTips(true)
-                    seterrorTips(`Create New Vote: ${error.message}`)
-                    setLoading(false);
+                    dispatch({ type: 'MSGTYPE', payload: { msg: `Create New Vote: ${error.message}` } });
+
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
                 });
             } else {
                 setWalletTips(true)
-                seterrorTips('Receiver\'s address & Amount is requierd')
-
+                dispatch({ type: 'MSGTYPE', payload: { msg: 'Receiver\'s address & Amount is requierd' } });
             }
         } else {
-            setLoading(true);
-            setTips(t('CreateNewVote'));
+            dispatch({ type: 'LOADINGTYPE', payload: t('CreateNewVote') });
+
             let dataobj = {
                 title,
                 desc,
@@ -97,7 +93,7 @@ export default function NewVote(props) {
                 choices: optionlist.join('|')
             }
             await api.vote.newVote(votecontract, dataobj, (result) => {
-                setLoading(false);
+                dispatch({ type: 'LOADINGTYPE', payload: null });
                 if (result) {
                     setdate('')
                     settitle('')
@@ -113,8 +109,9 @@ export default function NewVote(props) {
                 }
             }).catch((error) => {
                 setWalletTips(true)
-                seterrorTips(`Create New Vote: ${error.message}`)
-                setLoading(false);
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Create New Vote: ${error.message}` } });
+
+                dispatch({ type: 'LOADINGTYPE', payload: null });
             });
         }
 
@@ -150,7 +147,7 @@ export default function NewVote(props) {
         const nowTime = Date.parse(new Date());
         if (type === 2 && date <= 0) {
             setWalletTips(true)
-            seterrorTips('Please fill the correct time')
+            dispatch({ type: 'MSGTYPE', payload: { msg: 'Please fill the correct time' } });
         } else {
             settype(type)
         }
@@ -213,15 +210,6 @@ export default function NewVote(props) {
     let { handleClose, showTips } = props;
     return (
         <div>
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
-            <Modal
-                visible={walletTips}
-                onCancel={() => setWalletTips(false)}
-                footer={null}
-            >
-                <div>{errorTips}</div>
-            </Modal>
-
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
                 <div className="title">
                     {/* <img src={newVote} alt="" /> */}

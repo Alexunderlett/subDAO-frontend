@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, Input } from 'antd';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api/index";
-// import Loading from "../loading/Loading";
 import newVote from "../../images/newvoting.png";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +11,6 @@ export default function VoteView(props) {
     const { state } = useSubstrate();
     const { votecontract } = state;
 
-    // const [loading, setLoading] = useState(false);
     const [tips, setTips] = useState('');
 
     const [optionlist, setoptionlist] = useState([]);
@@ -109,7 +107,6 @@ export default function VoteView(props) {
     let { handleClose, showTips } = props;
     return (
         <div>
-            {/*<Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />*/}
             {/*<Modal*/}
             {/*    visible={errorShow}*/}
             {/*    onCancel={() => seterrorShow(false)}*/}

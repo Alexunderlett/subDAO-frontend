@@ -9,12 +9,8 @@ import sender from "../../images/send.png";
 import { useTranslation } from "react-i18next";
 
 const Withdraw = forwardRef((props, ref) => {
-    const { state } = useSubstrate();
+    const { state, dispatch } = useSubstrate();
     const { vaultcontract } = state;
-
-    const [loading, setLoading] = useState(false);
-    const [tips, setTips] = useState('');
-
 
     const [selected, setSelected] = useState(null);
     const [address, setaddress] = useState('');
@@ -45,10 +41,11 @@ const Withdraw = forwardRef((props, ref) => {
         let obj = {
             address, amount, selected
         }
-        setLoading(true);
-        setTips(t('Createwithdraw'));
+
+        dispatch({ type: 'LOADINGTYPE', payload: t('Createwithdraw') });
+
         await api.vault.withdraw(vaultcontract, obj, (result) => {
-            setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
             props.handleClose()
             props.setShow()
         });
@@ -72,7 +69,6 @@ const Withdraw = forwardRef((props, ref) => {
     let { handleClose, showTips } = props;
     return (
         <div>
-            <Loading showLoading={loading} setLoading={() => { setLoading(false) }} tips={tips} />
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
                 <div className="title">
                     {/* <img src={sender} alt="" /> */}
