@@ -4,7 +4,6 @@ import {useSubstrate} from "../api/contracts";
 import api from "../api";
 import LoadingNew from "./loadingNEW";
 
-
 const favoriteDAOs = window.mainAddress.favoriteDAOs;
 
 const AllDaos = styled.div`
@@ -42,7 +41,9 @@ const MoreDaos = (props) => {
     }
     const setALLlist = async () =>{
         let arr=[];
-        for( let item of favoriteDAOs){
+        let index = 0;
+        for( let item  of favoriteDAOs){
+            index ++;
             const data = await api.base.InitHome(state,item);
             if(!data) continue;
             const logo = data.logo ? data.logo : '';
@@ -55,10 +56,13 @@ const MoreDaos = (props) => {
                 name,
                 desc,
                 owner,
-            })
+            });
+
+            if(index >= favoriteDAOs.length-1){
+                setLoading(false)
+            }
         }
         setList(arr);
-        setLoading(false)
     }
     useEffect(()=>{
         setALLlist()
@@ -86,7 +90,7 @@ const MoreDaos = (props) => {
                     loading && <LoadingNew  />
                 }
                 {
-                    !loading && !!list.length && list.map((item, index) =>
+                    !loading && !!list.length && list.slice(0, 5).map((item, index) =>
                         <div key={index} className="daoItem" onClick={()=>toAbout(item)}>
                             <img src={item.logo} alt="" />
                             <div className="title">{item.name}</div>
