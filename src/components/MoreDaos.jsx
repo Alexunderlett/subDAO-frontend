@@ -81,7 +81,7 @@ const MoreDaos = (props) => {
     },[maincontract]);
 
     const toAbout = (obj) =>{
-        if(allAccounts == null){
+        if(allAccounts == null && sessionStorage.getItem('account')==null){
             dispatch({ type: 'MSGTYPE', payload:'Please connect wallet'  });
             return;
         }

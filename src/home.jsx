@@ -139,18 +139,12 @@ function Home(props) {
             dispatch({ type: 'LOADINGTYPE', payload: t('InitializeHome') });
 
             let addresslist = await api.main.listDaoInstances(maincontract) || [];
-            console.error('===========addresslist============', addresslist);
+            console.log('===========addresslist============', addresslist);
             let mydaolist = addresslist.filter(i => i.owner === allAccounts[0].address);
 
             setimglist(mydaolist);
             dispatch({ type: 'LOADINGTYPE', payload: null });
             sessionStorage.setItem('addresslist', JSON.stringify(mydaolist));
-            // if (typeStr === 'all') {
-            //     sessionStorage.setItem('daoList', JSON.stringify(arr));
-            //
-            // } else {
-            //     sessionStorage.setItem('mydaoList', JSON.stringify(arr))
-            // }
         };
 
         setInstances();

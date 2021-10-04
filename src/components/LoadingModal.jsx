@@ -54,7 +54,7 @@ const Msg = styled.div`
 
 
 const LoadingModal = (props) => {
-    const { showMsg, handleClose } = props
+    const { showMsg, handleClose } = props;
     const { state, dispatch } = useSubstrate();
     const { loadingType } = state;
 
