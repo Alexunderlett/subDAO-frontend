@@ -112,6 +112,24 @@ body,html{
         }
         .ant-modal-body{
           padding: 6rem;
+          .confirmInnerTitle{
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-family: Roboto-Light;
+            font-weight: 300;
+            color: #010643;
+              text-align: center;
+          }
+          .confirmInnerBtnGroup{
+              display: flex;
+              justify-content: center;
+              button{
+                padding: 0.7rem 3.1rem;
+                font-size: 1.2rem;
+                height: auto!important;
+                margin: 0 3rem;
+              }
+          }
           &>.title{
             margin: 2rem 0;
             height: 4rem;
@@ -131,7 +149,7 @@ body,html{
             line-height: 2.1rem;
             margin: 3rem 0 1rem 0;
           }
-
+          
           /* button */
           .ant-btn.ant-btn-primary, .default{
             height: 7.6rem;
@@ -303,6 +321,7 @@ body,html{
       font-weight: 300;
       color: #10164B;
       line-height: 1.6rem;
+      cursor: pointer;
     }
   }
   

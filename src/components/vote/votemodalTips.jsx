@@ -7,9 +7,9 @@ export default function VoteModalTips(props)  {
 
     let {handleClose, showTips,handleConfirm} = props;
 
-    return <Modal visible={showTips} onCancel={handleClose} footer={null} centered={true}  className='newVoteBrdr'>
-        <div className="title">{t('sureTrigger')}</div>
-        <div className='NextBrdr button2'>
+    return <Modal visible={showTips} onCancel={handleClose} footer={null} centered={true}  className='newVoteBrdr' maskClosable={false}>
+        <div className="confirmInnerTitle">{t('sureTrigger')}</div>
+        <div className='confirmInnerBtnGroup'>
             <Button onClick={handleClose}>
                 {t('Close')}
             </Button>

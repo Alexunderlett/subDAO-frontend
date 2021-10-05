@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import VotePagination from './components/vote/votePagination';
 import VotePending from './components/vote/votePending';
 import VoteActive from './components/vote/voteActive';
-// import NewVote from "./components/vote/newVote";
 
 import { useSubstrate } from "./api/contracts";
 
@@ -155,7 +154,7 @@ export default function Vote(props) {
 
                 </Tablesec>
                 <Tablesec>
-                    <div className="titleTop">Active Votinng List</div>
+                    <div className="titleTop">Active Voting List</div>
                     {
                         !showActive &&<VoteActive
                             id={id}

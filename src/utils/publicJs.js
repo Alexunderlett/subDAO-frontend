@@ -17,11 +17,11 @@ const dateFormat = (dateTime) => {
     const seconds = t.getSeconds();
     const hash = {
         'Y': year,
-        'm': month>10?month:`0${month}`,
-        'd': day>10?day:`0${day}`,
-        'h': hours>10?hours:`0${hours}`,
-        'i': minutes>10?minutes:`0${minutes}`,
-        's': seconds>10?seconds:`0${seconds}`
+        'm': month>=10?month:`0${month}`,
+        'd': day>=10?day:`0${day}`,
+        'h': hours>=10?hours:`0${hours}`,
+        'i': minutes>=10?minutes:`0${minutes}`,
+        's': seconds>=10?seconds:`0${seconds}`
     };
     return format.replace(/\w/g, o => {
         return hash[o]

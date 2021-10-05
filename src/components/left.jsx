@@ -12,7 +12,6 @@ import LoadingNew from "./loadingNEW";
 
 import Addnew from './org/addNew';
 import AddApply from './org/addApply';
-import AddBatch from "./org/addbatch";
 
 const TopTitles = styled.div`
     width: 100%;
@@ -146,6 +145,9 @@ export default function Left(props){
                     if (!result) return;
                     setdelAdmin(true)
                 }).catch((error) => {
+
+                    dispatch({ type: 'LOADINGTYPE', payload: null });
+                    dispatch({ type: 'MSGTYPE', payload: { msg: `Resign Moderator: ${error.message}` } });
                     // seterrorShow(true);
                     // seterrorTips(`Resign Moderator: ${error.message}`);
                     // setLoading(false);
@@ -341,6 +343,8 @@ export default function Left(props){
                 if (!result) return;
                 setdelMem(true)
             }).catch((error) => {
+                dispatch({ type: 'LOADINGTYPE', payload: null });
+                dispatch({ type: 'MSGTYPE', payload: { msg: `Resign Member: ${error.message}` } });
                 // seterrorShow(true);
                 // seterrorTips(`Resign Member: ${error.message}`);
                 // setLoading(false);

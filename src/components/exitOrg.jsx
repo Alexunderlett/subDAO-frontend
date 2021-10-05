@@ -8,15 +8,18 @@ export default function ExitOrg(props) {
 
     let { handleClose, showTips, handleConfirm } = props;
 
-    return <Modal visible={showTips} onCancel={handleClose} footer={null}>
-        <div className="title">{t('exitOrg')}</div>
+    return <Modal visible={showTips} onCancel={handleClose} footer={null} centered={true} maskClosable={false}>
+        <div className="confirmInnerTitle">{t('exitOrg')}</div>
+        <div className="confirmInnerBtnGroup">
+            <Button className="default" onClick={()=>handleClose()} >
+                {t('Close')}
+            </Button>
+            <Button type="primary" onClick={()=>handleConfirm()}>
+                {t('Confirm')}
+            </Button>
 
-        <Button type="primary" onClick={handleConfirm} style={{ width: '100%', margin: '8rem 0px 3rem' }}>
-            {t('Confirm')}
-        </Button>
-        <Button className="default" onClick={handleClose} style={{ width: '100%' }}>
-            {t('Close')}
-        </Button>
+        </div>
+
     </Modal>;
 }
 
