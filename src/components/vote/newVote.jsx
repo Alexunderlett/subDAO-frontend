@@ -78,6 +78,15 @@ const Vote = styled.div`
                     height: 3.2rem;
                 }
             }
+            .showOption{
+                width: 100%;
+                height: 4.4rem;
+                line-height: 4.4rem;
+                color: #A6A6B7;
+                box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+                border-radius: 0.8rem;
+                padding-left: 2rem;
+            }
         }
     }
     .btnLine{
@@ -136,7 +145,7 @@ export default function NewVote(props) {
     const [to_address, setto_address] = useState('');
     const [valueAmount, setvalueAmount] = useState('');
 
-    const [optionlist, setoptionlist] = useState(['']);
+    const [optionlist, setoptionlist] = useState(['Agree','Disagree']);
     const [optchecked, setoptchecked] = useState(false);
     const [walletTips, setWalletTips] = useState(false);
     const [resultDate, setresultDate] = useState('');
@@ -450,25 +459,26 @@ export default function NewVote(props) {
 
                         {optionlist.map((i, index) => (
                             <div className="addLine" key={index}>
-                                <Input
+                                <div className="showOption">{i}</div>
+                                {/* <Input
                                     placeholder={t('FillOption')}
                                     value={optionlist[index]}
                                     onChange={(event) => setAddress(event, index)}
-                                />
-                                {
+                                /> */}
+                                {/* {
                                     !!index && <div className="removerht" onClick={removeOption.bind(this, i, index)} >
                                         <img src={remove} alt='' />
                                     </div>
-                                }
+                                } */}
                             </div>
                         ))
                         }
                     </div>
 
-                    <AddButton onClick={addOption}>
+                    {/* <AddButton onClick={addOption}> */}
                         {/* <img src={add} className="addRht" alt='' /> */}
-                        + {t('AddOption')}
-                    </AddButton>
+                        {/* + {t('AddOption')} */}
+                    {/* </AddButton> */}
 
                     <div className='btnLine'>
                         <Button className="previous" onClick={() => nextStep(3)}>
