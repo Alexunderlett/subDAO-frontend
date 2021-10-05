@@ -45,7 +45,7 @@ const Breadcrumbstep = styled.div`
          line-height: 4.5rem;
      }
      .bgline{
-     width: 7rem;
+     width: 5rem;
     height: 0.3rem;
     background: #E6E9F2;
     border-radius: 0.1rem;

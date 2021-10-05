@@ -145,7 +145,7 @@ export default function NewVote(props) {
     const [to_address, setto_address] = useState('');
     const [valueAmount, setvalueAmount] = useState('');
 
-    const [optionlist, setoptionlist] = useState(['Agree','Disagree']);
+    const [optionlist, setoptionlist] = useState(['Agree', 'Disagree']);
     const [optchecked, setoptchecked] = useState(false);
     const [walletTips, setWalletTips] = useState(false);
     const [resultDate, setresultDate] = useState('');
@@ -476,8 +476,8 @@ export default function NewVote(props) {
                     </div>
 
                     {/* <AddButton onClick={addOption}> */}
-                        {/* <img src={add} className="addRht" alt='' /> */}
-                        {/* + {t('AddOption')} */}
+                    {/* <img src={add} className="addRht" alt='' /> */}
+                    {/* + {t('AddOption')} */}
                     {/* </AddButton> */}
 
                     <div className='btnLine'>
