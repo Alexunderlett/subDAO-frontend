@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import VoteEcharts from "./voteEcharts";
 import api from "../../api";
-import {useSubstrate} from "../../api/contracts";
+import { useSubstrate } from "../../api/contracts";
 import Left from "../left";
 import Back from "../../img/back.png";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import PublicJS from "../../utils/publicJs";
 
@@ -86,7 +86,7 @@ const Address = styled.div`
     line-height: 2.4rem;
 `;
 
-const  Desc = styled.div`
+const Desc = styled.div`
     width: 47.1rem;
     background: #EFF0FA;
     border-radius: 2.4rem;
@@ -114,9 +114,9 @@ const TokenBrdr = styled.div`
 `
 
 
-export default function VoteOverview (props){
-    const {state} = useSubstrate();
-    const {votecontract} = state;
+export default function VoteOverview(props) {
+    const { state } = useSubstrate();
+    const { votecontract } = state;
     const [voteid, setvoteid] = useState(null);
     const [title, settitle] = useState('');
     const [desc, setdesc] = useState('');
@@ -132,17 +132,17 @@ export default function VoteOverview (props){
     let { t } = useTranslation();
 
     const handleClicktoVote = () => {
-       props.history.push(`/vote/${props.match.params.id}/${props.match.params.owner}`)
+        props.history.push(`/vote/${props.match.params.id}/${props.match.params.owner}`)
     }
     useEffect(() => {
-        const setOneVote = async() => {
+        const setOneVote = async () => {
             await api.vote.queryOneVote(votecontract, props.match.params.voteid).then(data => {
                 if (!data) return;
                 const {
-                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address,transfer_value,start_date,vote_time, executed,need_trigger
+                    vote_id, title, desc, support_require_num, min_require_num, choices, to_address, transfer_value, start_date, vote_time, executed, need_trigger
                 } = data;
 
-                setendtime(PublicJS.formatvoteDateTime(start_date,vote_time));
+                setendtime(PublicJS.formatvoteDateTime(start_date, vote_time));
 
                 setneed(need_trigger);
 
@@ -177,9 +177,9 @@ export default function VoteOverview (props){
     return (
         <div>
             <div className="container">
-                <Left  history={props.history} id={props.match.params.id} owner={props.match.params.owner}  removeGroup={true}/>
+                <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} removeGroup={true} />
                 <div>
-                    <BackBrdr onClick={handleClicktoVote}><img src={Back} alt=""/> Back Voting</BackBrdr>
+                    <BackBrdr onClick={handleClicktoVote}><img src={Back} alt="" /> Back Voting</BackBrdr>
                 </div>
                 <SectionLayout>
                     <ul>
@@ -217,49 +217,42 @@ export default function VoteOverview (props){
                                     </Address>
                                 </div>
                             </AddBrdr>
-
-
                         </Li>
                         <Li>
                             <Titles>Voting Description</Titles>
                             <Desc>{desc}</Desc>
                         </Li>
-
                     </ul>
                     <FlexRht>
                         {
-                            !!optionlist.length&&<VoteEcharts optionlist={optionlist} />
+                            !!optionlist.length && <VoteEcharts optionlist={optionlist} />
                         }
                     </FlexRht>
                 </SectionLayout>
-
             </div>
 
-                                    {/*<ul>*/}
+            {/*<ul>*/}
 
-                                    {/*    <li>*/}
-                                    {/*        <h6>Ends at</h6>*/}
-                                    {/*        <div className='endtime'>{endtime}</div>*/}
-                                    {/*    </li>*/}
-                                    {/*    <li>*/}
-                                    {/*        <h6>{t('VotingNumber')}</h6>*/}
-                                    {/*        <div>{voteid}</div>*/}
-                                    {/*    </li>*/}
+            {/*    <li>*/}
+            {/*        <h6>Ends at</h6>*/}
+            {/*        <div className='endtime'>{endtime}</div>*/}
+            {/*    </li>*/}
+            {/*    <li>*/}
+            {/*        <h6>{t('VotingNumber')}</h6>*/}
+            {/*        <div>{voteid}</div>*/}
+            {/*    </li>*/}
 
-                                    {/*    {*/}
-                                    {/*        need &&*/}
-                                    {/*        <div>*/}
-                                    {/*            <li>*/}
-                                    {/*                <h6>Transaction Status</h6>*/}
-                                    {/*                <div className='address'>{executed?'Successful':'Not triggered'}</div>*/}
-                                    {/*            </li>*/}
+            {/*    {*/}
+            {/*        need &&*/}
+            {/*        <div>*/}
+            {/*            <li>*/}
+            {/*                <h6>Transaction Status</h6>*/}
+            {/*                <div className='address'>{executed?'Successful':'Not triggered'}</div>*/}
+            {/*            </li>*/}
 
-                                    {/*        </div>*/}
-                                    {/*    }*/}
-                                    {/*</ul>*/}
-
-
+            {/*        </div>*/}
+            {/*    }*/}
+            {/*</ul>*/}
         </div>
     )
-
 }
