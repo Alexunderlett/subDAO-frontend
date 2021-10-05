@@ -193,7 +193,6 @@ export default function Left(props){
     }, [daoManagercontract, props.id,maincontract]);
 
     useEffect(() => {
-        console.error("==============",contractlist.base_addr)
         const { vault_addr, org_addr, vote_addr, erc20_addr, base_addr, auth_addr } = contractlist;
         sessionStorage.setItem('contractlist', JSON.stringify(contractlist));
 
@@ -284,7 +283,6 @@ export default function Left(props){
 
     const init = () =>{
         const setBase = async () => {
-            console.error("==========setBase=======",basecontract.address.toString())
             await api.base.getBaseData(basecontract).then(data => {
                 if (!data) return;
                 let { owner, name, logo, desc } = data;

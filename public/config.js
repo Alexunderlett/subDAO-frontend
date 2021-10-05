@@ -8,5 +8,6 @@ window.mainAddress = {
     favoriteDAOs:[
         '5GGdPn9yqDmcbKwqsQ1MzP7Qzsh5dqJybc5LaRgRCoukL58H',
         '5FgZU6dWprgUYfsJACGBp7Kb1VjZcAvwi59AkDpnt1dnRbn7',
+        '5Eonhs15r87GSHVpKfWmBA7PxW1stijuvZFUVzkjFs81q5o4',
     ]
 };
