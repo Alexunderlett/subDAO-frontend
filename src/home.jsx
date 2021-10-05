@@ -209,7 +209,6 @@ function Home(props) {
                 </div>
 
                 <MoreDaos history={props.history} />
-
             </section>
         </HomeBg>
     )

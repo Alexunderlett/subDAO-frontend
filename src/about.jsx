@@ -55,17 +55,17 @@ const Ul = styled.ul`
     display: flex;
     flex-wrap: wrap;
     margin-left: -6rem;
-  li{
-    width: 31.3rem;
-    height: 16rem;
-    background: #FFFFFF;
-    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
-    border-radius: 2.4rem;
-    padding: 2rem 2.8rem;
-    box-sizing: border-box;
-    word-break: break-all;    
-    margin-left: 6rem;
-  }
+    li{
+        width: 31.3rem;
+        height: 16rem;
+        background: #FFFFFF;
+        box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+        border-radius: 2.4rem;
+        padding: 2rem 2.8rem;
+        box-sizing: border-box;
+        word-break: break-all;    
+        margin-left: 6rem;
+    }
 `;
 
 const BalanceNum = styled.div`
@@ -95,19 +95,19 @@ const UlMdrt = styled.ul`
     display: flex;
     margin-left: -6rem;
     flex-wrap: wrap;
-  li{
-    width: 31.3rem;
-    height: 14rem;
-    background: #FFFFFF;
-    box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
-    border-radius: 2.4rem;
-    padding: 1rem 3.7rem 1rem 1rem ;
-    box-sizing: border-box;
-    word-break: break-all;    
-    margin:0 0 3rem 6rem;
-    display: flex;
-    align-content: center;
-  }
+    li{
+        width: 31.3rem;
+        height: 14rem;
+        background: #FFFFFF;
+        box-shadow: 0 0 1rem 0 rgba(16, 22, 75, 0.05);
+        border-radius: 2.4rem;
+        padding: 1rem 3.7rem 1rem 1rem ;
+        box-sizing: border-box;
+        word-break: break-all;    
+        margin:0 0 3rem 6rem;
+        display: flex;
+        align-content: center;
+    }
 `;
 const Names = styled.div`
     font-size: 2rem;
@@ -117,22 +117,22 @@ const Names = styled.div`
 `;
 
 const UlContr = styled.ul`
-  li{
-    width: 78rem;
-    height: 4.4rem;
-    background: #FFFFFF;
-    box-shadow: 0 0 0.4rem 0 rgba(16, 22, 75, 0.1);
-    border-radius: 0.8rem;
-    padding: 1rem 3.7rem 1rem 1rem ;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: flex-start;
-    align-content: center;
-    margin-bottom: 1.5rem;
-    img{
- 
+    li{
+        width: 78rem;
+        height: 4.4rem;
+        background: #FFFFFF;
+        box-shadow: 0 0 0.4rem 0 rgba(16, 22, 75, 0.1);
+        border-radius: 0.8rem;
+        padding: 1rem 3.7rem 1rem 1rem ;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-start;
+        align-content: center;
+        margin-bottom: 1.5rem;
+        img{
+    
+        }
     }
-  }
 `
 const ContractName = styled.div`
     min-width: 6.3rem;
@@ -141,6 +141,7 @@ const ContractName = styled.div`
     margin-right: 1rem;
     line-height: 2.4rem;
 `;
+
 const Imglft = styled.img`
    width: 3.2rem;
     height: 3.2rem;
@@ -148,9 +149,19 @@ const Imglft = styled.img`
     margin-top: -0.4rem;
 `;
 
+const Other = styled.div`
+    height: 2.1rem;
+    font-size: 1.8rem;
+    font-family: Roboto-Regular;
+    font-weight: 400;
+    color: #10164B;
+    line-height: 2.1rem;
+    margin-top: 4rem;
+`
+
 export default function About(props) {
     const { state, dispatch } = useSubstrate();
-    const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract,maincontract } = state;
+    const { basecontract, vaultcontract, orgcontract, votecontract, daoManagercontract, apiState, erc20contract, maincontract } = state;
 
     const [id, setAId] = useState(null);
     const [moderators, setModerators] = useState([]);
@@ -161,12 +172,12 @@ export default function About(props) {
     const [contractshow, setcontractshow] = useState(true);
 
     const [contractlist, setcontractlist] = useState({
-        base_addr:null,
-        erc20_addr:null,
-        org_addr:null,
-        vault_addr:null,
-        vote_addr:null,
-        auth_addr:null,
+        base_addr: null,
+        erc20_addr: null,
+        org_addr: null,
+        vault_addr: null,
+        vote_addr: null,
+        auth_addr: null,
     });
     const [contractArr, setcontractArr] = useState([]);
     const [tokenlist, settokenlist] = useState([]);
@@ -179,12 +190,12 @@ export default function About(props) {
 
     useEffect(() => {
         setcontractlist({
-            base_addr:null,
-            erc20_addr:null,
-            org_addr:null,
-            vault_addr:null,
-            vote_addr:null,
-            auth_addr:null,
+            base_addr: null,
+            erc20_addr: null,
+            org_addr: null,
+            vault_addr: null,
+            vote_addr: null,
+            auth_addr: null,
         });
         setcontractArr([]);
         setcontractshow(true);
@@ -198,20 +209,20 @@ export default function About(props) {
 
         let contractlistBg = JSON.parse(sessionStorage.getItem('contractlist'));
 
-        if(contractlistBg!=null){
+        if (contractlistBg != null) {
             setcontractlist(contractlistBg);
         }
         let contractArrA = JSON.parse(sessionStorage.getItem('contractArr'));
-        if(contractArrA!=null){
+        if (contractArrA != null) {
             setcontractArr(contractArrA);
         }
         setcontractshow(false);
 
     };
     useEffect(() => {
-        if (daoManagercontract == null ) return;
+        if (daoManagercontract == null) return;
         queryAddrs();
-    }, [daoManagercontract, id,maincontract,basecontract]);
+    }, [daoManagercontract, id, maincontract, basecontract]);
     useEffect(() => {
         queryAddrs();
     }, []);
@@ -243,7 +254,7 @@ export default function About(props) {
     }, [tokenlist, id]);
 
     useEffect(() => {
-        if (vaultcontract ==null || contractlist.vault_addr == null || !contractlist.vault_addr) return;
+        if (vaultcontract == null || contractlist.vault_addr == null || !contractlist.vault_addr) return;
         const setToken = async () => {
             await api.vault.getTokenList(vaultcontract).then(data => {
                 if (!data) return;
@@ -289,7 +300,7 @@ export default function About(props) {
                 break;
             case 'vote_addr':
                 str = 'Vote';
-                img =  VOTE;
+                img = VOTE;
                 break;
             case 'auth_addr':
                 str = 'Auth';
@@ -297,11 +308,11 @@ export default function About(props) {
                 break;
             default:
                 str = key;
-                img ='';
+                img = '';
                 break;
         }
         return {
-            addr:str.toUpperCase(),
+            addr: str.toUpperCase(),
             img
         };
     }
@@ -321,7 +332,7 @@ export default function About(props) {
                     <div className="titleTop">Balance</div>
                     <Ul>
                         {
-                            balanceshow && <LoadingNew  />
+                            balanceshow && <LoadingNew />
                         }
 
                         {
@@ -340,11 +351,11 @@ export default function About(props) {
                     <UlMdrt>
 
                         {
-                            moderatorShow &&  <LoadingNew />
+                            moderatorShow && <LoadingNew />
                         }
                         {
                             !moderatorShow && moderators.map((i, index) => <li key={moderators[index]}>
-                                <img src={ props.match.params.owner === moderators[index][0] ? Owner :Admin} alt=""/>
+                                <img src={props.match.params.owner === moderators[index][0] ? Owner : Admin} alt="" />
                                 <div>
                                     <Names>{moderators[index][1]}</Names>
                                     <Address>{moderators[index][0]}</Address>
@@ -355,28 +366,26 @@ export default function About(props) {
                 </section>
                 <section>
                     <div className="titleTop">Contracts</div>
-                        {
-                            contractshow &&<LoadingNew  />
+                    {
+                        contractshow && <LoadingNew />
+                    }
+                    {
+                        !contractshow && contractlist != null && <UlContr>{
+                            contractArr.map((item) => (<li key={`contract_${item.address}`}>
+                                <Imglft src={switchKey(item.name).img} alt="" />
+                                <ContractName>{switchKey(item.name).addr} </ContractName>
+                                <Address>{item.address}</Address>
+                                <CopyStr address={item.address} alt="" />
+                            </li>
+                            ))
                         }
-                        {
-                            !contractshow && contractlist != null && <UlContr>{
-                                contractArr.map((item) => (<li key={`contract_${item.address}`}>
-                                            <Imglft src={switchKey(item.name).img} alt=""/>
-                                            <ContractName>{switchKey(item.name).addr} </ContractName>
-                                            <Address>{item.address}</Address>
-                                            <CopyStr address={item.address} alt=""/>
-                                        </li>
-                                    ))
-                            }
-                            </UlContr>
-                        }
-
+                        </UlContr>
+                    }
                 </section>
-                {/*<section>*/}
-                {/*    <MoreDaos showMoreDaos={moreDaos}/>*/}
-                {/*</section>*/}
-            </div>
 
+                <Other>Other DAOs</Other>
+                <MoreDaos history={props.history} title="Explorer other DAOs" />
+            </div>
         </div>
     )
 }

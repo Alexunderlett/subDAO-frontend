@@ -8,14 +8,15 @@ import nodaos from "../img/noDaos.png";
 import api from "../api";
 
 const DaoBody = styled.div`
-    width: 81%;
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
     .top{
+        width: 144rem;
         display: flex;
         justify-content: space-between;
         .left{
@@ -27,8 +28,8 @@ const DaoBody = styled.div`
         }
     }
     .daos{
-        width: calc(100% + 7rem);
-        margin-left: -3.5rem;
+        width: 151rem;
+        margin-left: 1rem;
         //max-height: 100%;
         display: flex;
         flex-wrap: wrap;
@@ -37,7 +38,7 @@ const DaoBody = styled.div`
         .daoItem{
             width: 23rem;
             height: 26.8rem;
-            margin: 1rem 3.6rem 6rem;
+            margin: 3rem 3.6rem;
         }
         .detail{
         font-size: 1.4rem;
@@ -73,13 +74,13 @@ const Inputbrdr = styled(Input)`
     border: 0;
     outline: none;
     font-size: 1.8rem;
-  font-family: Roboto-Light;
-  padding-left: 4.1rem;
-  margin-left: 1rem;
-  .ant-input{
-  background: #Fff!important;
-  height: 100%!important;
-  }
+    font-family: Roboto-Light;
+    padding-left: 4.1rem;
+    margin-left: 1rem;
+    .ant-input{
+    background: #Fff!important;
+    height: 100%!important;
+    }
     &:focus{
      outline: none;
     }

@@ -28,7 +28,6 @@ const AllDaos = styled.div`
 `
 
 const MoreDaos = (props) => {
-
     const { dispatch, state } = useSubstrate();
     const { maincontract, allAccounts } = state;
 
@@ -97,7 +96,7 @@ const MoreDaos = (props) => {
             {/*    </div>*/}
             {/*}*/}
             <div className="more" onClick={() => showDAOModal()}>
-                More DAOs ···
+                {props.title || 'More DAOs'} ···
             </div>
             <div className="daos">
                 {
