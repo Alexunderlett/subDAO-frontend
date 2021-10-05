@@ -77,8 +77,7 @@ export default function VotePending(props) {
                         <td onClick={() => triggerConfirm(item.vote_id)}> <img src={TriggerBtn} alt="" /></td>
                     </tr>)
                 }
-
-                <div onClick={() => triggerConfirm(234)}> <img src={TriggerBtn} alt="" /></div>
+                
             </tbody>
         </table>
     </div>)
