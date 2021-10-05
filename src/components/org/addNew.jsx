@@ -3,7 +3,6 @@ import { Button, Modal, Input } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import addnew from '../../images/newvoting.png';
 import { useTranslation } from "react-i18next";
 import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";
@@ -34,16 +33,16 @@ export default function AddNew(props) {
 
     const submitModerators = async (obj) => {
         dispatch({ type: 'LOADINGTYPE', payload: t('AddModerator') });
-
+        props.handleClose();
         await api.org.addDaoModerator(orgcontract, obj, function (result) {
-            setaddModerator(result)
-            props.handleClose()
-            props.refresh()
-            setname('')
-            setaddress('')
+            setaddModerator(result);
+
+            props.refresh();
+            setname('');
+            setaddress('');
             dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
-            seterrorShow(true)
+            seterrorShow(true);
 
             dispatch({ type: 'MSGTYPE', payload: { msg: `Add Moderator: ${error.message}` } });
             dispatch({ type: 'LOADINGTYPE', payload: null });
@@ -51,16 +50,16 @@ export default function AddNew(props) {
     }
     const submitMembers = async (obj) => {
         dispatch({ type: 'LOADINGTYPE', payload: t('AddMember') });
-
+        props.handleClose();
         await api.org.addDaoMember(orgcontract, obj, function (result) {
-            setaddMember(result)
-            props.handleClose()
-            props.refresh()
-            setname('')
-            setaddress('')
+            setaddMember(result);
+
+            props.refresh();
+            setname('');
+            setaddress('');
             dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
-            seterrorShow(true)
+            seterrorShow(true);
 
             dispatch({ type: 'MSGTYPE', payload: { msg: `Add Member: ${error.message}` } });
             dispatch({ type: 'LOADINGTYPE', payload: null });
@@ -69,7 +68,7 @@ export default function AddNew(props) {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        let str = `set${name}`
+        let str = `set${name}`;
         eval(str)(value)
     }
     const handleSubmit = (type) => {

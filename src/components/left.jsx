@@ -325,7 +325,6 @@ export default function Left(props){
 
     const joinDaos = async () =>{
         await api.org.getFreeAddMember(orgcontract).then(data => {
-            console.error("=====",data)
             if(data){
                 setaddshow(true)
             }else{
@@ -356,20 +355,7 @@ export default function Left(props){
     const handleAddClose = () => {
         setaddshow(false)
     }
-    // const handleBatch = () => {
-    //     setaddshow(false);
-    //     setbatchshow(true);
-    // }
-    // const handleBatchAdd = () => {
-    //     setaddshow(true);
-    //     setbatchshow(false);
-    // }
-    // const handleBatchClose = () => {
-    //     setbatchshow(false);
-    // }
-    // const handleAdd = () => {
-    //     setaddshow(true)
-    // }
+
 
     const setall = () => {
         // setModeratorFunc()
