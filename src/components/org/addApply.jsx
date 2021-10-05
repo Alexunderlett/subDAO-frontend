@@ -3,11 +3,11 @@ import { Button, Modal, Input } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import addnew from '../../images/newvoting.png';
+
 import { useTranslation } from "react-i18next";
 import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";
-import applyList from "../../images/apply.png";
+
 
 export default function AddApply(props) {
 

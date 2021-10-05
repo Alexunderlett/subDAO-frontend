@@ -7,6 +7,20 @@ import { useTranslation } from "react-i18next";
 import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";
 
+import styled from 'styled-components';
+
+const NextBrdr = styled.div`
+  .default{
+    background: #FFFFFF;
+    border-radius: 1.2rem;
+    border: 0.15rem solid #D52473;
+      
+color: #D52473;
+  }
+`
+
+
+
 export default function AddNew(props) {
 
     const { state, dispatch } = useSubstrate();
@@ -128,7 +142,7 @@ export default function AddNew(props) {
                 />
             </div>
 
-            <div className='NextBrdr'>
+            <NextBrdr >
                 <Button type="primary" onClick={() => handleSubmit(typeName)} style={{ width: '100%', marginTop: '3rem' }}>
                     Add
                 </Button>
@@ -138,7 +152,7 @@ export default function AddNew(props) {
                         Batch Import
                     </Button>
                 }
-            </div>
+            </NextBrdr>
         </Modal>
     </div>;
 }

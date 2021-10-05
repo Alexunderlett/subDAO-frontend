@@ -3,11 +3,80 @@ import { Button, Modal, Input } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import addnew from '../../images/newvoting.png';
 import { useTranslation } from "react-i18next";
-import remove from "../../img/shutdown.png";
-import add from "../../img/Add.png";
-import Back from "../../images/prev.png";
+import remove from "../../img/remove.png";
+import add from "../../img/plus.png";
+import Back from "../../img/left.png";
+
+import styled from "styled-components";
+
+const ModalWidth = styled(Modal)`
+  width: 89rem!important;
+`
+
+const Batchlist = styled.ul`
+  li{
+    margin-bottom: 2rem;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+  }
+  .nameInput{
+    padding-right: 3rem;
+    width: 29rem!important;
+    .ant-input{
+       width: 29rem!important;
+    }
+  }
+  .addrInput{
+    flex-grow: 1;
+    
+  }
+`;
+
+const BatchTop = styled.div`
+  display: flex;
+  justify-content: space-between;
+  .btnRTop{
+    background: #FFFFFF;
+    border-radius: 0.6rem;
+    border: 0.1rem solid #B7B9C9;
+    padding: 0.2rem 1.2rem;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    img{
+    width: 1.2rem;
+    margin-right: 0.6rem;
+    }
+  }
+`;
+
+const VoteLft = styled.div`
+  font-size: 1.4rem;
+  padding-top: 1rem;
+color: #D52473;
+  img{
+  width: 1.8rem;
+  }
+`;
+const NextBrdr = styled.div`
+   margin-top: 4rem;
+   button{
+   width: 100%;
+   }
+`;
+const RemoveImg = styled.div`
+    position: absolute;
+    right: -1.6rem;
+    top:  -1.6rem;
+   
+    img{
+     width: 3.6rem;
+     height: 3.6rem;
+      cursor: pointer;
+    }
+`
+
 
 export default function AddBatch(props) {
 
@@ -78,72 +147,67 @@ export default function AddBatch(props) {
 
     let { handleClose, showTips } = props;
     return <div>
-        <Modal visible={showTips} onCancel={handleClose} footer={null}>
-            <div className="title"><img src={addnew} alt="" /><span >{t('Members')}</span></div>
+        <ModalWidth visible={showTips} onCancel={()=>handleClose()} footer={null}   maskClosable={false} >
+            <div className="title"><span >Add Members</span></div>
 
             <section>
-                <div className='batchTop'>
-                    <div className='voteLft' onClick={handleBack}>
+                <BatchTop>
+                    <VoteLft onClick={()=>handleBack()}>
                         <img src={Back} alt="" /> {t('Back')}
-                    </div>
+                    </VoteLft>
                     <div>
-                        <div className='btnRTop' onClick={addAdmin}><img src={add} alt='' />{t('AddOption')}</div>
+                        <div className='btnRTop' onClick={()=>addAdmin()}><img src={add} alt='' />{t('AddOption')}</div>
                     </div>
-                </div>
-                <ul className='batchlist'>
-                    <li>
-                        <div>
-                            {adminlist.map((i, index) => (
+                </BatchTop>
+                <Batchlist>
 
-                                <div key={index} className='norow'>
-                                    <div className="row">
-                                        <div className="col-4">
-                                            <div className="mb-3">
-                                                <div className='inputBrdr'>
-                                                    <Input
-                                                        placeholder={t('FilltheName')}
-                                                        value={adminlist[index].name}
-                                                        name='name'
-                                                        autoComplete="off"
-                                                        onChange={(event) => setAdminInput(event, index)}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-8 flexBrdr">
-                                            <div className="mb-3">
-                                                <div className='inputBrdr'>
-                                                    <Input
-                                                        placeholder={t('FillAddress')}
-                                                        value={adminlist[index].address}
-                                                        name='address'
-                                                        autoComplete="off"
-                                                        onChange={(event) => setAdminInput(event, index)}
-                                                    />
-                                                </div>
-                                            </div>
-                                            {
-                                                !!index &&
-                                                <img src={remove} onClick={() => removeAdmin(i, index)} className="removerht" alt='' />
-                                            }
-                                        </div>
+
+                        {adminlist.map((i, index) => (
+
+                            <li key={index}>
+
+                                    <div className='inputBrdr nameInput'>
+                                        <Input
+                                            placeholder={t('FilltheName')}
+                                            value={adminlist[index].name}
+                                            name='name'
+                                            autoComplete="off"
+                                            onChange={(event) => setAdminInput(event, index)}
+                                        />
                                     </div>
-                                </div>
-                            ))
-                            }
+                                    <div className='inputBrdr addrInput'>
+                                        <Input
+                                            placeholder={t('FillAddress')}
+                                            value={adminlist[index].address}
+                                            name='address'
+                                            autoComplete="off"
+                                            onChange={(event) => setAdminInput(event, index)}
+                                        />
+                                    </div>
+                                    <RemoveImg>
 
-                        </div>
-                    </li>
+                                        {
+                                            !!index &&
+                                            <img src={remove} onClick={() => removeAdmin(i, index)} className="removerht" alt='' />
+                                        }
+                                    </RemoveImg>
 
-                </ul>
-                <div>
-                    <div className='NextBrdr'>
-                        <Button type="primary" onClick={() => handleSubmit()}>
-                            Add
-                        </Button>
-                    </div>
-                </div>
+                            </li>
+                        ))
+                        }
+
+
+
+
+                </Batchlist>
+
+                <NextBrdr>
+                    <Button type="primary" onClick={() => handleSubmit()}>
+                        Add
+                    </Button>
+                </NextBrdr>
+
             </section>
-        </Modal>
+        </ModalWidth>
     </div>;
 }
