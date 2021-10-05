@@ -154,28 +154,10 @@ export default function Vault(props) {
     //     checkAuthority();
     // }, [vaultcontract]);
 
-    const setbalance = async () => {
-        let arr = [{
-            token: '',
-            balance: ''
-        }];
-        let index = 0;
-        for (let item of list) {
-            arr[index].token = item;
-            // eslint-disable-next-line no-loop-func
-            await api.vault.getBalanceOf(vaultcontract, item).then(data => {
-                if (!data) return;
-                arr[index].balance = data
-            });
-            index++;
-        }
-        settokenlist(arr);
-        setLoading(false);
-        // dispatch({ type: 'LOADINGTYPE', payload: null });
-    };
-    useEffect(() => {
-        setbalance();
-    }, [list, historylist]);
+
+    // useEffect(() => {
+    //     setbalance();
+    // }, [list, historylist]);
     let beforelen, afterlen;
     const setShow = async (type) => {
 
@@ -215,9 +197,10 @@ export default function Vault(props) {
     const setAlllist = async () => {
         setLoading(true);
         // dispatch({ type: 'LOADINGTYPE', payload: t('InitializeVault') });
-        await api.vault.getTokenList(vaultcontract).then(data => {
+        await api.vault.getBalanceList(vaultcontract).then(data => {
             if (!data) return;
-            setlist(data)
+            settokenlist(data);
+            setLoading(false);
         });
         await api.vault.getTransferHistory(vaultcontract).then(data => {
             if (!data) return;
@@ -397,8 +380,8 @@ export default function Vault(props) {
                                     <BalanceNum>{item.balance}</BalanceNum>
                                     <Symbol>{item.symbol}</Symbol>
                                     <Address>
-                                        {item.token}
-                                        <CopyStr address={item.token} />
+                                        {item.erc20}
+                                        <CopyStr address={item.erc20} />
                                     </Address>
                                 </li>
                             )

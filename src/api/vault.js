@@ -53,6 +53,20 @@ const getTokenList = async (vaultcontract) => {
     return data;
 };
 
+const getBalanceList = async (vaultcontract) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (vaultcontract === null || !vaultcontract || !vaultcontract.query || !AccountId) return;
+
+
+    let data = await vaultcontract.query.getBalance(AccountId, {value, gasLimit});
+    data = publicJs.formatResult(data);
+
+    console.error(("============getBalanceList"),data)
+
+    return data;
+};
+
 const getTransferHistory = async (vaultcontract) => {
 
     const AccountId = await Accounts.accountAddress();
@@ -124,6 +138,7 @@ export default {
     InitVault,
     getBalanceOf,
     getTokenList,
+    getBalanceList,
     getTransferHistory,
     deposit,
     withdraw,

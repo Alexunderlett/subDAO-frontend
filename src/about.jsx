@@ -227,38 +227,41 @@ export default function About(props) {
         queryAddrs();
     }, []);
 
-    useEffect(() => {
-        const setBalance = async () => {
-            let arr = [];
-            let index = 0;
-            for (let item of tokenlist) {
-                // eslint-disable-next-line no-loop-func
-                await api.vault.getBalanceOf(vaultcontract, item).then(async (data) => {
-
-                    if (!data) return;
-                    arr[index] = {
-                        address: item,
-                        balance: data
-                    };
-                    let result = await api.erc20.queryInfo(erc20contract, item);
-                    let { symbol, name } = result;
-                    arr[index].symbol = symbol;
-                    arr[index].name = name;
-                });
-                index++;
-                setbalancelist(arr);
-                setbalanceshow(false);
-            }
-        }
-        setBalance();
-    }, [tokenlist, id]);
+    // useEffect(() => {
+    //     const setBalance = async () => {
+    //         let arr = [];
+    //         let index = 0;
+    //         for (let item of tokenlist) {
+    //             // eslint-disable-next-line no-loop-func
+    //             await api.vault.getBalanceOf(vaultcontract, item).then(async (data) => {
+    //
+    //                 if (!data) return;
+    //                 arr[index] = {
+    //                     address: item,
+    //                     balance: data
+    //                 };
+    //                 let result = await api.erc20.queryInfo(erc20contract, item);
+    //                 let { symbol, name } = result;
+    //                 arr[index].symbol = symbol;
+    //                 arr[index].name = name;
+    //             });
+    //             index++;
+    //             setbalancelist(arr);
+    //             setbalanceshow(false);
+    //         }
+    //     }
+    //     setBalance();
+    // }, [tokenlist, id]);
 
     useEffect(() => {
         if (vaultcontract == null || contractlist.vault_addr == null || !contractlist.vault_addr) return;
         const setToken = async () => {
-            await api.vault.getTokenList(vaultcontract).then(data => {
+            await api.vault.getBalanceList(vaultcontract).then(data => {
                 if (!data) return;
-                settokenlist(data)
+                // settokenlist(data)
+
+                setbalancelist(data);
+                setbalanceshow(false);
             });
         };
         setToken();
@@ -341,8 +344,8 @@ export default function About(props) {
                                     <BalanceNum>{item.balance}</BalanceNum>
                                     <Symbol>{item.symbol}</Symbol>
                                     <Address>
-                                        {item.name}
-                                        <CopyStr address={item.name} />
+                                        {item.erc20}
+                                        <CopyStr address={item.erc20} />
                                     </Address>
                                 </li>
                             )
