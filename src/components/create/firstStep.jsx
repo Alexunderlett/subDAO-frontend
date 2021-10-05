@@ -75,6 +75,7 @@ const Content = styled.div`
     .imageBox{
         display: flex;
         .img{
+            flex-shrink: 0;
             width: 14rem;
             height: 14rem;
             background: #FFFFFF;
