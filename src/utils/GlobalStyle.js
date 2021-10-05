@@ -307,7 +307,6 @@ body,html{
   }
   
   .inputBrdr{
-    flex: 1;
     width: 100%;
     display: flex;
     align-items: center;

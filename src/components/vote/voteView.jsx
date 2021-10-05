@@ -1,17 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Input } from 'antd';
+import { Button, Modal, Radio } from 'antd';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api/index";
 import newVote from "../../img/newvoting.png";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
+import LoadingNew from "../loadingNEW";
+
+const NextBrdr= styled.li`
+margin-top: 1rem;
+     button{
+      width: 100%;
+      &:disabled{
+      opacity: 0.3;
+      }
+     }
+`;
+
+const SectionBrdr = styled.section`
+    li{
+        margin-bottom: 2rem;
+        &>div{
+        font-size: 1.6rem;
+        font-family: Roboto-Regular;
+        font-weight: 400;
+        color: #10164B;
+        line-height: 1.9rem;
+        }
+    }
+`;
+const Titles = styled.span`
+  font-size: 1.2rem;
+    font-family: Roboto-Light;
+    font-weight: 300;
+    color: #10164B;
+    opacity: 0.6;
+    padding-bottom: 1rem;
+    display: inline-block;
+    
+`;
+
+const Desc = styled.div`
+    min-height: 13.8rem;
+    background: #EFF0FA;
+    border-radius: 2.4rem;
+    padding: 2rem;
+`;
+const Li = styled.li`
+  display: flex;
+  word-break: break-all;
+`;
+const TransferLft = styled.div`
+ width: 25rem;
+`;
+const Amount = styled.div`
+   border-left: 0.4rem solid #FFD9CF;;
+    font-size: 2rem;
+    color: #FF672F;
+    line-height: 2em;
+    padding-left: 0.8rem;
+    
+`;
+const Addr = styled.div`
+  flex-grow: 1;
+`
 
 export default function VoteView(props) {
 
-    const { state } = useSubstrate();
+    const { state,dispatch } = useSubstrate();
     const { votecontract } = state;
-
-    const [tips, setTips] = useState('');
 
     const [optionlist, setoptionlist] = useState([]);
     const [id, setId] = useState(null);
@@ -19,26 +77,16 @@ export default function VoteView(props) {
     const [title, settitle] = useState('');
     const [desc, setdesc] = useState('');
     const [selected, setselected] = useState('');
-    const [logo, setLogo] = useState('');
     const [afterchoice, setafterchoice] = useState(false);
-    const [active, setActive] = useState(null);
+    const [show, setShow] = useState(true);
     const [disabledVote, setdisabledVote] = useState(false);
     const [toaddress, settoaddress] = useState('');
     const [toValue, settovalule] = useState('');
 
-    // const [errorShow, seterrorShow] = useState(false);
-    const [errorTips, seterrorTips] = useState('');
-
     let { t } = useTranslation();
 
     useEffect(() => {
-        let logo = sessionStorage.getItem('logo');
-        setLogo(logo);
-    }, []);
-    useEffect(() => {
         if (afterchoice) {
-            // props.history.push(`/voteOverview/${props.id}/${voteid}`);
-            // setLoading(false);
             props.handleClose()
         }
 
@@ -55,11 +103,9 @@ export default function VoteView(props) {
     }, [voteid]);
 
     useEffect(() => {
-        console.log(props.id, props.voteid)
         if (props.id == null) return;
         setvoteid(props.voteid);
         setId(props.id);
-
 
         const setOnevote = async () => {
 
@@ -75,98 +121,79 @@ export default function VoteView(props) {
                 settovalule(transfer_value);
                 setoptionlist(choices.split('|'))
             });
-            // setLoading(false);
+            setShow(false);
         };
         setOnevote();
     }, [props.voteid, props.id]);
 
-    const handleClicktoVote = () => {
-        props.history.push(`/vote/${props.id}`)
-    }
     const handleClicktoOverview = async () => {
-        // setLoading(true);
-        setTips(t('Voting'));
 
+        dispatch({ type: 'LOADINGTYPE', payload: t('Voting') });
         await api.vote.VoteChoice(votecontract, voteid, selected, (data) => {
-            setafterchoice(data)
+            setafterchoice(data);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
         }).catch((error) => {
-            // seterrorShow(true)
-            // seterrorTips(`Vote: ${error.message}`)
-            // setLoading(false);
+            dispatch({ type: 'LOADINGTYPE', payload: null });
+            dispatch({ type: 'MSGTYPE', payload: { msg: `Vote: ${error.message}`, closable: true } });
 
         });
 
     }
     const handleRadio = (e) => {
-        setselected(e.target.value)
-    }
-    const handleActive = (e) => {
-        let index = e.currentTarget.id.split("_")[1];
-        setActive(index)
+        setselected(e.target.value);
+        console.log("=====",e.target.value)
     }
     let { handleClose, showTips } = props;
     return (
         <div>
-            {/*<Modal*/}
-            {/*    visible={errorShow}*/}
-            {/*    onCancel={() => seterrorShow(false)}*/}
-            {/*    footer={null}*/}
-            {/*>*/}
-            {/*    <div className="title">{errorTips}</div>*/}
-            {/*</Modal>*/}
-            <Modal visible={showTips} onCancel={handleClose} footer={null}>
-                <div className="title"><img src={newVote} alt="" /><span> {t('Voting')}</span></div>
-                <section>
-                    <ul>
-                        <li className='VotetitleTop'>{title}</li>
-                        <li className='voteContent'>
-                            <div className='desc'>{desc}</div>
-                            <div>{t('ReceiverAddress')}: {toaddress}</div>
-                            <div>{t('Amount')}: {toValue}</div>
-                        </li>
-                        <li className='voteSelect'>
-                            {optionlist.map((i, index) => (
 
-                                <div key={index}>
-                                    <div className="row">
-                                        <div className={parseInt(active) === index ? 'col-12 radioOption radioActive' : 'col-12 radioOption'} id={`active_${index}`} onClick={handleActive}>
-                                            <div className="form-group">
-                                                <div className="form-check"  >
-                                                    <label htmlFor={`radio_${index}`}>{i.split(":")[0]}</label>
-                                                    <Input name="radiobutton"
-                                                        type="radio"
-                                                        id={`radio_${index}`}
-                                                        className="form-check-inputRadio"
-                                                        value={index}
-                                                        onClick={handleRadio}
-                                                    />
-                                                </div>
-                                            </div>
-                                            {/*<Form.Group>*/}
-                                            {/*    <Form.Check*/}
-                                            {/*        type="radio"*/}
-                                            {/*        label={i.split(":")[0]}*/}
-                                            {/*        id={`radio_${index}`}*/}
-                                            {/*        value={index+1}*/}
-                                            {/*        name='radiobutton' onChange={handleRadio}/>*/}
-                                            {/*</Form.Group>*/}
+            <Modal visible={showTips} onCancel={handleClose} footer={null} maskClosable={false} centered={true}>
+                <div className="title"><span> {t('Voting')}</span></div>
+                <SectionBrdr>
+                    {
+                        show && <LoadingNew />
+                    }
+                    {
+                        !show && <ul>
+                            <li>
+                                <Titles>Title</Titles>
+                                <div>{title}</div>
+                            </li>
+                            <Li>
+                                <TransferLft>
+                                    <Titles>Transfer</Titles>
+                                    <Amount>{toValue}</Amount>
+                                </TransferLft>
+                                <Addr>
+                                    <Titles>Recipient Address</Titles>
+                                    <div>{toaddress}</div>
+                                </Addr>
+
+                            </Li>
+                            <li>
+                                <Titles>Voting Description</Titles>
+                                <Desc>{desc}</Desc>
+                            </li>
+                            <li className='voteSelect'>
+
+                                <Radio.Group onChange={handleRadio} value={selected}>
+                                    {optionlist.map((i, index) => (
+                                        <div key={index}>
+                                            <Radio value={index}>{i.split(":")[0]}</Radio>
                                         </div>
+                                    ))
+                                    }
+                                </Radio.Group>
 
-                                    </div>
-                                </div>
-                            ))
-                            }
+                            </li>
+                            <NextBrdr>
+                                <Button type="primary" onClick={handleClicktoOverview}
+                                        disabled={disabledVote}>{t('Decide')}</Button>
+                            </NextBrdr>
+                        </ul>
+                    }
 
-
-                        </li>
-                        <li className='NextBrdr'>
-                            {/*<Button className='leftBtn'*/}
-                            {/*        onClick={handleClicktoVote}>Cancel</Button>*/}
-                            <Button type="primary" onClick={handleClicktoOverview}
-                                disabled={disabledVote}>{t('Decide')}</Button>
-                        </li>
-                    </ul>
-                </section>
+                </SectionBrdr>
             </Modal>
         </div>
     )

@@ -177,8 +177,7 @@ export default function NewVote(props) {
                         setmin('')
                         setoptionlist(['', '', ''])
                         settype(1)
-                        props.handleClose()
-                        props.refresh()
+                        props.history.push(pURL)
                     }
                 }).catch((error) => {
                     setWalletTips(true)
@@ -214,8 +213,7 @@ export default function NewVote(props) {
                     setmin('')
                     setoptionlist(['', '', ''])
                     settype(1)
-                    props.handleClose()
-                    props.refresh()
+                    props.history.push(pURL)
                 }
             }).catch((error) => {
                 setWalletTips(true)
