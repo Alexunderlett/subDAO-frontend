@@ -117,41 +117,19 @@ const DaosModal = (props) => {
 
     const setInstances = async () => {
 
-        let mydaolist=[];
-        mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
+
+       let mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
 
 
         if ( daoType === 'my'){
             mydaolist = mydaolist.filter(i => i.owner === allAccounts[0].address);
         }
-        const setListAll = async (mydaolist) => {
-            let arr = [];
-            if (!!mydaolist && mydaolist.length) {
-                for (let item of mydaolist) {
 
-                    const data = await api.main.listDAOInfo(maincontract, item.dao_manager_addr);
-                    if (!data) continue;
-                    const { logo, name, desc, owner} = data;
-                    arr.push({
-                        address: item,
-                        logo,
-                        name,
-                        desc,
-                        owner,
-                    });
-                }
-                setimglist(arr);
-            }else{
-                setimglist([]);
-            }
+        setTimeout(()=>{
+            setAlls(false);
+            setimglist(mydaolist);
+        },0)
 
-            setTimeout(()=>{
-                setAlls(false);
-            },0)
-
-        }
-
-        setListAll(mydaolist);
     };
 
 
