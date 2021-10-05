@@ -90,16 +90,28 @@ const Vote = styled.div`
         }
     }
     .myDatePicker{
+        border: 0;
         height: 4.4rem;
+        box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+        border-radius: 0.8rem;
         input{
             height: 100%;
             box-shadow: none;
         }
+        &.ant-picker-focused{
+            box-shadow: 0 0 0 2px rgb(213 36 115 / 20%) !important;
+        }
     }
 
     input{
+        border: 0;
         height: 4.4rem;
         background: #FFFFFF;
+        box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
+        border-radius: 0.8rem;
+    }
+    textarea{
+        border: 0;
         box-shadow: 0rem 0rem 0.4rem 0rem rgba(16, 22, 75, 0.1);
         border-radius: 0.8rem;
     }
@@ -128,6 +140,7 @@ export default function NewVote(props) {
     const [optchecked, setoptchecked] = useState(false);
     const [walletTips, setWalletTips] = useState(false);
     const [resultDate, setresultDate] = useState('');
+    const [mydate, setmydate] = useState(null);
 
     const { TextArea } = Input;
 
@@ -211,9 +224,10 @@ export default function NewVote(props) {
                 dispatch({ type: 'LOADINGTYPE', payload: null });
             });
         }
+    }
 
-
-
+    function disabledDate(current) {
+        return current && current < moment().endOf('day');
     }
 
     const removeOption = (selectItem, index) => {
@@ -262,11 +276,8 @@ export default function NewVote(props) {
         return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (s < 10 ? '0' + s : s);
     }
 
-    const dateFormat = (value) => {
-        return moment(value).startOf().format('YYYY-MM-DD HH:mm:ss')
-    }
-
     const handleChange = (value) => {
+        setmydate(value)
         const nowTime = Date.parse(new Date())
         const dateTime = Date.parse(value._d)
         setdate(dateTime - nowTime)
@@ -286,7 +297,6 @@ export default function NewVote(props) {
                     itemprops.value.length !== 0 &&
                     <div className='removeDate' onClick={clear}><i className='fa fa-close' /></div>
                 }
-
             </div>
         );
     }
@@ -317,11 +327,15 @@ export default function NewVote(props) {
                         </div>
                         <DatePicker
                             placeholder='Please select end time'
+                            defaultValue={mydate}
                             className="myDatePicker"
                             style={{ width: '100%' }}
-                            format={dateFormat}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            disabledDate={disabledDate}
                             allowClear={false}
-                            onChange={handleChange} />
+                            onChange={handleChange}
+                            showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                            showNow={false} />
                     </div>
                     <div>
                         <div className="label">{t('Title')}</div>

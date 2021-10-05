@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Checkbox, Row, Col } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
@@ -204,28 +204,10 @@ export default function AddAuth(props) {
                 <ul className='orgSelect'>
                     <li className="row">
                         {!!optionlist.length && optionlist.map((i, index) => (
-
-                            <div key={index} className='col-4'>
-                                <div>
-                                    {/*<div className={parseInt(active) === index?'radioOption radioActive':'radioOption'} id={`active_${index}`} onClick={handleActive}>*/}
-                                    <div className={i.checked ? 'radioOption radioActive' : 'radioOption'} id={`active_${index}`} >
-                                        <div className="form-group">
-                                            <div className="form-check"  >
-                                                <input name="radiobutton"
-                                                    type="checkbox"
-                                                    id={`radio_${index}`}
-                                                    className="form-check-inputRadio"
-                                                    value={i.action_id}
-                                                    onChange={e => isChecked(e, i)}
-                                                    checked={i.checked}
-                                                />
-                                                <label htmlFor={`radio_${index}`}>{i.contract_name}: {i.action_title}</label>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
+                            <div style={{ minWidth: '50%', float: 'left' }}>
+                                <Checkbox key={index} onChange={e => isChecked(e, i)} checked={i.checked}>
+                                    {i.contract_name}: {i.action_title}
+                                </Checkbox>
                             </div>
                         ))
                         }
