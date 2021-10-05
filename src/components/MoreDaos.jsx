@@ -45,16 +45,10 @@ const MoreDaos = (props) => {
         // if(daolist == null) return;
         // setLen(daolist.length)
         let arr = [];
-        let index = 0;
         for (let item of favoriteDAOs) {
-            index++;
-            const data = await api.base.InitHome(state, item);
-
+            const data = await api.main.listDAOInfo(maincontract, item);
             if (!data) continue;
-            const logo = data.logo ? data.logo : '';
-            const name = data.name ? data.name : '';
-            const desc = data.desc ? data.desc : '';
-            const owner = data.owner ? data.owner : '';
+            const { logo, name, desc, owner} = data
             arr.push({
                 address: item,
                 logo,
@@ -63,9 +57,7 @@ const MoreDaos = (props) => {
                 owner,
             });
 
-            if (index >= favoriteDAOs.length - 1) {
-                setLoading(false)
-            }
+            setLoading(false)
         }
         setList(arr);
     }

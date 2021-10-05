@@ -32,6 +32,18 @@ const listDaoInstances = async (maincontract) => {
 
 };
 
+const listDAOInfo = async (maincontract,Daoaddress) => {
+
+    const AccountId = await Accounts.accountAddress();
+    if (maincontract === null || !maincontract || !maincontract.query || !AccountId) return;
+
+    let data = await maincontract.query.listDaoInfo(AccountId, {value, gasLimit},Daoaddress);
+    data = publicJs.formatResult(data);
+
+    return data;
+
+};
+
 const mainAddress = window.mainAddress;
 const listDaoInstancesByOwner = async (maincontract) => {
 
@@ -71,6 +83,7 @@ const instanceByTemplate = async (maincontract,id,cb) => {
 export default {
     listTemplates,
     listDaoInstances,
+    listDAOInfo,
     listDaoInstancesByOwner,
     instanceByTemplate,
 
