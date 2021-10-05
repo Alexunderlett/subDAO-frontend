@@ -340,7 +340,10 @@ export default function About(props) {
                                 <li key={`balance_${index}`}>
                                     <BalanceNum>{item.balance}</BalanceNum>
                                     <Symbol>{item.symbol}</Symbol>
-                                    <Address>{item.name}</Address>
+                                    <Address>
+                                        {item.name}
+                                        <CopyStr address={item.name} />
+                                    </Address>
                                 </li>
                             )
                         }

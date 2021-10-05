@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next";
 import styled from 'styled-components';
 import LoadingNew from "./components/loadingNEW";
 import PublicJS from './utils/publicJs';
+import CopyStr from "./components/copy";
+
 
 const FirstLine = styled.div`
   position: relative;
@@ -394,7 +396,10 @@ export default function Vault(props) {
                                 <li key={`balance_${index}`}>
                                     <BalanceNum>{item.balance}</BalanceNum>
                                     <Symbol>{item.symbol}</Symbol>
-                                    <Address>{item.token}</Address>
+                                    <Address>
+                                        {item.token}
+                                        <CopyStr address={item.token} />
+                                    </Address>
                                 </li>
                             )
                         }
