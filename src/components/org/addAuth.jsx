@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Checkbox, Row, Col } from 'antd';
+import { Button, Modal, Checkbox } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
