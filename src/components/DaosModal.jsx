@@ -126,10 +126,10 @@ const DaosModal = (props) => {
         }
 
         setTimeout(()=>{
-            setAlls(false);
-            setimglist(mydaolist);
-        },0)
 
+            setimglist(mydaolist);
+            setAlls(false);
+        },0)
     };
 
 
@@ -201,7 +201,7 @@ const DaosModal = (props) => {
                     }
                     {
                         !alls && !!imglist.length && imglist.map((item) =>
-                            <div key={item.address} className="daoItem" onClick={() => handleClicktoAbout(item.address, item.owner)}>
+                            <div key={item.dao_manager_addr} className="daoItem" onClick={() => handleClicktoAbout(item.dao_manager_addr, item.owner)}>
                                 <img src={item.logo} alt="" />
                                 <div className="title">{item.name}</div>
                                 <div className="detail">{item.desc}</div>
