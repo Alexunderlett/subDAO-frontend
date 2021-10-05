@@ -128,18 +128,16 @@ const DaosModal = (props) => {
             let arr = [];
             if (!!mydaolist && mydaolist.length) {
                 for (let item of mydaolist) {
-                    const data = await api.base.InitHome(state, item.dao_manager_addr);
-                    if (!data) continue;
 
-                    const logo = data.logo ? data.logo : '';
-                    const name = data.name ? data.name : '';
-                    const desc = data.desc ? data.desc : '';
+                    const data = await api.main.listDAOInfo(maincontract, item.dao_manager_addr);
+                    if (!data) continue;
+                    const { logo, name, desc, owner} = data;
                     arr.push({
-                        address: item.dao_manager_addr,
+                        address: item,
                         logo,
                         name,
-                        owner: item.owner,
                         desc,
+                        owner,
                     });
                 }
                 setimglist(arr);
@@ -176,15 +174,6 @@ const DaosModal = (props) => {
     }
 
     const handleClicktoAbout = (id,owner) => {
-
-            // dispatch({ type: 'SET_BASE',payload: null });
-            // dispatch({ type: 'SET_ERC20',payload:null });
-            // dispatch({ type: 'SET_ORG',payload: null });
-            // dispatch({ type: 'SET_VAULT',payload: null });
-            // dispatch({ type: 'SET_VOTE',payload: null });
-            // dispatch({ type: 'SET_AUTH',payload: null });
-            //
-
 
         props.history.push(`/about/${id}/${owner}`);
         dispatch({ type: 'DAOTYPE',payload: null });
