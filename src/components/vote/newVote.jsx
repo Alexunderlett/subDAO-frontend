@@ -224,8 +224,29 @@ export default function NewVote(props) {
         }
     }
 
-    function disabledDate(current) {
-        return current && current < moment().endOf('day');
+    const disabledDate = (current) => {
+        return current && current <= moment().startOf('day');
+    }
+
+    const range = (start, end) => {
+        const result = [];
+        for (let i = start; i < end; i++) {
+            result.push(i);
+        }
+        return result;
+    }
+
+    const disabledDateTime = (dates) => {
+        let hours = moment().hours(); //0~23
+        let minutes = moment().minutes(); //0~59
+        let seconds = moment().seconds(); //0~59
+        if (dates && moment(dates[1]).date() === moment().date()) {
+            return {
+                disabledHours: () => range(0, hours),
+                disabledMinutes: () => range(0, minutes),
+                disabledSeconds: () => range(0, seconds + 1),
+            };
+        }
     }
 
     const removeOption = (selectItem, index) => {
@@ -324,15 +345,16 @@ export default function NewVote(props) {
                             <span>Select how long the vote durate by seconds</span>
                         </div>
                         <DatePicker
+                            className="myDatePicker"
                             placeholder='Please select end time'
                             defaultValue={mydate}
-                            className="myDatePicker"
                             style={{ width: '100%' }}
                             format="YYYY-MM-DD HH:mm:ss"
                             disabledDate={disabledDate}
+                            disabledTime={disabledDateTime}
                             allowClear={false}
                             onChange={handleChange}
-                            showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                            showTime={true}
                             showNow={false} />
                     </div>
                     <div>
