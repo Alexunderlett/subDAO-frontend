@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import cpoy from '../images/copy.png';
+import cpoy from '../img/copy.png';
 import styled from 'styled-components';
 import { Tooltip } from 'antd';
 

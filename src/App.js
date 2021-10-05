@@ -1,6 +1,5 @@
 import React from "react";
 import { SubstrateContextProvider } from "./api/contracts";
-// import mp4 from "./images/wave.mp4";
 import { HashRouter as Router } from "react-router-dom";
 import Routerlink from "./router/router";
 import FootBtm from "./components/footBtm";

@@ -5,7 +5,7 @@ import api from "../../api";
 import left from '../../img/left.png';
 import right from '../../img/right.png';
 
-import newVote from '../../images/newvoting.png';
+import newVote from '../../img/newvoting.png';
 import NewVoteTop from './newVoteTop';
 import remove from "../../img/shutdown.png";
 import add from "../../img/Add.png";

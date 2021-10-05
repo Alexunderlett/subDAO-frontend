@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import closeBtn from '../../images/shutdownW.png'
+import closeBtn from '../../img/shutdownW.png'
 import {Trans, Translation} from 'react-i18next';
 import {Modal, Button, Input} from 'antd';
 import styled from 'styled-components';

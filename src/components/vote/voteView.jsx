@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, Input } from 'antd';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api/index";
-import newVote from "../../images/newvoting.png";
+import newVote from "../../img/newvoting.png";
 import { useTranslation } from "react-i18next";
 
 

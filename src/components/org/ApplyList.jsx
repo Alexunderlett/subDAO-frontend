@@ -4,7 +4,6 @@ import { Button, Modal } from 'antd';
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
 import { useTranslation } from "react-i18next";
-import applyList from "../../images/apply.png";
 import Sel from "../../img/Sel.png";
 import styled from 'styled-components';
 

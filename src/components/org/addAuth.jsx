@@ -3,7 +3,6 @@ import { Button, Modal, Checkbox } from 'antd';
 
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
-import authWhite from '../../images/auth.png';
 import { useTranslation } from "react-i18next";
 
 export default function AddAuth(props) {

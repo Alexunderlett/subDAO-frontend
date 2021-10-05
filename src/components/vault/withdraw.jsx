@@ -4,7 +4,7 @@ import { Button, Modal, Input, Select } from 'antd';
 import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
 
-import sender from "../../images/send.png";
+import sender from "../../img/send.png";
 import { useTranslation } from "react-i18next";
 
 const Withdraw = forwardRef((props, ref) => {
