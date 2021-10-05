@@ -5,26 +5,32 @@ import api from "../../api";
 import { useSubstrate } from "../../api/contracts";
 import { useTranslation } from "react-i18next";
 
+import LoadingNew from "../loadingNEW";
+
 export default function AddAuth(props) {
 
     const { state, dispatch } = useSubstrate();
     const { authcontract, allAccounts, apiState } = state;
 
     const [tips, setTips] = useState('');
+    const [addr, setAddr] = useState('');
 
     const [optionlist, setoptionlist] = useState([]);
     const [cancel, setcancel] = useState([]);
     const [selected, setselected] = useState([]);
     const [handleselected, sethandleselected] = useState(false);
-    const [handlecancel, sethandlecancel] = useState(false);
     const [afterselected, setafterselected] = useState(false);
     const [aftercancel, setaftercancel] = useState(false);
 
     let { t } = useTranslation();
 
+
     useEffect(() => {
-        setoptionlist([])
-        if (!props.address || !props.authlist) return
+
+        setoptionlist([]);
+        if (!props.address || !props.authlist) return;
+
+        setAddr(props.address);
         let arr = props.authlist;
         arr.map(i => {
             i.checked = false;
@@ -69,7 +75,7 @@ export default function AddAuth(props) {
         if (!handleselected) return;
 
         if (!selected.length) {
-            setafterselected(true)
+            setafterselected(true);
             return
         }
 
@@ -85,11 +91,11 @@ export default function AddAuth(props) {
                     }
                 }
                 let obj = {
-                    address: props.address,
+                    address: addr,
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
-
+                console.error(obj)
                 await api.auth.grantPermission(authcontract, obj, (data) => {
                     if (!data) return;
                     afterArr.push(obj);
@@ -118,7 +124,7 @@ export default function AddAuth(props) {
     useEffect(() => {
         if (!afterselected) return;
         if (!cancel.length) {
-            setaftercancel(true)
+            setaftercancel(true);
             return
         }
         const handlecal = async () => {
@@ -132,7 +138,7 @@ export default function AddAuth(props) {
                     }
                 }
                 let obj = {
-                    address: props.address,
+                    address: addr,
                     contract_name: item.contract_name,
                     function_name: item.function_name
                 };
@@ -188,6 +194,7 @@ export default function AddAuth(props) {
     }
 
     const confirmAuth = async () => {
+        props.handleClose();
         dispatch({ type: 'LOADINGTYPE', payload: tips });
         sethandleselected(true)
     }
@@ -203,7 +210,7 @@ export default function AddAuth(props) {
                 <ul className='orgSelect'>
                     <li className="row">
                         {!!optionlist.length && optionlist.map((i, index) => (
-                            <div style={{ minWidth: '50%', float: 'left' }}>
+                            <div style={{ minWidth: '50%', float: 'left' }} key={index}>
                                 <Checkbox key={index} onChange={e => isChecked(e, i)} checked={i.checked}>
                                     {i.contract_name}: {i.action_title}
                                 </Checkbox>
@@ -211,12 +218,12 @@ export default function AddAuth(props) {
                         ))
                         }
                         {
-                            !optionlist.length && <div animation="border" variant="light" />
+                            !optionlist.length && <LoadingNew />
                         }
                     </li>
                     <li className='btmBtn'>
                         <div className='NextBrdr100'>
-                            <Button type="primary" onClick={confirmAuth} style={{ width: '100%', marginTop: '3rem' }}>{t('Confirm')}</Button>
+                            <Button type="primary" onClick={()=>confirmAuth()} style={{ width: '100%', marginTop: '3rem' }}>{t('Confirm')}</Button>
                         </div>
                     </li>
                 </ul>
