@@ -124,6 +124,9 @@ const reducer = (state, action) => {
         case 'WALLET':
             return { ...state, wallet: action.payload};
 
+        case 'RELOAD_DAOS':
+            return { ...state, reloadDaos: action.payload};
+
 
         default:
             throw new Error(`Unknown type: ${action.type}`);

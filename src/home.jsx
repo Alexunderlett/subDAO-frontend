@@ -89,7 +89,7 @@ function Home(props) {
     const { state, dispatch } = useSubstrate();
     let { t } = useTranslation();
 
-    const { maincontract, allAccounts, apiState } = state;
+    const { maincontract, allAccounts, reloadDaos } = state;
 
     const [showButton, setShowButton] = useState(false);
 
@@ -140,12 +140,13 @@ function Home(props) {
         setimglist(mydaolist);
         dispatch({ type: 'LOADINGTYPE', payload: null });
         sessionStorage.setItem('addresslist', JSON.stringify(addresslist));
+
     };
     useEffect(() => {
 
-        if (maincontract == null || allAccounts == null ) return;
+        if (maincontract == null || allAccounts == null  ) return;
         setInstances();
-    }, [allAccounts, maincontract, first]);
+    }, [allAccounts, maincontract, first,reloadDaos])
 
     const ConnectWallet = () => {
         dispatch({ type: 'WALLET', payload: true });

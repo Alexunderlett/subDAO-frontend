@@ -36,4 +36,5 @@ module.exports = {
     msgType:null,
     loadingType:null,
     wallet:null,
+    reloadDaos:null
 };

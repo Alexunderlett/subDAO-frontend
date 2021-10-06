@@ -353,6 +353,7 @@ export default function ThirdStep(props) {
 
                 await api.main.listDAOInfo(maincontract, baseC.dao_manager_addr).then((data)=>{
                     props.history.push(`/about/${baseC.dao_manager_addr}`);
+                    dispatch({ type: 'RELOAD_DAOS', payload: true });
                 });
 
 

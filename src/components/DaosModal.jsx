@@ -101,7 +101,7 @@ const DaosModal = (props) => {
     const { moreDaos, handleClose } = props;
 
     const { state, dispatch } = useSubstrate();
-    const {  maincontract, allAccounts, daoManagercontract,daoType } = state;
+    const {  maincontract, allAccounts, daoManagercontract,daoType,reloadDaos } = state;
     const [alls, setAlls] = useState(true);
     const [imglist, setimglist] = useState([]);
     const [showCreatDaoBtn, setshowCreatDaoBtn] = useState(true);
@@ -116,10 +116,18 @@ const DaosModal = (props) => {
     },[pathname])
 
     const setInstances = async () => {
+        let mydaolist;
+
+       mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
+
+       if(reloadDaos){
+           mydaolist = await api.main.listDaoInstances(maincontract) || [];
+           sessionStorage.setItem('addresslist', JSON.stringify(mydaolist));
+           dispatch({ type: 'RELOAD_DAOS', payload:null });
+       }
 
 
-       let mydaolist = JSON.parse(sessionStorage.getItem('addresslist')) ;
-
+       //  let mydaolist = await api.main.listDaoInstances(maincontract) || [];
 
         if ( daoType === 'my'){
             mydaolist = mydaolist.filter(i => i.owner === allAccounts[0].address);
