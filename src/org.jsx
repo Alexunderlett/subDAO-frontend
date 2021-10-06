@@ -423,7 +423,7 @@ export default function Org(props) {
                     </UlMdrt>
                 </section>
                 <section>
-                    <div className="titleTop">Moderators</div>
+                    <div className="titleTop">Members</div>
                     <UlMdrt>
                         {
                             memberlistStatus && <LoadingNew />

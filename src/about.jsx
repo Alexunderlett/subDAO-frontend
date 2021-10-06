@@ -225,6 +225,7 @@ export default function About(props) {
     }, [daoManagercontract, id, maincontract, basecontract]);
     useEffect(() => {
         queryAddrs();
+        if(maincontract == null) dispatch({ type: 'LOAD_MAINCONTRACT' });
     }, []);
 
     // useEffect(() => {

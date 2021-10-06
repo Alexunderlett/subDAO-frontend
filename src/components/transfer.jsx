@@ -55,7 +55,7 @@ const Transfer = forwardRef((props, ref) => {
             <Modal visible={showTips} onCancel={handleClose} footer={null}>
                 <div className="title">
                     {/* <img src={sender} alt="" /> */}
-                    <span>{t('transferBtn')}</span>
+                    <span>Transfer Ownership</span>
                 </div>
 
                 <div className="label">{t('fillAddress')}</div>

@@ -496,13 +496,13 @@ export default function NewVote(props) {
                 type === 5 &&
                 <div>
                     <div className="line">
-                        <Checkbox onChange={(e) => handleActive(e)}>add transfer</Checkbox>
+                        <Checkbox onChange={(e) => handleActive(e)}>Token Transfer</Checkbox>
                     </div>
                     {
                         optchecked && <div className="line">
-                            <div className="label">{t('fillAddress')}</div>
+                            <div className="label">Address</div>
                             <Input
-                                placeholder={t('fillAddress')}
+                                placeholder='Address'
                                 name='to_address'
                                 value={to_address}
                                 onChange={handleInputChange}
@@ -512,9 +512,9 @@ export default function NewVote(props) {
 
                     {
                         optchecked && <div className="line">
-                            <div className="label">{t('fillAmount')}</div>
+                            <div className="label">Amount</div>
                             <Input
-                                placeholder={t('fillAmount')}
+                                placeholder="Amount"
                                 name='valueAmount'
                                 value={valueAmount}
                                 onChange={handleInputChange}

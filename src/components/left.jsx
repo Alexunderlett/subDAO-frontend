@@ -139,7 +139,7 @@ export default function Left(props){
     useEffect(() => {
         if (orgcontract == null || !delMem) return;
         const setAdmin = async () => {
-            dispatch({ type: 'LOADINGTYPE', payload:'Resign Moderator' });
+            dispatch({ type: 'LOADINGTYPE', payload:'Quitting' });
             if (isModerator) {
                 await api.org.resignModerator(orgcontract, function (result) {
                     if (!result) return;
@@ -337,7 +337,7 @@ export default function Left(props){
 
     const handleExitConfirm = async () => {
         setShowModal(false);
-        dispatch({ type: 'LOADINGTYPE', payload:'Resign Member' });
+        dispatch({ type: 'LOADINGTYPE', payload:'Quitting' });
         if (isMember) {
             await api.org.resignMember(orgcontract, function (result) {
                 if (!result) return;
@@ -447,7 +447,7 @@ export default function Left(props){
                         contractlist.vault_addr != null && <span className={type === 'vault' ? 'active' : ''} onClick={() => handleClicktoType('vault')}>Vault</span>
                     }
                     {
-                        contractlist.org_addr != null && <span className={type === 'org' ? 'active' : ''} onClick={() => handleClicktoType('org')}>Org</span>
+                        contractlist.org_addr != null && <span className={type === 'org' ? 'active' : ''} onClick={() => handleClicktoType('org')}>ORG</span>
                     }
                 </BtnGroup>
             }

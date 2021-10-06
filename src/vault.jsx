@@ -287,7 +287,7 @@ export default function Vault(props) {
                 let text = 'Failure'
                 if (State) {
                     img = finish
-                    text = 'Finish'
+                    text = 'Finished'
                 } else if (State === 'cancel') {
                     img = cancel
                 } else {

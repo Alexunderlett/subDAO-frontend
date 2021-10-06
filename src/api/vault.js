@@ -33,8 +33,6 @@ const getBalanceOf = async (vaultcontract,erc20) => {
 
     let data = await vaultcontract.query.getBalanceOf(AccountId, {value, gasLimit},erc20);
     data = publicJs.formatResult(data);
-
-    console.error(("============getBalanceOf"),data)
     return data;
 
 };
@@ -48,8 +46,6 @@ const getTokenList = async (vaultcontract) => {
     let data = await vaultcontract.query.getTokenList(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
-    console.error(("============getTokenList"),data)
-
     return data;
 };
 
@@ -62,7 +58,6 @@ const getBalanceList = async (vaultcontract) => {
     let data = await vaultcontract.query.getBalance(AccountId, {value, gasLimit});
     data = publicJs.formatResult(data);
 
-    console.error(("============getBalanceList"),data)
 
     return data;
 };

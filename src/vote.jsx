@@ -138,23 +138,7 @@ export default function Vote(props) {
                     </BtnRht>
                 </FirstLine>
                 <Tablesec>
-                    <div className="titleTop">Pendinng Voting List</div>
-                    {
-                        !showPending && <VotePending
-                            id={id}
-                            list={pendinglist}
-                            history={props.history}
-                            refresh={setAll}
-                            owner={props.match.params.owner}
-                        />
-                    }
-                    {
-                        showPending && <LoadingNew  />
-                    }
-
-                </Tablesec>
-                <Tablesec>
-                    <div className="titleTop">Active Voting List</div>
+                    <div className="titleTop">Voting</div>
                     {
                         !showActive &&<VoteActive
                             id={id}
@@ -169,7 +153,24 @@ export default function Vote(props) {
 
                 </Tablesec>
                 <Tablesec>
-                    <div className="titleTop">History</div>
+                    <div className="titleTop">Waiting for trigger</div>
+                    {
+                        !showPending && <VotePending
+                            id={id}
+                            list={pendinglist}
+                            history={props.history}
+                            refresh={setAll}
+                            owner={props.match.params.owner}
+                        />
+                    }
+                    {
+                        showPending && <LoadingNew  />
+                    }
+
+                </Tablesec>
+
+                <Tablesec>
+                    <div className="titleTop">Finished</div>
                     {
                         !showHistory &&<VotePagination
                             id={id}

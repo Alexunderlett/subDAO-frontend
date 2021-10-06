@@ -157,7 +157,8 @@ const DaosModal = (props) => {
         dispatch({ type: 'DAOTYPE',payload: null });
     }
     const handleSearch = (e) =>{
-        let list = JSON.parse(sessionStorage.getItem('daoList'));
+        let list = JSON.parse(sessionStorage.getItem('addresslist'));
+
         let arr;
         if(e.target.value.length){
             arr =  list.filter(item=> {
@@ -187,7 +188,7 @@ const DaosModal = (props) => {
                         </div>
                     }
                    {
-                        daoType ==='my' && <div className="left">My Daos</div>
+                        daoType ==='my' && <div className="left">My DAOs</div>
                     }
 
                     {showCreatDaoBtn &&

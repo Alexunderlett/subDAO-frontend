@@ -348,8 +348,18 @@ export default function ThirdStep(props) {
             sessionStorage.removeItem("firstStep");
             sessionStorage.removeItem("ImageUrl");
 
-            setTimeout(() => {
-                props.history.push(`home/about/${baseC.dao_manager_addr}`);
+            setTimeout(async() => {
+                dispatch({ type: 'LOADINGTYPE', payload: null });
+
+
+
+                await api.main.listDAOInfo(maincontract, baseC.dao_manager_addr).then((data)=>{
+                    props.history.push(`/about/${baseC.dao_manager_addr}/${data.owner}`);
+                });
+
+
+
+
             }, 2000)
         }
     }, [next]);
