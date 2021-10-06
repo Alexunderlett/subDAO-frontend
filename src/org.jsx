@@ -176,8 +176,14 @@ export default function Org(props) {
 
     useEffect(() => {
         setId(props.match.params.id);
+        initOwner();
     }, []);
-
+    const initOwner = async()=>{
+        await api.main.listDAOInfo(maincontract, id).then((data)=>{
+            if(!data)return;
+            setowner(data.owner)
+        });
+    }
     useEffect(() => {
         if (orgcontract == null) return;
         const whoAmI = async () => {
@@ -198,12 +204,7 @@ export default function Org(props) {
         }
         getFree()
 
-        const initOwner = async()=>{
-            await api.main.listDAOInfo(maincontract, id).then((data)=>{
-                if(!data)return;
-                setowner(data.owner)
-            });
-        }
+
 
         initOwner();
     }, [orgcontract, id, applyAuth]);

@@ -204,7 +204,7 @@ export default function About(props) {
         setbalanceshow(true);
 
         setAId(props.match.params.id);
-        initOwner();
+
     }, [props.match.params.id]);
     const queryAddrs = () => {
 
@@ -224,11 +224,13 @@ export default function About(props) {
         await api.main.listDAOInfo(maincontract, props.match.params.id).then((data)=>{
             if(!data)return;
             setowner(data.owner)
+            console.error("====listDAOInfo",data)
         });
     }
     useEffect(() => {
         if (daoManagercontract == null) return;
         queryAddrs();
+        initOwner();
     }, [daoManagercontract, id, maincontract, basecontract]);
     useEffect(() => {
         queryAddrs();
