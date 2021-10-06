@@ -77,7 +77,7 @@ const MoreDaos = (props) => {
             return;
         }
         const { address, owner } = obj;
-        props.history.push(`/about/${address}/${owner}`)
+        props.history.push(`/about/${address}`)
     }
 
     return (

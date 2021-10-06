@@ -129,6 +129,7 @@ export default function VoteView(props) {
     const handleClicktoOverview = async () => {
 
         dispatch({ type: 'LOADINGTYPE', payload: t('Voting') });
+        props.handleClose()
         await api.vote.VoteChoice(votecontract, voteid, selected, (data) => {
             setafterchoice(data);
             dispatch({ type: 'LOADINGTYPE', payload: null });
@@ -187,7 +188,7 @@ export default function VoteView(props) {
 
                             </li>
                             <NextBrdr>
-                                <Button type="primary" onClick={handleClicktoOverview}
+                                <Button type="primary" onClick={()=>handleClicktoOverview()}
                                         disabled={disabledVote}>{t('Decide')}</Button>
                             </NextBrdr>
                         </ul>

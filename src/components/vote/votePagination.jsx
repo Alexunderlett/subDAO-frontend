@@ -14,7 +14,7 @@ export default function VotePagination(props){
     }, [props]);
     const handleClicktoVoteview = (voteid) => {
         let { id,owner } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}/${owner}`)
+        props.history.push(`/voteOverview/${id}/${voteid}`)
     }
         return (
             <div className='votePending'>

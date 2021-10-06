@@ -153,7 +153,7 @@ const DaosModal = (props) => {
 
     const handleClicktoAbout = (id,owner) => {
 
-        props.history.push(`/about/${id}/${owner}`);
+        props.history.push(`/about/${id}`);
         dispatch({ type: 'DAOTYPE',payload: null });
     }
     const handleSearch = (e) =>{

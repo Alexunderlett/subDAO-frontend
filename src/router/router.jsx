@@ -19,17 +19,17 @@ function routerlink() {
             {/*<Route path="/" component={Home} exact/>*/}
 
             <Route path="/home" component={Home} />
-            <Route  path="/about/:id/:owner" component={About}/>
+            <Route  path="/about/:id" component={About}/>
             {/*<Route   activeClassName="active"  path="/about/:id" component={About}/>*/}
             <Route path="/create" component={Createnew} />
-            <Route path="/Vote/:id/:owner" component={Vote} />
-            <Route path="/newVote/:owner" component={NewVote} />
-            <Route path="/voteView/:id/:voteid/:owner" component={VoteView} />
-            <Route path="/voteOverview/:id/:voteid/:owner" component={VoteOverview} />
-            <Route path="/vault/:id/:owner" component={Vault} />
-            <Route path="/deposit/:id/:owner" component={Deposit} />
-            <Route path="/withdraw/:id/:owner" component={Withdraw} />
-            <Route path="/org/:id/:owner" component={Org} />
+            <Route path="/Vote/:id" component={Vote} />
+            <Route path="/newVote" component={NewVote} />
+            <Route path="/voteView/:id/:voteid" component={VoteView} />
+            <Route path="/voteOverview/:id/:voteid" component={VoteOverview} />
+            <Route path="/vault/:id" component={Vault} />
+            <Route path="/deposit/:id" component={Deposit} />
+            <Route path="/withdraw/:id" component={Withdraw} />
+            <Route path="/org/:id" component={Org} />
             <Redirect from="/" to="/home" exact />
         </Switch>
     );

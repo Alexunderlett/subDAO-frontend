@@ -170,6 +170,7 @@ export default function About(props) {
     const [balancelist, setbalancelist] = useState([]);
     const [balanceshow, setbalanceshow] = useState(true);
     const [contractshow, setcontractshow] = useState(true);
+    const [owner, setowner] = useState('');
 
     const [contractlist, setcontractlist] = useState({
         base_addr: null,
@@ -203,7 +204,14 @@ export default function About(props) {
         setbalanceshow(true);
 
         setAId(props.match.params.id);
+        const initOwner = async()=>{
+            await api.main.listDAOInfo(maincontract, props.match.params.id).then((data)=>{
+                if(!data)return;
+                setowner(data.owner)
+            });
+        }
 
+        initOwner();
     }, [props.match.params.id]);
     const queryAddrs = () => {
 
@@ -362,7 +370,7 @@ export default function About(props) {
                         }
                         {
                             !moderatorShow && moderators.map((i, index) => <li key={moderators[index]}>
-                                <img src={props.match.params.owner === moderators[index][0] ? Owner : Admin} alt="" />
+                                <img src={owner === moderators[index][0] ? Owner : Admin} alt="" />
                                 <div>
                                     <Names>{moderators[index][1]}</Names>
                                     <Address>{moderators[index][0]}</Address>

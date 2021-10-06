@@ -319,7 +319,7 @@ export default function Left(props){
     const handleClicktoType = (typeNow) => {
         if(typeNow === type) return;
 
-        props.history.push(`/${typeNow}/${props.id}/${props.owner}`);
+        props.history.push(`/${typeNow}/${props.id}`);
     }
     const handleExit = () => {
         setShowModal(true)

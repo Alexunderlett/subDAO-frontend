@@ -133,7 +133,7 @@ export default function Vote(props) {
                     <BtnRht>
                         {
                             isModerator &&
-                            <Button type="primary" onClick={() => props.history.push(`/newVote/${props.match.params.owner}?url=${props.match.url}`)}>New voting</Button>
+                            <Button type="primary" onClick={() => props.history.push(`/newVote?url=${props.match.url}`)}>New voting</Button>
                         }
                     </BtnRht>
                 </FirstLine>

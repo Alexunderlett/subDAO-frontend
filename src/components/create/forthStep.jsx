@@ -351,10 +351,8 @@ export default function ThirdStep(props) {
             setTimeout(async() => {
                 dispatch({ type: 'LOADINGTYPE', payload: null });
 
-
-
                 await api.main.listDAOInfo(maincontract, baseC.dao_manager_addr).then((data)=>{
-                    props.history.push(`/about/${baseC.dao_manager_addr}/${data.owner}`);
+                    props.history.push(`/about/${baseC.dao_manager_addr}`);
                 });
 
 

@@ -145,7 +145,7 @@ const SwitchBtn = styled.img`
 export default function Org(props) {
 
     const { state, dispatch } = useSubstrate();
-    const { orgcontract, allAccounts, apiState, authcontract, erc20contract } = state;
+    const { orgcontract, allAccounts, apiState, authcontract, erc20contract,maincontract } = state;
 
     const [addshow, setaddshow] = useState(false);
     const [authshow, setauthshow] = useState(false);
@@ -170,7 +170,7 @@ export default function Org(props) {
     const [applyAuth, setapplyAuth] = useState(false);
     const [triggerStatus, settriggerStatus] = useState(false);
     const [address, setaddress] = useState('');
-
+    const [owner, setowner] = useState('');
     const [errorShow, seterrorShow] = useState(false);
 
 
@@ -186,6 +186,7 @@ export default function Org(props) {
                 setisMember(data[0]);
                 setisModerator(data[1]);
                 setisOwner(data[2])
+
             });
         };
         whoAmI();
@@ -196,6 +197,15 @@ export default function Org(props) {
             });
         }
         getFree()
+
+        const initOwner = async()=>{
+            await api.main.listDAOInfo(maincontract, id).then((data)=>{
+                if(!data)return;
+                setowner(data.owner)
+            });
+        }
+
+        initOwner();
     }, [orgcontract, id, applyAuth]);
 
     const setall = () => {
@@ -400,7 +410,7 @@ export default function Org(props) {
                         }
                         {
                             !listStatus && list.map((i, index) => <li key={`moderators_${index}_${i[0]}`}>
-                                <img src={props.match.params.owner === i[0] ? Owner : Admin} alt="" />
+                                <img src={owner === i[0] ? Owner : Admin} alt="" />
                                 <div>
                                     <div className="names">{i[1]}</div>
                                     <Address>{i[0]}</Address>

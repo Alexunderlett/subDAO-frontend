@@ -43,7 +43,7 @@ export default function VotePending(props) {
             dispatch({ type: 'LOADINGTYPE', payload: null });
 
             settoTop(data);
-            props.history.push(`/voteOverview/${id}/${selectid}/${owner}`)
+            props.history.push(`/voteOverview/${id}/${selectid}`)
         }).catch((error) => {
             dispatch({ type: 'MSGTYPE', payload: { msg: `Voting: ${error.message}` } });
 
@@ -52,7 +52,7 @@ export default function VotePending(props) {
     }
     const handleClicktoVoteview = (voteid) => {
         let { id, owner } = props;
-        props.history.push(`/voteOverview/${id}/${voteid}/${owner}`)
+        props.history.push(`/voteOverview/${id}/${voteid}`)
     }
     return (<div className='votePending'>
         <VoteModalTips

@@ -132,7 +132,7 @@ export default function VoteOverview(props) {
     let { t } = useTranslation();
 
     const handleClicktoVote = () => {
-        props.history.push(`/vote/${props.match.params.id}/${props.match.params.owner}`)
+        props.history.push(`/vote/${props.match.params.id}`)
     }
     useEffect(() => {
         const setOneVote = async () => {
