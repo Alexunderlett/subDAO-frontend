@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import VoteView from '../vote/voteView';
 
-import {useSubstrate} from "../../api/contracts";
+import VotingImg from '../../img/votingImg.png';
 
 import PublicJS from '../../utils/publicJs';
 import styled from 'styled-components';
 
 const BtnSpan = styled.span`
-    width: 6.6rem;
-    height: 2.6rem;
+    padding:0 0.5rem;
     background: #EEF5F0;
     border-radius: 0.4rem;
     border: 0.1rem solid #6AB861;
@@ -19,6 +18,11 @@ const BtnSpan = styled.span`
     font-family: Roboto-Regular;
     font-weight: 400;
     color: #6AB861;
+    img{
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 0.5rem;
+    }
 `
 
 
@@ -41,9 +45,7 @@ export default function VoteActive(props){
     const handleView = (voteid) => {
 
         setnewshow(true)
-            // const{id,owner} = props;
         setvoteid(voteid)
-            // props.history.push(`/voteView/${id}/${voteid}/${owner}`)
     }
 
     const handleClicktoVoteview = (voteid) => {
@@ -73,7 +75,7 @@ export default function VoteActive(props){
                             <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
                             <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.title}</td>
                             <td>
-                                <BtnSpan onClick={()=>handleView(item.vote_id)}>Voting</BtnSpan>
+                                <BtnSpan onClick={()=>handleView(item.vote_id)}><img src={VotingImg} alt=""/>Voting</BtnSpan>
                             </td>
 
                         </tr>)

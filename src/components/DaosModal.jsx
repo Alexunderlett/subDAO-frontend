@@ -6,6 +6,7 @@ import LoadingNew from "./loadingNEW";
 import { useLocation } from 'react-router-dom';
 import nodaos from "../img/noDaos.png";
 import api from "../api";
+import searchImg from '../img/search.png';
 
 const DaoBody = styled.div`
     width: 100%;
@@ -19,12 +20,21 @@ const DaoBody = styled.div`
         width: 144rem;
         display: flex;
         justify-content: space-between;
+       
         .left{
             font-size: 5.6rem;
             font-family: Roboto-Light;
             font-weight: 300;
             color: #10134E;
             line-height: 6.6rem;
+             position: relative;
+                img{
+                    position: absolute;
+                    left: 2rem;
+                    top:3.4rem;
+                    z-index: 9;
+                    width: 2.4rem;
+                }
         }
     }
     .daos{
@@ -170,7 +180,7 @@ const DaosModal = (props) => {
         let arr;
         if(e.target.value.length){
             arr =  list.filter(item=> {
-                return item.name.indexOf(e.target.value)>-1
+                return item.name.toLowerCase().indexOf(e.target.value.toLowerCase())>-1
             });
         }else{
             arr = list ;
@@ -190,8 +200,10 @@ const DaosModal = (props) => {
         >
             <DaoBody>
                 <div className="top">
+
                     {
                         daoType ==='all' && <div className="left">
+                            <img src={searchImg} alt=""/>
                             <Inputbrdr type="text" placeholder="search" onChange={(e) =>handleSearch(e)}/>
                         </div>
                     }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Radio } from 'antd';
+import { Button, Modal, Radio,Input } from 'antd';
 import { useSubstrate } from "../../api/contracts";
 import api from "../../api/index";
-import newVote from "../../img/newvoting.png";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import CloseImg from '../../img/closeImg.png';
 
 import LoadingNew from "../loadingNEW";
 
@@ -22,11 +22,31 @@ const SectionBrdr = styled.section`
     li{
         margin-bottom: 2rem;
         &>div{
-        font-size: 1.6rem;
-        font-family: Roboto-Regular;
-        font-weight: 400;
+        font-size: 1.8rem;
+        font-family: Roboto-Light;
+        font-weight: 300;
         color: #10164B;
         line-height: 1.9rem;
+        }
+        .ant-radio-group{
+        width: 100%;
+        }
+        .radioBrdr{
+             width: 100%;
+            padding: 2.1rem 1.5rem;
+            border-radius: 1.2rem;
+            border: 0.1rem solid #E8E8EA;
+            margin-bottom: 1.5rem;
+         
+                span{
+                font-size: 2.1rem;
+                font-family: Roboto-Light;
+                font-weight: 300;
+                color: #010643;
+                }
+        }
+        .radioActive{
+            background: #F9F9FC;
         }
     }
 `;
@@ -42,10 +62,7 @@ const Titles = styled.span`
 `;
 
 const Desc = styled.div`
-    min-height: 13.8rem;
-    background: #EFF0FA;
     border-radius: 2.4rem;
-    padding: 2rem;
 `;
 const Li = styled.li`
   display: flex;
@@ -82,6 +99,7 @@ export default function VoteView(props) {
     const [disabledVote, setdisabledVote] = useState(false);
     const [toaddress, settoaddress] = useState('');
     const [toValue, settovalule] = useState('');
+    const [active, setActive] = useState(null);
 
     let { t } = useTranslation();
 
@@ -140,8 +158,17 @@ export default function VoteView(props) {
         });
 
     }
+
+    // const handleActive = (e) => {
+    //     let index = e.currentTarget.id.split("_")[1];
+    //     setActive(index)
+    //     setselected(index);
+    // }
+
+
     const handleRadio = (e) => {
         setselected(e.target.value);
+        setActive(e.target.value)
         console.log("=====",e.target.value)
     }
     let { handleClose, showTips } = props;
@@ -176,15 +203,23 @@ export default function VoteView(props) {
                                 <Desc>{desc}</Desc>
                             </li>
                             <li className='voteSelect'>
+                                <Titles>Please select</Titles>
+                                <div>
 
-                                <Radio.Group onChange={handleRadio} value={selected}>
-                                    {optionlist.map((i, index) => (
-                                        <div key={index}>
-                                            <Radio value={index}>{i.split(":")[0]}</Radio>
-                                        </div>
-                                    ))
-                                    }
-                                </Radio.Group>
+
+
+                                    <Radio.Group onChange={handleRadio} value={selected} buttonStyle="solid">
+                                        {optionlist.map((i, index) => (
+
+                                                <div className={parseInt(active) === index ? 'radioActive radioBrdr' : 'radioBrdr'} id={`active_${index}`} key={index}>
+                                                <Radio value={index} disabled={disabledVote}>{i.split(":")[0]} </Radio>
+                                            </div>
+
+                                        ))
+                                        }
+                                    </Radio.Group>
+                                </div>
+
 
                             </li>
                             <NextBrdr>

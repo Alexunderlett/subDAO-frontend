@@ -204,13 +204,6 @@ export default function About(props) {
         setbalanceshow(true);
 
         setAId(props.match.params.id);
-        const initOwner = async()=>{
-            await api.main.listDAOInfo(maincontract, props.match.params.id).then((data)=>{
-                if(!data)return;
-                setowner(data.owner)
-            });
-        }
-
         initOwner();
     }, [props.match.params.id]);
     const queryAddrs = () => {
@@ -227,12 +220,19 @@ export default function About(props) {
         setcontractshow(false);
 
     };
+    const initOwner = async()=>{
+        await api.main.listDAOInfo(maincontract, props.match.params.id).then((data)=>{
+            if(!data)return;
+            setowner(data.owner)
+        });
+    }
     useEffect(() => {
         if (daoManagercontract == null) return;
         queryAddrs();
     }, [daoManagercontract, id, maincontract, basecontract]);
     useEffect(() => {
         queryAddrs();
+        initOwner();
         if(maincontract == null) dispatch({ type: 'LOAD_MAINCONTRACT' });
     }, []);
 
