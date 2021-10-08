@@ -133,12 +133,12 @@ export default function Vote(props) {
                     <BtnRht>
                         {
                             isModerator &&
-                            <Button type="primary" onClick={() => props.history.push(`/newVote?url=${props.match.url}`)}>New voting</Button>
+                            <Button type="primary" onClick={() => props.history.push(`/newVote?url=${props.match.url}`)}>New Vote</Button>
                         }
                     </BtnRht>
                 </FirstLine>
                 <Tablesec>
-                    <div className="titleTop">Voting</div>
+                    <div className="titleTop">Vote</div>
                     {
                         !showActive &&<VoteActive
                             id={id}

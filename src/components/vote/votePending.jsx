@@ -65,7 +65,7 @@ export default function VotePending(props) {
                     <th>Number</th>
                     <th>Time</th>
                     <th>Title</th>
-                    <th>Trigger</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

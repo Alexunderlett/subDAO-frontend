@@ -350,7 +350,7 @@ export default function NewVote(props) {
                 type === 1 && <div>
                     <div className="line">
                         <div className="label">
-                            Voting Time
+                            Vote Time
                             <span>Select how long the vote durate by seconds</span>
                         </div>
                         <DatePicker
@@ -500,9 +500,9 @@ export default function NewVote(props) {
                     </div>
                     {
                         optchecked && <div className="line">
-                            <div className="label">Address</div>
+                            <div className="label">Recipient Address</div>
                             <Input
-                                placeholder='Address'
+                                placeholder='Recipient Address'
                                 name='to_address'
                                 value={to_address}
                                 onChange={handleInputChange}

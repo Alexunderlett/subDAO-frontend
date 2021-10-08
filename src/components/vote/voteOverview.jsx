@@ -179,7 +179,7 @@ export default function VoteOverview(props) {
             <div className="container">
                 <Left history={props.history} id={props.match.params.id} owner={props.match.params.owner} removeGroup={true} />
                 <div>
-                    <BackBrdr onClick={handleClicktoVote}><img src={Back} alt="" /> Back Voting</BackBrdr>
+                    <BackBrdr onClick={handleClicktoVote}><img src={Back} alt="" /> Back Vote</BackBrdr>
                 </div>
                 <SectionLayout>
                     <ul>
@@ -219,7 +219,7 @@ export default function VoteOverview(props) {
                             </AddBrdr>
                         </Li>
                         <Li>
-                            <Titles>Voting Description</Titles>
+                            <Titles>Vote Description</Titles>
                             <Desc>{desc}</Desc>
                         </Li>
                     </ul>

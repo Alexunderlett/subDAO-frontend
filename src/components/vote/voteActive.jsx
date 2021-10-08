@@ -65,7 +65,7 @@ export default function VoteActive(props){
                         <th>Number</th>
                         <th>Time</th>
                         <th>Title</th>
-                        <th>Trigger</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,7 @@ export default function VoteActive(props){
                             <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
                             <td onClick={()=>handleClicktoVoteview(item.vote_id)}>{item.title}</td>
                             <td>
-                                <BtnSpan onClick={()=>handleView(item.vote_id)}><img src={VotingImg} alt=""/>Voting</BtnSpan>
+                                <BtnSpan onClick={()=>handleView(item.vote_id)}><img src={VotingImg} alt=""/>Vote</BtnSpan>
                             </td>
 
                         </tr>)

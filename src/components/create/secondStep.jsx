@@ -76,7 +76,7 @@ const Content = styled.div`
                 border: 0.1rem solid #D52473;
                 line-height: 3rem;
                 padding: 0;
-                font-size: 1.2rem;
+                font-size: 1.8rem;
                 font-weight: 500;
                 color: #d52473;
             }

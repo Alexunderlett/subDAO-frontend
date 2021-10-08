@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 const Footer = styled.div`
     width: 100%;
-    height: 100px;
+    height: 60px;
     background: #FFFFFF;
     display: flex;
     align-items: center;
@@ -88,6 +88,10 @@ const FootBtm = (props) => {
                         <img src={Twitter} alt="" />
                         Twitter
                     </a>
+                    {/* <a href="https://t.me/subdao" target="_blank" rel="noopener noreferrer">
+                        <img src={{}} alt="" />
+                        Telegram
+                    </a> */}
                 </div>}
             </div>
         </Footer>

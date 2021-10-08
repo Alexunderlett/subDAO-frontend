@@ -25,6 +25,7 @@ export default function VotePagination(props){
                         <th>Number</th>
                         <th>Time</th>
                         <th>Title</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -33,6 +34,7 @@ export default function VotePagination(props){
                             <td>{item.vote_id}</td>
                             <td>{PublicJS.formatvoteDateTime(item.start_date,item.vote_time)}</td>
                             <td>{item.title}</td>
+                            <td></td>
                         </tr>)
                     }
                     </tbody>

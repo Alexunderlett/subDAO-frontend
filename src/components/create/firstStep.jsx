@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import closeBtn from '../../img/shutdownW.png'
-import {Trans, Translation} from 'react-i18next';
-import {Modal, Button, Input} from 'antd';
+import { Trans, Translation } from 'react-i18next';
+import { Modal, Button, Input } from 'antd';
 import styled from 'styled-components';
 import right from '../../img/right.png';
 
@@ -41,8 +41,8 @@ const Content = styled.div`
     .title{
         height: 2.1rem;
         font-size: 1.8rem;
-        font-family: Roboto-Regular, Roboto;
-        font-weight: 400;
+        font-family: Roboto-Light;
+        font-weight: 300;
         color: #10164B;
         line-height: 2.1rem;
         margin-bottom: 1rem;
@@ -120,7 +120,7 @@ const Content = styled.div`
     }
 `;
 
-export default function FirstStep(props){
+export default function FirstStep(props) {
     const [imgUrl, setimgUrl] = useState('');
     const [errTips, seterrTips] = useState(false);
     const [showDisable, setshowDisable] = useState(true);
@@ -130,31 +130,31 @@ export default function FirstStep(props){
 
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
 
-        if(name === "name"){
+        if (name === "name") {
             setName(value)
-        }else{
+        } else {
             setdescription(value)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const form1 = JSON.parse(sessionStorage.getItem('firstStep'));
         const imgUrl1 = JSON.parse(sessionStorage.getItem('imgUrl'));
         if (form1 != null) {
             setName(form1.name);
             setdescription(form1.description);
             setimgUrl(imgUrl1);
-            setshowDisable(imgUrl1.length && form1.name.length&&form1.description.length)
+            setshowDisable(imgUrl1.length && form1.name.length && form1.description.length)
         }
 
-    },[]);
+    }, []);
 
-    useEffect(()=>{
-        setshowDisable(imgUrl.length && name.length&&description.length)
+    useEffect(() => {
+        setshowDisable(imgUrl.length && name.length && description.length)
 
-    },[imgUrl,name,description]);
+    }, [imgUrl, name, description]);
 
     const toSecondStep = () => {
         sessionStorage.setItem('firstStep', JSON.stringify({
@@ -179,93 +179,93 @@ export default function FirstStep(props){
     }
 
 
-        return <div className="content">
-            <Modal
-                visible={errTips}
-                onCancel={()=>seterrTips(false)}
-                className='newVoteBrdr homebtm'
-                footer={null}
-            >
-                <Tip>
-                    DAO Logo、DAO name、DAO description is Required
-                </Tip>
-            </Modal>
-            <Info>
-                <div className="title">Basic informationn</div>
-                <div className="detail mt1">
-                    DAOWallet Will Soon Be Launched On Chrome Web Store. It Will Gradually Support Most Types .
+    return <div className="content">
+        <Modal
+            visible={errTips}
+            onCancel={() => seterrTips(false)}
+            className='newVoteBrdr homebtm'
+            footer={null}
+        >
+            <Tip>
+                Logo、Name、Description is Required
+            </Tip>
+        </Modal>
+        <Info>
+            <div className="title">Basic informationn</div>
+            <div className="detail mt1">
+                DAOWallet Will Soon Be Launched On Chrome Web Store. It Will Gradually Support Most Types .
+            </div>
+        </Info>
+        <Content>
+            {
+                imgUrl && <div className='uploadBrdr'>
+                    <div className='title'><Trans>DAOImage</Trans></div>
+                    <div className='imgBrdr'>
+                        <img src={imgUrl} alt="" />
+                        {
+                            <img src={closeBtn} className='removeBrdr' onClick={removeImage} alt='' />
+                        }
+                    </div>
                 </div>
-            </Info>
-            <Content>
-                {
-                    imgUrl && <div className='uploadBrdr'>
-                        <div className='title'><Trans>DAOImage</Trans></div>
-                        <div className='imgBrdr'>
-                            <img src={imgUrl} alt=""/>
-                            {
-                                <img src={closeBtn} className='removeBrdr' onClick={removeImage} alt=''/>
-                            }
+            }
+            {
+                !imgUrl && <div className='uploadBrdr'>
+                    <div className='title'>Logo</div>
+                    <div className="imageBox">
+                        <div className="img">Image scale 1:1</div>
+                        <div className="inputBrdr">
+                            <Translation>{t => <Input type="text"
+                                placeholder='Url'
+                                onChange={handleImageChange}
+                                allowClear={true}
+                            />}
+                            </Translation>
                         </div>
                     </div>
-                }
-                {
-                    !imgUrl && <div className='uploadBrdr'>
-                        <div className='title'><Trans>DAOImage</Trans></div>
-                        <div className="imageBox">
-                            <div className="img">Image scale 1:1</div>
-                            <div className="inputBrdr">
-                                <Translation>{t => <Input type="text"
-                                                          placeholder='Url'
-                                                          onChange={handleImageChange}
-                                                          allowClear={true}
-                                />}
-                                </Translation>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                <div className="line">
-                    <div className="title"><Trans>DAOName</Trans></div>
-                    <div className='inputBrdr'>
-                        <Translation>{t =>
-                            <Input
-                                placeholder={t('FillName')}
-                                value={name}
-                                name='name'
-                                autoComplete="off"
-                                onChange={handleChange}
-                                allowClear={true}
-                            />
-                        }
-                        </Translation>
-                    </div>
                 </div>
+            }
 
-                <div className="line">
-                    <div className="title"><Trans>DAODescription</Trans></div>
-                    <div className='inputBrdr textareaB'>
-                        <Translation>{t =>
-                            <Input.TextArea
-                                placeholder={t('FillDAODescription')}
-                                value={description}
-                                name='description'
-                                autoComplete="off"
-                                onChange={handleChange}
-                                allowClear={true}
-                            />
-                        }
-                        </Translation>
-                    </div>
+            <div className="line">
+                <div className="title">Name</div>
+                <div className='inputBrdr'>
+                    <Translation>{t =>
+                        <Input
+                            placeholder={t('FillName')}
+                            value={name}
+                            name='name'
+                            autoComplete="off"
+                            onChange={handleChange}
+                            allowClear={true}
+                        />
+                    }
+                    </Translation>
                 </div>
+            </div>
 
-                <div className="line" style={{textAlign: 'right'}}>
-                    <Button className="nextBtn" type="primary" disabled={!showDisable} onClick={toSecondStep}>
-                        Next
-                        <img src={right} alt=""/>
-                    </Button>
+            <div className="line">
+                <div className="title">Description</div>
+                <div className='inputBrdr textareaB'>
+                    <Translation>{t =>
+                        <Input.TextArea
+                            placeholder={t('FillDAODescription')}
+                            value={description}
+                            name='description'
+                            autoComplete="off"
+                            onChange={handleChange}
+                            allowClear={true}
+                        />
+                    }
+                    </Translation>
                 </div>
-            </Content>
-        </div>
+            </div>
+
+            <div className="line" style={{ textAlign: 'right' }}>
+                <Button className="nextBtn" type="primary" disabled={!showDisable} onClick={toSecondStep}>
+                    Next
+                    <img src={right} alt="" />
+                </Button>
+            </div>
+        </Content>
+    </div>
 
 }

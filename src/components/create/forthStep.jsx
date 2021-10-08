@@ -14,8 +14,8 @@ const Content = styled.div`
         .title{
             height: 2.1rem;
             font-size: 1.8rem;
-            font-family: Roboto-Regular, Roboto;
-            font-weight: 400;
+            font-family: Roboto-Light;
+            font-weight: 300;
             color: #10164B;
             line-height: 2.1rem;
             margin-bottom: 1rem;
@@ -394,7 +394,7 @@ export default function ThirdStep(props) {
                 {/*</div>*/}
 
                 <div className="line">
-                    <div className="title"><Trans>Fill Token Name</Trans></div>
+                    <div className="title"><Trans>Name</Trans></div>
                     <div className='inputBrdr'>
                         <Input
                             placeholder={t('FillToken')}
@@ -407,7 +407,7 @@ export default function ThirdStep(props) {
                 </div>
 
                 <div className="line">
-                    <div className="title"><Trans>Fill the symbol</Trans></div>
+                    <div className="title"><Trans>Symbol</Trans></div>
                     <div className='inputBrdr'>
                         <Input
                             placeholder={t('FillSymbol')}
@@ -421,7 +421,7 @@ export default function ThirdStep(props) {
                 </div>
 
                 <div className="line">
-                    <div className="title"><Trans>Fill the total supply</Trans></div>
+                    <div className="title"><Trans>Total Supply</Trans></div>
                     <div className='inputBrdr'>
                         <Input
                             placeholder={t('FillSupply')}

@@ -12,7 +12,7 @@ class VoteEcharts extends Component {
         myChart.setOption({
             title: {
                 text: count,
-                subtext: 'Voting Number',
+                subtext: 'Vote Number',
                 left: "49.5%",
                 top: "38%",
                 textAlign: 'center',

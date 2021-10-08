@@ -99,9 +99,14 @@ function Home(props) {
 
     const [selected, setselected] = useState([]);
     const [createDAOModal, setcreateDAOModal] = useState(false);
-    const [moreDaos, setMoreDaos] = useState(false);
 
     const account = JSON.parse(sessionStorage.getItem('account'));
+
+    const browseOtherDAOs =()=>{
+        setcreateDAOModal(false);
+        dispatch({ type: 'DAOTYPE', payload: 'all' });
+        window.scrollTo(0, 0);
+    }
 
     const handleClick = () => {
         if (account === null || !account.length) {
@@ -164,8 +169,8 @@ function Home(props) {
                         <div className="detail">
                             You can join other DAOs or create your own DAO!
                         </div>
-                        <Button type="primary" style={{ width: '100%', margin: '8rem 0 3rem 0' }} onClick={() => { setcreateDAOModal(false); setMoreDaos(true) }}>Browse other DAOs</Button>
-                        <Button className="default" style={{ width: '100%' }} onClick={handleClick}>{t('CreateDAO')}</Button>
+                        <Button type="primary" style={{ width: '100%', margin: '8rem 0 3rem 0' }} onClick={browseOtherDAOs}>Browse other DAOs</Button>
+                        <Button className="default" style={{ width: '100%' }} onClick={handleClick}>Create DAO</Button>
                     </SelectAccount>
                 </Modal>
             </section>

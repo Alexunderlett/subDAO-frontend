@@ -441,7 +441,7 @@ export default function Left(props){
                 !props.removeGroup && <BtnGroup>
                     <span className={type === 'about' ? 'active' : ''} onClick={() => handleClicktoType('about')}>Home</span>
                     {
-                        contractlist.vote_addr != null &&<span className={type === 'vote' ? 'active' : ''} onClick={() => handleClicktoType('vote')}>Voting</span>
+                        contractlist.vote_addr != null &&<span className={type === 'vote' ? 'active' : ''} onClick={() => handleClicktoType('vote')}>Vote</span>
                     }
                     {
                         contractlist.vault_addr != null && <span className={type === 'vault' ? 'active' : ''} onClick={() => handleClicktoType('vault')}>Vault</span>

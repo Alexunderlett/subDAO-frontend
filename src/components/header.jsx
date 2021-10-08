@@ -73,7 +73,7 @@ const HeaderBg = styled.div`
             .header-button{
                 text-align: right;
                 height: 1.9rem;
-                font-size: 1.6rem;
+                font-size: 1.8rem;
                 font-family: Roboto-Light, Roboto;
                 font-weight: 300;
                 line-height: 1.9rem;
@@ -277,7 +277,7 @@ export default function Headertop(props) {
                         }
 
                         {
-                            !!selected.length && <span className='createDAO' onClick={() => handleClick()}>Create My DAO</span>
+                            false && !!selected.length && <span className='createDAO' onClick={() => handleClick()}>Create</span>
                         }
 
                         {
@@ -302,7 +302,7 @@ export default function Headertop(props) {
             {
                 showlist && !selected.length &&
                 <Modal visible={showlist} onCancel={cancleShowlist} footer={null}>
-                    <div className="title">Select You Account</div>
+                    <div className="title">Select Your Account</div>
                     <Select placeholder="Please Select Your Account" style={{ width: '100%' }} onChange={selectAccounts}>
                         {
                             allList && allList.length && allList.map((opt) =>

@@ -199,7 +199,7 @@ export default function VoteView(props) {
 
                             </Li>
                             <li>
-                                <Titles>Voting Description</Titles>
+                                <Titles>Vote Description</Titles>
                                 <Desc>{desc}</Desc>
                             </li>
                             <li className='voteSelect'>

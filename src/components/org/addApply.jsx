@@ -54,7 +54,7 @@ export default function AddApply(props) {
         <Modal visible={showTips} onCancel={handleClose} footer={null}>
             <div className="title">
                 {/* <img src={applyList} alt="" /> */}
-                <span >Apply</span>
+                <span>Apply</span>
             </div>
 
             <div className="label">{t('FilltheName')}</div>
@@ -69,7 +69,7 @@ export default function AddApply(props) {
             </div>
 
             <Button type="primary" onClick={() => handleSubmit()} style={{ width: '100%', marginTop: '3rem' }}>
-                Add
+                Submit
             </Button>
         </Modal>
     </div>;

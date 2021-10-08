@@ -242,7 +242,7 @@ export default function Vault(props) {
 
     const columns = [
         {
-            title: 'Deposit',
+            title: 'Amount',
             dataIndex: 'value',
             key: 'value',
         },
@@ -250,13 +250,23 @@ export default function Vault(props) {
             title: 'From',
             dataIndex: 'from_address',
             key: 'from_address',
-            render: tag => (`${tag.slice(0, 15)}…${tag.slice(-15)}`),
+            render: tag => {
+                return <span>
+                    {`${tag.slice(0, 15)}…${tag.slice(-15)}`}
+                    <CopyStr address={tag} />
+                </span>
+            },
         },
         {
             title: 'To',
             dataIndex: 'to_address',
             key: 'to_address',
-            render: tag => (`${tag.slice(0, 15)}…${tag.slice(-15)}`),
+            render: tag => {
+                return <span>
+                    {`${tag.slice(0, 15)}…${tag.slice(-15)}`}
+                    <CopyStr address={tag} />
+                </span>
+            },
         },
         {
             title: 'Behavior',
@@ -401,7 +411,7 @@ export default function Vault(props) {
                             </div> */}
                 </div>
                 <div className='hslist'>
-                    <div className="titleTop">{t('History')}</div>
+                    <div className="titleTop">Transfer Histories</div>
                     <Table
                         dataSource={historylist}
                         columns={columns}

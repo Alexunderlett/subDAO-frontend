@@ -91,7 +91,7 @@ export default function StepNav(props){
                             }
 
                             <div className='name'>
-                                <div className="span">Basicin formation</div>
+                                <div className="span">Basic information</div>
                                 <div className="bgline" />
                             </div>
 
